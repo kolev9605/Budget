@@ -31,7 +31,7 @@
             return primaryCategories;
         }
 
-        public async Task<IEnumerable<CategoryServiceModel>> GetAllUserCategoriesByTypeAsync(string userId, TransactionType transactionType)
+        public async Task<IEnumerable<UserCategoryServiceModel>> GetAllUserCategoriesByTypeAsync(string userId, TransactionType transactionType)
         {
             var userCategoriesIds = this.context.UserCategories
                 .Where(uc => uc.UserId == userId)
@@ -40,8 +40,10 @@
             var categories = await context.Categories
                 .Where(c => userCategoriesIds.Contains(c.Id))
                 .Where(c => c.TransactionType == transactionType)
-                .ProjectTo<CategoryServiceModel>()
+                .ProjectTo<UserCategoryServiceModel>()
                 .ToListAsync();
+
+            categories.ForEach(c => c.UserId = userId);
 
             return categories;
         }

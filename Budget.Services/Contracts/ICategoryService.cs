@@ -9,7 +9,7 @@
     { 
         Task<IEnumerable<CategoryServiceModel>> GetAllPrimaryAsync();
 
-        Task<IEnumerable<CategoryServiceModel>> GetAllUserCategoriesByTypeAsync(string userId, TransactionType transactionType);
+        Task<IEnumerable<UserCategoryServiceModel>> GetAllUserCategoriesByTypeAsync(string userId, TransactionType transactionType);
 
         Task<TransactionType> GetTransactionTypeByCategoryIdAsync(int categoryId);
     }

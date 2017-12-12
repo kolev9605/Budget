@@ -8,6 +8,7 @@
     using Budget.Web.Common;
     using Budget.Web.Common.ColorGenerator;
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using System.Threading.Tasks;
@@ -63,7 +64,6 @@
 
             var categories = await this.categoryService.GetAllUserCategoriesByTypeAsync(user.Id, type);
             var addTransactionViewModel = this.mapper.Map<AddTransactionViewModel>(categories);
-            addTransactionViewModel.UserId = user.Id;
 
             return View(addTransactionViewModel);
         }
@@ -73,14 +73,17 @@
         {
             if (!ModelState.IsValid)
             {
+                var categories = await this.categoryService.GetAllUserCategoriesByTypeAsync(addTransactionViewModel.UserId, addTransactionViewModel.TransactionType);
+                addTransactionViewModel = this.mapper.Map<AddTransactionViewModel>(categories);
+
                 return View(addTransactionViewModel);
             }
 
-            await this.transactionService.AddTransactionAsync(addTransactionViewModel.Amount, addTransactionViewModel.UserId, addTransactionViewModel.CategoryId);
+            await this.transactionService.AddTransactionAsync(addTransactionViewModel.Amount, addTransactionViewModel.UserId, addTransactionViewModel.CategoryId, addTransactionViewModel.Description);
 
             TempData[GlobalConstants.SuccessMessageKey] = GlobalConstants.TransactionAddedSuccessfully;
 
-            return RedirectToAction(nameof(Index), new { type = this.categoryService.GetTransactionTypeByCategoryIdAsync(addTransactionViewModel.CategoryId) });
+            return RedirectToAction(nameof(Index), new { type = addTransactionViewModel.TransactionType });
         }
     }
 }

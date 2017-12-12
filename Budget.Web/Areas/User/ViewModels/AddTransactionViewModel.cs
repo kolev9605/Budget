@@ -1,5 +1,6 @@
 ﻿namespace Budget.Web.Areas.User.ViewModels
 {
+    using Budget.Data.Models.Enums;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using System.Collections.Generic;
@@ -12,12 +13,16 @@
         [DataType(DataType.Currency)]
         public decimal Amount { get; set; }
 
-        [Required(ErrorMessage = "You must select a category to add transaction.")]
         public int CategoryId { get; set; }
         
         public IEnumerable<SelectListItem> Categories { get; set; }
 
+        public string Description { get; set; }
+
         [HiddenInput]
         public string UserId { get; set; }
+
+        [HiddenInput]
+        public TransactionType TransactionType { get; set; }
     }
 }

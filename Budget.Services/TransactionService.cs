@@ -37,14 +37,15 @@
             return transactions;
         }
 
-        public async Task<bool> AddTransactionAsync(decimal amount, string userId, int categoryId)
+        public async Task<bool> AddTransactionAsync(decimal amount, string userId, int categoryId, string description)
         {
             var transaction = new Transaction
             {
                 Amount = amount,
                 UserId = userId,
                 CategoryId = categoryId,
-                Date = DateTime.UtcNow
+                Date = DateTime.UtcNow,
+                Description = description
             };
 
             var result = await this.context.Transactions.AddAsync(transaction);

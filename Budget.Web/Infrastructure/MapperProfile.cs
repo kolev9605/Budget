@@ -18,14 +18,18 @@
 
             this.CreateMap<Category, CategoryServiceModel>();
 
-            this.CreateMap<IEnumerable<CategoryServiceModel>, AddTransactionViewModel>()
+            this.CreateMap<Category, UserCategoryServiceModel>();
+
+            this.CreateMap<IEnumerable<UserCategoryServiceModel>, AddTransactionViewModel>()
                 .ForMember(
                     c => c.Categories,
                     cfg => cfg.MapFrom(c => c.Select(x => new SelectListItem
                     {
                         Text = x.Name,
                         Value = x.Id.ToString()
-                    })));
+                    })))
+                .ForMember(c => c.UserId, cfg => cfg.MapFrom(x => x.Select(uc => uc.UserId).Distinct().First()))
+                .ForMember(c => c.TransactionType, cfg => cfg.MapFrom(x => x.Select(uc => uc.TransactionType).Distinct().First()));
 
             this.CreateMap<IEnumerable<TransactionServiceModel>, ChartViewModel>()
                 .ForMember(c => c.OpositeType, cfg => cfg.MapFrom(

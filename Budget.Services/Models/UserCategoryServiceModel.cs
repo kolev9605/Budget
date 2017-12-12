@@ -1,16 +1,15 @@
-﻿namespace Budget.Data.Models
+﻿namespace Budget.Services.Models
 {
-    using Enums;
+    using Budget.Data.Models;
+    using Budget.Data.Models.Enums;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
 
-    public class Category
+    public class UserCategoryServiceModel
     {
         public int Id { get; set; }
 
-        [Required]
         public string Name { get; set; }
-        
+
         public TransactionType TransactionType { get; set; }
 
         public List<Transaction> Transactions { get; set; } = new List<Transaction>();
@@ -19,7 +18,6 @@
 
         public bool IsPrimary { get; set; }
 
-        [Required]
-        public string RgbColorValue { get; set; }
+        public string UserId { get; set; }
     }
 }
