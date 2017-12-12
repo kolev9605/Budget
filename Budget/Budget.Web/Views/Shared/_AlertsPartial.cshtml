@@ -1,0 +1,39 @@
+﻿@if (TempData[GlobalConstants.SuccessMessageKey] != null)
+{
+    <div class="center-block padding-top-10">
+        <div class="alert alert-success alert-dismissable fade in">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Success!</strong> @TempData[GlobalConstants.SuccessMessageKey]
+        </div>
+    </div>
+}
+
+@if (TempData[GlobalConstants.InfoMessageKey] != null)
+            {
+    <div class="center-block padding-top-10">
+        <div class="alert alert-info alert-dismissable fade in">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Info!</strong> @TempData[GlobalConstants.InfoMessageKey]
+        </div>
+    </div>
+}
+
+@if (TempData[GlobalConstants.WarningMessageKey] != null)
+{
+    <div class="center-block padding-top-10">
+        <div class="alert alert-warning alert-dismissable fade in">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Warning!</strong> TempData[GlobalConstants.WarningMessageKey]
+        </div>
+    </div>
+}
+
+@if (TempData[GlobalConstants.DangerMessageKey] != null)
+{
+    <div class="center-block padding-top-10">
+        <div class="alert alert-danger alert-dismissable fade in">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Danger!</strong> TempData[GlobalConstants.DangerMessageKey]
+        </div>
+    </div>
+}

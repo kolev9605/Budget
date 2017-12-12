@@ -1,0 +1,39 @@
+﻿@model ChartViewModel
+
+<div class="container-fluid">
+    <div class="row padding-top-20">
+        <div class="col-md-6 col-md-offset-3 col-xs-10 col-xs-offset-1">
+            @if (Model.IsEmpty)
+            {
+                <h2>You dont have any transactions yet. Add some! :)</h2>
+            }
+            else
+            {
+                <canvas id="myChart" width="400" height="400"></canvas>
+            }
+        </div>
+    </div>
+    <div class="row padding-top-20">
+        <div class="col-md-2 col-md-offset-5">
+            <a asp-controller="Transaction"
+               asp-action="Index"
+               asp-route-type="@Model.OpositeType"
+               class="btn btn-info center-block background-color-blue">@Model.ChangeChartStatusButtonLabel</a>
+        </div>
+    </div>
+    <div class="row padding-top-10">
+        <div class="col-md-3 col-md-offset-3">
+            <a asp-controller="Transaction"
+               asp-action="AddTransaction"
+               asp-route-type="@TransactionType.Income"
+               class="btn btn-success center-block background-color-blue">Add Income</a>
+        </div>
+        <div class="col-md-3">
+            <a asp-controller="Transaction"
+               asp-action="AddTransaction"
+               asp-route-type="@TransactionType.Expense"
+               class="btn btn-danger center-block background-color-blue">Add Expense</a>
+        </div>
+    </div>
+</div>
+@Html.Partial("_ChartPartial", Model)

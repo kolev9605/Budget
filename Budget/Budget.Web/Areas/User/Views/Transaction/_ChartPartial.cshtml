@@ -1,0 +1,18 @@
+﻿@model ChartViewModel
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.min.js"></script>
+
+<script>
+    new Chart(document.getElementById("myChart"), {
+        type: 'pie',
+        data: {
+            datasets: [{
+                data: @Html.Raw(Model.DataJson),
+                backgroundColor: @Html.Raw(Model.ColorsJson),
+            }],
+            
+            labels: @Html.Raw(Model.LabelsJson),
+        }
+    });
+
+</script>

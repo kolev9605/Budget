@@ -1,0 +1,31 @@
+﻿@model AddTransactionViewModel
+@{
+    ViewData["Title"] = "Add Transaction";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4">
+            <hr />
+            <form method="post">
+                <div class="form-group">
+                    <label asp-for="Amount"></label>
+                    <input asp-for="Amount" class="form-control" />
+                    <span asp-validation-for="Amount" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Categories"></label>
+                    <select asp-for="CategoryId" asp-items="Model.Categories" class="form-control">
+                        <option>Please category</option>
+                    </select>
+                    <span asp-validation-for="CategoryId" class="text-danger"></span>
+                </div>
+                <input asp-for="UserId" class="form-control" />
+
+                <button type="submit" class="btn btn-default">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
