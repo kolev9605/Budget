@@ -14,12 +14,19 @@
     {
         public MapperProfile()
         {
+            this.MapServiceModels();
+            this.MapViewModels();
+        }
+
+        private void MapServiceModels()
+        {
             this.CreateMap<Transaction, TransactionServiceModel>();
-
             this.CreateMap<Category, CategoryServiceModel>();
-
             this.CreateMap<Category, UserCategoryServiceModel>();
+        }
 
+        private void MapViewModels()
+        {
             this.CreateMap<IEnumerable<UserCategoryServiceModel>, AddTransactionViewModel>()
                 .ForMember(
                     c => c.Categories,
@@ -67,7 +74,6 @@
                         Amount = t.Sum(tt => tt.Amount)
                     })
                     .Select(c => c.Category.RgbColorValue))));
-
         }
     }
 }
