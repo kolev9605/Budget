@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <UserSecretsId>aspnet-Budget.Web-529C5AF7-52A4-4032-9D17-3236AD880B27</UserSecretsId>
-    <PublishDir>$(OutDir)_PublishedWebsites\BudgetWeb\</PublishDir>
+    <PublishDir>$(OutDir)/_PublishedWebsites\BudgetWeb\</PublishDir>
   </PropertyGroup>
 
   <ItemGroup>
