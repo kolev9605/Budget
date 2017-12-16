@@ -51,5 +51,7 @@
             var result = await this.context.Transactions.AddAsync(transaction);
             return await this.context.SaveChangesAsync() > 0;
         }
+
+        public async Task<bool> HasTransactionsAsync(string userId) => await this.context.Transactions.Where(t => t.UserId == userId).AnyAsync();
     }
 }

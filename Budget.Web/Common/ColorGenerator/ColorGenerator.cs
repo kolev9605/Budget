@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Budget.Services.Contracts;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -279,13 +280,16 @@ namespace Budget.Web.Common.ColorGenerator
             "#263238"
         };
 
+        private readonly ICategoryService categoryService;
         private readonly ICollection<string> GeneratedColors;
 
         private int currentIndex;
 
-        public ColorGenerator()
+        public ColorGenerator(ICategoryService categoryService)
         {
+            this.categoryService = categoryService;
             this.GeneratedColors = new List<string>();
+            this.FillCollection();
 
             this.currentIndex = 0;
             Random rnd = new Random();
@@ -297,19 +301,50 @@ namespace Budget.Web.Common.ColorGenerator
             string currentColor = this.colourValues[currentIndex];
             if (this.GeneratedColors.Contains(currentColor))
             {
-                throw new InvalidOperationException("The generated color is already used.");
+                if (currentIndex == this.GeneratedColors.Count - 1)
+                {
+                    throw new InvalidOperationException("There are no colors left to be generated.");
+                }
+
+                this.currentIndex++;
+                this.GetColor();
             }
 
             this.GeneratedColors.Add(currentColor);
             this.currentIndex++;
 
-            int red = int.Parse(currentColor.Substring(1, 2), System.Globalization.NumberStyles.HexNumber);
-            int green = int.Parse(currentColor.Substring(3, 2), System.Globalization.NumberStyles.HexNumber);
-            int blue = int.Parse(currentColor.Substring(5, 2), System.Globalization.NumberStyles.HexNumber);
+            return this.ConvertToRgbString(currentColor);
+        }
+
+        private void FillCollection()
+        {
+            if (!this.GeneratedColors.Any())
+            {
+                var presentColors = this.categoryService.GetAllCategoryColors().Select(c => this.ConvertToHexString(c));
+                foreach (var color in presentColors)
+                {
+                    this.GeneratedColors.Add(color);
+                }
+            }
+        }
+
+        private string ConvertToRgbString(string hexColor)
+        {
+            int red = int.Parse(hexColor.Substring(1, 2), System.Globalization.NumberStyles.HexNumber);
+            int green = int.Parse(hexColor.Substring(3, 2), System.Globalization.NumberStyles.HexNumber);
+            int blue = int.Parse(hexColor.Substring(5, 2), System.Globalization.NumberStyles.HexNumber);
 
             return string.Format($"rgb({red}, {green}, {blue})");
+        }
 
-            //return currentColor;
+        private string ConvertToHexString(string rgbColor)
+        {
+            var hexColor = rgbColor
+                .Substring(3)
+                .Split(new char[] { ',', '(', ')' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(c => int.Parse(c).ToString("X"));
+
+            return string.Format($"#{string.Join(string.Empty, hexColor)}");
         }
     }
 }

@@ -10,5 +10,7 @@
         Task<IEnumerable<TransactionServiceModel>> GetAllByUserIdAndTypeAsync(string userId, TransactionType type);
 
         Task<bool> AddTransactionAsync(decimal amount, string userId, int categoryId, string description);
+
+        Task<bool> HasTransactionsAsync(string userId);
     }
 }

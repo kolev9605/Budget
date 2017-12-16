@@ -2,7 +2,8 @@
 {
     public enum HtmlId
     {
-        AddIncomeTransactionButton,
-        AddExpenseTransactionButton,
+        RemoveCategoryPopup = 0,
+        AddCategoryPopup = 1,
+        TransactionDetailsPopup = 2,
     }
 }

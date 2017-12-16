@@ -1,10 +1,16 @@
-﻿namespace Budget.Web.Extensions
+﻿namespace Budget.Web.Extensions.MvcExtensions
 {
     using Budget.Web.Common;
     using System;
 
-    public static class HtmlIdExtensions
+    public static class HtmlExtensions
     {
+        public static string Get()
+        {
+            
+            return "";
+        }
+
         public static string ToHtmlString(this HtmlId htmlId)
         {
             string id = Enum.GetName(typeof(HtmlId), htmlId);

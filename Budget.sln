@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budget.Web", "Budget.Web\Bu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budget.Data", "Budget.Data\Budget.Data.csproj", "{04A5E723-C679-4719-A12F-77C6965AC914}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Budget.Services", "Budget.Services\Budget.Services.csproj", "{1F268A19-CAE9-42F3-A99B-61B7BD9AE351}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budget.Services", "Budget.Services\Budget.Services.csproj", "{1F268A19-CAE9-42F3-A99B-61B7BD9AE351}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

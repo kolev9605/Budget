@@ -49,3 +49,12 @@
     padding-top: 40px;
 }
 
+.pull-bottom {
+    display: inline-block;
+    vertical-align: bottom;
+    float: none;
+}
+
+.padding-bottom-15 {
+    padding-bottom: 15px;
+}

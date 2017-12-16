@@ -2,8 +2,6 @@
 {
     using Budget.Data.Models.Enums;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Mvc.Rendering;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
     public class AddTransactionViewModel
@@ -13,14 +11,11 @@
         [DataType(DataType.Currency)]
         public decimal Amount { get; set; }
 
-        public int CategoryId { get; set; }
-        
-        public IEnumerable<SelectListItem> Categories { get; set; }
+        public CategoriesViewModel CategoriesViewModel { get; set; }
+
+        public AddCategoryViewModel AddCategoryViewModel { get; set; }
 
         public string Description { get; set; }
-
-        [HiddenInput]
-        public string UserId { get; set; }
 
         [HiddenInput]
         public TransactionType TransactionType { get; set; }

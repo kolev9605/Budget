@@ -12,5 +12,13 @@
         Task<IEnumerable<UserCategoryServiceModel>> GetAllUserCategoriesByTypeAsync(string userId, TransactionType transactionType);
 
         Task<TransactionType> GetTransactionTypeByCategoryIdAsync(int categoryId);
+
+        Task<int> AddOrGetCategoryAsync(string name, TransactionType type, string rgbColor);
+
+        Task<bool> AddUserCategoryAsync(int categoryId, string userId);
+
+        Task<bool> DeleteUserCategoryAsync(int categoryId, string userId);
+
+        IEnumerable<string> GetAllCategoryColors();
     }
 }

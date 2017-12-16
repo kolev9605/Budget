@@ -1,16 +1,20 @@
 ﻿namespace Budget.Web.Areas.User.Controllers
 {
     using AutoMapper;
+    using AutoMapper.QueryableExtensions;
     using Budget.Data.Models;
     using Budget.Data.Models.Enums;
     using Budget.Services.Contracts;
     using Budget.Web.Areas.User.ViewModels;
     using Budget.Web.Common;
     using Budget.Web.Common.ColorGenerator;
+    using Budget.Web.Extensions.MvcExtensions;
     using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     [Area("User")]
@@ -21,49 +25,44 @@
         private readonly ITransactionService transactionService;
         private readonly UserManager<User> userManager;
         private readonly IMapper mapper;
-        private readonly IColorGenerator colourGenerator;
+        private readonly IColorGenerator colorGenerator;
 
         public TransactionController(
             ICategoryService categoryService,
             ITransactionService transactionService,
             UserManager<User> userManager,
             IMapper mapper,
-            IColorGenerator colourGenerator
+            IColorGenerator colorGenerator
             )
         {
             this.categoryService = categoryService;
             this.transactionService = transactionService;
             this.userManager = userManager;
             this.mapper = mapper;
-            this.colourGenerator = colourGenerator;
+            this.colorGenerator = colorGenerator;
         }
 
         public async Task<IActionResult> Index(TransactionType type = TransactionType.Expense)
         {
-            var user = await this.userManager.FindByEmailAsync(this.User.Identity.Name);
-            if (user == null)
-            {
-                return BadRequest();
-            }
-
+            var loggedUserId = this.User.GetUserId();
             var transactions = await this.transactionService
-                .GetAllByUserIdAndTypeAsync(user.Id, type);
+                .GetAllByUserIdAndTypeAsync(loggedUserId, type);
 
-            ChartViewModel chartViewModel = mapper.Map<ChartViewModel>(transactions);
+            TransactionsViewModel transactionsViewModel = this.mapper.Map<TransactionsViewModel>(transactions);
+            transactionsViewModel.ChartViewModel = mapper.Map<ChartViewModel>(transactions);
+            transactionsViewModel.TransactionDataViewModel = transactions.Select(t => mapper.Map<TransactionDataViewModel>(t));
+            transactionsViewModel.HasTransaction = await this.transactionService.HasTransactionsAsync(loggedUserId);
+            transactionsViewModel.Type = type;
 
-            return View(chartViewModel);
+            return View(transactionsViewModel);
         }
 
         public async Task<IActionResult> AddTransaction(TransactionType type)
         {
-            var user = await this.userManager.FindByEmailAsync(this.User.Identity.Name);
-            if (user == null)
-            {
-                return BadRequest();
-            }
-
-            var categories = await this.categoryService.GetAllUserCategoriesByTypeAsync(user.Id, type);
+            var categories = await this.categoryService.GetAllUserCategoriesByTypeAsync(this.User.GetUserId(), type);
             var addTransactionViewModel = this.mapper.Map<AddTransactionViewModel>(categories);
+            addTransactionViewModel.CategoriesViewModel = this.mapper.Map<CategoriesViewModel>(categories);
+            addTransactionViewModel.AddCategoryViewModel = this.mapper.Map<AddCategoryViewModel>((TransactionType[])Enum.GetValues(typeof(TransactionType)));
 
             return View(addTransactionViewModel);
         }
@@ -71,19 +70,25 @@
         [HttpPost]
         public async Task<IActionResult> AddTransaction(AddTransactionViewModel addTransactionViewModel)
         {
+            var loggedUserId = this.User.GetUserId();
             if (!ModelState.IsValid)
             {
-                var categories = await this.categoryService.GetAllUserCategoriesByTypeAsync(addTransactionViewModel.UserId, addTransactionViewModel.TransactionType);
-                addTransactionViewModel = this.mapper.Map<AddTransactionViewModel>(categories);
+                var categories = await this.categoryService.GetAllUserCategoriesByTypeAsync(loggedUserId, addTransactionViewModel.TransactionType);
+                addTransactionViewModel.CategoriesViewModel = this.mapper.Map<CategoriesViewModel>(categories);
+                addTransactionViewModel.AddCategoryViewModel = this.mapper.Map<AddCategoryViewModel>((TransactionType[])Enum.GetValues(typeof(TransactionType)));
 
                 return View(addTransactionViewModel);
             }
 
-            await this.transactionService.AddTransactionAsync(addTransactionViewModel.Amount, addTransactionViewModel.UserId, addTransactionViewModel.CategoryId, addTransactionViewModel.Description);
+            await this.transactionService.AddTransactionAsync(addTransactionViewModel.Amount, loggedUserId, addTransactionViewModel.CategoriesViewModel.CategoryId, addTransactionViewModel.Description);
 
             TempData[GlobalConstants.SuccessMessageKey] = GlobalConstants.TransactionAddedSuccessfully;
-
             return RedirectToAction(nameof(Index), new { type = addTransactionViewModel.TransactionType });
+        }
+
+        public async Task<IActionResult> DeleteTransaction()
+        {
+            return NotFound();
         }
     }
 }

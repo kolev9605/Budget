@@ -10,10 +10,6 @@ namespace Budget.Web.Areas.User.ViewModels
 
         public string ColorsJson { get; set; }
 
-        public bool IsEmpty => this.DataJson == "[]" || this.LabelsJson == "[]" || this.ColorsJson == "[]";
-
-        public TransactionType OpositeType { get; set; }
-
-        public string ChangeChartStatusButtonLabel => $"Show {OpositeType}";
+        public bool IsCurrentChartEmpty => this.DataJson == "[]" || this.LabelsJson == "[]" || this.ColorsJson == "[]";
     }
 }

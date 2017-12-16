@@ -15,19 +15,37 @@
                     <input asp-for="Amount" class="form-control" />
                     <span asp-validation-for="Amount" class="text-danger"></span>
                 </div>
-                <div class="form-group">
-                    <label asp-for="Categories"></label>
-                    <select asp-for="CategoryId" asp-items="Model.Categories" class="form-control">
-                        <option>Please category</option>
-                    </select>
-                    <span asp-validation-for="CategoryId" class="text-danger"></span>
+                <div class="row">
+                    <div class="col-md-6 col-xs-6 pull-bottom">
+                        <div class="form-group">
+                            <label asp-for="CategoriesViewModel"></label>
+                            <select asp-for="CategoriesViewModel.CategoryId" asp-items="Model.CategoriesViewModel.Categories" class="form-control">
+                                <option>Please select category</option>
+                            </select>
+                            <span asp-validation-for="CategoriesViewModel.CategoryId" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-xs-2 pull-bottom padding-bottom-15" data-toggle="tooltip" title="Remove category">
+                        <a class="btn btn-danger"
+                           data-toggle="modal"
+                           data-target="#@HtmlId.RemoveCategoryPopup.ToHtmlString()">
+                            <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                    <div class="col-md-2 col-xs-2 pull-bottom padding-bottom-15" data-toggle="tooltip" title="Add new category">
+                        <a data-toggle="modal"
+                           data-target="#@HtmlId.AddCategoryPopup.ToHtmlString()"
+                           class="btn btn-success">
+                            <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                        </a>
+                    </div>
                 </div>
+
                 <div class="form-group">
                     <label asp-for="Description"></label>
                     <input asp-for="Description" class="form-control" />
                     <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
-                <input asp-for="UserId" class="form-control" />
                 <input asp-for="TransactionType" class="form-control" />
 
                 <button type="submit" class="btn btn-default">Submit</button>
@@ -35,3 +53,6 @@
         </div>
     </div>
 </div>
+
+@Html.Partial("_AddCategoryPopupPartial", Model.AddCategoryViewModel)
+@Html.Partial("_RemoveCategoryPopupPartial", Model.CategoriesViewModel)

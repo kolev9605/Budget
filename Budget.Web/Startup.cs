@@ -44,12 +44,12 @@
                 .AddEntityFrameworkStores<BudgetDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddSingleton<IColorGenerator, ColorGenerator>();
+            services.AddTransient<IColorGenerator, ColorGenerator>();
             services.AddAutoMapper();
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
-            services.AddScoped<ICategoryService, CategoryService>();
+            services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<ITransactionService, TransactionService>();
             services.AddTransient<IUserCategoryService, UserCategoryService>();
 
@@ -83,7 +83,7 @@
             {
                 routes.MapRoute(
                     name: "area",
-                    template: "{area:exists=public}/{controller=Home}/{action=Index}/{id?}");
+                    template: "{area:exists=Public}/{controller=Home}/{action=Index}/{id?}");
 
                 routes.MapRoute(
                     name: "default",

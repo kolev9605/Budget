@@ -1,11 +1,13 @@
-﻿@model ChartViewModel
-
+﻿@model TransactionsViewModel
+@{
+    ViewData["Title"] = "Transaction";
+}
 <div class="container-fluid">
     <div class="row padding-top-20">
         <div class="col-md-6 col-md-offset-3 col-xs-10 col-xs-offset-1">
-            @if (Model.IsEmpty)
+            @if (Model.ChartViewModel.IsCurrentChartEmpty)
             {
-                <h2>You dont have any transactions yet. Add some! :)</h2>
+                <h2>You dont have any @Model.Type.ToString()s yet. Add some! :)</h2>
             }
             else
             {
@@ -13,27 +15,52 @@
             }
         </div>
     </div>
-    <div class="row padding-top-20">
+
+    @if (Model.HasTransactionDataViewModel)
+    {
+        <div class="row padding-top-20">
+            <div class="col-md-2 col-md-offset-5">
+                <a data-toggle="modal"
+                    data-target="#@HtmlId.TransactionDetailsPopup.ToHtmlString()"
+                    class="btn btn-default center-block">Details</a>
+            </div>
+        </div>
+    }    
+
+    @if (Model.HasTransaction)
+    {
+    <div class="row padding-top-10">
         <div class="col-md-2 col-md-offset-5">
             <a asp-controller="Transaction"
                asp-action="Index"
                asp-route-type="@Model.OpositeType"
-               class="btn btn-info center-block background-color-blue">@Model.ChangeChartStatusButtonLabel</a>
+               class="btn btn-info center-block">@Model.ChangeChartStatusButtonLabel</a>
         </div>
     </div>
+    }
+
     <div class="row padding-top-10">
-        <div class="col-md-3 col-md-offset-3">
+        <div class="col-xs-6 col-md-3 col-md-offset-3">
             <a asp-controller="Transaction"
                asp-action="AddTransaction"
                asp-route-type="@TransactionType.Income"
-               class="btn btn-success center-block background-color-blue">Add Income</a>
+               class="btn btn-success center-block">Add Income</a>
         </div>
-        <div class="col-md-3">
+        <div class="col-xs-6  col-md-3">
             <a asp-controller="Transaction"
                asp-action="AddTransaction"
                asp-route-type="@TransactionType.Expense"
-               class="btn btn-danger center-block background-color-blue">Add Expense</a>
+               class="btn btn-danger center-block">Add Expense</a>
         </div>
     </div>
 </div>
-@Html.Partial("_ChartPartial", Model)
+
+@if (!Model.ChartViewModel.IsCurrentChartEmpty)
+{
+    @Html.Partial("_ChartPartial", Model.ChartViewModel)
+}
+
+@if(Model.HasTransactionDataViewModel)
+{
+    @Html.Partial("_TransactionsDetailsPopupPartial", Model.TransactionDataViewModel)
+}

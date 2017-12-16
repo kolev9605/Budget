@@ -7,6 +7,7 @@
     using Budget.Web.Areas.User.ViewModels;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Newtonsoft.Json;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -28,19 +29,32 @@
         private void MapViewModels()
         {
             this.CreateMap<IEnumerable<UserCategoryServiceModel>, AddTransactionViewModel>()
+                .ForMember(c => c.TransactionType, cfg => cfg.MapFrom(x => x.Select(uc => uc.TransactionType).Distinct().First()));
+
+            this.CreateMap<IEnumerable<UserCategoryServiceModel>, CategoriesViewModel>()
                 .ForMember(
                     c => c.Categories,
                     cfg => cfg.MapFrom(c => c.Select(x => new SelectListItem
                     {
                         Text = x.Name,
                         Value = x.Id.ToString()
-                    })))
-                .ForMember(c => c.UserId, cfg => cfg.MapFrom(x => x.Select(uc => uc.UserId).Distinct().First()))
-                .ForMember(c => c.TransactionType, cfg => cfg.MapFrom(x => x.Select(uc => uc.TransactionType).Distinct().First()));
+                    })));
+
+            this.CreateMap<IEnumerable<TransactionType>, AddCategoryViewModel>()
+                .ForMember(c => c.TransactionTypes,
+                    cfg => cfg.MapFrom(c => c.Select(x => new SelectListItem
+                    {
+                        Text = Enum.GetName(typeof(TransactionType), x),
+                        Value = ((int)x).ToString()
+                    })));
+
+            this.CreateMap<IEnumerable<TransactionServiceModel>, TransactionsViewModel>()
+                .ForMember(c => c.OpositeType, cfg => cfg.MapFrom(
+                    cc => cc.FirstOrDefault().Category.TransactionType == TransactionType.Expense ? TransactionType.Income : TransactionType.Expense));
+
+            this.CreateMap<TransactionServiceModel, TransactionDataViewModel>();                
 
             this.CreateMap<IEnumerable<TransactionServiceModel>, ChartViewModel>()
-                .ForMember(c => c.OpositeType, cfg => cfg.MapFrom(
-                    cc => cc.FirstOrDefault().Category.TransactionType == TransactionType.Expense ? TransactionType.Income : TransactionType.Expense))
                 .ForMember(c => c.DataJson, cfg => cfg.MapFrom(cc => JsonConvert.SerializeObject(cc
                     .GroupBy(t => t.Category.Id)
                     .Select(t => new TransactionServiceModel
@@ -73,7 +87,8 @@
                         User = t.First().User,
                         Amount = t.Sum(tt => tt.Amount)
                     })
-                    .Select(c => c.Category.RgbColorValue))));
+                    .Select(c => c.Category.RgbColorValue))))
+                .ForMember(c => c.IsCurrentChartEmpty, cfg => cfg.MapFrom(c => c.Any()));
         }
     }
 }
