@@ -3,6 +3,7 @@
     using Budget.Data.Models;
     using Budget.Services.Contracts;
     using Budget.Web.Areas.Public.Controllers;
+    using Budget.Web.Infrastructure.Extensions;
     using Budget.Web.Models.AccountViewModels;
     using Budget.Web.Services;
     using Microsoft.AspNetCore.Authentication;

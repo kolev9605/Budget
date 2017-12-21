@@ -19,5 +19,7 @@
         public TransactionType OpositeType { get; set; }
 
         public string ChangeChartStatusButtonLabel => $"Show {OpositeType}s";
+
+        public decimal Balance { get; set; }
     }
 }

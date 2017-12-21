@@ -7,10 +7,10 @@
 
     public interface ITransactionService
     {
-        Task<IEnumerable<TransactionServiceModel>> GetAllByUserIdAndTypeAsync(string userId, TransactionType type);
+        Task<IEnumerable<TransactionServiceModel>> GetAllByUserIdAsync(string userId);
 
-        Task<bool> AddTransactionAsync(decimal amount, string userId, int categoryId, string description);
+        Task<bool> AddTransactionAsync(decimal amount, string userId, int categoryId, string description, TransactionType type);
 
-        Task<bool> HasTransactionsAsync(string userId);
+        Task<bool> DeleteTransactionAsync(int transactionId);
     }
 }

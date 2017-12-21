@@ -2,6 +2,7 @@
 {
     using Budget.Data;
     using Budget.Data.Models;
+    using Budget.Web.Infrastructure.Extensions;
     using Budget.Web.Models.ManageViewModels;
     using Budget.Web.Services;
     using Microsoft.AspNetCore.Authentication;

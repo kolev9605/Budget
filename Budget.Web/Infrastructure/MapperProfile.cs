@@ -28,9 +28,6 @@
 
         private void MapViewModels()
         {
-            this.CreateMap<IEnumerable<UserCategoryServiceModel>, AddTransactionViewModel>()
-                .ForMember(c => c.TransactionType, cfg => cfg.MapFrom(x => x.Select(uc => uc.TransactionType).Distinct().First()));
-
             this.CreateMap<IEnumerable<UserCategoryServiceModel>, CategoriesViewModel>()
                 .ForMember(
                     c => c.Categories,
@@ -48,9 +45,13 @@
                         Value = ((int)x).ToString()
                     })));
 
+
+
             this.CreateMap<IEnumerable<TransactionServiceModel>, TransactionsViewModel>()
-                .ForMember(c => c.OpositeType, cfg => cfg.MapFrom(
-                    cc => cc.FirstOrDefault().Category.TransactionType == TransactionType.Expense ? TransactionType.Income : TransactionType.Expense));
+                .ForMember(c => c.Balance, cfg => cfg.MapFrom(
+                    cc => cc.FirstOrDefault().User.Balance))
+                .ForMember(c => c.HasTransaction, cfg => cfg.MapFrom(
+                    cc => cc.Any()));
 
             this.CreateMap<TransactionServiceModel, TransactionDataViewModel>();                
 

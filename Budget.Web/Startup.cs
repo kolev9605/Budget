@@ -6,16 +6,19 @@
     using Budget.Data.Models.Enums;
     using Budget.Services;
     using Budget.Services.Contracts;
-    using Budget.Web.Common.ColorGenerator;
+    using Budget.Web.Infrastructure.ColorGenerator;
     using Budget.Web.Services;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Localization;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Razor;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using System.Collections.Generic;
+    using System.Globalization;
 
     public class Startup
     {
@@ -52,11 +55,20 @@
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<ITransactionService, TransactionService>();
             services.AddTransient<IUserCategoryService, UserCategoryService>();
+            services.AddTransient<IUserService, UserService>();
 
-            services.AddMvc(options =>
-            {
-                options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
-            });
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+            services
+                .AddMvc(options =>
+                {
+                    options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+                })
+                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+                .AddDataAnnotationsLocalization(options => {
+                    options.DataAnnotationLocalizerProvider = (type, factory) =>
+                        factory.Create(typeof(SharedResources));
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -74,11 +86,21 @@
             }
 
             app.UseSession();
-
             app.UseStaticFiles();
-
             app.UseAuthentication();
 
+            IList<CultureInfo> supportedCultures = new List<CultureInfo>
+            {
+                new CultureInfo("en-US"),
+                new CultureInfo("bg-BG"),
+            };
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture("en-US"),
+                SupportedCultures = supportedCultures,
+                SupportedUICultures = supportedCultures
+            });
+            
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

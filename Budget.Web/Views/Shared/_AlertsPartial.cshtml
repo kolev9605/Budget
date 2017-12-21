@@ -1,9 +1,11 @@
-﻿@if (TempData[GlobalConstants.SuccessMessageKey] != null)
+﻿@inject IHtmlLocalizer<SharedResources> Resources
+
+@if (TempData[GlobalConstants.SuccessMessageKey] != null)
 {
     <div class="center-block padding-top-10">
         <div class="alert alert-success alert-dismissable fade in">
             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            <strong>Success!</strong> @TempData[GlobalConstants.SuccessMessageKey]
+            <strong>@Resources["Success"]!</strong> @TempData[GlobalConstants.SuccessMessageKey]
         </div>
     </div>
 }
@@ -13,7 +15,7 @@
     <div class="center-block padding-top-10">
         <div class="alert alert-info alert-dismissable fade in">
             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            <strong>Info!</strong> @TempData[GlobalConstants.InfoMessageKey]
+            <strong>@Resources["Info"]!</strong> @TempData[GlobalConstants.InfoMessageKey]
         </div>
     </div>
 }
@@ -23,7 +25,7 @@
     <div class="center-block padding-top-10">
         <div class="alert alert-warning alert-dismissable fade in">
             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            <strong>Warning!</strong> @TempData[GlobalConstants.WarningMessageKey]
+            <strong>@Resources["Warning"]!</strong> @TempData[GlobalConstants.WarningMessageKey]
         </div>
     </div>
 }
@@ -33,7 +35,7 @@
     <div class="center-block padding-top-10">
         <div class="alert alert-danger alert-dismissable fade in">
             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            <strong>Danger!</strong> @TempData[GlobalConstants.DangerMessageKey]
+            <strong>@Resources["Danger"]!</strong> @TempData[GlobalConstants.DangerMessageKey]
         </div>
     </div>
 }

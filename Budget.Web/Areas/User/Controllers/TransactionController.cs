@@ -1,19 +1,16 @@
 ﻿namespace Budget.Web.Areas.User.Controllers
 {
     using AutoMapper;
-    using AutoMapper.QueryableExtensions;
-    using Budget.Data.Models;
     using Budget.Data.Models.Enums;
     using Budget.Services.Contracts;
     using Budget.Web.Areas.User.ViewModels;
-    using Budget.Web.Common;
-    using Budget.Web.Common.ColorGenerator;
-    using Budget.Web.Extensions.MvcExtensions;
+    using Budget.Web.Infrastructure;
+    using Budget.Web.Infrastructure.ColorGenerator;
+    using Budget.Web.Infrastructure.Extensions;
     using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Localization;
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -23,36 +20,42 @@
     {
         private readonly ICategoryService categoryService;
         private readonly ITransactionService transactionService;
-        private readonly UserManager<User> userManager;
         private readonly IMapper mapper;
         private readonly IColorGenerator colorGenerator;
+        private readonly IUserService userService;
+        private readonly IStringLocalizer<SharedResources> stringLocalizer;
 
         public TransactionController(
             ICategoryService categoryService,
             ITransactionService transactionService,
-            UserManager<User> userManager,
             IMapper mapper,
-            IColorGenerator colorGenerator
+            IColorGenerator colorGenerator,
+            IUserService userService,
+            IStringLocalizer<SharedResources> stringLocalizer
             )
         {
             this.categoryService = categoryService;
             this.transactionService = transactionService;
-            this.userManager = userManager;
             this.mapper = mapper;
             this.colorGenerator = colorGenerator;
+            this.userService = userService;
+            this.stringLocalizer = stringLocalizer;
         }
 
         public async Task<IActionResult> Index(TransactionType type = TransactionType.Expense)
         {
             var loggedUserId = this.User.GetUserId();
-            var transactions = await this.transactionService
-                .GetAllByUserIdAndTypeAsync(loggedUserId, type);
+            var userTransactions = await this.transactionService
+                .GetAllByUserIdAsync(loggedUserId);
 
-            TransactionsViewModel transactionsViewModel = this.mapper.Map<TransactionsViewModel>(transactions);
-            transactionsViewModel.ChartViewModel = mapper.Map<ChartViewModel>(transactions);
-            transactionsViewModel.TransactionDataViewModel = transactions.Select(t => mapper.Map<TransactionDataViewModel>(t));
-            transactionsViewModel.HasTransaction = await this.transactionService.HasTransactionsAsync(loggedUserId);
+            var transactionsByType = userTransactions.Where(t => t.Category.TransactionType == type);
+
+            TransactionsViewModel transactionsViewModel = this.mapper.Map<TransactionsViewModel>(userTransactions);
+            transactionsViewModel.ChartViewModel = mapper.Map<ChartViewModel>(transactionsByType);
+            transactionsViewModel.TransactionDataViewModel = transactionsByType.Select(t => mapper.Map<TransactionDataViewModel>(t));
             transactionsViewModel.Type = type;
+            transactionsViewModel.OpositeType = type.GetOpositeTransactionType();
+            transactionsViewModel.Balance = await this.userService.GetUserBalanceAsync(loggedUserId);
 
             return View(transactionsViewModel);
         }
@@ -60,7 +63,8 @@
         public async Task<IActionResult> AddTransaction(TransactionType type)
         {
             var categories = await this.categoryService.GetAllUserCategoriesByTypeAsync(this.User.GetUserId(), type);
-            var addTransactionViewModel = this.mapper.Map<AddTransactionViewModel>(categories);
+            var addTransactionViewModel = new AddTransactionViewModel();
+            addTransactionViewModel.TransactionType = type;
             addTransactionViewModel.CategoriesViewModel = this.mapper.Map<CategoriesViewModel>(categories);
             addTransactionViewModel.AddCategoryViewModel = this.mapper.Map<AddCategoryViewModel>((TransactionType[])Enum.GetValues(typeof(TransactionType)));
 
@@ -80,15 +84,30 @@
                 return View(addTransactionViewModel);
             }
 
-            await this.transactionService.AddTransactionAsync(addTransactionViewModel.Amount, loggedUserId, addTransactionViewModel.CategoriesViewModel.CategoryId, addTransactionViewModel.Description);
-
-            TempData[GlobalConstants.SuccessMessageKey] = GlobalConstants.TransactionAddedSuccessfully;
+            await this.transactionService.AddTransactionAsync(addTransactionViewModel.Amount, 
+                                                                loggedUserId, 
+                                                                addTransactionViewModel.CategoriesViewModel.CategoryId, 
+                                                                addTransactionViewModel.Description,
+                                                                addTransactionViewModel.TransactionType);
+            
+            TempData[GlobalConstants.SuccessMessageKey] = this.stringLocalizer["TransactionAddedSuccessfully"].Value;
             return RedirectToAction(nameof(Index), new { type = addTransactionViewModel.TransactionType });
         }
 
-        public async Task<IActionResult> DeleteTransaction()
+        public async Task<IActionResult> DeleteTransaction(int id, int categoryId)
         {
-            return NotFound();
+            bool successful = await this.transactionService.DeleteTransactionAsync(id);
+            if (successful)
+            {
+                TempData[GlobalConstants.SuccessMessageKey] = this.stringLocalizer["TransactionDeletedSuccessfully"].Value;
+            }
+            else
+            {
+                TempData[GlobalConstants.WarningMessageKey] = this.stringLocalizer["TransactionDeletedUnsuccessfully"].Value;
+            }
+
+            TransactionType type = await this.categoryService.GetTransactionTypeByCategoryIdAsync(categoryId);
+            return RedirectToAction(nameof(Index), new { type = type });
         }
     }
 }

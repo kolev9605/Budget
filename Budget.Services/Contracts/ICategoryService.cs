@@ -6,9 +6,7 @@
     using System.Threading.Tasks;
 
     public interface ICategoryService
-    { 
-        Task<IEnumerable<CategoryServiceModel>> GetAllPrimaryAsync();
-
+    {
         Task<IEnumerable<UserCategoryServiceModel>> GetAllUserCategoriesByTypeAsync(string userId, TransactionType transactionType);
 
         Task<TransactionType> GetTransactionTypeByCategoryIdAsync(int categoryId);

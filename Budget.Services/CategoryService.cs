@@ -22,16 +22,6 @@
             this.context = context;
         }
 
-        public async Task<IEnumerable<CategoryServiceModel>> GetAllPrimaryAsync()
-        {
-            var primaryCategories = await context.Categories
-                .Where(c => c.IsPrimary)
-                .ProjectTo<CategoryServiceModel>()
-                .ToListAsync();
-
-            return primaryCategories;
-        }
-
         public async Task<IEnumerable<UserCategoryServiceModel>> GetAllUserCategoriesByTypeAsync(string userId, TransactionType transactionType)
         {
             var userCategoriesIds = this.context.UserCategories
@@ -106,7 +96,7 @@
                 throw new InvalidOperationException($"User category for user with id: {userId} and category with id: {categoryId} does not exist.");
             }
 
-            if (this.context.Transactions.Any(t => t.CategoryId == userCategory.CategoryId))
+            if (this.context.Transactions.Any(t => t.CategoryId == userCategory.CategoryId && t.UserId == userId))
             {
                 return false;
             }
