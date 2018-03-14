@@ -69,6 +69,11 @@
                     options.DataAnnotationLocalizerProvider = (type, factory) =>
                         factory.Create(typeof(SharedResources));
                 });
+
+            services.Configure<RazorViewEngineOptions>(o =>
+            {
+                o.AreaViewLocationFormats.Add("/Areas/Public/Views/Shared/{0}" + RazorViewEngine.ViewExtension);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

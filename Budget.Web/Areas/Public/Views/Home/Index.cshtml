@@ -12,8 +12,8 @@
                 <h2><strong>Budget</strong></h2>
                 <p>@Resources["HpSubtitle"]</p>
                 <div>
-                    <a asp-controller="Account" asp-action="Register" class="btn btn-success btn-lg">@Resources["Register"]</a>
-                    <span>@Resources["Or"] <a asp-controller="Account" asp-action="Login">@Resources["Login"]</a> @Resources["IfYouHaveRegisteredAlready"]</span>
+                    <a asp-area="User" asp-controller="Account" asp-action="Register" class="btn btn-success btn-lg">@Resources["Register"]</a>
+                    <span>@Resources["Or"] <a asp-area="User" asp-controller="Account" asp-action="Login">@Resources["Login"]</a> @Resources["IfYouHaveRegisteredAlready"]</span>
                 </div>
             </div>
         </div>

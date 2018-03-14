@@ -8,6 +8,7 @@
     using Budget.Web.Infrastructure.ColorGenerator;
     using Budget.Web.Infrastructure.Extensions;
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Localization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Localization;
     using System;
@@ -44,6 +45,9 @@
 
         public async Task<IActionResult> Index(TransactionType type = TransactionType.Expense)
         {
+            var cookie = Request.Cookies.FirstOrDefault(x => x.Key == CookieRequestCultureProvider.DefaultCookieName);
+            var currentCulture = CookieRequestCultureProvider.ParseCookieValue(cookie.Value);
+
             var loggedUserId = this.User.GetUserId();
             var userTransactions = await this.transactionService
                 .GetAllByUserIdAsync(loggedUserId);

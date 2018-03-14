@@ -13,6 +13,7 @@
                     <table class="table table-hover table-striped">
                         <thead>
                             <tr>
+                                <th></th>
                                 <th>@Resources["Date"]</th>
                                 <th>@Resources["Amount"]</th>
                                 <th>@Resources["CategoryName"]</th>
@@ -23,18 +24,20 @@
                             @foreach(var transactionData in Model)
                             {
                                 <tr>
-                                    <td>@transactionData.Date.ToLocalTime().ToString()</td>
-                                    <td>@transactionData.Amount</td>
-                                    <td>@transactionData.CategoryName</td>
-                                    <td>@transactionData.Description</td>
                                     <td>
                                         <a asp-controller="Transaction"
                                            asp-action="DeleteTransaction"
                                            asp-route-id="@transactionData.Id"
-                                           asp-route-categoryId="@transactionData.CategoryId">
+                                           asp-route-categoryId="@transactionData.CategoryId"
+                                           data-toggle="tooltip"
+                                           title="@Resources["RemoveTransaction"]">
                                             <i class="fa fa-times" aria-hidden="true"></i>
                                         </a>
                                     </td>
+                                    <td>@transactionData.Date.ToLocalTime().ToString()</td>
+                                    <td>@transactionData.Amount</td>
+                                    <td>@transactionData.CategoryName</td>
+                                    <td>@transactionData.Description</td>
                                 </tr>
                             }
                         </tbody>

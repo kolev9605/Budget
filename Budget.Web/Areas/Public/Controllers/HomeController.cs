@@ -8,6 +8,7 @@
     using Microsoft.Extensions.Localization;
     using System;
     using System.Diagnostics;
+    using System.Linq;
 
     [Area("Public")]
     public class HomeController : Controller
