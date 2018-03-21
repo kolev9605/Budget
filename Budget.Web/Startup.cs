@@ -65,10 +65,12 @@
                     options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
                 })
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
-                .AddDataAnnotationsLocalization(options => {
+                .AddDataAnnotationsLocalization(options =>
+                {
                     options.DataAnnotationLocalizerProvider = (type, factory) =>
                         factory.Create(typeof(SharedResources));
-                });
+                })
+                ;
 
             services.Configure<RazorViewEngineOptions>(o =>
             {
@@ -105,7 +107,7 @@
                 SupportedCultures = supportedCultures,
                 SupportedUICultures = supportedCultures
             });
-            
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

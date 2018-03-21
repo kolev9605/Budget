@@ -45,9 +45,6 @@
 
         public async Task<IActionResult> Index(TransactionType type = TransactionType.Expense)
         {
-            var cookie = Request.Cookies.FirstOrDefault(x => x.Key == CookieRequestCultureProvider.DefaultCookieName);
-            var currentCulture = CookieRequestCultureProvider.ParseCookieValue(cookie.Value);
-
             var loggedUserId = this.User.GetUserId();
             var userTransactions = await this.transactionService
                 .GetAllByUserIdAsync(loggedUserId);

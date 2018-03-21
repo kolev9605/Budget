@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budget.Data", "Budget.Data\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budget.Services", "Budget.Services\Budget.Services.csproj", "{1F268A19-CAE9-42F3-A99B-61B7BD9AE351}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Budget.Tests", "Budget.Tests\Budget.Tests.csproj", "{29A4B931-6B15-4817-881D-20714524CCB5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budget.Tests", "Budget.Tests\Budget.Tests.csproj", "{29A4B931-6B15-4817-881D-20714524CCB5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Budget.Api", "Budget.Api\Budget.Api.csproj", "{CC7FA903-F094-4F18-8357-4132DB40A651}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{29A4B931-6B15-4817-881D-20714524CCB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{29A4B931-6B15-4817-881D-20714524CCB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{29A4B931-6B15-4817-881D-20714524CCB5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC7FA903-F094-4F18-8357-4132DB40A651}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC7FA903-F094-4F18-8357-4132DB40A651}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC7FA903-F094-4F18-8357-4132DB40A651}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC7FA903-F094-4F18-8357-4132DB40A651}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
