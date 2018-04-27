@@ -1,7 +1,9 @@
 ﻿namespace Budget.Api
 {
+    using AutoMapper;
     using Budget.Data;
     using Budget.Data.Models;
+    using Budget.Infrastructure;
     using Budget.Services;
     using Budget.Services.Contracts;
     using Microsoft.AspNetCore.Builder;
@@ -11,6 +13,7 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using System.Reflection;
 
     public class Startup
     {
@@ -40,6 +43,7 @@
                 .AddEntityFrameworkStores<BudgetDbContext>()
                 .AddDefaultTokenProviders();
 
+
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<ITransactionService, TransactionService>();
             services.AddTransient<IUserCategoryService, UserCategoryService>();
@@ -49,6 +53,8 @@
             {
                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
             });
+
+            services.AddAutoMapper(typeof(MapperProfile).GetTypeInfo().Assembly);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,7 +72,6 @@
             app.UseCors(
                 options => options.WithOrigins("http://localhost:3000/").AllowAnyMethod()
             );
-
 
             app.UseMvc();
         }

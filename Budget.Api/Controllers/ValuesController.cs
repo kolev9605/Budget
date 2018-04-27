@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Identity;
 using Budget.Data.Models;
 using System.Threading.Tasks;
 using Budget.Services.Contracts;
+using Budget.Services.Models;
+using AutoMapper;
 
 namespace Budget.Api.Controllers
 {
@@ -12,20 +14,22 @@ namespace Budget.Api.Controllers
     {
         private readonly UserManager<User> userManager;
         private readonly ICategoryService categoryService;
+        private readonly IMapper mapper;
 
-        public ValuesController(UserManager<User> userManager, ICategoryService categoryService)
+        public ValuesController(UserManager<User> userManager, ICategoryService categoryService, IMapper mapper)
         {
             this.userManager = userManager;
             this.categoryService = categoryService;
+            this.mapper = mapper;
         }
 
         // GET api/values
         [HttpGet]
-        public async Task<IEnumerable<string>> Get()
+        public async Task<IEnumerable<CategoryInfoServiceModel>> Get()
         {
-            var colors = this.categoryService.GetAllCategoryColors();
+            var categories = await this.categoryService.GetAllCategoriesInfo();
 
-            return colors;
+            return categories;
         }
 
         // GET api/values/5

@@ -16,8 +16,7 @@
     {
         private readonly BudgetDbContext context;
 
-        public CategoryService(
-            BudgetDbContext context)
+        public CategoryService(BudgetDbContext context)
         {
             this.context = context;
         }
@@ -108,5 +107,14 @@
         }
 
         public IEnumerable<string> GetAllCategoryColors() => this.context.Categories.Select(c => c.RgbColorValue);
+
+        public async Task<IEnumerable<CategoryInfoServiceModel>> GetAllCategoriesInfo()
+        {
+            return await this.context.Categories
+                .ProjectTo<CategoryInfoServiceModel>()
+                .ToListAsync();
+        }
+
+
     }
 }

@@ -18,5 +18,7 @@
         Task<bool> DeleteUserCategoryAsync(int categoryId, string userId);
 
         IEnumerable<string> GetAllCategoryColors();
+
+        Task<IEnumerable<CategoryInfoServiceModel>> GetAllCategoriesInfo();
     }
 }
