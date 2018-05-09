@@ -9,7 +9,7 @@
 
         public string LastName { get; set; }
 
-        public decimal Balance { get; set; }
+        public decimal? Balance { get; set; }
 
         public List<Transaction> Transactions { get; set; } = new List<Transaction>();
 

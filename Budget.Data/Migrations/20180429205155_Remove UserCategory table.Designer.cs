@@ -12,9 +12,10 @@ using System;
 namespace Budget.Data.Migrations
 {
     [DbContext(typeof(BudgetDbContext))]
-    partial class BudgetDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180429205155_Remove UserCategory table")]
+    partial class RemoveUserCategorytable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,7 +35,11 @@ namespace Budget.Data.Migrations
 
                     b.Property<int>("TransactionType");
 
+                    b.Property<string>("UserId");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Categories");
                 });
@@ -52,8 +57,7 @@ namespace Budget.Data.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<string>("UserId")
-                        .IsRequired();
+                    b.Property<string>("UserId");
 
                     b.HasKey("Id");
 
@@ -71,7 +75,7 @@ namespace Budget.Data.Migrations
 
                     b.Property<int>("AccessFailedCount");
 
-                    b.Property<decimal?>("Balance");
+                    b.Property<decimal>("Balance");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
@@ -119,19 +123,6 @@ namespace Budget.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
-                });
-
-            modelBuilder.Entity("Budget.Data.Models.UserCategory", b =>
-                {
-                    b.Property<string>("UserId");
-
-                    b.Property<int>("CategoryId");
-
-                    b.HasKey("UserId", "CategoryId");
-
-                    b.HasIndex("CategoryId");
-
-                    b.ToTable("UserCategories");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -242,6 +233,13 @@ namespace Budget.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("Budget.Data.Models.Category", b =>
+                {
+                    b.HasOne("Budget.Data.Models.User", "User")
+                        .WithMany("Categories")
+                        .HasForeignKey("UserId");
+                });
+
             modelBuilder.Entity("Budget.Data.Models.Transaction", b =>
                 {
                     b.HasOne("Budget.Data.Models.Category", "Category")
@@ -251,21 +249,7 @@ namespace Budget.Data.Migrations
 
                     b.HasOne("Budget.Data.Models.User", "User")
                         .WithMany("Transactions")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Budget.Data.Models.UserCategory", b =>
-                {
-                    b.HasOne("Budget.Data.Models.Category", "Category")
-                        .WithMany("UserCategories")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Budget.Data.Models.User", "User")
-                        .WithMany("UserCategories")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

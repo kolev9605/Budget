@@ -46,7 +46,6 @@
 
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<ITransactionService, TransactionService>();
-            services.AddTransient<IUserCategoryService, UserCategoryService>();
             services.AddTransient<IUserService, UserService>();
 
             services.AddMvc(options =>

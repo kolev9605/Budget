@@ -9,8 +9,6 @@
         public MapperProfile()
         {
             this.CreateMap<Transaction, TransactionServiceModel>();
-            this.CreateMap<Category, CategoryServiceModel>();
-            this.CreateMap<Category, UserCategoryServiceModel>();
             this.CreateMap<Category, CategoryInfoServiceModel>();
         }
     }

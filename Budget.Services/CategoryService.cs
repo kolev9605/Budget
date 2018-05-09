@@ -6,6 +6,7 @@
     using Budget.Services.Models;
     using Contracts;
     using Data;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
@@ -15,25 +16,21 @@
     public class CategoryService : ICategoryService
     {
         private readonly BudgetDbContext context;
+        private readonly UserManager<User> userManager;
 
-        public CategoryService(BudgetDbContext context)
+        public CategoryService(BudgetDbContext context, UserManager<User> userManager)
         {
             this.context = context;
+            this.userManager = userManager;
         }
 
-        public async Task<IEnumerable<UserCategoryServiceModel>> GetAllUserCategoriesByTypeAsync(string userId, TransactionType transactionType)
+        public async Task<IEnumerable<CategoryInfoServiceModel>> GetAllUserCategoriesByTypeAsync(string userId, TransactionType transactionType)
         {
-            var userCategoriesIds = this.context.UserCategories
-                .Where(uc => uc.UserId == userId)
-                .Select(uc => uc.CategoryId);
-
-            var categories = await context.Categories
-                .Where(c => userCategoriesIds.Contains(c.Id))
-                .Where(c => c.TransactionType == transactionType)
-                .ProjectTo<UserCategoryServiceModel>()
+            var categories = await this.context.UserCategories
+                .Where(uc => uc.UserId == userId && uc.Category.TransactionType == transactionType)
+                .Select(uc => uc.Category)
+                .ProjectTo<CategoryInfoServiceModel>()
                 .ToListAsync();
-
-            categories.ForEach(c => c.UserId = userId);
 
             return categories;
         }
@@ -46,7 +43,7 @@
             return category.TransactionType;
         }
 
-        public async Task<int> AddOrGetCategoryAsync(string name, TransactionType type, string rgbColor)
+        public async Task<int> AddOrGetCategoryAsync(string name, TransactionType type, string rgbColor, string userId = null)
         {
             var existingCategory = this.context.Categories.FirstOrDefault(c => c.Name == name);
             if (existingCategory != null)
@@ -58,33 +55,30 @@
             {
                 Name = name,
                 TransactionType = type,
-                RgbColorValue = rgbColor,
-                IsPrimary = false
+                RgbColorValue = rgbColor
             };
 
             await this.context.Categories.AddAsync(category);
+
+            if (userId != null)
+            {
+                if (await this.userManager.FindByIdAsync(userId) == null)
+                {
+                    throw new ArgumentException($"User with id {userId} is not present in the database.", nameof(userId));
+                }
+
+                var userCategory = new UserCategory
+                {
+                    CategoryId = category.Id,
+                    UserId = userId
+                };
+
+                await this.context.UserCategories.AddAsync(userCategory);
+            }
+
             var result = await this.context.SaveChangesAsync();
 
             return category.Id;
-        }
-
-        public async Task<bool> AddUserCategoryAsync(int categoryId, string userId)
-        {
-            if (this.context.UserCategories.Where(uc => uc.UserId == userId && uc.CategoryId == categoryId).Any())
-            {
-                throw new InvalidOperationException($"User category for user with id: {userId} and category with id: {categoryId} already exist.");
-            }
-
-            var userCategory = new UserCategory
-            {
-                CategoryId = categoryId,
-                UserId = userId
-            };
-
-            await this.context.UserCategories.AddAsync(userCategory);
-            var result = await this.context.SaveChangesAsync();
-
-            return result > 0;
         }
 
         public async Task<bool> DeleteUserCategoryAsync(int categoryId, string userId)
@@ -106,8 +100,6 @@
             return result > 0;
         }
 
-        public IEnumerable<string> GetAllCategoryColors() => this.context.Categories.Select(c => c.RgbColorValue);
-
         public async Task<IEnumerable<CategoryInfoServiceModel>> GetAllCategoriesInfo()
         {
             return await this.context.Categories
@@ -115,6 +107,7 @@
                 .ToListAsync();
         }
 
-
+        public IEnumerable<string> GetAllCategoryColors()
+            => this.context.Categories.Select(c => c.RgbColorValue);
     }
 }

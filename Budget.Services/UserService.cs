@@ -20,7 +20,7 @@
             this.mapper = mapper;
         }
 
-        public async Task<decimal> GetUserBalanceAsync(string userId)
+        public async Task<decimal?> GetUserBalanceAsync(string userId)
         {
             var user = await this.context.Users.FirstOrDefaultAsync(u => u.Id == userId);
             if (user == null)

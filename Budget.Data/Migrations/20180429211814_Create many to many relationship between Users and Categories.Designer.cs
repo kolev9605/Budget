@@ -12,9 +12,10 @@ using System;
 namespace Budget.Data.Migrations
 {
     [DbContext(typeof(BudgetDbContext))]
-    partial class BudgetDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180429211814_Create many to many relationship between Users and Categories")]
+    partial class CreatemanytomanyrelationshipbetweenUsersandCategories
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -71,7 +72,7 @@ namespace Budget.Data.Migrations
 
                     b.Property<int>("AccessFailedCount");
 
-                    b.Property<decimal?>("Balance");
+                    b.Property<decimal>("Balance");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();

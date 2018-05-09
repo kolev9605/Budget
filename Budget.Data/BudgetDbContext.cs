@@ -29,9 +29,9 @@
                 .HasMany(c => c.Transactions)
                 .WithOne(t => t.Category)
                 .HasForeignKey(t => t.CategoryId);
-
+            
             builder.Entity<UserCategory>()
-                .HasKey(uc => new { uc.CategoryId, uc.UserId });
+                .HasKey(uc => new { uc.UserId, uc.CategoryId });
 
             builder.Entity<UserCategory>()
                 .HasOne(uc => uc.User)

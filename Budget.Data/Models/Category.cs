@@ -15,11 +15,9 @@
 
         public List<Transaction> Transactions { get; set; } = new List<Transaction>();
 
-        public List<UserCategory> UserCategories { get; set; } = new List<UserCategory>();
-
-        public bool IsPrimary { get; set; }
-
         [Required]
         public string RgbColorValue { get; set; }
+
+        public List<UserCategory> UserCategories { get; set; } = new List<UserCategory>();
     }
 }

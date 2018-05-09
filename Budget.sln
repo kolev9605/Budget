@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budget.Tests", "Budget.Test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budget.Api", "Budget.Api\Budget.Api.csproj", "{CC7FA903-F094-4F18-8357-4132DB40A651}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Budget.Infrastructure", "Budget.Infrastructure\Budget.Infrastructure.csproj", "{1701F3F7-4403-4921-901D-3543DE81C201}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budget.Infrastructure", "Budget.Infrastructure\Budget.Infrastructure.csproj", "{1701F3F7-4403-4921-901D-3543DE81C201}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
