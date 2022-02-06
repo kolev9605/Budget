@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Budget.Persistance
 {
-    public class BudgetDbContext : DbContext, IBudgetDbContext
+    public class BudgetDbContext : DbContext
     {
         public BudgetDbContext(DbContextOptions<BudgetDbContext> options)
             : base(options)
