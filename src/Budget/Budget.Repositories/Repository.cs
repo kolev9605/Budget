@@ -1,4 +1,6 @@
 ﻿using Budget.Core.Entities;
+using Budget.Core.Entities.Base;
+using Budget.Core.Interfaces;
 using Budget.Core.Interfaces.Repositories;
 using Budget.Persistance;
 using Microsoft.EntityFrameworkCore;
@@ -8,10 +10,12 @@ namespace Budget.Repositories
     public class Repository<T> : IRepository<T> where T : BaseEntity
     {
         private readonly BudgetDbContext _budgetDbContext;
+        private readonly IDateTimeProvider _dateTimeProvider;
 
-        public Repository(BudgetDbContext budgetDbContext)
+        public Repository(BudgetDbContext budgetDbContext, IDateTimeProvider dateTimeProvider)
         {
             _budgetDbContext = budgetDbContext;
+            _dateTimeProvider = dateTimeProvider;
         }
 
         public async Task<IEnumerable<T>> AllAsync()

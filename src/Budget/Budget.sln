@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Budget.Web", "Budget.Web\Budget.Web.csproj", "{5D5F5259-338E-42CC-9F34-A7E5D67579D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budget.Web", "Budget.Web\Budget.Web.csproj", "{5D5F5259-338E-42CC-9F34-A7E5D67579D7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{CDE3EC69-539B-4216-888E-76A470732AB6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Budget.Core", "Budget.Core\Budget.Core.csproj", "{BD38A62D-7A6C-4685-B0F1-0BC06932FA07}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budget.Core", "Budget.Core\Budget.Core.csproj", "{BD38A62D-7A6C-4685-B0F1-0BC06932FA07}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Budget.Infrastructure", "Budget.Infrastructure\Budget.Infrastructure.csproj", "{0CC194F3-A14A-4EF6-ACCA-D545E33C4703}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budget.Infrastructure", "Budget.Infrastructure\Budget.Infrastructure.csproj", "{0CC194F3-A14A-4EF6-ACCA-D545E33C4703}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Budget.Persistance", "Budget.Persistance\Budget.Persistance.csproj", "{0D589ECA-6F29-4578-A5DB-FAA93BC37FB1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budget.Persistance", "Budget.Persistance\Budget.Persistance.csproj", "{0D589ECA-6F29-4578-A5DB-FAA93BC37FB1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{47FF34F4-8A28-4308-8BA4-683BDA9EC76A}"
 EndProject
@@ -19,9 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{699EBCE7-73CD-41FB-B8CB-A19A736240BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Budget.Repositories", "Budget.Repositories\Budget.Repositories.csproj", "{9D3F1290-2B76-4242-AA03-018A533262B3}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Budget.Services", "Budget.Services\Budget.Services.csproj", "{7F54704B-53F4-4173-A008-35F8F898C8A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budget.Repositories", "Budget.Repositories\Budget.Repositories.csproj", "{9D3F1290-2B76-4242-AA03-018A533262B3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,10 +47,6 @@ Global
 		{9D3F1290-2B76-4242-AA03-018A533262B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9D3F1290-2B76-4242-AA03-018A533262B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9D3F1290-2B76-4242-AA03-018A533262B3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7F54704B-53F4-4173-A008-35F8F898C8A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7F54704B-53F4-4173-A008-35F8F898C8A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7F54704B-53F4-4173-A008-35F8F898C8A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7F54704B-53F4-4173-A008-35F8F898C8A3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -66,7 +60,6 @@ Global
 		{65EF2355-FC26-4DFA-89B6-2620C8854BD5} = {CDE3EC69-539B-4216-888E-76A470732AB6}
 		{699EBCE7-73CD-41FB-B8CB-A19A736240BB} = {CDE3EC69-539B-4216-888E-76A470732AB6}
 		{9D3F1290-2B76-4242-AA03-018A533262B3} = {65EF2355-FC26-4DFA-89B6-2620C8854BD5}
-		{7F54704B-53F4-4173-A008-35F8F898C8A3} = {65EF2355-FC26-4DFA-89B6-2620C8854BD5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {752CFA98-5041-464B-B90C-912FF9874173}
