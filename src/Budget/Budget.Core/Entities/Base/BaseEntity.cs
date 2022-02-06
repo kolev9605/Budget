@@ -1,4 +1,4 @@
-﻿namespace Budget.Core.Entities
+﻿namespace Budget.Core.Entities.Base
 {
     public class BaseEntity
     {

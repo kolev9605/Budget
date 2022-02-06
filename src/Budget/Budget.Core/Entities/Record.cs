@@ -1,4 +1,6 @@
-﻿namespace Budget.Core.Entities
+﻿using Budget.Core.Entities.Base;
+
+namespace Budget.Core.Entities
 {
     public class Record : BaseEntity
     {
