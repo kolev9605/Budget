@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Budget.Core\Budget.Core.csproj" />
+    <ProjectReference Include="..\Budget.Persistance\Budget.Persistance.csproj" />
+  </ItemGroup>
+
 </Project>
