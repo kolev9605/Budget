@@ -1,9 +1,7 @@
 ﻿namespace Budget.Core.Entities
 {
-    public class Record
+    public class Record : BaseEntity
     {
-        public int Id { get; set; }
-
         public string Description { get; set; }
     }
 }
