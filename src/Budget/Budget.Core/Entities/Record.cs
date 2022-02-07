@@ -4,6 +4,18 @@ namespace Budget.Core.Entities
 {
     public class Record : BaseEntity
     {
-        public string Description { get; set; }
+        public string Note { get; set; }
+
+        public DateTime DateAdded { get; set; }
+
+        public decimal Amount { get; set; }
+
+        public Currency Currency { get; set; }
+
+        public int CurrencyId { get; set; }
+
+        public PaymentType PaymentType { get; set; }
+
+        public int PaymentTypeId { get; set; }
     }
 }

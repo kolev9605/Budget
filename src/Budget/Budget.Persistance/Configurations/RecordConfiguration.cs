@@ -8,7 +8,7 @@ namespace Budget.Persistance.Configurations
     {
         public void Configure(EntityTypeBuilder<Record> builder)
         {
-            builder.Property(p => p.Description)
+            builder.Property(p => p.Note)
                 .HasMaxLength(100);
         }
     }
