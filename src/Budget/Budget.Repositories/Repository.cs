@@ -9,13 +9,11 @@ namespace Budget.Repositories
 {
     public class Repository<T> : IRepository<T> where T : BaseEntity
     {
-        private readonly BudgetDbContext _budgetDbContext;
-        private readonly IDateTimeProvider _dateTimeProvider;
+        protected readonly BudgetDbContext _budgetDbContext;
 
-        public Repository(BudgetDbContext budgetDbContext, IDateTimeProvider dateTimeProvider)
+        public Repository(BudgetDbContext budgetDbContext)
         {
             _budgetDbContext = budgetDbContext;
-            _dateTimeProvider = dateTimeProvider;
         }
 
         public async Task<IEnumerable<T>> AllAsync()

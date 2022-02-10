@@ -6,14 +6,14 @@ namespace Budget.Infrastructure.Services
 {
     public class RecordService : IRecordService
     {
-        private readonly IRepository<Record> _recordRepository;
+        private readonly IRecordRepository _recordRepository;
 
-        public RecordService(IRepository<Record> recordsRepository)
+        public RecordService(IRecordRepository recordsRepository)
         {
             _recordRepository = recordsRepository;
         }
 
-        public async Task<IEnumerable<Record>> GetAll()
-            => await _recordRepository.AllAsync();
+        public async Task<IEnumerable<Record>> GetAllAsync()
+            => await _recordRepository.GetAllWithCurrenciesAsync();
     }
 }

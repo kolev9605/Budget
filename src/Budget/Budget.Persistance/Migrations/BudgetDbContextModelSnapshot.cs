@@ -41,6 +41,26 @@ namespace Budget.Persistance.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Currencies");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Abbreviation = "BGN",
+                            Name = "Bulgarian lev"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Abbreviation = "EUR",
+                            Name = "European Euro"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Abbreviation = "USD",
+                            Name = "U.S. Dollar"
+                        });
                 });
 
             modelBuilder.Entity("Budget.Core.Entities.PaymentType", b =>
@@ -82,14 +102,9 @@ namespace Budget.Persistance.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("PaymentTypeId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CurrencyId");
-
-                    b.HasIndex("PaymentTypeId");
 
                     b.ToTable("Records");
                 });
@@ -102,15 +117,7 @@ namespace Budget.Persistance.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Budget.Core.Entities.PaymentType", "PaymentType")
-                        .WithMany()
-                        .HasForeignKey("PaymentTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Currency");
-
-                    b.Navigation("PaymentType");
                 });
 #pragma warning restore 612, 618
         }

@@ -12,6 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddPersistence(builder.Configuration);
 
 builder.Services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddTransient<IRecordRepository, RecordRepository>();
+
 builder.Services.AddTransient<IRecordService, RecordService>();
 builder.Services.AddTransient<IDateTimeProvider, DateTimeProvider>();
 

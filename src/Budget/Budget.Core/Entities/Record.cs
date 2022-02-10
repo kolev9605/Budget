@@ -13,9 +13,5 @@ namespace Budget.Core.Entities
         public Currency Currency { get; set; }
 
         public int CurrencyId { get; set; }
-
-        public PaymentType PaymentType { get; set; }
-
-        public int PaymentTypeId { get; set; }
     }
 }
