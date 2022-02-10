@@ -1,5 +1,5 @@
-﻿using Budget.Core.Entities;
-using Budget.Core.Interfaces.Services;
+﻿using Budget.Core.Interfaces.Services;
+using Budget.Core.Models.Records;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Budget.Web.Controllers
@@ -16,7 +16,7 @@ namespace Budget.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Record>> GetAll()
+        public async Task<IEnumerable<RecordDto>> GetAll()
         {
             var records = await _recordService.GetAllAsync();
             return records;

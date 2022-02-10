@@ -19,5 +19,14 @@ namespace Budget.Repositories
 
             return records;
         }
+
+        public async Task<Record> GetByIdWithCurrencyAsync(int id)
+        {
+            var record = await _budgetDbContext.Records
+                .Include(r => r.Currency)
+                .FirstOrDefaultAsync(r => r.Id == id);
+
+            return record;
+        }
     }
 }
