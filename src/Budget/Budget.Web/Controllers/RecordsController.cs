@@ -1,9 +1,11 @@
 ﻿using Budget.Core.Interfaces.Services;
 using Budget.Core.Models.Records;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Budget.Web.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("records")]
     public class RecordsController : ControllerBase
