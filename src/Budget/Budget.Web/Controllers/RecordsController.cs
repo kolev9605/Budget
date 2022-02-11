@@ -18,7 +18,7 @@ namespace Budget.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<RecordDto>> GetAll()
+        public async Task<IEnumerable<RecordModel>> GetAll()
         {
             var records = await _recordService.GetAllAsync();
             return records;

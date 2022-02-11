@@ -15,22 +15,22 @@ namespace Budget.Infrastructure.Services
             _recordRepository = recordsRepository;
         }
 
-        public async Task<IEnumerable<RecordDto>> GetAllAsync()
+        public async Task<IEnumerable<RecordModel>> GetAllAsync()
         {
             var records = await _recordRepository.GetAllWithCurrenciesAsync();
 
             var recordDtos = records
                 .ToList()
-                .Select(r => RecordDto.FromRecord(r));
+                .Select(r => RecordModel.FromRecord(r));
 
             return recordDtos;
         }
 
-        public async Task<RecordDto> GetByIdAsync(int id)
+        public async Task<RecordModel> GetByIdAsync(int id)
         {
             var recordEntity = await _recordRepository.GetByIdWithCurrencyAsync(id);
 
-            var recordDto = RecordDto.FromRecord(recordEntity);
+            var recordDto = RecordModel.FromRecord(recordEntity);
 
             return recordDto;
         }

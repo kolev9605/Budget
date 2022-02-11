@@ -3,7 +3,7 @@ using Budget.Core.Models.Currencies;
 
 namespace Budget.Core.Models.Records
 {
-    public class RecordDto
+    public class RecordModel
     {
         public int Id { get; set; }
 
@@ -13,15 +13,15 @@ namespace Budget.Core.Models.Records
 
         public decimal Amount { get; set; }
 
-        public CurrencyDto Currency { get; set; }
+        public CurrencyModel Currency { get; set; }
 
-        public static RecordDto FromRecord(Record record)
+        public static RecordModel FromRecord(Record record)
         {
-            return new RecordDto
+            return new RecordModel
             {
                 Id = record.Id,
                 Amount = record.Amount,
-                Currency = new CurrencyDto
+                Currency = new CurrencyModel
                 {
                     Id = record.Currency.Id,
                     Name = record.Currency.Name,

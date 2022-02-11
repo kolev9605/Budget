@@ -5,8 +5,8 @@ namespace Budget.Core.Interfaces.Services
 {
     public interface IRecordService
     {
-        Task<IEnumerable<RecordDto>> GetAllAsync();
+        Task<IEnumerable<RecordModel>> GetAllAsync();
 
-        Task<RecordDto> GetByIdAsync(int id);
+        Task<RecordModel> GetByIdAsync(int id);
     }
 }

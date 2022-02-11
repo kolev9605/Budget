@@ -1,6 +1,6 @@
 ﻿namespace Budget.Core.Models.Currencies
 {
-    public class CurrencyDto
+    public class CurrencyModel
     {
         public int Id { get; set; }
 
