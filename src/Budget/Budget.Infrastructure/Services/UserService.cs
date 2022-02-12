@@ -75,7 +75,7 @@ namespace Budget.Infrastructure.Services
             var result = await _userManager.CreateAsync(user, registerModel.Password);
             if (result.Succeeded)
             {
-                await _userManager.AddToRoleAsync(user, "User");
+                await _userManager.AddToRoleAsync(user, Roles.User);
                 return true;
             }
 
