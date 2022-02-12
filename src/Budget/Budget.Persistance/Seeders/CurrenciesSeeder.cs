@@ -1,12 +1,13 @@
 ﻿using Budget.Core.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Budget.Persistance.Seeders
 {
     public static class CurrenciesSeeder
     {
-        public static BudgetDbContext AddCurrencies(this BudgetDbContext context)
+        public static async Task<BudgetDbContext> AddCurrenciesAsync(this BudgetDbContext context)
         {
-            if (!context.Currencies.Any())
+            if (!await context.Currencies.AnyAsync())
             {
                 context.Add(new Currency() { Name = "Bulgarian lev", Abbreviation = "BGN" });
                 context.Add(new Currency() { Name = "European Euro", Abbreviation = "EUR" });

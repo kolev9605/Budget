@@ -5,16 +5,16 @@ namespace Budget.Persistance.Seeders
 {
     public static class RolesSeeder
     {
-        public static BudgetDbContext AddRoles(this BudgetDbContext context)
-        {
-            if (context.Roles.SingleOrDefault(r => r.Name == Roles.Administrator) == null)
+        public static async Task<BudgetDbContext> AddRolesAsync(this BudgetDbContext context, RoleManager<IdentityRole> roleManager)
+        {            
+            if (!await roleManager.RoleExistsAsync(Roles.Administrator))
             {
-                context.Roles.Add(new IdentityRole(Roles.Administrator));
+                await roleManager.CreateAsync(new IdentityRole(Roles.Administrator));
             }
 
-            if (context.Roles.SingleOrDefault(r => r.Name == Roles.User) == null)
+            if (!await roleManager.RoleExistsAsync(Roles.User))
             {
-                context.Roles.Add(new IdentityRole(Roles.User));
+                await roleManager.CreateAsync(new IdentityRole(Roles.User));
             }
 
             return context;

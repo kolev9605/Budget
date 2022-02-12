@@ -54,6 +54,7 @@ builder.Services.Configure<IdentityOptions>(options =>
 builder.Services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddTransient<IRecordRepository, RecordRepository>();
 
+builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IRecordService, RecordService>();
 builder.Services.AddTransient<IDateTimeProvider, DateTimeProvider>();
 
@@ -71,7 +72,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.Seed();
+await app.SeedAsync();
 
 app.UseHttpsRedirection();
 

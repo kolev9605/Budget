@@ -7,7 +7,7 @@ namespace Budget.Web.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("records")]
+    [Route("Records")]
     public class RecordsController : ControllerBase
     {
         private readonly IRecordService _recordService;
@@ -18,6 +18,7 @@ namespace Budget.Web.Controllers
         }
 
         [HttpGet]
+        [Route("GetAll")]
         public async Task<IEnumerable<RecordModel>> GetAll()
         {
             var records = await _recordService.GetAllAsync();

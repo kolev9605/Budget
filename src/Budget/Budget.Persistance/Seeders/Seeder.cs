@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -6,13 +7,14 @@ namespace Budget.Persistance.Seeders
 {
     public static class Seeder
     {
-        public static void Seed(this IApplicationBuilder app, bool development = false)
+        public static async Task SeedAsync(this IApplicationBuilder app, bool development = false)
         {
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             using (var context = serviceScope.ServiceProvider.GetService<BudgetDbContext>())
+            using (var roleManager = serviceScope.ServiceProvider.GetService<RoleManager<IdentityRole>>())
             {
                 context.Migrate();
-                context.Seed();
+                await context.SeedAsync(roleManager);
             }
         }
 
@@ -23,13 +25,12 @@ namespace Budget.Persistance.Seeders
                 context.Database.Migrate();
         }
 
-        private static void Seed(this BudgetDbContext context)
+        private static async Task SeedAsync(this BudgetDbContext context, RoleManager<IdentityRole> roleManager)
         {
-            context
-                .AddRoles()
-                .AddCurrencies();
+            await context.AddRolesAsync(roleManager);
+            await context.AddCurrenciesAsync();
 
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
     }
 }
