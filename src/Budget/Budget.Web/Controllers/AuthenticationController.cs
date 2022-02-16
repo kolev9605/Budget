@@ -33,9 +33,9 @@ namespace Budget.Web.Controllers
         [Route("Register")]
         public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
-            var registerSuccessful = await _userService.RegisterAsync(model);
+            await _userService.RegisterAsync(model);
 
-            return Ok(registerSuccessful);
-        }
+            return Ok();
+        
     }
 }
