@@ -42,7 +42,7 @@ namespace Budget.Repositories
         public async Task<T> UpdateAsync(T entity)
         {
             _budgetDbContext.Set<T>().Update(entity);
-            await _budgetDbContext.AddRangeAsync();
+            await _budgetDbContext.SaveChangesAsync();
 
             return entity;
         }
