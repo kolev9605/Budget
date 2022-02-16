@@ -1,4 +1,5 @@
-﻿using Budget.Core.Interfaces.Services;
+﻿using Budget.Core.Exceptions;
+using Budget.Core.Interfaces.Services;
 using Budget.Core.Models.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -6,6 +7,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+
+using static Budget.Core.Constants.ValidationMessages;
 
 namespace Budget.Infrastructure.Services
 {
@@ -28,33 +31,39 @@ namespace Budget.Infrastructure.Services
         public async Task<TokenModel> LoginAsync(LoginModel loginModel)
         {
             var user = await _userManager.FindByNameAsync(loginModel.Username);
-            if (user != null && await _userManager.CheckPasswordAsync(user, loginModel.Password))
+            if (user == null)
             {
-                var userRoles = await _userManager.GetRolesAsync(user);
+                throw new BudgetAuthenticationException(Authentication.UserDoesNotExists, loginModel.Username);
+            }
 
-                var authClaims = new List<Claim>
+            if (!await _userManager.CheckPasswordAsync(user, loginModel.Password))
+            {
+                throw new BudgetAuthenticationException(Authentication.IncorrectPassword);
+
+            }
+
+            var userRoles = await _userManager.GetRolesAsync(user);
+
+            var authClaims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, user.UserName),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 };
 
-                foreach (var userRole in userRoles)
-                {
-                    authClaims.Add(new Claim(ClaimTypes.Role, userRole));
-                }
-
-                var token = GetToken(authClaims);
-
-                var tokenModel = new TokenModel()
-                {
-                    Token = new JwtSecurityTokenHandler().WriteToken(token),
-                    ValidTo = token.ValidTo,
-                };
-
-                return tokenModel;
+            foreach (var userRole in userRoles)
+            {
+                authClaims.Add(new Claim(ClaimTypes.Role, userRole));
             }
 
-            return null;
+            var token = GetToken(authClaims);
+
+            var tokenModel = new TokenModel()
+            {
+                Token = new JwtSecurityTokenHandler().WriteToken(token),
+                ValidTo = token.ValidTo,
+            };
+
+            return tokenModel;
         }
 
         public async Task<bool> RegisterAsync(RegisterModel registerModel)
@@ -62,7 +71,7 @@ namespace Budget.Infrastructure.Services
             var userExists = await _userManager.FindByNameAsync(registerModel.Username);
             if (userExists != null)
             {
-                return false;
+                throw new BudgetAuthenticationException(Authentication.UserExists, registerModel.Username);
             }
 
             IdentityUser user = new()
@@ -73,13 +82,13 @@ namespace Budget.Infrastructure.Services
             };
 
             var result = await _userManager.CreateAsync(user, registerModel.Password);
-            if (result.Succeeded)
+            if (!result.Succeeded)
             {
-                await _userManager.AddToRoleAsync(user, Roles.User);
-                return true;
+                throw new BudgetAuthenticationException(Authentication.RegisterFailed);
             }
 
-            return false;
+            await _userManager.AddToRoleAsync(user, Roles.User);
+            return true;
         }
 
         private JwtSecurityToken GetToken(List<Claim> authClaims)
