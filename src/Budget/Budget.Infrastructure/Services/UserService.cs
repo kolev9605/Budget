@@ -66,7 +66,7 @@ namespace Budget.Infrastructure.Services
             return tokenModel;
         }
 
-        public async Task<bool> RegisterAsync(RegisterModel registerModel)
+        public async Task RegisterAsync(RegisterModel registerModel)
         {
             var userExists = await _userManager.FindByNameAsync(registerModel.Username);
             if (userExists != null)
@@ -88,7 +88,6 @@ namespace Budget.Infrastructure.Services
             }
 
             await _userManager.AddToRoleAsync(user, Roles.User);
-            return true;
         }
 
         private JwtSecurityToken GetToken(List<Claim> authClaims)

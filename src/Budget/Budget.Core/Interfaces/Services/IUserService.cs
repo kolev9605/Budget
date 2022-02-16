@@ -6,6 +6,6 @@ namespace Budget.Core.Interfaces.Services
     {
         Task<TokenModel> LoginAsync(LoginModel loginModel);
 
-        Task<bool> RegisterAsync(RegisterModel registerModel);
+        Task RegisterAsync(RegisterModel registerModel);
     }
 }
