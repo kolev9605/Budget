@@ -2,6 +2,7 @@ using Budget.Infrastructure;
 using Budget.Persistance;
 using Budget.Persistance.Seeders;
 using Budget.Repositories;
+using Budget.Web.Helpers;
 using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -39,6 +40,8 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseMiddleware<ErrorHandlerMiddleware>();
 
 app.MapControllers();
 

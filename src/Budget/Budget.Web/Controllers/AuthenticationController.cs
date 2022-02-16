@@ -26,12 +26,7 @@ namespace Budget.Web.Controllers
         {
             var token = await _userService.LoginAsync(model);
 
-            if (token != null)
-            {
-                return Ok(token);
-            }
-
-            return Unauthorized();
+            return Ok(token);
         }
 
         [HttpPost]
@@ -40,12 +35,7 @@ namespace Budget.Web.Controllers
         {
             var registerSuccessful = await _userService.RegisterAsync(model);
 
-            if (!registerSuccessful)
-            {
-                return BadRequest();
-            }
-
-            return Ok();
+            return Ok(registerSuccessful);
         }
     }
 }

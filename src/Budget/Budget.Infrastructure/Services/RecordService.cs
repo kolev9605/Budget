@@ -1,7 +1,6 @@
-﻿using Budget.Core.Entities;
+﻿using Budget.Core.Exceptions;
 using Budget.Core.Interfaces.Repositories;
 using Budget.Core.Interfaces.Services;
-using Budget.Core.Models.Currencies;
 using Budget.Core.Models.Records;
 
 namespace Budget.Infrastructure.Services
