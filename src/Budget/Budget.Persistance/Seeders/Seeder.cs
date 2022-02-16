@@ -13,16 +13,8 @@ namespace Budget.Persistance.Seeders
             using (var context = serviceScope.ServiceProvider.GetService<BudgetDbContext>())
             using (var roleManager = serviceScope.ServiceProvider.GetService<RoleManager<IdentityRole>>())
             {
-                context.Migrate();
                 await context.SeedAsync(roleManager);
             }
-        }
-
-        private static void Migrate(this BudgetDbContext context)
-        {
-            context.Database.EnsureCreated();
-            if (context.Database.GetPendingMigrations().Any())
-                context.Database.Migrate();
         }
 
         private static async Task SeedAsync(this BudgetDbContext context, RoleManager<IdentityRole> roleManager)
