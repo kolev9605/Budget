@@ -10,6 +10,11 @@ namespace Budget.Persistance.Configurations
         {
             builder.Property(p => p.Note)
                 .HasMaxLength(100);
+
+            builder.HasOne(p => p.Currency)
+                .WithMany(c => c.Records)
+                .HasForeignKey(p => p.CurrencyId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

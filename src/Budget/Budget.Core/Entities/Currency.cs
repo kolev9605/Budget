@@ -7,5 +7,7 @@ namespace Budget.Core.Entities
         public string Name { get; set; }
 
         public string Abbreviation { get; set; }
+
+        public ICollection<Record> Records { get; set; } = new List<Record>();
     }
 }

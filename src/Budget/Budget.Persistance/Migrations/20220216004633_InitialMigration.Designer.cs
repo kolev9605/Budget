@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Budget.Persistance.Migrations
 {
     [DbContext(typeof(BudgetDbContext))]
-    [Migration("20220216004028_InitialMigration")]
+    [Migration("20220216004633_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -294,9 +294,9 @@ namespace Budget.Persistance.Migrations
             modelBuilder.Entity("Budget.Core.Entities.Record", b =>
                 {
                     b.HasOne("Budget.Core.Entities.Currency", "Currency")
-                        .WithMany()
+                        .WithMany("Records")
                         .HasForeignKey("CurrencyId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Currency");
@@ -351,6 +351,11 @@ namespace Budget.Persistance.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Budget.Core.Entities.Currency", b =>
+                {
+                    b.Navigation("Records");
                 });
 #pragma warning restore 612, 618
         }
