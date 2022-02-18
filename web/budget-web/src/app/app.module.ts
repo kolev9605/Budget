@@ -7,8 +7,11 @@ import { NavigationComponent } from './layout/navigation/navigation.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './authentication/login/login.component';
-import { OverlayModule, OverlayRef } from '@angular/cdk/overlay';
+import { OverlayModule } from '@angular/cdk/overlay';
 import { ProgressSpinnerComponent } from './shared/components/progress-spinner/progress-spinner.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MaterialUiModule } from './material-ui.module';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -18,7 +21,13 @@ import { ProgressSpinnerComponent } from './shared/components/progress-spinner/p
     LoginComponent,
     ProgressSpinnerComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, OverlayModule],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    OverlayModule,
+    BrowserAnimationsModule,
+    MaterialUiModule,
+  ],
   providers: [],
   bootstrap: [AppComponent],
 })
