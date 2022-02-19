@@ -8,9 +8,9 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './authentication/login/login.component';
 import { OverlayModule } from '@angular/cdk/overlay';
-import { ProgressSpinnerComponent } from './shared/components/progress-spinner/progress-spinner.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MaterialUiModule } from './material-ui.module';
+import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -19,14 +19,14 @@ import { MaterialUiModule } from './material-ui.module';
     DashboardComponent,
     HomeComponent,
     LoginComponent,
-    ProgressSpinnerComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     OverlayModule,
     BrowserAnimationsModule,
-    MaterialUiModule,
+    ReactiveFormsModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
