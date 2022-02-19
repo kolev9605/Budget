@@ -13,6 +13,7 @@ import { AuthService } from 'src/app/shared/services/auth.service';
 export class LoginComponent implements OnInit {
   form: FormGroup;
   isLogin: boolean = false;
+  isLoading: boolean = false;
   backgroundColor = ColorConstants.BACKGROUND;
 
   constructor(private fb: FormBuilder, private authService: AuthService) {}
@@ -42,14 +43,24 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
+    this.isLoading = true;
     const loginModel: LoginModel = new LoginModel(
       this.form.value.username,
       this.form.value.password,
     );
 
-    this.authService.login(loginModel).subscribe((x) => {
-      console.log(x);
-    });
+    this.authService.login(loginModel).subscribe(
+      (res) => {
+        console.log(res);
+        this.isLoading = false;
+      },
+      (err) => {
+        console.log(err);
+        this.isLoading = false;
+      },
+    );
+
+    this.form.reset();
   }
 
   register() {
@@ -59,8 +70,15 @@ export class LoginComponent implements OnInit {
       this.form.value.email,
     );
 
-    this.authService.register(registerModel).subscribe((x) => {
-      console.log(x);
-    });
+    this.authService.register(registerModel).subscribe(
+      (res) => {
+        console.log(res);
+      },
+      (err) => {
+        console.log(err);
+      },
+    );
+
+    this.form.reset();
   }
 }

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { RegisterModel } from '../models/authentication/register.model';
 import { LoginModel } from '../models/authentication/login.model';
+import { TokenModel } from '../models/authentication/token.model';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +16,7 @@ export class AuthService {
   }
 
   login(signUpModel: LoginModel) {
-    return this.http.post(environment.apiUrl + 'Authentication/Login', signUpModel);
+    return this.http.post<TokenModel>(environment.apiUrl + 'Authentication/Login', signUpModel);
   }
 
   signOut() {}
