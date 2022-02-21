@@ -4,6 +4,8 @@ using Budget.Core.Interfaces;
 using Budget.Core.Interfaces.Repositories;
 using Budget.Persistance;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Budget.Repositories
 {

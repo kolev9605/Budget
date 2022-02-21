@@ -1,5 +1,6 @@
 ﻿using Budget.Core.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace Budget.Persistance.Seeders
 {

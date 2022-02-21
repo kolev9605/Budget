@@ -1,4 +1,6 @@
-﻿namespace Budget.Core.Entities.Base
+﻿using System;
+
+namespace Budget.Core.Entities.Base
 {
     public interface IUpdatableEntity
     {

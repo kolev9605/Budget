@@ -1,4 +1,7 @@
-﻿namespace Budget.Core.Interfaces.Repositories
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Budget.Core.Interfaces.Repositories
 {
     public interface IRepository<T>
     {

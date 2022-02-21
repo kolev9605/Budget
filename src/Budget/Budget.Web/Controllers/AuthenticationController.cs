@@ -1,6 +1,7 @@
 ﻿using Budget.Core.Interfaces.Services;
 using Budget.Core.Models.Authentication;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Budget.Web.Controllers
 {
@@ -17,7 +18,7 @@ namespace Budget.Web.Controllers
 
         [HttpPost]
         [Route("Login")]
-        public async Task<IActionResult> Login([FromBody] LoginModel model)
+        public async Task<IActionResult> Login(LoginModel model)
         {
             var token = await _userService.LoginAsync(model);
 
@@ -26,7 +27,7 @@ namespace Budget.Web.Controllers
 
         [HttpPost]
         [Route("Register")]
-        public async Task<IActionResult> Register([FromBody] RegisterModel model)
+        public async Task<IActionResult> Register(RegisterModel model)
         {
             await _userService.RegisterAsync(model);
 

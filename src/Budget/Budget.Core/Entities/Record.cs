@@ -1,4 +1,5 @@
 ﻿using Budget.Core.Entities.Base;
+using System;
 
 namespace Budget.Core.Entities
 {

@@ -1,4 +1,6 @@
-﻿namespace Budget.Core.Interfaces
+﻿using System;
+
+namespace Budget.Core.Interfaces
 {
     public interface IDateTimeProvider
     {

@@ -1,5 +1,6 @@
 ﻿using Budget.Core.Entities;
 using Budget.Core.Models.Currencies;
+using System;
 
 namespace Budget.Core.Models.Records
 {

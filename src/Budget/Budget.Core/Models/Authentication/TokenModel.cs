@@ -1,4 +1,6 @@
-﻿namespace Budget.Core.Models.Authentication
+﻿using System;
+
+namespace Budget.Core.Models.Authentication
 {
     public class TokenModel
     {

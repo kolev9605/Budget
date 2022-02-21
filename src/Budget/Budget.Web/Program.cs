@@ -3,7 +3,10 @@ using Budget.Persistance;
 using Budget.Persistance.Seeders;
 using Budget.Repositories;
 using Budget.Web.Helpers;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,7 +43,8 @@ app.UseHttpsRedirection();
 
 app.UseCors(x => x.AllowAnyHeader()
       .AllowAnyMethod()
-      .WithOrigins("http://localhost:4200"));
+      .WithOrigins("http://localhost:4200")
+      .AllowAnyHeader());
 
 app.UseAuthentication();
 app.UseAuthorization();

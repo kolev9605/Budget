@@ -4,10 +4,12 @@ using Budget.Core.Models.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-
+using System.Threading.Tasks;
 using static Budget.Core.Constants.ValidationMessages;
 
 namespace Budget.Infrastructure.Services
@@ -55,12 +57,12 @@ namespace Budget.Infrastructure.Services
                 authClaims.Add(new Claim(ClaimTypes.Role, userRole));
             }
 
-            var token = GetToken(authClaims);
+            (var token, var validTo) = GetToken(authClaims);
 
             var tokenModel = new TokenModel()
             {
-                Token = new JwtSecurityTokenHandler().WriteToken(token),
-                ValidTo = token.ValidTo,
+                Token = token,
+                ValidTo = validTo,
             };
 
             return tokenModel;
@@ -90,19 +92,17 @@ namespace Budget.Infrastructure.Services
             await _userManager.AddToRoleAsync(user, Roles.User);
         }
 
-        private JwtSecurityToken GetToken(List<Claim> authClaims)
+        private (string token, DateTime validTo) GetToken(List<Claim> authClaims)
         {
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
 
             var token = new JwtSecurityToken(
-                issuer: _configuration["JWT:ValidIssuer"],
-                audience: _configuration["JWT:ValidAudience"],
                 expires: DateTime.Now.AddHours(3),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                 );
 
-            return token;
+            return (new JwtSecurityTokenHandler().WriteToken(token), token.ValidTo);
         }
     }
 }

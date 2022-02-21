@@ -1,5 +1,6 @@
 ﻿using Budget.Core.Models.Authentication;
 using Microsoft.AspNetCore.Identity;
+using System.Threading.Tasks;
 
 namespace Budget.Persistance.Seeders
 {

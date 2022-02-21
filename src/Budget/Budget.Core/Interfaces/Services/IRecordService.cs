@@ -1,5 +1,7 @@
 ﻿using Budget.Core.Entities;
 using Budget.Core.Models.Records;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Budget.Core.Interfaces.Services
 {
