@@ -41,7 +41,6 @@ namespace Budget.Infrastructure.Services
             if (!await _userManager.CheckPasswordAsync(user, loginModel.Password))
             {
                 throw new BudgetAuthenticationException(Authentication.IncorrectPassword);
-
             }
 
             var userRoles = await _userManager.GetRolesAsync(user);
@@ -100,7 +99,7 @@ namespace Budget.Infrastructure.Services
                 expires: DateTime.Now.AddHours(1),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
-                );
+            );
 
             return (new JwtSecurityTokenHandler().WriteToken(token), token.ValidTo);
         }

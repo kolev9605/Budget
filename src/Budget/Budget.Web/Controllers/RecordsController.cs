@@ -28,13 +28,5 @@ namespace Budget.Web.Controllers
             var records = await _recordService.GetAllAsync();
             return Ok(records);
         }
-
-        [Authorize]
-        [HttpGet]
-        [Route(nameof(GetAllUser))]
-        public async Task<IActionResult> GetAllUser()
-        {
-            return Ok();
-        }
     }
 }
