@@ -29,7 +29,7 @@ namespace Budget.Web.Controllers
             return Ok(records);
         }
 
-        [Authorize(Roles = Roles.User)]
+        [Authorize]
         [HttpGet]
         [Route(nameof(GetAllUser))]
         public async Task<IActionResult> GetAllUser()
