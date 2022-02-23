@@ -1,5 +1,6 @@
 ﻿using Budget.Core.Interfaces;
 using Budget.Core.Interfaces.Services;
+using Budget.Core.Options;
 using Budget.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -14,6 +15,8 @@ namespace Budget.Infrastructure
     {
         public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
+            var preciseConfig = configuration.GetSection(JwtOptions.JWT).Get<JwtOptions>();
+
             // Adding Authentication
             services.AddAuthentication(options =>
             {
@@ -29,7 +32,7 @@ namespace Budget.Infrastructure
                     ValidateIssuer = false,
                     ValidateAudience = false,
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"])),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(preciseConfig.Secret)),
                 };
             });
 

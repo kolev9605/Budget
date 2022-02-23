@@ -17,7 +17,7 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<BudgetDbContext>()
     .AddDefaultTokenProviders();
 
-// Adding Authentication
+// Adding JWT Authentication
 builder.Services.AddJwtAuthentication(builder.Configuration);
 
 builder.Services.AddRepositories();
@@ -43,7 +43,7 @@ app.UseHttpsRedirection();
 
 app.UseCors(x => x.AllowAnyHeader()
       .AllowAnyMethod()
-      .WithOrigins("http://localhost:4200")
+      .AllowAnyOrigin()
       .AllowAnyHeader());
 
 app.UseAuthentication();

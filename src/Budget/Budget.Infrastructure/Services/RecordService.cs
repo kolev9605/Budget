@@ -1,5 +1,4 @@
-﻿using Budget.Core.Exceptions;
-using Budget.Core.Interfaces.Repositories;
+﻿using Budget.Core.Interfaces.Repositories;
 using Budget.Core.Interfaces.Services;
 using Budget.Core.Models.Records;
 using System.Collections.Generic;
