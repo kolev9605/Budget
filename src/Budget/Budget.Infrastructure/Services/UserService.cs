@@ -1,8 +1,9 @@
 ﻿using Budget.Core.Exceptions;
 using Budget.Core.Interfaces.Services;
 using Budget.Core.Models.Authentication;
+using Budget.Core.Options;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -17,17 +18,14 @@ namespace Budget.Infrastructure.Services
     public class UserService : IUserService
     {
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IConfiguration _configuration;
+        private readonly JwtOptions _jwtOptions;
 
         public UserService(
-            UserManager<IdentityUser> userManager,
-            RoleManager<IdentityRole> roleManager,
-            IConfiguration configuration)
+            UserManager<IdentityUser> userManager, 
+            IOptions<JwtOptions> jwtOptions)
         {
             _userManager = userManager;
-            _roleManager = roleManager;
-            _configuration = configuration;
+            _jwtOptions = jwtOptions.Value;
         }
 
         public async Task<TokenModel> LoginAsync(LoginModel loginModel)
@@ -56,7 +54,7 @@ namespace Budget.Infrastructure.Services
                 authClaims.Add(new Claim(ClaimTypes.Role, userRole));
             }
 
-            (var token, var validTo) = GetToken(authClaims);
+            (var token, var validTo) = GenerateToken(authClaims);
 
             var tokenModel = new TokenModel()
             {
@@ -91,9 +89,9 @@ namespace Budget.Infrastructure.Services
             await _userManager.AddToRoleAsync(user, Roles.User);
         }
 
-        private (string token, DateTime validTo) GetToken(List<Claim> authClaims)
+        private (string token, DateTime validTo) GenerateToken(List<Claim> authClaims)
         {
-            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Secret));
 
             var token = new JwtSecurityToken(
                 expires: DateTime.Now.AddHours(1),
