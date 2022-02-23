@@ -1,3 +1,4 @@
+using Budget.Core.Options;
 using Budget.Infrastructure;
 using Budget.Persistance;
 using Budget.Persistance.Seeders;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +18,8 @@ builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<BudgetDbContext>()
     .AddDefaultTokenProviders();
+
+builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(JwtOptions.JWT));
 
 // Adding JWT Authentication
 builder.Services.AddJwtAuthentication(builder.Configuration);
