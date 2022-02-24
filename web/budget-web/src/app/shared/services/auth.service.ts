@@ -8,6 +8,7 @@ import { ErrorService } from './error.service';
 import { catchError, tap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { User } from '../models/authentication/user.model';
+import { LocalStorageKeys } from 'src/app/shared/constants';
 
 @Injectable({
   providedIn: 'root',
@@ -30,13 +31,13 @@ export class AuthService {
         catchError(this.errorService.handleError),
         tap((resData) => {
           this.userSubject.next(new User(resData.token, resData.validTo));
-          localStorage.setItem('userData', JSON.stringify(resData));
+          localStorage.setItem(LocalStorageKeys.UserData, JSON.stringify(resData));
         }),
       );
   }
 
   tryLogin(): void {
-    const userData = JSON.parse(localStorage.getItem('userData')!);
+    const userData = JSON.parse(localStorage.getItem(LocalStorageKeys.UserData)!);
     const user = new User(userData.token, new Date(userData.validTo));
 
     // TODO: implement refreshing the token when it expires
@@ -46,5 +47,6 @@ export class AuthService {
 
   logout() {
     this.userSubject.next(null!);
+    localStorage.removeItem(LocalStorageKeys.UserData);
   }
 }

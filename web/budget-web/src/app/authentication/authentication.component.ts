@@ -15,7 +15,7 @@ export class AuthenticationComponent implements OnInit {
   form: FormGroup;
   isLogin: boolean = true;
   isLoading: boolean = false;
-  backgroundColor = ColorConstants.BACKGROUND;
+  backgroundColor = ColorConstants.Background;
 
   constructor(
     private fb: FormBuilder,

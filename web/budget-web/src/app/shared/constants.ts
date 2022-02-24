@@ -1,3 +1,7 @@
 export const ColorConstants = {
-  BACKGROUND: '#d8d8d8',
+  Background: '#d8d8d8',
+};
+
+export const LocalStorageKeys = {
+  UserData: 'userData',
 };
