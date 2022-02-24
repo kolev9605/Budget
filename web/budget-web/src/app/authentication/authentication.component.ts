@@ -5,6 +5,7 @@ import { LoginModel } from 'src/app/shared/models/authentication/login.model';
 import { RegisterModel } from 'src/app/shared/models/authentication/register.model';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-authentication',
@@ -21,6 +22,7 @@ export class AuthenticationComponent implements OnInit {
     private fb: FormBuilder,
     private authService: AuthService,
     private toastr: ToastrService,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -52,12 +54,15 @@ export class AuthenticationComponent implements OnInit {
 
     this.authService.login(loginModel).subscribe(
       (res) => {
-        console.log(res);
         this.isLoading = false;
+
+        this.toastr.success('Login successful!');
+        this.router.navigate(['dashboard']);
       },
       (err) => {
-        this.toastr.error(err);
         this.isLoading = false;
+
+        this.toastr.error(err);
       },
     );
 
@@ -65,6 +70,7 @@ export class AuthenticationComponent implements OnInit {
   }
 
   register() {
+    this.isLoading = true;
     const registerModel: RegisterModel = new RegisterModel(
       this.form.value.username,
       this.form.value.password,
@@ -73,10 +79,14 @@ export class AuthenticationComponent implements OnInit {
 
     this.authService.register(registerModel).subscribe(
       (res) => {
+        this.isLoading = false;
+
         this.toastr.success('Registration successful!');
         this.isLogin = !this.isLogin;
       },
       (err) => {
+        this.isLoading = false;
+
         this.toastr.error(err);
       },
     );
