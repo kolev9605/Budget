@@ -4,19 +4,24 @@ import { ColorConstants } from 'src/app/shared/constants';
 import { LoginModel } from 'src/app/shared/models/authentication/login.model';
 import { RegisterModel } from 'src/app/shared/models/authentication/register.model';
 import { AuthService } from 'src/app/shared/services/auth.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
+  selector: 'app-authentication',
+  templateUrl: './authentication.component.html',
+  styleUrls: ['./authentication.component.scss'],
 })
-export class LoginComponent implements OnInit {
+export class AuthenticationComponent implements OnInit {
   form: FormGroup;
   isLogin: boolean = false;
   isLoading: boolean = false;
   backgroundColor = ColorConstants.BACKGROUND;
 
-  constructor(private fb: FormBuilder, private authService: AuthService) {}
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private toastr: ToastrService,
+  ) {}
 
   ngOnInit(): void {
     this.form = this.fb.group({
@@ -27,8 +32,6 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(): void {
-    console.log('form', this.form);
-
     if (this.isLogin) {
       this.login();
     } else {
@@ -37,8 +40,6 @@ export class LoginComponent implements OnInit {
   }
 
   onFormTypeChanged(): void {
-    console.log('here', this.isLogin);
-
     this.isLogin = !this.isLogin;
   }
 
@@ -55,7 +56,7 @@ export class LoginComponent implements OnInit {
         this.isLoading = false;
       },
       (err) => {
-        console.log(err);
+        this.toastr.error(err);
         this.isLoading = false;
       },
     );
@@ -72,10 +73,11 @@ export class LoginComponent implements OnInit {
 
     this.authService.register(registerModel).subscribe(
       (res) => {
-        console.log(res);
+        this.toastr.success('Registration successful!');
+        this.isLogin = !this.isLogin;
       },
       (err) => {
-        console.log(err);
+        this.toastr.error(err);
       },
     );
 

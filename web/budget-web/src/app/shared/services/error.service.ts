@@ -9,10 +9,10 @@ export class ErrorService {
   public handleError(errorResponse: HttpErrorResponse) {
     console.log('subscription error: ', errorResponse);
     let errorMessage;
-    if (!errorResponse.message) {
+    if (!errorResponse.error.message) {
       errorMessage = 'Something went wrong :/';
     } else {
-      errorMessage = errorResponse.message;
+      errorMessage = errorResponse.error.message;
     }
 
     return throwError(errorMessage);

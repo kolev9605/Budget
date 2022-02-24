@@ -3,15 +3,18 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { RegisterModel } from '../models/authentication/register.model';
 import { LoginModel } from '../models/authentication/login.model';
-import { TokenModel } from '../models/authentication/token.model';
+import { LoginResultModel } from '../models/authentication/login-result.model';
 import { ErrorService } from './error.service';
-import { catchError } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { User } from '../models/authentication/user.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+  userSubject = new Subject<User>();
+
   constructor(private http: HttpClient, private errorService: ErrorService) {}
 
   register(signUpModel: RegisterModel): Observable<Object> {
@@ -20,10 +23,15 @@ export class AuthService {
       .pipe(catchError(this.errorService.handleError));
   }
 
-  login(signUpModel: LoginModel): Observable<TokenModel> {
+  login(signUpModel: LoginModel): Observable<LoginResultModel> {
     return this.http
-      .post<TokenModel>(environment.apiUrl + 'Authentication/Login', signUpModel)
-      .pipe(catchError(this.errorService.handleError));
+      .post<LoginResultModel>(environment.apiUrl + 'Authentication/Login', signUpModel)
+      .pipe(
+        catchError(this.errorService.handleError),
+        tap((resData) => {
+          this.userSubject.next(new User(resData.token));
+        }),
+      );
   }
 
   signOut() {}

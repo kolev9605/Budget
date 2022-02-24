@@ -6,8 +6,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavigationComponent } from './layout/navigation/navigation.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { HomeComponent } from './home/home.component';
-import { LoginComponent } from './authentication/login/login.component';
+import { AuthenticationComponent } from './authentication/authentication.component';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -19,8 +18,7 @@ import { LoadingSpinnerComponent } from './shared/components/loading-spinner/loa
     AppComponent,
     NavigationComponent,
     DashboardComponent,
-    HomeComponent,
-    LoginComponent,
+    AuthenticationComponent,
     LoadingSpinnerComponent,
   ],
   imports: [
