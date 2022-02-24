@@ -1,4 +1,4 @@
-export interface LoginResultModel {
+export class LoginResultModel {
   token: string;
   validTo: Date;
 }

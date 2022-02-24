@@ -1,3 +1,3 @@
 export class User {
-  constructor(public token: string) {}
+  constructor(public token: string, public validTo: Date) {}
 }

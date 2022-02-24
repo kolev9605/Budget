@@ -6,14 +6,14 @@ import { LoginModel } from '../models/authentication/login.model';
 import { LoginResultModel } from '../models/authentication/login-result.model';
 import { ErrorService } from './error.service';
 import { catchError, tap } from 'rxjs/operators';
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { User } from '../models/authentication/user.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  userSubject = new Subject<User>();
+  userSubject = new BehaviorSubject<User>(null!);
 
   constructor(private http: HttpClient, private errorService: ErrorService) {}
 
@@ -29,10 +29,22 @@ export class AuthService {
       .pipe(
         catchError(this.errorService.handleError),
         tap((resData) => {
-          this.userSubject.next(new User(resData.token));
+          this.userSubject.next(new User(resData.token, resData.validTo));
+          localStorage.setItem('userData', JSON.stringify(resData));
         }),
       );
   }
 
-  signOut() {}
+  tryLogin(): void {
+    const userData = JSON.parse(localStorage.getItem('userData')!);
+    const user = new User(userData.token, new Date(userData.validTo));
+
+    // TODO: implement refreshing the token when it expires
+
+    this.userSubject.next(user);
+  }
+
+  logout() {
+    this.userSubject.next(null!);
+  }
 }

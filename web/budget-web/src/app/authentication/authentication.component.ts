@@ -13,7 +13,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class AuthenticationComponent implements OnInit {
   form: FormGroup;
-  isLogin: boolean = false;
+  isLogin: boolean = true;
   isLoading: boolean = false;
   backgroundColor = ColorConstants.BACKGROUND;
 
