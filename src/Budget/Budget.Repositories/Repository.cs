@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 
 namespace Budget.Repositories
 {
-    public class Repository<T> : IRepository<T> where T : BaseEntity
+    public class Repository<T> : IRepository<T> 
+        where T : class, IBaseEntity
     {
         protected readonly BudgetDbContext _budgetDbContext;
 

@@ -1,5 +1,4 @@
 ﻿using Budget.Core.Entities;
-using Budget.Core.Models.Currencies;
 using System;
 
 namespace Budget.Core.Models.Records
@@ -14,20 +13,12 @@ namespace Budget.Core.Models.Records
 
         public decimal Amount { get; set; }
 
-        public CurrencyModel Currency { get; set; }
-
         public static RecordModel FromRecord(Record record)
         {
             return new RecordModel
             {
                 Id = record.Id,
                 Amount = record.Amount,
-                Currency = new CurrencyModel
-                {
-                    Id = record.Currency.Id,
-                    Name = record.Currency.Name,
-                    Abbreviation = record.Currency.Abbreviation,
-                },
                 DateAdded = record.DateAdded,
                 Note = record.Note,
             };

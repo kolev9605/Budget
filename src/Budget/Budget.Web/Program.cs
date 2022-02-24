@@ -1,3 +1,4 @@
+using Budget.Core.Entities;
 using Budget.Core.Options;
 using Budget.Infrastructure;
 using Budget.Persistance;
@@ -20,7 +21,7 @@ builder.Host.UseSerilog((context, services, configuration) =>
 // Add services to the container.
 builder.Services.AddPersistence(builder.Configuration);
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<BudgetDbContext>()
     .AddDefaultTokenProviders();
 

@@ -1,6 +1,6 @@
 ﻿namespace Budget.Core.Entities.Base
 {
-    public class BaseEntity
+    public interface IBaseEntity
     {
         public int Id { get; set; }
     }

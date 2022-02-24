@@ -16,7 +16,6 @@ namespace Budget.Repositories
         public async Task<IEnumerable<Record>> GetAllWithCurrenciesAsync()
         {
             var records = await _budgetDbContext.Records
-                .Include(r => r.Currency)
                 .ToListAsync();
 
             return records;
@@ -25,7 +24,6 @@ namespace Budget.Repositories
         public async Task<Record> GetByIdWithCurrencyAsync(int id)
         {
             var record = await _budgetDbContext.Records
-                .Include(r => r.Currency)
                 .FirstOrDefaultAsync(r => r.Id == id);
 
             return record;

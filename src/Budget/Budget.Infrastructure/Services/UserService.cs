@@ -1,4 +1,5 @@
-﻿using Budget.Core.Exceptions;
+﻿using Budget.Core.Entities;
+using Budget.Core.Exceptions;
 using Budget.Core.Interfaces.Services;
 using Budget.Core.Models.Authentication;
 using Budget.Core.Options;
@@ -17,11 +18,11 @@ namespace Budget.Infrastructure.Services
 {
     public class UserService : IUserService
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly JwtOptions _jwtOptions;
 
         public UserService(
-            UserManager<IdentityUser> userManager, 
+            UserManager<ApplicationUser> userManager, 
             IOptions<JwtOptions> jwtOptions)
         {
             _userManager = userManager;
@@ -73,7 +74,7 @@ namespace Budget.Infrastructure.Services
                 throw new BudgetAuthenticationException(Authentication.UserExists, registerModel.Username);
             }
 
-            IdentityUser user = new()
+            ApplicationUser user = new()
             {
                 Email = registerModel.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
