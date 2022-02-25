@@ -13,14 +13,5 @@ namespace Budget.Core.Models.Authentication
 
         [Required(ErrorMessage = "Password is required")]
         public string? Password { get; set; }
-
-        public LoginModel ToLoginModel()
-        {
-            return new LoginModel
-            {
-                Username = Username,
-                Password = Password,
-            };
-        }
     }
 }
