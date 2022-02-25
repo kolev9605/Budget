@@ -7,7 +7,6 @@ import { Injectable } from '@angular/core';
 })
 export class ErrorService {
   public handleError(errorResponse: HttpErrorResponse) {
-    console.log('subscription error: ', errorResponse);
     let errorMessage;
     if (!errorResponse.error || !errorResponse.error.message) {
       errorMessage = 'Something went wrong :/';
