@@ -22,9 +22,14 @@ namespace Budget.Repositories
         public async Task<IEnumerable<T>> AllAsync()
             => await _budgetDbContext.Set<T>().ToListAsync();
 
-        public async Task<T> CreateAsync(T entity)
+        public async Task<T> CreateAsync(T entity, bool saveChanges = true)
         {
             await _budgetDbContext.AddAsync(entity);
+
+            if (saveChanges)
+            {
+                await _budgetDbContext.SaveChangesAsync();
+            }
 
             return entity;
         }
@@ -49,5 +54,8 @@ namespace Budget.Repositories
 
             return entity;
         }
+
+        public async Task<int> SaveChangesAsync()
+            => await _budgetDbContext.SaveChangesAsync();
     }
 }

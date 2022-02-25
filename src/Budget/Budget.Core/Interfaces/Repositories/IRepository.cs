@@ -9,10 +9,12 @@ namespace Budget.Core.Interfaces.Repositories
 
         Task<T> GetByIdAsync(int id);
         
-        Task<T> CreateAsync(T entity);
+        Task<T> CreateAsync(T entity, bool saveChanges = true);
         
-        Task<T> UpdateAsync(T entity);
+        Task<T> UpdateAsync(T entity, bool saveChanges = true);
         
-        Task<T> DeleteAsync(int id);
+        Task<T> DeleteAsync(int id, bool saveChanges = true);
+
+        Task<int> SaveChangesAsync();
     }
 }
