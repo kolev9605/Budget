@@ -22,7 +22,7 @@ namespace Budget.Infrastructure.Services
             var account = new Account()
             {
                 Name = createAccountModel.Name,
-                CurrencyId = 1, //TODO Accept the currency from the front end
+                CurrencyId = createAccountModel.CurrencyId,
                 UserId = userId,
             };
 

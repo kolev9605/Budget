@@ -49,10 +49,13 @@ export class CreateAccountComponent implements OnInit {
   onSubmit(): void {
     this.isLoading = true;
 
-    console.log(this.createAccountForm.value);
+    console.log(this.createAccountForm.value.currency);
     const createAccountModel: CreateAccountModel = new CreateAccountModel(
       this.createAccountForm.value.accountName,
+      this.createAccountForm.value.currency.id,
     );
+
+    console.log('createAccountModel', createAccountModel);
 
     this.accountService.createAccount(createAccountModel).subscribe(
       (res) => {
