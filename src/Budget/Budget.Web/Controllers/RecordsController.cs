@@ -1,5 +1,4 @@
 ﻿using Budget.Core.Interfaces.Services;
-using Budget.Core.Models.Authentication;
 using Budget.Core.Models.Records;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Budget.Web.Controllers
 {
-    
+    [Authorize]
     [ApiController]
     [Route("Records")]
     public class RecordsController : ControllerBase
@@ -20,7 +19,6 @@ namespace Budget.Web.Controllers
             _recordService = recordService;
         }
 
-        [Authorize(Roles = Roles.Administrator)]
         [HttpGet]
         [Route(nameof(GetAll))]
         public async Task<ActionResult<IEnumerable<RecordModel>>> GetAll()

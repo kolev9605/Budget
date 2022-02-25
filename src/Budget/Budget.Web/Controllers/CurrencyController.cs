@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 namespace Budget.Web.Controllers
 {
     [Authorize]
-    [Route("Currency")]
     [ApiController]
+    [Route("Currency")]
     public class CurrencyController : ControllerBase
     {
-
         private readonly ICurrencyService _currencyService;
 
         public CurrencyController(ICurrencyService currencyService)
