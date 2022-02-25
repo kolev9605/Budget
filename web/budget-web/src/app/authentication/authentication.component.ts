@@ -13,10 +13,10 @@ import { Router } from '@angular/router';
   styleUrls: ['./authentication.component.scss'],
 })
 export class AuthenticationComponent implements OnInit {
-  form: FormGroup;
-  isLogin: boolean = true;
-  isLoading: boolean = false;
-  backgroundColor = ColorConstants.Background;
+  public isLogin: boolean = true;
+  public isLoading: boolean = false;
+  public backgroundColor = ColorConstants.Background;
+  public form: FormGroup;
 
   constructor(
     private fb: FormBuilder,

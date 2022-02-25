@@ -1,6 +1,4 @@
-﻿using Budget.Core.Entities;
-using Budget.Core.Entities.Base;
-using Budget.Core.Interfaces;
+﻿using Budget.Core.Entities.Base;
 using Budget.Core.Interfaces.Repositories;
 using Budget.Persistance;
 using Microsoft.EntityFrameworkCore;
@@ -34,7 +32,7 @@ namespace Budget.Repositories
             return entity;
         }
 
-        public async Task<T> DeleteAsync(int id)
+        public async Task<T> DeleteAsync(int id, bool saveChanges = true)
         {
             var entity = await _budgetDbContext.Set<T>().FindAsync(id);
             _budgetDbContext.Set<T>().Remove(entity);
@@ -47,7 +45,7 @@ namespace Budget.Repositories
         public async Task<T> GetByIdAsync(int id)
             => await _budgetDbContext.Set<T>().FirstOrDefaultAsync(e => e.Id == id);
 
-        public async Task<T> UpdateAsync(T entity)
+        public async Task<T> UpdateAsync(T entity, bool saveChanges = true)
         {
             _budgetDbContext.Set<T>().Update(entity);
             await _budgetDbContext.SaveChangesAsync();

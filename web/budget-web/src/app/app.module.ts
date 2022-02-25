@@ -13,6 +13,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { LoadingSpinnerComponent } from './shared/components/loading-spinner/loading-spinner.component';
 import { AuthInterceptor } from './shared/services/auth.interceptor';
+import { CreateAccountComponent } from './account/create-account/create-account.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { AuthInterceptor } from './shared/services/auth.interceptor';
     DashboardComponent,
     AuthenticationComponent,
     LoadingSpinnerComponent,
+    CreateAccountComponent,
   ],
   imports: [
     BrowserModule,

@@ -51,9 +51,11 @@ namespace Budget.Infrastructure
 
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
+            services.AddTransient<IDateTimeProvider, DateTimeProvider>();
+
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IRecordService, RecordService>();
-            services.AddTransient<IDateTimeProvider, DateTimeProvider>();
+            services.AddTransient<IAccountService, AccountService>();
 
             return services;
         }

@@ -1,4 +1,4 @@
 export class LoginResultModel {
-  token: string;
-  validTo: Date;
+  public token: string;
+  public validTo: Date;
 }

@@ -9,6 +9,7 @@ namespace Budget.Repositories
         {
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
             services.AddTransient<IRecordRepository, RecordRepository>();
+            services.AddTransient<IAccountRepository, AccountRepository>();
 
             return services;
         }
