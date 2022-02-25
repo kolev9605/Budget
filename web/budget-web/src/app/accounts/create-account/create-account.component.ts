@@ -55,16 +55,12 @@ export class CreateAccountComponent implements OnInit {
       this.createAccountForm.value.currency.id,
     );
 
-    console.log('createAccountModel', createAccountModel);
-
     this.accountService.createAccount(createAccountModel).subscribe(
       (res) => {
         this.isLoading = false;
 
         this.toastr.success('Account created!');
         this.router.navigate(['dashboard']);
-
-        console.log(res);
       },
       (err) => {
         this.isLoading = false;
