@@ -39,6 +39,6 @@ export class DashboardComponent implements OnInit {
   onAddAccountPressed(): void {
     console.log('here');
 
-    this.router.navigate(['account/create-account']);
+    this.router.navigate(['accounts/create-account']);
   }
 }
