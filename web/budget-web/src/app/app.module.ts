@@ -13,8 +13,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { LoadingSpinnerComponent } from './shared/components/loading-spinner/loading-spinner.component';
 import { AuthInterceptor } from './shared/services/auth.interceptor';
-import { CreateAccountComponent } from './account/create-account/create-account.component';
+import { CreateAccountComponent } from './accounts/create-account/create-account.component';
 import { FormWrapperComponent } from './shared/components/form-wrapper/form-wrapper.component';
+import { AccountsComponent } from './accounts/accounts.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { FormWrapperComponent } from './shared/components/form-wrapper/form-wrap
     LoadingSpinnerComponent,
     CreateAccountComponent,
     FormWrapperComponent,
+    AccountsComponent,
   ],
   imports: [
     BrowserModule,

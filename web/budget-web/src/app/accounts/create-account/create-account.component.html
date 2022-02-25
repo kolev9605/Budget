@@ -11,8 +11,9 @@
     </div>
     <div class="form-group py-2">
       <label class="form-label" for="currency">Currency</label>
-      <select class="form-control form-control-lg" id="currency">
-        <option *ngFor="let currency of currencies">{{currency.name}}</option>
+      <select class="form-control form-control-lg" id="currency" formControlName="currency">
+        <option disabled class="text-secondary" value="">Choose Currency</option>
+        <option *ngFor="let currency of currencies" [ngValue]="currency">{{currency.name}}</option>
       </select>
     </div>
     <div class="mt-4">

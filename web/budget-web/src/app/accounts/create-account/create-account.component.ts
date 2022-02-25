@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { CreateAccountModel } from 'src/app/shared/models/accounts/create-account.model';
 import { CurrencyModel } from 'src/app/shared/models/currencies/currency.model';
 import { AccountService } from 'src/app/shared/services/account.service';
@@ -19,28 +21,53 @@ export class CreateAccountComponent implements OnInit {
     private accountService: AccountService,
     private fb: FormBuilder,
     private currencyService: CurrencyService,
+    private toastr: ToastrService,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
+    this.isLoading = true;
     this.createAccountForm = this.fb.group({
       accountName: ['', [Validators.required]],
+      currency: ['', [Validators.required]],
     });
 
-    this.currencyService.getAll().subscribe((res) => {
-      console.log('currencies', this.currencies);
+    this.currencyService.getAll().subscribe(
+      (res) => {
+        this.isLoading = false;
 
-      this.currencies = res;
-    });
+        this.currencies = res;
+      },
+      (err) => {
+        this.isLoading = false;
+
+        this.toastr.error(err);
+      },
+    );
   }
 
   onSubmit(): void {
-    console.log(this.createAccountForm);
+    this.isLoading = true;
+
+    console.log(this.createAccountForm.value);
     const createAccountModel: CreateAccountModel = new CreateAccountModel(
       this.createAccountForm.value.accountName,
     );
 
-    this.accountService.createAccount(createAccountModel).subscribe((res) => {
-      console.log(res);
-    });
+    this.accountService.createAccount(createAccountModel).subscribe(
+      (res) => {
+        this.isLoading = false;
+
+        this.toastr.success('Account created!');
+        this.router.navigate(['dashboard']);
+
+        console.log(res);
+      },
+      (err) => {
+        this.isLoading = false;
+
+        this.toastr.error(err);
+      },
+    );
   }
 }
