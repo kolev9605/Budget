@@ -1,24 +1,22 @@
-<div class="container py-5">
-  <div class="row d-flex justify-content-center align-items-center">
-    <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-      <div class="card shadow-2-strong">
-        <div class="card-body p-5 text-center">
-          <h3 class="mb-4">Create Account</h3>
-          <form [formGroup]="createAccountForm" (ngSubmit)="onSubmit()">
-            <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
-            <div class="form-group">
-              <label class="form-label" for="username">Account Name</label>
-              <input
-                type="text"
-                id="accountName"
-                formControlName="accountName"
-                class="form-control form-control-lg" />
-            </div>
-
-            <button class="btn btn-primary btn-block mt-5">Create Account</button>
-          </form>
-        </div>
-      </div>
+<app-form-wrapper [formTitle]="'Create Account'">
+  <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+  <form [formGroup]="createAccountForm" (ngSubmit)="onSubmit()">
+    <div class="form-group py-2">
+      <label class="form-label" for="accountName">Account Name</label>
+      <input
+        type="text"
+        id="accountName"
+        formControlName="accountName"
+        class="form-control form-control-lg" />
     </div>
-  </div>
-</div>
+    <div class="form-group py-2">
+      <label class="form-label" for="currency">Currency</label>
+      <select class="form-control form-control-lg" id="currency">
+        <option *ngFor="let currency of currencies">{{currency.name}}</option>
+      </select>
+    </div>
+    <div class="mt-4">
+      <button class="btn btn-primary btn-block">Create Account</button>
+    </div>
+  </form>
+</app-form-wrapper>

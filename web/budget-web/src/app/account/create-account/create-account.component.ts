@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CreateAccountModel } from 'src/app/shared/models/accounts/create-account.model';
+import { CurrencyModel } from 'src/app/shared/models/currencies/currency.model';
 import { AccountService } from 'src/app/shared/services/account.service';
+import { CurrencyService } from 'src/app/shared/services/currency.service';
 
 @Component({
   selector: 'app-create-account',
@@ -11,12 +13,23 @@ import { AccountService } from 'src/app/shared/services/account.service';
 export class CreateAccountComponent implements OnInit {
   public createAccountForm: FormGroup;
   public isLoading: boolean = false;
+  public currencies: CurrencyModel[];
 
-  constructor(private accountService: AccountService, private fb: FormBuilder) {}
+  constructor(
+    private accountService: AccountService,
+    private fb: FormBuilder,
+    private currencyService: CurrencyService,
+  ) {}
 
   ngOnInit(): void {
     this.createAccountForm = this.fb.group({
       accountName: ['', [Validators.required]],
+    });
+
+    this.currencyService.getAll().subscribe((res) => {
+      console.log('currencies', this.currencies);
+
+      this.currencies = res;
     });
   }
 

@@ -1,45 +1,32 @@
-<div class="container py-5">
-  <div class="row d-flex justify-content-center align-items-center">
-    <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-      <div class="card shadow-2-strong">
-        <div class="card-body p-5 text-center">
-          <h3 class="mb-4">{{isLogin ? "Login" : "Register"}}</h3>
-          <form [formGroup]="form" (ngSubmit)="onSubmit()">
-            <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
-            <div class="form-group">
-              <label class="form-label" for="username">Username</label>
-              <input
-                type="text"
-                id="username"
-                formControlName="username"
-                class="form-control form-control-lg" />
-            </div>
-            <div class="form-group" *ngIf="!isLogin">
-              <label class="form-label" for="email">Email</label>
-              <input
-                type="email"
-                id="email"
-                formControlName="email"
-                class="form-control form-control-lg" />
-            </div>
-
-            <div class="form-group">
-              <label class="form-label" for="password">Password</label>
-              <input
-                type="password"
-                id="password"
-                formControlName="password"
-                class="form-control form-control-lg" />
-            </div>
-            <div class="mt-5">
-              <button class="btn btn-primary btn-block">{{isLogin ? "Login" : "Register"}}</button>
-              <a class="btn btn-silent btn-sm btn-block" (click)="onFormTypeChanged()">
-                Go to {{isLogin ? "Register" : "Login"}}
-              </a>
-            </div>
-          </form>
-        </div>
-      </div>
+<app-form-wrapper [formTitle]="isLogin ? 'Login' : 'Register'">
+  <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="form-group py-2">
+      <label class="form-label" for="username">Username</label>
+      <input
+        type="text"
+        id="username"
+        formControlName="username"
+        class="form-control form-control-lg" />
     </div>
-  </div>
-</div>
+    <div class="form-group py-2" *ngIf="!isLogin">
+      <label class="form-label" for="email">Email</label>
+      <input type="email" id="email" formControlName="email" class="form-control form-control-lg" />
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="password">Password</label>
+      <input
+        type="password"
+        id="password"
+        formControlName="password"
+        class="form-control form-control-lg" />
+    </div>
+    <div class="mt-4">
+      <button class="btn btn-primary btn-block">{{isLogin ? "Login" : "Register"}}</button>
+      <a class="btn btn-silent btn-sm btn-block" (click)="onFormTypeChanged()">
+        Go to {{isLogin ? "Register" : "Login"}}
+      </a>
+    </div>
+  </form>
+</app-form-wrapper>
