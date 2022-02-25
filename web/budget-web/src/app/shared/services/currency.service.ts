@@ -10,11 +10,12 @@ import { catchError } from 'rxjs/operators';
 })
 export class CurrencyService {
   private controllerName: string = 'Currency';
+
   constructor(private http: HttpClient, private errorService: ErrorService) {}
 
   getAll() {
     return this.http
-      .get<CurrencyModel[]>(environment.apiUrl + this.controllerName + '/GetAll')
+      .get<CurrencyModel[]>(`${environment.apiUrl}${this.controllerName}/GetAll`)
       .pipe(catchError(this.errorService.handleError));
   }
 }

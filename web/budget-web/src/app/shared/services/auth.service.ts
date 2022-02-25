@@ -14,19 +14,24 @@ import { LocalStorageKeys } from 'src/app/shared/constants';
   providedIn: 'root',
 })
 export class AuthService {
-  userSubject = new BehaviorSubject<User>(null!);
+  private controller: string = 'Authentication';
+
+  public userSubject = new BehaviorSubject<User>(null!);
 
   constructor(private http: HttpClient, private errorService: ErrorService) {}
 
   register(signUpModel: RegisterModel): Observable<Object> {
     return this.http
-      .post(environment.apiUrl + 'Authentication/Register', signUpModel)
+      .post(`${environment.apiUrl}${this.controller}/Register`, signUpModel)
       .pipe(catchError(this.errorService.handleError));
   }
 
   login(signUpModel: LoginModel): Observable<LoginResultModel> {
     return this.http
-      .post<LoginResultModel>(environment.apiUrl + 'Authentication/Login', signUpModel)
+      .post<LoginResultModel>(
+        environment.apiUrl + `${environment.apiUrl}${this.controller}/Login`,
+        signUpModel,
+      )
       .pipe(
         catchError(this.errorService.handleError),
         tap((resData) => {
