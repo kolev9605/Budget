@@ -14,6 +14,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { LoadingSpinnerComponent } from './shared/components/loading-spinner/loading-spinner.component';
 import { AuthInterceptor } from './shared/services/auth.interceptor';
 import { CreateAccountComponent } from './account/create-account/create-account.component';
+import { FormWrapperComponent } from './shared/components/form-wrapper/form-wrapper.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { CreateAccountComponent } from './account/create-account/create-account.
     AuthenticationComponent,
     LoadingSpinnerComponent,
     CreateAccountComponent,
+    FormWrapperComponent,
   ],
   imports: [
     BrowserModule,
