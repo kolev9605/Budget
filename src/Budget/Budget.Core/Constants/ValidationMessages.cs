@@ -10,5 +10,14 @@
             public const string UserDoesNotExists = "User with username {0} does not exists";
             public const string IncorrectPassword = "Incorrect password";
         }
+
+        public static class Common
+        {
+            public const string IsNotNull = "The argument {0} cannot be null";
+            public const string IsNotNullOrEmpty = "The argument {0} cannot be null or empty";
+            public const string EntityDoesNotExist = "{0} with id {1} does not exist";
+
+        }
+
     }
 }
