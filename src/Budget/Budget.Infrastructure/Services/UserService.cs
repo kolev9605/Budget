@@ -1,5 +1,6 @@
 ﻿using Budget.Core.Entities;
 using Budget.Core.Exceptions;
+using Budget.Core.Guards;
 using Budget.Core.Interfaces.Services;
 using Budget.Core.Models.Authentication;
 using Budget.Core.Options;
@@ -31,6 +32,9 @@ namespace Budget.Infrastructure.Services
 
         public async Task<TokenModel> LoginAsync(LoginModel loginModel)
         {
+            Guard.IsNotNullOrEmpty(loginModel.Username, nameof(loginModel.Username));
+            Guard.IsNotNullOrEmpty(loginModel.Password, nameof(loginModel.Password));
+
             var user = await _userManager.FindByNameAsync(loginModel.Username);
             if (user == null)
             {
@@ -69,6 +73,10 @@ namespace Budget.Infrastructure.Services
 
         public async Task RegisterAsync(RegisterModel registerModel)
         {
+            Guard.IsNotNullOrEmpty(registerModel.Username, nameof(registerModel.Username));
+            Guard.IsNotNullOrEmpty(registerModel.Password, nameof(registerModel.Password));
+            Guard.IsNotNullOrEmpty(registerModel.Email, nameof(registerModel.Email));
+
             var userExists = await _userManager.FindByNameAsync(registerModel.Username);
             if (userExists != null)
             {

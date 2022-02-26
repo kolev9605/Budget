@@ -5,24 +5,40 @@ using Budget.Core.Models.Accounts;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using Budget.Core.Guards;
+using Budget.Core.Exceptions;
+using Budget.Core.Constants;
 
 namespace Budget.Infrastructure.Services
 {
     public class AccountService : IAccountService
     {
         private readonly IAccountRepository _accountRepository;
+        private readonly IRepository<Currency> _currencyRepository;
 
-        public AccountService(IAccountRepository accountRepository)
+        public AccountService(
+            IAccountRepository accountRepository, 
+            IRepository<Currency> currencyRepository)
         {
             _accountRepository = accountRepository;
+            _currencyRepository = currencyRepository;
         }
 
         public async Task<int> CreateAccountAsync(CreateAccountModel createAccountModel, string userId)
         {
+            Guard.IsNotNullOrEmpty(createAccountModel.Name, nameof(createAccountModel.Name));
+
+            var currency = await _currencyRepository.GetByIdAsync(createAccountModel.CurrencyId);
+            if (currency == null)
+            {
+                throw new BudgetValidationException(
+                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(currency), createAccountModel.CurrencyId));
+            }
+
             var account = new Account()
             {
                 Name = createAccountModel.Name,
-                CurrencyId = createAccountModel.CurrencyId,
+                CurrencyId = currency.Id,
                 UserId = userId,
             };
 
