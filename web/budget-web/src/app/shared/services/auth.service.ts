@@ -28,10 +28,7 @@ export class AuthService {
 
   login(signUpModel: LoginModel): Observable<LoginResultModel> {
     return this.http
-      .post<LoginResultModel>(
-        environment.apiUrl + `${environment.apiUrl}${this.controller}/Login`,
-        signUpModel,
-      )
+      .post<LoginResultModel>(`${environment.apiUrl}${this.controller}/Login`, signUpModel)
       .pipe(
         catchError(this.errorService.handleError),
         tap((resData) => {
@@ -43,11 +40,13 @@ export class AuthService {
 
   tryLogin(): void {
     const userData = JSON.parse(localStorage.getItem(LocalStorageKeys.UserData)!);
-    const user = new User(userData.token, new Date(userData.validTo));
+    if (userData) {
+      const user = new User(userData.token, new Date(userData.validTo));
 
-    // TODO: implement refreshing the token when it expires
+      // TODO: implement refreshing the token when it expires
 
-    this.userSubject.next(user);
+      this.userSubject.next(user);
+    }
   }
 
   logout() {
