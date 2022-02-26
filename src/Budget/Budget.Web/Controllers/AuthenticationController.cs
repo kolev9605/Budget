@@ -19,19 +19,11 @@ namespace Budget.Web.Controllers
         [HttpPost]
         [Route("Login")]
         public async Task<IActionResult> Login(LoginModel model)
-        {
-            var token = await _userService.LoginAsync(model);
-
-            return Ok(token);
-        }
+            => Ok(await _userService.LoginAsync(model));
 
         [HttpPost]
         [Route("Register")]
         public async Task<IActionResult> Register(RegisterModel model)
-        {
-            await _userService.RegisterAsync(model);
-
-            return Ok();
-        }
+            => Ok(_userService.RegisterAsync(model));
     }
 }
