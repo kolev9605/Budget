@@ -8,6 +8,8 @@ namespace Budget.Core.Interfaces.Services
     {
         Task<int> CreateAccountAsync(CreateAccountModel createAccountModel, string userId);
 
+        Task<int> DeleteAccountAsync(int accountId);
+
         Task<IEnumerable<AccountModel>> GetAllAccountsAsync(string userId);
     }
 }

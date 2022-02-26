@@ -71,7 +71,7 @@ namespace Budget.Infrastructure.Services
             return tokenModel;
         }
 
-        public async Task RegisterAsync(RegisterModel registerModel)
+        public async Task<string> RegisterAsync(RegisterModel registerModel)
         {
             Guard.IsNotNullOrEmpty(registerModel.Username, nameof(registerModel.Username));
             Guard.IsNotNullOrEmpty(registerModel.Password, nameof(registerModel.Password));
@@ -97,6 +97,7 @@ namespace Budget.Infrastructure.Services
             }
 
             await _userManager.AddToRoleAsync(user, Roles.User);
+            return user.Id;
         }
 
         private (string token, DateTime validTo) GenerateToken(List<Claim> authClaims)

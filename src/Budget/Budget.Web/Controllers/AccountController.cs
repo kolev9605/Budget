@@ -22,19 +22,16 @@ namespace Budget.Web.Controllers
         [HttpPost]
         [Route(nameof(Create))]
         public async Task<IActionResult> Create(CreateAccountModel createAccountModel)
-        {
-            var id = await _accountService.CreateAccountAsync(createAccountModel, User.FindFirstValue(ClaimTypes.NameIdentifier));
+            => Ok(await _accountService.CreateAccountAsync(createAccountModel, User.FindFirstValue(ClaimTypes.NameIdentifier)));
 
-            return Ok(id);
-        }
+        [HttpGet]
+        [Route(nameof(Delete))]
+        public async Task<IActionResult> Delete(int accountId)
+            => Ok(await _accountService.DeleteAccountAsync(accountId));
 
         [HttpGet]
         [Route(nameof(GetAll))]
         public async Task<IActionResult> GetAll()
-        {
-            var accounts = await _accountService.GetAllAccountsAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
-
-            return Ok(accounts);
-        }
+            => Ok(await _accountService.GetAllAccountsAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)));
     }
 }
