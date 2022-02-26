@@ -61,6 +61,6 @@ app.UseAuthorization();
 
 app.UseMiddleware<ErrorHandlerMiddleware>();
 
-app.MapControllers();
+app.MapDefaultControllerRoute();
 
 app.Run();
