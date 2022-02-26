@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Budget.Repositories
 {
-    public class Repository<T> : IRepository<T> 
+    public class Repository<T> : IRepository<T>
         where T : class, IBaseEntity
     {
         protected readonly BudgetDbContext _budgetDbContext;
@@ -37,7 +37,10 @@ namespace Budget.Repositories
             var entity = await _budgetDbContext.Set<T>().FindAsync(id);
             _budgetDbContext.Set<T>().Remove(entity);
 
-            await _budgetDbContext.SaveChangesAsync();
+            if (saveChanges)
+            {
+                await _budgetDbContext.SaveChangesAsync();
+            }
 
             return entity;
         }
@@ -48,7 +51,11 @@ namespace Budget.Repositories
         public async Task<T> UpdateAsync(T entity, bool saveChanges = true)
         {
             _budgetDbContext.Set<T>().Update(entity);
-            await _budgetDbContext.SaveChangesAsync();
+
+            if (saveChanges)
+            {
+                await _budgetDbContext.SaveChangesAsync();
+            }
 
             return entity;
         }
