@@ -22,9 +22,6 @@ namespace Budget.Web.Controllers
         [HttpGet]
         [Route(nameof(GetAll))]
         public async Task<ActionResult<IEnumerable<RecordModel>>> GetAll()
-        {
-            var records = await _recordService.GetAllAsync();
-            return Ok(records);
-        }
+            => Ok(await _recordService.GetAllAsync());
     }
 }
