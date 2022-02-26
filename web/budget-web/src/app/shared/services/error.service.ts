@@ -8,10 +8,10 @@ import { Injectable } from '@angular/core';
 export class ErrorService {
   public handleError(errorResponse: HttpErrorResponse) {
     let errorMessage;
-    if (!errorResponse.error || !errorResponse.error.message) {
-      errorMessage = 'Something went wrong :/';
-    } else {
+    if (errorResponse.error && errorResponse.error.message) {
       errorMessage = errorResponse.error.message;
+    } else {
+      errorMessage = 'Something went wrong.';
     }
 
     return throwError(errorMessage);
