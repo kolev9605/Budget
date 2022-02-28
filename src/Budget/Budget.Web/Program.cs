@@ -31,6 +31,7 @@ builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(JwtOptio
 builder.Services.AddJwtAuthentication(builder.Configuration);
 
 builder.Services.AddRepositories();
+builder.Services.AddMemoryCache();
 builder.Services.AddServices();
 
 builder.Services.AddControllers();

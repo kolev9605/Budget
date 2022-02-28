@@ -53,6 +53,7 @@ namespace Budget.Infrastructure
         {
             services.AddTransient<IDateTimeProvider, DateTimeProvider>();
 
+            services.AddTransient<ICacheManager, CacheManager>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IRecordService, RecordService>();
             services.AddTransient<IAccountService, AccountService>();
