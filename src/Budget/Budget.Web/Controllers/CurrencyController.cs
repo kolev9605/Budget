@@ -23,13 +23,9 @@ namespace Budget.Web.Controllers
         [HttpGet]
         [Route(nameof(GetAll))]
         public async Task<IActionResult> GetAll()
-        {
-            var currencies = await _cacheManager.GetOrCreateAsync(
+            => Ok(await _cacheManager.GetOrCreateAsync(
                 CacheConstants.Keys.Currencies, 
                 CacheConstants.Expirations.CurrenciesExpirationInSeconds, 
-                _currencyService.GetAllAsync);
-
-            return Ok(currencies);
-        }
+                _currencyService.GetAllAsync));
     }
 }
