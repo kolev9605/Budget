@@ -8,6 +8,7 @@ using System.Linq;
 using Budget.Core.Guards;
 using Budget.Core.Exceptions;
 using Budget.Core.Constants;
+using Budget.Core.Models.Currencies;
 
 namespace Budget.Infrastructure.Services
 {
@@ -64,7 +65,7 @@ namespace Budget.Infrastructure.Services
         public async Task<IEnumerable<AccountModel>> GetAllAccountsAsync(string userId)
         {
             var accounts = await _accountRepository
-                .GetAllByUserId(userId);
+                .GetAllByUserIdAsync(userId);
 
             var accountModels = accounts
                 .Select(a => new AccountModel()
@@ -73,6 +74,25 @@ namespace Budget.Infrastructure.Services
                 });
 
             return accountModels;
+        }
+
+        public async Task<AccountModel> GetByIdAsync(int accountId)
+        {
+            var account = await _accountRepository
+                .GetByIdWithCurrencyAsync(accountId);
+
+            var accountModel = new AccountModel()
+            {
+                Name = account.Name,
+                CurrencyModel = new CurrencyModel()
+                {
+                    Id = account.Id,
+                    Name = account.Currency.Name,
+                    Abbreviation = account.Currency.Abbreviation,
+                }
+            };
+
+            return accountModel;
         }
     }
 }

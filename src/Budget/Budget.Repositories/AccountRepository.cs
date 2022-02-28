@@ -18,9 +18,14 @@ namespace Budget.Repositories
             _budgetDbContext = budgetDbContext;
         }
 
-        public async Task<IEnumerable<Account>> GetAllByUserId(string userId)
+        public async Task<IEnumerable<Account>> GetAllByUserIdAsync(string userId)
             => await _budgetDbContext.Accounts
                 .Where(a => a.UserId == userId)
                 .ToListAsync();
+
+        public async Task<Account> GetByIdWithCurrencyAsync(int accountId)
+            => await _budgetDbContext.Accounts
+                .Include(a => a.Currency)    
+                .FirstOrDefaultAsync(a => a.Id == accountId);
     }
 }

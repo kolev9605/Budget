@@ -11,5 +11,7 @@ namespace Budget.Core.Interfaces.Services
         Task<int> DeleteAccountAsync(int accountId);
 
         Task<IEnumerable<AccountModel>> GetAllAccountsAsync(string userId);
+
+        Task<AccountModel> GetByIdAsync(int accountId);
     }
 }

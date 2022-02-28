@@ -33,5 +33,10 @@ namespace Budget.Web.Controllers
         [Route(nameof(GetAll))]
         public async Task<IActionResult> GetAll()
             => Ok(await _accountService.GetAllAccountsAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)));
+
+        [HttpGet]
+        [Route(nameof(GetById))]
+        public async Task<IActionResult> GetById(int accountId)
+            => Ok(await _accountService.GetByIdAsync(accountId));
     }
 }
