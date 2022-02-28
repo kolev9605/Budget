@@ -42,8 +42,11 @@ export class AuthService {
     const userData = JSON.parse(localStorage.getItem(LocalStorageKeys.UserData)!);
     if (userData) {
       const user = new User(userData.token, new Date(userData.validTo));
-
       // TODO: implement refreshing the token when it expires
+      if (new Date() >= user.validTo) {
+        this.logout();
+        return;
+      }
 
       this.userSubject.next(user);
     }
