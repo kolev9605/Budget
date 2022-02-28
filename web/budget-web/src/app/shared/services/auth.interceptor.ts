@@ -16,6 +16,11 @@ export class AuthInterceptor implements HttpInterceptor {
           return next.handle(req);
         }
 
+        if (!this.authService.isTokenValid(user)) {
+          this.authService.logout();
+          return next.handle(req);
+        }
+
         const modifiedRequest = req.clone({
           setHeaders: {
             Authorization: `Bearer ${user.token}`,

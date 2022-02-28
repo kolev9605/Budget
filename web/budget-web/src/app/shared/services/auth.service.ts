@@ -43,7 +43,7 @@ export class AuthService {
     if (userData) {
       const user = new User(userData.token, new Date(userData.validTo));
       // TODO: implement refreshing the token when it expires
-      if (new Date() >= user.validTo) {
+      if (!this.isTokenValid(user)) {
         this.logout();
         return;
       }
@@ -55,5 +55,12 @@ export class AuthService {
   logout() {
     this.userSubject.next(null!);
     localStorage.removeItem(LocalStorageKeys.UserData);
+  }
+
+  isTokenValid(user: User) {
+    const nowUtc = new Date(new Date().toUTCString());
+    const validToDate = new Date(user.validTo);
+
+    return validToDate >= nowUtc;
   }
 }
