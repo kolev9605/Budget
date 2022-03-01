@@ -7,11 +7,14 @@
       [routerLink]="['/accounts/edit', account.id]"
       *ngFor="let account of accounts"
       role="button"
-      class="card col-3 m-3 text-white bg-info">
-      <div class="card-body text-center">{{account.name}}</div>
+      class="card col-3 m-3 text-white bg-success">
+      <div class="card-body text-center">
+        {{account.name}}
+        <span class="fs-6">({{account.currency.abbreviation}})</span>
+      </div>
     </div>
-    <div role="button" class="card col-3 m-3 border-info" (click)="onAddAccountPressed()">
-      <div class="card-body text-info text-center">Add Account</div>
+    <div role="button" class="card col-3 m-3 border-success" (click)="onAddAccountPressed()">
+      <div class="card-body text-success text-center">Add Account</div>
     </div>
   </div>
 </div>

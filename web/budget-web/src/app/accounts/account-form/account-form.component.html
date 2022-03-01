@@ -15,7 +15,7 @@
       </select>
     </div>
     <div class="mt-4">
-      <button class="mx-2 btn btn-primary btn-block">Save</button>
+      <button class="mx-2 btn btn-success btn-block">{{inEditMode ? 'Update' : 'Create'}}</button>
       <button
         *ngIf="inEditMode"
         type="button"

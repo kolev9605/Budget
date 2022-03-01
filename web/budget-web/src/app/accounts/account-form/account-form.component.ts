@@ -33,8 +33,6 @@ export class AccountFormComponent implements OnInit {
   }
 
   onAccountDelete(): void {
-    console.log('here');
-
     this.accountDeleted.emit();
   }
 }
