@@ -3,6 +3,7 @@
 <app-account-form
   *ngIf="currencies"
   (formSubmitted)="onSubmit()"
-  [inEditMode]="false"
+  (accountDeleted)="deleteAccount()"
+  [inEditMode]="true"
   [currencies]="currencies"
-  [accountForm]="createAccountForm"></app-account-form>
+  [accountForm]="editAccountForm"></app-account-form>

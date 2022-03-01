@@ -3,7 +3,11 @@
   <h1>Accounts</h1>
 
   <div class="row g-2">
-    <div *ngFor="let account of accounts" role="button" class="card col-3 m-3 text-white bg-info">
+    <div
+      [routerLink]="['/accounts/edit', account.id]"
+      *ngFor="let account of accounts"
+      role="button"
+      class="card col-3 m-3 text-white bg-info">
       <div class="card-body text-center">{{account.name}}</div>
     </div>
     <div role="button" class="card col-3 m-3 border-info" (click)="onAddAccountPressed()">

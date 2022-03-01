@@ -38,5 +38,10 @@ namespace Budget.Web.Controllers
         [Route(nameof(GetById))]
         public async Task<IActionResult> GetById(int accountId)
             => Ok(await _accountService.GetByIdAsync(accountId));
+
+        [HttpPost]
+        [Route(nameof(Update))]
+        public async Task<IActionResult> Update(UpdateAccountModel updateAccountModel)
+            => Ok(await _accountService.UpdateAsync(updateAccountModel));
     }
 }

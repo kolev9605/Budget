@@ -13,5 +13,7 @@ namespace Budget.Core.Interfaces.Services
         Task<IEnumerable<AccountModel>> GetAllAccountsAsync(string userId);
 
         Task<AccountModel> GetByIdAsync(int accountId);
+
+        Task<int> UpdateAsync(UpdateAccountModel accountModel);
     }
 }

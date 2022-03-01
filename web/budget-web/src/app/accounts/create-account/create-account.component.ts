@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { forkJoin } from 'rxjs';
 import { CreateAccountModel } from 'src/app/shared/models/accounts/create-account.model';
 import { CurrencyModel } from 'src/app/shared/models/currencies/currency.model';
 import { AccountService } from 'src/app/shared/services/account.service';
@@ -13,9 +14,9 @@ import { CurrencyService } from 'src/app/shared/services/currency.service';
   styleUrls: ['./create-account.component.scss'],
 })
 export class CreateAccountComponent implements OnInit {
-  public createAccountForm: FormGroup;
-  public isLoading: boolean = false;
-  public currencies: CurrencyModel[];
+  createAccountForm: FormGroup;
+  isLoading: boolean = false;
+  currencies: CurrencyModel[];
 
   constructor(
     private accountService: AccountService,
@@ -33,26 +34,29 @@ export class CreateAccountComponent implements OnInit {
     });
 
     this.currencyService.getAll().subscribe(
-      (res) => {
+      (currencies) => {
         this.isLoading = false;
 
-        this.currencies = res;
+        this.currencies = currencies;
       },
-      (err) => {
+      (error) => {
         this.isLoading = false;
 
-        this.toastr.error(err);
+        this.toastr.error(error);
       },
     );
   }
 
   onSubmit(): void {
+    this.createAccount();
+  }
+
+  createAccount() {
     this.isLoading = true;
 
-    console.log(this.createAccountForm.value.currency);
     const createAccountModel: CreateAccountModel = new CreateAccountModel(
       this.createAccountForm.value.accountName,
-      this.createAccountForm.value.currency.id,
+      this.createAccountForm.value.currency,
     );
 
     this.accountService.createAccount(createAccountModel).subscribe(

@@ -20,6 +20,7 @@ namespace Budget.Repositories
 
         public async Task<IEnumerable<Account>> GetAllByUserIdAsync(string userId)
             => await _budgetDbContext.Accounts
+                .Include(a => a.Currency)
                 .Where(a => a.UserId == userId)
                 .ToListAsync();
 

@@ -1,0 +1,28 @@
+<app-form-wrapper [formTitle]="inEditMode ? 'Edit Account' : 'Create Account'">
+  <form [formGroup]="accountForm" (ngSubmit)="onFormSubmitted()">
+    <div class="form-group py-2">
+      <label class="form-label" for="accountName">Account Name</label>
+      <input
+        type="text"
+        id="accountName"
+        formControlName="accountName"
+        class="form-control form-control-lg" />
+    </div>
+    <div class="form-group py-2">
+      <label class="form-label" for="currency">Currency</label>
+      <select class="form-control form-control-lg" id="currency" formControlName="currency">
+        <option *ngFor="let currency of currencies" [value]="currency.id">{{currency.name}}</option>
+      </select>
+    </div>
+    <div class="mt-4">
+      <button class="mx-2 btn btn-primary btn-block">Save</button>
+      <button
+        *ngIf="inEditMode"
+        type="button"
+        class="mx-2 btn btn-danger btn-block"
+        (click)="onAccountDelete()">
+        Delete
+      </button>
+    </div>
+  </form>
+</app-form-wrapper>

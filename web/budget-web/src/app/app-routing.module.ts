@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AccountsComponent } from './accounts/accounts.component';
 import { CreateAccountComponent } from './accounts/create-account/create-account.component';
+import { EditAccountComponent } from './accounts/edit-account/edit-account.component';
 import { AuthenticationComponent } from './authentication/authentication.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AuthGuard } from './shared/services/auth.guard';
@@ -16,7 +17,8 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       { path: '', component: AccountsComponent },
-      { path: 'create-account', component: CreateAccountComponent, pathMatch: 'full' },
+      { path: 'create', component: CreateAccountComponent, pathMatch: 'full' },
+      { path: 'edit/:accountId', component: EditAccountComponent, pathMatch: 'full' },
     ],
   },
 ];

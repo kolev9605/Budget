@@ -57,7 +57,7 @@ namespace Budget.Infrastructure.Services
                     string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(account), accountId));
             }
 
-            var deletedAccount = await _currencyRepository.DeleteAsync(accountId);
+            var deletedAccount = await _accountRepository.DeleteAsync(accountId);
 
             return deletedAccount.Id;
         }
@@ -71,6 +71,13 @@ namespace Budget.Infrastructure.Services
                 .Select(a => new AccountModel()
                 {
                     Name = a.Name,
+                    Id = a.Id,
+                    Currency = new CurrencyModel
+                    {
+                        Id = a.Currency.Id,
+                        Abbreviation = a.Currency.Abbreviation,
+                        Name = a.Currency.Name
+                    }
                 });
 
             return accountModels;
@@ -83,16 +90,37 @@ namespace Budget.Infrastructure.Services
 
             var accountModel = new AccountModel()
             {
+                Id = account.Id,
                 Name = account.Name,
-                CurrencyModel = new CurrencyModel()
+                Currency = new CurrencyModel()
                 {
-                    Id = account.Id,
+                    Id = account.Currency.Id,
                     Name = account.Currency.Name,
                     Abbreviation = account.Currency.Abbreviation,
                 }
             };
 
             return accountModel;
+        }
+
+        public async Task<int> UpdateAsync(UpdateAccountModel accountModel)
+        {
+            Guard.IsNotNullOrEmpty(accountModel.Name, nameof(accountModel.Name));
+
+            var account = await _accountRepository
+                .GetByIdWithCurrencyAsync(accountModel.Id);
+            if (account == null)
+            {
+                throw new BudgetValidationException(
+                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(account), accountModel.Id));
+            }
+
+            account.CurrencyId = accountModel.CurrencyId;
+            account.Name = accountModel.Name;
+
+            await _accountRepository.UpdateAsync(account);
+
+            return account.Id;
         }
     }
 }

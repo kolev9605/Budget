@@ -16,6 +16,8 @@ import { AuthInterceptor } from './shared/services/auth.interceptor';
 import { CreateAccountComponent } from './accounts/create-account/create-account.component';
 import { FormWrapperComponent } from './shared/components/form-wrapper/form-wrapper.component';
 import { AccountsComponent } from './accounts/accounts.component';
+import { EditAccountComponent } from './accounts/edit-account/edit-account.component';
+import { AccountFormComponent } from './accounts/account-form/account-form.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +29,8 @@ import { AccountsComponent } from './accounts/accounts.component';
     CreateAccountComponent,
     FormWrapperComponent,
     AccountsComponent,
+    EditAccountComponent,
+    AccountFormComponent,
   ],
   imports: [
     BrowserModule,
