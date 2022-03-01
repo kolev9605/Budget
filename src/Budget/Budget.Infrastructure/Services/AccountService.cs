@@ -68,17 +68,7 @@ namespace Budget.Infrastructure.Services
                 .GetAllByUserIdAsync(userId);
 
             var accountModels = accounts
-                .Select(a => new AccountModel()
-                {
-                    Name = a.Name,
-                    Id = a.Id,
-                    Currency = new CurrencyModel
-                    {
-                        Id = a.Currency.Id,
-                        Abbreviation = a.Currency.Abbreviation,
-                        Name = a.Currency.Name
-                    }
-                });
+                .Select(a => AccountModel.FromAccount(a));
 
             return accountModels;
         }
@@ -88,17 +78,7 @@ namespace Budget.Infrastructure.Services
             var account = await _accountRepository
                 .GetByIdWithCurrencyAsync(accountId);
 
-            var accountModel = new AccountModel()
-            {
-                Id = account.Id,
-                Name = account.Name,
-                Currency = new CurrencyModel()
-                {
-                    Id = account.Currency.Id,
-                    Name = account.Currency.Name,
-                    Abbreviation = account.Currency.Abbreviation,
-                }
-            };
+            var accountModel = AccountModel.FromAccount(account);
 
             return accountModel;
         }
