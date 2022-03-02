@@ -61,6 +61,7 @@ export class EditAccountComponent implements OnInit {
       },
       (error) => {
         this.isLoading = false;
+        this.toastr.error(error);
       },
     );
   }
