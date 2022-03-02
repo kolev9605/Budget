@@ -20,5 +20,9 @@ namespace Budget.Core.Entities
         public int PaymentTypeId { get; set; }
 
         public PaymentType PaymentType { get; set; }
+
+        public int CategoryId { get; set; }
+
+        public Category Category { get; set; }
     }
 }

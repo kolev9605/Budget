@@ -20,6 +20,8 @@ namespace Budget.Persistance
         
         public DbSet<Record> Records { get; set; }
 
+        public DbSet<Category> Categories { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(BudgetDbContext).Assembly);
