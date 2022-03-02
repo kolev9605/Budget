@@ -6,6 +6,8 @@
 
         public string Name { get; set; }
 
+        public decimal InitialBalance { get; set; }
+
         public int CurrencyId { get; set; }
     }
 }

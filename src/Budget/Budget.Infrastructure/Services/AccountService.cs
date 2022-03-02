@@ -39,6 +39,7 @@ namespace Budget.Infrastructure.Services
             var account = new Account()
             {
                 Name = createAccountModel.Name,
+                InitialBalance = createAccountModel.InitialBalance,
                 CurrencyId = currency.Id,
                 UserId = userId,
             };
@@ -97,6 +98,7 @@ namespace Budget.Infrastructure.Services
 
             account.CurrencyId = accountModel.CurrencyId;
             account.Name = accountModel.Name;
+            account.InitialBalance = accountModel.InitialBalance;
 
             await _accountRepository.UpdateAsync(account);
 

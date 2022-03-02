@@ -18,5 +18,7 @@ namespace Budget.Core.Entities
         public int CurrencyId { get; set; }
 
         public Currency Currency { get; set; }
+
+        public decimal InitialBalance { get; set; }
     }
 }

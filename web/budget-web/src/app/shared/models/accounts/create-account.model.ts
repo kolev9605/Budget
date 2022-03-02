@@ -1,9 +1,7 @@
 export class CreateAccountModel {
-  public name: string;
-  public currencyId: number;
-
-  constructor(name: string, currencyId: number) {
+  constructor(public name: string, public currencyId: number, public initialBalance: number) {
     this.name = name;
     this.currencyId = currencyId;
+    this.initialBalance = initialBalance;
   }
 }

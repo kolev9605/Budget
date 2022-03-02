@@ -31,6 +31,7 @@ export class CreateAccountComponent implements OnInit {
     this.createAccountForm = this.fb.group({
       accountName: ['', [Validators.required]],
       currency: ['', [Validators.required]],
+      initialBalance: 0,
     });
 
     this.currencyService.getAll().subscribe(
@@ -57,6 +58,7 @@ export class CreateAccountComponent implements OnInit {
     const createAccountModel: CreateAccountModel = new CreateAccountModel(
       this.createAccountForm.value.accountName,
       this.createAccountForm.value.currency,
+      this.createAccountForm.value.initialBalance,
     );
 
     this.accountService.createAccount(createAccountModel).subscribe(

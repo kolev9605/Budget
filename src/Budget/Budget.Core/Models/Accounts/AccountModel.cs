@@ -9,6 +9,8 @@ namespace Budget.Core.Models.Accounts
 
         public string Name { get; set; }
 
+        public decimal InitialBalance { get; set; }
+
         public CurrencyModel Currency { get; set; }
 
         public static AccountModel FromAccount(Account account)
@@ -17,6 +19,7 @@ namespace Budget.Core.Models.Accounts
             {
                 Id = account.Id,
                 Name = account.Name,
+                InitialBalance = account.InitialBalance,
                 Currency = new CurrencyModel()
                 {
                     Id = account.Currency.Id,

@@ -6,7 +6,7 @@ import { CurrencyModel } from 'src/app/shared/models/currencies/currency.model';
 @Component({
   selector: 'app-account-form',
   templateUrl: './account-form.component.html',
-  styleUrls: ['./account-form.component.scss'],
+  styleUrls: [],
 })
 export class AccountFormComponent implements OnInit {
   @Input()
@@ -26,7 +26,9 @@ export class AccountFormComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.log(this.accountForm.value);
+  }
 
   onFormSubmitted(): void {
     this.formSubmitted.emit();

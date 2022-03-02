@@ -35,6 +35,7 @@ export class EditAccountComponent implements OnInit {
     this.editAccountForm = this.fb.group({
       accountName: ['', [Validators.required]],
       currency: ['', [Validators.required]],
+      initialBalance: [0],
     });
 
     forkJoin({
@@ -49,9 +50,13 @@ export class EditAccountComponent implements OnInit {
         this.currencies = currencies;
 
         this.account = editAccount;
+
+        console.log(this.account);
+
         this.editAccountForm.patchValue({
           accountName: editAccount.name,
           currency: editAccount.currency.id,
+          initialBalance: editAccount.initialBalance,
         });
       },
       (error) => {
@@ -86,6 +91,7 @@ export class EditAccountComponent implements OnInit {
       this.account.id,
       this.editAccountForm.value.accountName,
       this.editAccountForm.value.currency,
+      this.editAccountForm.value.initialBalance,
     );
 
     this.accountService.updateAccount(updateAccountModel).subscribe(
