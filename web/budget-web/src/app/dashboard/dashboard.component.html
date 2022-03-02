@@ -1,20 +1,19 @@
 <div class="container py-5">
   <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
-  <h1>Accounts</h1>
+  <h1 class="text-center mb-4">Accounts</h1>
 
-  <div class="row g-2">
+  <div class="row">
     <div
       [routerLink]="['/accounts/edit', account.id]"
       *ngFor="let account of accounts"
       role="button"
-      class="card col-3 m-3 text-white bg-success">
-      <div class="card-body text-center">
-        {{account.name}}
-        <span class="fs-6">({{account.currency.abbreviation}})</span>
+      class="col-12 col-md-6 col-lg-4 col-xl-3">
+      <div class="m-1 card card-body text-center text-white bg-success">
+        <span>{{account.name}} ({{account.currency.abbreviation}})</span>
       </div>
     </div>
-    <div role="button" class="card col-3 m-3 border-success" (click)="onAddAccountPressed()">
-      <div class="card-body text-success text-center">Add Account</div>
+    <div role="button" class="col-12 col-md-6 col-lg-4 col-xl-3" (click)="onAddAccountPressed()">
+      <div class="m-1 card card-body text-success text-center border-success">Add Account</div>
     </div>
   </div>
 </div>
