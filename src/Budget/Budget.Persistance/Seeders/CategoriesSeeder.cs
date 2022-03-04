@@ -26,7 +26,7 @@ namespace Budget.Persistance.Seeders
                     new Category() { Name = "Bills" },
                     new Category() { Name = "Sports" },
                     new Category() { Name = "Car Maintenance" },
-                }.Select(c => new Category() { Name = c.Name, CategoryType = CategoryType.Want });
+                }.Select(c => new Category() { Name = c.Name, CategoryType = CategoryType.Need });
 
                 var wants = new List<Category>()
                 {
