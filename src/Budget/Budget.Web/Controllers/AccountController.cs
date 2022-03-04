@@ -8,9 +8,8 @@ using System.Threading.Tasks;
 namespace Budget.Web.Controllers
 {
     [Authorize]
-    [ApiController]
     [Route("Account")]
-    public class AccountController : ControllerBase
+    public class AccountController : BaseController
     {
         private readonly IAccountService _accountService;
 
@@ -22,7 +21,7 @@ namespace Budget.Web.Controllers
         [HttpPost]
         [Route(nameof(Create))]
         public async Task<IActionResult> Create(CreateAccountModel createAccountModel)
-            => Ok(await _accountService.CreateAccountAsync(createAccountModel, User.FindFirstValue(ClaimTypes.NameIdentifier)));
+            => Ok(await _accountService.CreateAccountAsync(createAccountModel, LoggedInUserToken));
 
         [HttpGet]
         [Route(nameof(Delete))]
@@ -32,7 +31,7 @@ namespace Budget.Web.Controllers
         [HttpGet]
         [Route(nameof(GetAll))]
         public async Task<IActionResult> GetAll()
-            => Ok(await _accountService.GetAllAccountsAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)));
+            => Ok(await _accountService.GetAllAccountsAsync(LoggedInUserToken));
 
         [HttpGet]
         [Route(nameof(GetById))]
