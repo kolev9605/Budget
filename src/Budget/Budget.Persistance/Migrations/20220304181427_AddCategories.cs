@@ -16,7 +16,7 @@ namespace Budget.Persistance.Migrations
                 defaultValue: 0);
 
             migrationBuilder.CreateTable(
-                name: "Category",
+                name: "Categories",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -25,7 +25,7 @@ namespace Budget.Persistance.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Category", x => x.Id);
+                    table.PrimaryKey("PK_Categories", x => x.Id);
                 });
 
             migrationBuilder.CreateIndex(
@@ -34,10 +34,10 @@ namespace Budget.Persistance.Migrations
                 column: "CategoryId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Records_Category_CategoryId",
+                name: "FK_Records_Categories_CategoryId",
                 table: "Records",
                 column: "CategoryId",
-                principalTable: "Category",
+                principalTable: "Categories",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
         }
@@ -45,11 +45,11 @@ namespace Budget.Persistance.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Records_Category_CategoryId",
+                name: "FK_Records_Categories_CategoryId",
                 table: "Records");
 
             migrationBuilder.DropTable(
-                name: "Category");
+                name: "Categories");
 
             migrationBuilder.DropIndex(
                 name: "IX_Records_CategoryId",

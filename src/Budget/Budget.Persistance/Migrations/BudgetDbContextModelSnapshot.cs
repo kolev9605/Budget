@@ -134,7 +134,7 @@ namespace Budget.Persistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category");
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("Budget.Core.Entities.Currency", b =>

@@ -15,20 +15,20 @@ namespace Budget.Persistance.Seeders
             if (!await context.Categories.AnyAsync())
             {
                 context.Add(new Category() { Name = "Groceries" });
-                context.Add(new Currency() { Name = "Restaurant" });
-                context.Add(new Currency() { Name = "Fast-food" });
-                context.Add(new Currency() { Name = "Bar, cafe" });
-                context.Add(new Currency() { Name = "Shopping" });
-                context.Add(new Currency() { Name = "Clothes & shoes" });
-                context.Add(new Currency() { Name = "Medicaments" });
-                context.Add(new Currency() { Name = "Kids" });
-                context.Add(new Currency() { Name = "Electronics" });
-                context.Add(new Currency() { Name = "Pets, animals" });
-                context.Add(new Currency() { Name = "Home" });
-                context.Add(new Currency() { Name = "Sports" });
-                context.Add(new Currency() { Name = "Rent" });
-                context.Add(new Currency() { Name = "Income" });
-                context.Add(new Currency() { Name = "Missing" });
+                context.Add(new Category() { Name = "Restaurant" });
+                context.Add(new Category() { Name = "Fast-food" });
+                context.Add(new Category() { Name = "Bar, cafe" });
+                context.Add(new Category() { Name = "Shopping" });
+                context.Add(new Category() { Name = "Clothes & shoes" });
+                context.Add(new Category() { Name = "Medicaments" });
+                context.Add(new Category() { Name = "Kids" });
+                context.Add(new Category() { Name = "Electronics" });
+                context.Add(new Category() { Name = "Pets, animals" });
+                context.Add(new Category() { Name = "Home" });
+                context.Add(new Category() { Name = "Sports" });
+                context.Add(new Category() { Name = "Rent" });
+                context.Add(new Category() { Name = "Income" });
+                context.Add(new Category() { Name = "Missing" });
             }
 
             return context;
