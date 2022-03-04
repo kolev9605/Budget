@@ -24,5 +24,7 @@ namespace Budget.Core.Entities
         public int CategoryId { get; set; }
 
         public Category Category { get; set; }
+
+        public RecordType RecordType { get; set; }
     }
 }
