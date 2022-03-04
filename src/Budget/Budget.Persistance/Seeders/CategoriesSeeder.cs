@@ -1,9 +1,7 @@
 ﻿using Budget.Core.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Budget.Persistance.Seeders
@@ -14,21 +12,45 @@ namespace Budget.Persistance.Seeders
         {
             if (!await context.Categories.AnyAsync())
             {
-                context.Add(new Category() { Name = "Groceries" });
-                context.Add(new Category() { Name = "Restaurant" });
-                context.Add(new Category() { Name = "Fast-food" });
-                context.Add(new Category() { Name = "Bar, cafe" });
-                context.Add(new Category() { Name = "Shopping" });
-                context.Add(new Category() { Name = "Clothes & shoes" });
-                context.Add(new Category() { Name = "Medicaments" });
-                context.Add(new Category() { Name = "Kids" });
-                context.Add(new Category() { Name = "Electronics" });
-                context.Add(new Category() { Name = "Pets, animals" });
-                context.Add(new Category() { Name = "Home" });
-                context.Add(new Category() { Name = "Sports" });
-                context.Add(new Category() { Name = "Rent" });
-                context.Add(new Category() { Name = "Income" });
-                context.Add(new Category() { Name = "Missing" });
+                var needs = new List<Category>()
+                {
+                    new Category() { Name = "Groceries" },
+                    new Category() { Name = "Clothes" },
+                    new Category() { Name = "Medicaments" },
+                    new Category() { Name = "Healh Care, Doctor" },
+                    new Category() { Name = "Kids" },
+                    new Category() { Name = "Home" },
+                    new Category() { Name = "Rent" },
+                    new Category() { Name = "Mortgage" },
+                    new Category() { Name = "Online Services" },
+                    new Category() { Name = "Bills" },
+                    new Category() { Name = "Sports" },
+                    new Category() { Name = "Car Maintenance" },
+                }.Select(c => new Category() { Name = c.Name, CategoryType = CategoryType.Want });
+
+                var wants = new List<Category>()
+                {
+                    new Category() { Name = "Restaurant" },
+                    new Category() { Name = "Fast-food" },
+                    new Category() { Name = "Bar, cafe" },
+                    new Category() { Name = "Shopping" },
+                    new Category() { Name = "Electronics" },                    
+                    new Category() { Name = "Other" },
+                    new Category() { Name = "Hobbies" },
+                    new Category() { Name = "Gifts" },
+                    new Category() { Name = "Partner" },
+                    new Category() { Name = "Travel" },
+                }.Select(c => new Category() { Name = c.Name, CategoryType = CategoryType.Want});
+
+                var incomes = new List<Category>()
+                {
+                    new Category() { Name = "Income" },
+                    new Category() { Name = "Salary" },
+                }.Select(c => new Category() { Name = c.Name, CategoryType = CategoryType.Income });
+
+                await context.Categories.AddRangeAsync(needs);
+                await context.Categories.AddRangeAsync(wants);
+                await context.Categories.AddRangeAsync(incomes);
             }
 
             return context;

@@ -11,6 +11,7 @@ namespace Budget.Persistance.Configurations
         {
             builder.Property(c => c.Name)
                 .HasMaxLength(50)
+                .IsUnicode(true)
                 .IsRequired();
 
             builder.HasMany(c => c.Records)

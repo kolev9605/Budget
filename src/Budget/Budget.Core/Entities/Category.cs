@@ -1,5 +1,4 @@
 ﻿using Budget.Core.Entities.Base;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace Budget.Core.Entities
@@ -11,5 +10,7 @@ namespace Budget.Core.Entities
         public string Name { get; set; }
 
         public ICollection<Record> Records { get; set; } = new List<Record>();
+
+        public CategoryType CategoryType { get; set; }
     }
 }
