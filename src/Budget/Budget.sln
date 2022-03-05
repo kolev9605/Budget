@@ -21,6 +21,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentatio
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budget.Repositories", "Budget.Repositories\Budget.Repositories.csproj", "{9D3F1290-2B76-4242-AA03-018A533262B3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Budget.Common", "Budget.Common\Budget.Common.csproj", "{D7D322EE-4478-4761-AC0F-5650E394043D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5EC2C7BC-C0A7-48C6-A2B2-77E06EF1ABA3}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +54,10 @@ Global
 		{9D3F1290-2B76-4242-AA03-018A533262B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9D3F1290-2B76-4242-AA03-018A533262B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9D3F1290-2B76-4242-AA03-018A533262B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7D322EE-4478-4761-AC0F-5650E394043D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7D322EE-4478-4761-AC0F-5650E394043D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7D322EE-4478-4761-AC0F-5650E394043D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7D322EE-4478-4761-AC0F-5650E394043D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -60,6 +71,7 @@ Global
 		{65EF2355-FC26-4DFA-89B6-2620C8854BD5} = {CDE3EC69-539B-4216-888E-76A470732AB6}
 		{699EBCE7-73CD-41FB-B8CB-A19A736240BB} = {CDE3EC69-539B-4216-888E-76A470732AB6}
 		{9D3F1290-2B76-4242-AA03-018A533262B3} = {65EF2355-FC26-4DFA-89B6-2620C8854BD5}
+		{D7D322EE-4478-4761-AC0F-5650E394043D} = {47FF34F4-8A28-4308-8BA4-683BDA9EC76A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {752CFA98-5041-464B-B90C-912FF9874173}
