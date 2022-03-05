@@ -24,6 +24,6 @@ namespace Budget.Web.Controllers
         [HttpPost]
         [Route("Register")]
         public async Task<IActionResult> Register(RegisterModel model)
-            => Ok(_userService.RegisterAsync(model));
+            => Ok(await _userService.RegisterAsync(model));
     }
 }
