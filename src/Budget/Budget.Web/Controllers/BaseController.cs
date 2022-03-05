@@ -6,7 +6,7 @@ namespace Budget.Web.Controllers
     [ApiController]
     public class BaseController : ControllerBase
     {
-        protected string LoggedInUserToken
+        protected string LoggedInUserId
         {
             get
             {
