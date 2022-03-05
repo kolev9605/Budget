@@ -24,9 +24,9 @@ namespace Budget.Web.Controllers
         public async Task<ActionResult<IEnumerable<RecordModel>>> GetAll()
             => Ok(await _recordService.GetAllAsync());
 
-        //[HttpPost]
-        //[Route(nameof(Create))]
-        //public async Task<IActionResult> Create(CreateRecordModel createRecordModel)
-        //    => Ok(await _recordService.CreateAccountAsync(createRecordModel, LoggedInUserToken));
+        [HttpPost]
+        [Route(nameof(Create))]
+        public async Task<IActionResult> Create(CreateRecordModel createRecordModel)
+            => Ok(await _recordService.CreateAsync(createRecordModel, LoggedInUserId));
     }
 }

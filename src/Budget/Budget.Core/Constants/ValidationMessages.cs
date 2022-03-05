@@ -16,8 +16,11 @@
             public const string IsNotNull = "The argument {0} cannot be null";
             public const string IsNotNullOrEmpty = "The argument {0} cannot be null or empty";
             public const string EntityDoesNotExist = "{0} with id {1} does not exist";
-
         }
 
+        public static class Accounts
+        {
+            public const string InvalidAccount = "The account {0} is not valid";
+        }
     }
 }
