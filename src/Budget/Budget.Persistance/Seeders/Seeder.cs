@@ -22,6 +22,7 @@ namespace Budget.Persistance.Seeders
         {
             await context.AddRolesAsync(roleManager);
             await context.AddCurrenciesAsync();
+            await context.AddPaymentTypesAsync();
             await context.AddCategoriesAsync();
 
             await context.SaveChangesAsync();
