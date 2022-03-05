@@ -8,14 +8,12 @@ namespace Budget.Persistance.Seeders
 {
     public static class Seeder
     {
-        public static async Task SeedAsync(this IApplicationBuilder app, bool development = false)
+        public static async Task SeedAsync(this IApplicationBuilder app)
         {
-            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
-            using (var context = serviceScope.ServiceProvider.GetService<BudgetDbContext>())
-            using (var roleManager = serviceScope.ServiceProvider.GetService<RoleManager<IdentityRole>>())
-            {
-                await context.SeedAsync(roleManager);
-            }
+            using var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
+            using var context = serviceScope.ServiceProvider.GetService<BudgetDbContext>();
+            using var roleManager = serviceScope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
+            await context.SeedAsync(roleManager);
         }
 
         private static async Task SeedAsync(this BudgetDbContext context, RoleManager<IdentityRole> roleManager)
