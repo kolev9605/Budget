@@ -10,12 +10,9 @@ namespace Budget.Repositories
 {
     public class AccountRepository : Repository<Account>, IAccountRepository
     {
-        private readonly BudgetDbContext _budgetDbContext;
-
         public AccountRepository(BudgetDbContext budgetDbContext) 
             : base(budgetDbContext)
         {
-            _budgetDbContext = budgetDbContext;
         }
 
         public async Task<IEnumerable<Account>> GetAllByUserIdAsync(string userId)
