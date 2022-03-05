@@ -33,11 +33,11 @@ namespace Budget.Web.Helpers
                 switch (error)
                 {
                     // TODO: take advantage of the templates and log more detailed information about the error
-                    case BudgetValidationException budgetValidationException:
+                    case BudgetValidationException:
                         response.StatusCode = (int)HttpStatusCode.BadRequest;
                         _logger.LogWarning("{exception}", error);
                         break;
-                    case BudgetAuthenticationException budgetAuthorizationException:
+                    case BudgetAuthenticationException:
                         response.StatusCode = (int)HttpStatusCode.Unauthorized;
                         _logger.LogWarning("{exception}", error);
                         break;
