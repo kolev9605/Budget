@@ -15,15 +15,15 @@ namespace Budget.Repositories
         {
         }
 
+        public async Task<Account> GetByIdWithCurrencyAsync(int accountId)
+            => await _budgetDbContext.Accounts
+                .Include(a => a.Currency)
+                .FirstOrDefaultAsync(a => a.Id == accountId);
+
         public async Task<IEnumerable<Account>> GetAllByUserIdAsync(string userId)
             => await _budgetDbContext.Accounts
                 .Include(a => a.Currency)
                 .Where(a => a.UserId == userId)
                 .ToListAsync();
-
-        public async Task<Account> GetByIdWithCurrencyAsync(int accountId)
-            => await _budgetDbContext.Accounts
-                .Include(a => a.Currency)    
-                .FirstOrDefaultAsync(a => a.Id == accountId);
     }
 }

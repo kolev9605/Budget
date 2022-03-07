@@ -21,6 +21,11 @@ namespace Budget.Web.Controllers
         }
 
         [HttpGet]
+        [Route(nameof(GetById))]
+        public async Task<IActionResult> GetById(int recordId)
+            => Ok(await _recordService.GetByIdAsync(recordId));
+
+        [HttpGet]
         [Route(nameof(GetAll))]
         public async Task<ActionResult<IEnumerable<RecordModel>>> GetAll()
             => Ok(await _recordService.GetAllAsync());
@@ -29,6 +34,16 @@ namespace Budget.Web.Controllers
         [Route(nameof(Create))]
         public async Task<IActionResult> Create(CreateRecordModel createRecordModel)
             => Ok(await _recordService.CreateAsync(createRecordModel, LoggedInUserId));
+
+        [HttpPost]
+        [Route(nameof(Update))]
+        public async Task<IActionResult> Update(UpdateRecordModel updateRecordModel)
+            => Ok(await _recordService.UpdateAsync(updateRecordModel));
+
+        [HttpGet]
+        [Route(nameof(Delete))]
+        public async Task<IActionResult> Delete(int recordId)
+            => Ok(await _recordService.DeleteAsync(recordId));
 
         [HttpGet]
         [Route(nameof(GetRecordTypes))]

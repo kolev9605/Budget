@@ -1,0 +1,12 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<app-record-form
+  *ngIf="categories"
+  (formSubmitted)="onSubmit()"
+  (recordDeleted)="deleteRecord()"
+  [inEditMode]="true"
+  [categories]="categories"
+  [accounts]="accounts"
+  [paymentTypes]="paymentTypes"
+  [recordTypes]="recordTypes"
+  [recordForm]="editRecordForm"></app-record-form>

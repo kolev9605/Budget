@@ -6,6 +6,7 @@ import { EditAccountComponent } from './accounts/edit-account/edit-account.compo
 import { AuthenticationComponent } from './authentication/authentication.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { CreateRecordComponent } from './records/create-record/create-record.component';
+import { EditRecordComponent } from './records/edit-record/edit-record.component';
 import { RecordsComponent } from './records/records.component';
 import { AuthGuard } from './shared/services/auth.guard';
 
@@ -27,7 +28,7 @@ const routes: Routes = [
     children: [
       { path: '', component: RecordsComponent },
       { path: 'create', component: CreateRecordComponent, pathMatch: 'full' },
-      // { path: 'edit/:accountId', component: EditAccountComponent, pathMatch: 'full' },
+      { path: 'edit/:accountId', component: EditRecordComponent, pathMatch: 'full' },
     ],
   },
 ];

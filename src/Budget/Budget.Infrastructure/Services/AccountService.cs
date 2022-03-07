@@ -25,6 +25,27 @@ namespace Budget.Infrastructure.Services
             _currencyRepository = currencyRepository;
         }
 
+        public async Task<AccountModel> GetByIdAsync(int accountId)
+        {
+            var account = await _accountRepository
+                .GetByIdWithCurrencyAsync(accountId);
+
+            var accountModel = AccountModel.FromAccount(account);
+
+            return accountModel;
+        }
+
+        public async Task<IEnumerable<AccountModel>> GetAllAccountsAsync(string userId)
+        {
+            var accounts = await _accountRepository
+                .GetAllByUserIdAsync(userId);
+
+            var accountModels = accounts
+                .Select(a => AccountModel.FromAccount(a));
+
+            return accountModels;
+        }
+
         public async Task<int> CreateAccountAsync(CreateAccountModel createAccountModel, string userId)
         {
             Guard.IsNotNullOrEmpty(createAccountModel.Name, nameof(createAccountModel.Name));
@@ -49,41 +70,6 @@ namespace Budget.Infrastructure.Services
             return createdAccount.Id;
         }
 
-        public async Task<int> DeleteAccountAsync(int accountId)
-        {
-            var account = await _accountRepository.GetByIdAsync(accountId);
-            if (account == null)
-            {
-                throw new BudgetValidationException(
-                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(account), accountId));
-            }
-
-            var deletedAccount = await _accountRepository.DeleteAsync(accountId);
-
-            return deletedAccount.Id;
-        }
-
-        public async Task<IEnumerable<AccountModel>> GetAllAccountsAsync(string userId)
-        {
-            var accounts = await _accountRepository
-                .GetAllByUserIdAsync(userId);
-
-            var accountModels = accounts
-                .Select(a => AccountModel.FromAccount(a));
-
-            return accountModels;
-        }
-
-        public async Task<AccountModel> GetByIdAsync(int accountId)
-        {
-            var account = await _accountRepository
-                .GetByIdWithCurrencyAsync(accountId);
-
-            var accountModel = AccountModel.FromAccount(account);
-
-            return accountModel;
-        }
-
         public async Task<int> UpdateAsync(UpdateAccountModel accountModel)
         {
             Guard.IsNotNullOrEmpty(accountModel.Name, nameof(accountModel.Name));
@@ -103,6 +89,20 @@ namespace Budget.Infrastructure.Services
             await _accountRepository.UpdateAsync(account);
 
             return account.Id;
+        }
+
+        public async Task<int> DeleteAccountAsync(int accountId)
+        {
+            var account = await _accountRepository.GetByIdAsync(accountId);
+            if (account == null)
+            {
+                throw new BudgetValidationException(
+                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(account), accountId));
+            }
+
+            var deletedAccount = await _accountRepository.DeleteAsync(accountId);
+
+            return deletedAccount.Id;
         }
     }
 }

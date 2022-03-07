@@ -7,10 +7,14 @@ namespace Budget.Core.Interfaces.Services
 {
     public interface IRecordService
     {
-        Task<IEnumerable<RecordModel>> GetAllAsync();
-
         Task<RecordModel> GetByIdAsync(int id);
 
+        Task<IEnumerable<RecordModel>> GetAllAsync();
+
         Task<int> CreateAsync(CreateRecordModel createRecordModel, string userId);
+
+        Task<int> UpdateAsync(UpdateRecordModel updateRecordModel);
+
+        Task<int> DeleteAsync(int recordId);
     }
 }

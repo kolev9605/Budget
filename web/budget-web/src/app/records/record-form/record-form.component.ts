@@ -18,12 +18,15 @@ export class RecordFormComponent implements OnInit {
   @Input() recordTypes: string[];
 
   @Output() formSubmitted = new EventEmitter();
+  @Output() recordDeleted = new EventEmitter();
 
   constructor() {}
 
   ngOnInit(): void {}
 
-  onRecordDelete(): void {}
+  onRecordDelete(): void {
+    this.recordDeleted.emit();
+  }
 
   onFormSubmitted(): void {
     this.formSubmitted.emit();

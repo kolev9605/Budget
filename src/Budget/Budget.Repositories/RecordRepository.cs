@@ -13,18 +13,6 @@ namespace Budget.Repositories
         {
         }
 
-        public async Task<IEnumerable<Record>> GetAllAsync()
-        {
-            var records = await _budgetDbContext.Records
-                .Include(r => r.Account)
-                    .ThenInclude(a => a.Currency)
-                .Include(r => r.PaymentType)
-                .Include(r => r.Category)
-                .ToListAsync();
-
-            return records;
-        }
-
         public async Task<Record> GetRecordByIdAsync(int id)
         {
             var record = await _budgetDbContext.Records
@@ -36,5 +24,17 @@ namespace Budget.Repositories
 
             return record;
         }
+
+        public async Task<IEnumerable<Record>> GetAllAsync()
+        {
+            var records = await _budgetDbContext.Records
+                .Include(r => r.Account)
+                    .ThenInclude(a => a.Currency)
+                .Include(r => r.PaymentType)
+                .Include(r => r.Category)
+                .ToListAsync();
+
+            return records;
+        }        
     }
 }

@@ -21,6 +21,7 @@ import { AccountFormComponent } from './accounts/account-form/account-form.compo
 import { RecordsComponent } from './records/records.component';
 import { CreateRecordComponent } from './records/create-record/create-record.component';
 import { RecordFormComponent } from './records/record-form/record-form.component';
+import { EditRecordComponent } from './records/edit-record/edit-record.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { RecordFormComponent } from './records/record-form/record-form.component
     RecordsComponent,
     CreateRecordComponent,
     RecordFormComponent,
+    EditRecordComponent,
   ],
   imports: [
     BrowserModule,

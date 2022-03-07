@@ -48,10 +48,7 @@ export class EditAccountComponent implements OnInit {
         this.isLoading = false;
 
         this.currencies = currencies;
-
         this.account = editAccount;
-
-        console.log(this.account);
 
         this.editAccountForm.patchValue({
           accountName: editAccount.name,

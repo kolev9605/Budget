@@ -18,9 +18,12 @@
       </div>
     </div>
     <ul class="list-group list-group-flush">
-      <li class="list-group-item">
+      <li
+        class="list-group-item"
+        *ngFor="let record of records"
+        [routerLink]="['/records/edit', record.id]">
         <div class="container">
-          <div *ngFor="let record of records" class="row">
+          <div class="row">
             <div class="col">{{record.category.name}}</div>
             <div class="col">{{record.account.name}}</div>
             <div class="col">{{record.dateAdded | date}}</div>

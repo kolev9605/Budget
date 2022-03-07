@@ -16,19 +16,19 @@ export class AccountService {
 
   constructor(private http: HttpClient, private errorService: ErrorService) {}
 
-  getAll(): Observable<AccountModel[]> {
-    return this.http
-      .get<AccountModel[]>(`${environment.apiUrl}${this.controller}/GetAll`)
-      .pipe(catchError(this.errorService.handleError));
-  }
-
-  getById(accountId: number) {
+  getById(accountId: number): Observable<AccountModel> {
     return this.http
       .get<AccountModel>(`${environment.apiUrl}${this.controller}/GetById`, {
         params: {
           accountId: accountId,
         },
       })
+      .pipe(catchError(this.errorService.handleError));
+  }
+
+  getAll(): Observable<AccountModel[]> {
+    return this.http
+      .get<AccountModel[]>(`${environment.apiUrl}${this.controller}/GetAll`)
       .pipe(catchError(this.errorService.handleError));
   }
 
@@ -46,7 +46,7 @@ export class AccountService {
 
   deleteAccount(accountId: number) {
     return this.http
-      .get<AccountModel>(`${environment.apiUrl}${this.controller}/Delete`, {
+      .get<number>(`${environment.apiUrl}${this.controller}/Delete`, {
         params: {
           accountId: accountId,
         },
