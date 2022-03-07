@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 
 namespace Budget.Web.Controllers
 {
-    [ApiController]
     [Route("Authentication")]
-    public class AuthenticationController : ControllerBase
+    public class AuthenticationController : BaseController
     {
         private readonly IUserService _userService;
 
@@ -17,12 +16,12 @@ namespace Budget.Web.Controllers
         }
 
         [HttpPost]
-        [Route("Login")]
+        [Route(nameof(Login))]
         public async Task<IActionResult> Login(LoginModel model)
             => Ok(await _userService.LoginAsync(model));
 
         [HttpPost]
-        [Route("Register")]
+        [Route(nameof(Register))]
         public async Task<IActionResult> Register(RegisterModel model)
             => Ok(await _userService.RegisterAsync(model));
     }
