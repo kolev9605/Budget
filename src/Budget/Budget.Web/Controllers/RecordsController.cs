@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Budget.Core.Entities;
+using Budget.Common;
 
 namespace Budget.Web.Controllers
 {
@@ -32,6 +33,6 @@ namespace Budget.Web.Controllers
         [HttpGet]
         [Route(nameof(GetRecordTypes))]
         public IActionResult GetRecordTypes()
-            => Ok(Common.Helpers.GetListFromEnum<RecordType>());
+            => Ok(EnumHelpers.GetListFromEnum<RecordType>());
     }
 }

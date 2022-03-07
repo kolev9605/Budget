@@ -1,6 +1,6 @@
 ﻿namespace Budget.Common
 {
-    public static class Helpers
+    public static class EnumHelpers
     {
         public static IEnumerable<string> GetListFromEnum<T>()
             where T : struct, IConvertible
