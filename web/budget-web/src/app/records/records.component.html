@@ -1,0 +1,35 @@
+<div class="container py-5">
+  <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+  <h1 class="text-center mb-4">Records</h1>
+
+  <div class="text-center mb-4">
+    <div role="button" class="btn btn-primary" (click)="onAddRecordPressed()">Add Record</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="container">
+        <div class="row">
+          <div class="col">Category</div>
+          <div class="col">Account</div>
+          <div class="col">Date Added</div>
+          <div class="col">Amount</div>
+        </div>
+      </div>
+    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">
+        <div class="container">
+          <div *ngFor="let record of records" class="row">
+            <div class="col">{{record.category.name}}</div>
+            <div class="col">{{record.account.name}}</div>
+            <div class="col">{{record.dateAdded | date}}</div>
+            <div class="col">
+              {{record.amount | currency: record.account.currency.abbreviation :'symbol'}}
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>

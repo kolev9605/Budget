@@ -16,7 +16,7 @@ export class AccountService {
 
   constructor(private http: HttpClient, private errorService: ErrorService) {}
 
-  getAccounts(): Observable<AccountModel[]> {
+  getAll(): Observable<AccountModel[]> {
     return this.http
       .get<AccountModel[]>(`${environment.apiUrl}${this.controller}/GetAll`)
       .pipe(catchError(this.errorService.handleError));

@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { RegisterModel } from '../models/authentication/register.model';
 import { LoginModel } from '../models/authentication/login.model';
-import { LoginResultModel } from '../models/authentication/login-result.model';
+import { TokenModel } from '../models/authentication/token.model';
 import { ErrorService } from './error.service';
 import { catchError, tap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
@@ -26,9 +26,9 @@ export class AuthService {
       .pipe(catchError(this.errorService.handleError));
   }
 
-  login(signUpModel: LoginModel): Observable<LoginResultModel> {
+  login(signUpModel: LoginModel): Observable<TokenModel> {
     return this.http
-      .post<LoginResultModel>(`${environment.apiUrl}${this.controller}/Login`, signUpModel)
+      .post<TokenModel>(`${environment.apiUrl}${this.controller}/Login`, signUpModel)
       .pipe(
         catchError(this.errorService.handleError),
         tap((resData) => {

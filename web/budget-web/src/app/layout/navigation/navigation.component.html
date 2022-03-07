@@ -33,6 +33,15 @@
         </li>
         <li class="nav-item">
           <a
+            *ngIf="isAuthenticated"
+            class="nav-link"
+            routerLink="/records"
+            routerLinkActive="active"
+            >Records</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
             *ngIf="!isAuthenticated"
             class="nav-link"
             routerLink="/sign-in"

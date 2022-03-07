@@ -9,20 +9,11 @@ import { CurrencyModel } from 'src/app/shared/models/currencies/currency.model';
   styleUrls: [],
 })
 export class AccountFormComponent implements OnInit {
-  @Input()
-  currencies: CurrencyModel[];
-
-  @Input()
-  accountForm: FormGroup;
-
-  @Input()
-  inEditMode: boolean;
-
-  @Output()
-  formSubmitted = new EventEmitter();
-
-  @Output()
-  accountDeleted = new EventEmitter();
+  @Input() currencies: CurrencyModel[];
+  @Input() accountForm: FormGroup;
+  @Input() inEditMode: boolean;
+  @Output() formSubmitted = new EventEmitter();
+  @Output() accountDeleted = new EventEmitter();
 
   constructor() {}
 

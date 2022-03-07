@@ -22,7 +22,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.isLoading = true;
-    this.accountService.getAccounts().subscribe(
+    this.accountService.getAll().subscribe(
       (res) => {
         this.isLoading = false;
 

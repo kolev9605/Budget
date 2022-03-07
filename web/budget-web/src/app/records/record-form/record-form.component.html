@@ -1,0 +1,53 @@
+<app-form-wrapper [formTitle]="inEditMode ? 'Edit Record' : 'Create Record'">
+  <form [formGroup]="recordForm" (ngSubmit)="onFormSubmitted()">
+    <div class="form-group py-2">
+      <label class="form-label" for="amount">Amount</label>
+      <input
+        type="number"
+        id="amount"
+        formControlName="amount"
+        class="form-control form-control-lg" />
+    </div>
+    <div class="form-group py-2">
+      <label class="form-label" for="note">Note</label>
+      <input type="text" id="note" formControlName="note" class="form-control form-control-lg" />
+    </div>
+    <div class="form-group py-2">
+      <label class="form-label" for="recordType">Category</label>
+      <select class="form-control form-control-lg" id="category" formControlName="category">
+        <option *ngFor="let category of categories" [value]="category.id">{{category.name}}</option>
+      </select>
+    </div>
+    <div class="form-group py-2">
+      <label class="form-label" for="recordType">Account</label>
+      <select class="form-control form-control-lg" id="account" formControlName="account">
+        <option *ngFor="let account of accounts" [value]="account.id">{{account.name}}</option>
+      </select>
+    </div>
+    <div class="form-group py-2">
+      <label class="form-label" for="recordType">Payment Type</label>
+      <select class="form-control form-control-lg" id="paymentType" formControlName="paymentType">
+        <option *ngFor="let paymentType of paymentTypes" [value]="paymentType.id">
+          {{paymentType.name}}
+        </option>
+      </select>
+    </div>
+    <div class="form-group py-2">
+      <label class="form-label" for="recordType">Record Type</label>
+      <select class="form-control form-control-lg" id="recordType" formControlName="recordType">
+        <option *ngFor="let recordType of recordTypes" [value]="recordType">{{recordType}}</option>
+      </select>
+    </div>
+
+    <div class="mt-4">
+      <button class="mx-2 btn btn-success btn-block">{{inEditMode ? 'Update' : 'Create'}}</button>
+      <button
+        *ngIf="inEditMode"
+        type="button"
+        class="mx-2 btn btn-danger btn-block"
+        (click)="onRecordDelete()">
+        Delete
+      </button>
+    </div>
+  </form>
+</app-form-wrapper>
