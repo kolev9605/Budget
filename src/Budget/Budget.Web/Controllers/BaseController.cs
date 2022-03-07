@@ -4,7 +4,7 @@ using System.Security.Claims;
 namespace Budget.Web.Controllers
 {
     [ApiController]
-    public class BaseController : ControllerBase
+    public abstract class BaseController : ControllerBase
     {
         protected string LoggedInUserId
         {
