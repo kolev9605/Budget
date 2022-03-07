@@ -59,6 +59,7 @@ namespace Budget.Infrastructure
             services.AddTransient<IAccountService, AccountService>();
             services.AddTransient<ICurrencyService, CurrencyService>();
             services.AddTransient<IPaymentTypeService, PaymentTypeService>();
+            services.AddTransient<ICategoryService, CategoryService>();
 
             return services;
         }

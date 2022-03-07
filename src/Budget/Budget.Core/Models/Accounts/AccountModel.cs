@@ -20,12 +20,7 @@ namespace Budget.Core.Models.Accounts
                 Id = account.Id,
                 Name = account.Name,
                 InitialBalance = account.InitialBalance,
-                Currency = new CurrencyModel()
-                {
-                    Id = account.Currency.Id,
-                    Name = account.Currency.Name,
-                    Abbreviation = account.Currency.Abbreviation,
-                }
+                Currency = CurrencyModel.FromCurrency(account.Currency),
             };
         }
     }

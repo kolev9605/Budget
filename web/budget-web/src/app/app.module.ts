@@ -18,6 +18,9 @@ import { FormWrapperComponent } from './shared/components/form-wrapper/form-wrap
 import { AccountsComponent } from './accounts/accounts.component';
 import { EditAccountComponent } from './accounts/edit-account/edit-account.component';
 import { AccountFormComponent } from './accounts/account-form/account-form.component';
+import { RecordsComponent } from './records/records.component';
+import { CreateRecordComponent } from './records/create-record/create-record.component';
+import { RecordFormComponent } from './records/record-form/record-form.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +34,9 @@ import { AccountFormComponent } from './accounts/account-form/account-form.compo
     AccountsComponent,
     EditAccountComponent,
     AccountFormComponent,
+    RecordsComponent,
+    CreateRecordComponent,
+    RecordFormComponent,
   ],
   imports: [
     BrowserModule,

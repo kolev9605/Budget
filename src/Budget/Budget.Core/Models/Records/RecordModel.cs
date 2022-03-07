@@ -1,4 +1,7 @@
 ﻿using Budget.Core.Entities;
+using Budget.Core.Models.Accounts;
+using Budget.Core.Models.Categories;
+using Budget.Core.Models.PaymentTypes;
 using System;
 
 namespace Budget.Core.Models.Records
@@ -9,6 +12,14 @@ namespace Budget.Core.Models.Records
 
         public string Note { get; set; }
 
+        public AccountModel Account { get; set; }
+
+        public RecordType RecordType { get; set; }
+
+        public PaymentTypeModel PaymentType { get; set; }
+
+        public CategoryModel Category { get; set; }
+
         public DateTime DateAdded { get; set; }
 
         public decimal Amount { get; set; }
@@ -18,9 +29,13 @@ namespace Budget.Core.Models.Records
             return new RecordModel
             {
                 Id = record.Id,
-                Amount = record.Amount,
-                DateAdded = record.DateAdded,
                 Note = record.Note,
+                Account = AccountModel.FromAccount(record.Account),
+                RecordType = record.RecordType,
+                PaymentType = PaymentTypeModel.FromPaymentType(record.PaymentType),
+                Category = CategoryModel.FromCategory(record.Category),
+                DateAdded = record.DateAdded,
+                Amount = record.Amount,
             };
         }
     }

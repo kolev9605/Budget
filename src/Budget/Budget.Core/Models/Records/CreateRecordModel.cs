@@ -4,8 +4,6 @@ namespace Budget.Core.Models.Records
 {
     public class CreateRecordModel
     {
-        public int Id { get; set; }
-
         public string Note { get; set; }
 
         public decimal Amount { get; set; }
