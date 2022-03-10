@@ -5,6 +5,7 @@ using Budget.Core.Interfaces;
 using Budget.Core.Interfaces.Repositories;
 using Budget.Core.Interfaces.Services;
 using Budget.Core.Models.Records;
+using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,15 +17,24 @@ namespace Budget.Infrastructure.Services
         private readonly IRecordRepository _recordRepository;
         private readonly IAccountRepository _accountRepository;
         private readonly IDateTimeProvider _dateTimeProvider;
+        private readonly IRepository<Category> _categoriesRepository;
+        private readonly IRepository<PaymentType> _paymentTypesRepository;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         public RecordService(
             IRecordRepository recordsRepository,
-            IAccountRepository accountRepository, 
-            IDateTimeProvider dateTimeProvider)
+            IAccountRepository accountRepository,
+            IDateTimeProvider dateTimeProvider,
+            IRepository<Category> categoriesRepository,
+            IRepository<PaymentType> paymentTypesRepository, 
+            UserManager<ApplicationUser> userManager)
         {
             _recordRepository = recordsRepository;
             _accountRepository = accountRepository;
             _dateTimeProvider = dateTimeProvider;
+            _categoriesRepository = categoriesRepository;
+            _paymentTypesRepository = paymentTypesRepository;
+            _userManager = userManager;
         }
 
         public async Task<RecordModel> GetByIdAsync(int id)
@@ -49,23 +59,12 @@ namespace Budget.Infrastructure.Services
 
         public async Task<int> CreateAsync(CreateRecordModel createRecordModel, string userId)
         {
-            var account = await _accountRepository.GetByIdAsync(createRecordModel.AccountId);
-            if (account == null)
-            {
-                throw new BudgetValidationException(
-                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(account), createRecordModel.AccountId));
-            }
-
-            if (account.UserId != userId)
-            {
-                throw new BudgetValidationException(
-                    string.Format(ValidationMessages.Accounts.InvalidAccount, account.Name));
-            }
+            await ValidateCrudRecordModel(createRecordModel, userId);
 
             var record = new Record()
             {
-                AccountId = account.Id,
-                Amount = createRecordModel.Amount,
+                AccountId = createRecordModel.AccountId,
+                Amount = GetAmountByRecordType(createRecordModel.Amount, createRecordModel.RecordType),
                 DateAdded = _dateTimeProvider.Now,
                 Note = createRecordModel.Note,
                 CategoryId = createRecordModel.CategoryId,
@@ -78,7 +77,7 @@ namespace Budget.Infrastructure.Services
             return createdRecord.Id;
         }
 
-        public async Task<int> UpdateAsync(UpdateRecordModel updateRecordModel)
+        public async Task<int> UpdateAsync(UpdateRecordModel updateRecordModel, string userId)
         {
             var record = await _recordRepository.GetRecordByIdAsync(updateRecordModel.Id);
             if (record == null)
@@ -87,8 +86,10 @@ namespace Budget.Infrastructure.Services
                     string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(record), updateRecordModel.Id));
             }
 
+            await ValidateCrudRecordModel(updateRecordModel, userId);
+
             record.AccountId = updateRecordModel.AccountId;
-            record.Amount = updateRecordModel.Amount;
+            record.Amount = GetAmountByRecordType(updateRecordModel.Amount, updateRecordModel.RecordType);
             record.Note = updateRecordModel.Note;
             record.CategoryId = updateRecordModel.CategoryId;
             record.PaymentTypeId = updateRecordModel.PaymentTypeId;
@@ -111,6 +112,53 @@ namespace Budget.Infrastructure.Services
             var deletedRecord = await _recordRepository.DeleteAsync(recordId);
 
             return deletedRecord.Id;
+        }
+
+        private decimal GetAmountByRecordType(decimal amount, RecordType recordType)
+        {
+            if (recordType == RecordType.Expense)
+            {
+                return amount * -1;
+            }
+
+            return amount;
+        }
+
+        private async Task ValidateCrudRecordModel(BaseCrudRecordModel model, string userId)
+        {
+            var account = await _accountRepository.GetByIdAsync(model.AccountId);
+            if (account == null)
+            {
+                throw new BudgetValidationException(
+                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(account), model.AccountId));
+            }
+
+            if (account.UserId != userId)
+            {
+                throw new BudgetValidationException(
+                    string.Format(ValidationMessages.Accounts.InvalidAccount, account.Name));
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                throw new BudgetValidationException(
+                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(user), userId));
+            }
+
+            var category = await _categoriesRepository.GetByIdAsync(model.CategoryId);
+            if (category == null)
+            {
+                throw new BudgetValidationException(
+                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(category), model.CategoryId));
+            }
+
+            var paymentType = await _paymentTypesRepository.GetByIdAsync(model.PaymentTypeId);
+            if (paymentType == null)
+            {
+                throw new BudgetValidationException(
+                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(paymentType), model.PaymentTypeId));
+            }
         }
     }
 }

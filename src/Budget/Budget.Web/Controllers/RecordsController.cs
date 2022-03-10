@@ -38,7 +38,7 @@ namespace Budget.Web.Controllers
         [HttpPost]
         [Route(nameof(Update))]
         public async Task<IActionResult> Update(UpdateRecordModel updateRecordModel)
-            => Ok(await _recordService.UpdateAsync(updateRecordModel));
+            => Ok(await _recordService.UpdateAsync(updateRecordModel, LoggedInUserId));
 
         [HttpGet]
         [Route(nameof(Delete))]

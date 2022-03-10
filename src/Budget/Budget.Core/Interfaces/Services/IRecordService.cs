@@ -13,7 +13,7 @@ namespace Budget.Core.Interfaces.Services
 
         Task<int> CreateAsync(CreateRecordModel createRecordModel, string userId);
 
-        Task<int> UpdateAsync(UpdateRecordModel updateRecordModel);
+        Task<int> UpdateAsync(UpdateRecordModel updateRecordModel, string userId);
 
         Task<int> DeleteAsync(int recordId);
     }
