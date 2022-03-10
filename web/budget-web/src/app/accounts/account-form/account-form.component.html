@@ -24,7 +24,9 @@
     </div>
 
     <div class="mt-4">
-      <button class="mx-2 btn btn-success btn-block">{{inEditMode ? 'Update' : 'Create'}}</button>
+      <button class="mx-2 btn btn-accent text-white btn-block">
+        {{inEditMode ? 'Update' : 'Create'}}
+      </button>
       <button
         *ngIf="inEditMode"
         type="button"

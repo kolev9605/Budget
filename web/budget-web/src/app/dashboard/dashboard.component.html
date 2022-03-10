@@ -2,13 +2,19 @@
   <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
   <h1 class="text-center mb-4">Accounts</h1>
 
+  <div class="text-center mb-4">
+    <div role="button" class="btn btn-accent text-white" (click)="onAddAccountPressed()">
+      Add Account
+    </div>
+  </div>
+
   <div class="row h-100">
     <div
       [routerLink]="['/accounts/edit', account.id]"
       *ngFor="let account of accounts"
       role="button"
       class="col-12 col-md-6 col-lg-4 col-xl-3 p-1">
-      <div class="card text-white bg-success h-100s">
+      <div class="card text-white bg-primary h-100">
         <div class="card-body">
           <div class="text-bold">{{account.name}}</div>
           <div class="fs-6 text fw-ligh">
@@ -16,12 +22,6 @@
           </div>
         </div>
       </div>
-    </div>
-    <div
-      role="button"
-      class="col-12 col-md-6 col-lg-4 col-xl-3 p-1"
-      (click)="onAddAccountPressed()">
-      <div class="card card-body text-success text-center border-success h-100">Add Account</div>
     </div>
   </div>
 </div>

@@ -3,10 +3,12 @@
   <h1 class="text-center mb-4">Records</h1>
 
   <div class="text-center mb-4">
-    <div role="button" class="btn btn-primary" (click)="onAddRecordPressed()">Add Record</div>
+    <div role="button" class="btn btn-accent text-white" (click)="onAddRecordPressed()">
+      Add Record
+    </div>
   </div>
 
-  <div class="card">
+  <div class="card" *ngIf="records && records.length > 0">
     <div class="card-header">
       <div class="container">
         <div class="row">
