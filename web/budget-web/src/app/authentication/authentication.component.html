@@ -23,7 +23,9 @@
         class="form-control form-control-lg" />
     </div>
     <div class="mt-4">
-      <button class="btn btn-primary btn-block">{{isLogin ? "Login" : "Register"}}</button>
+      <button class="btn btn-accent text-white btn-block">
+        {{isLogin ? "Login" : "Register"}}
+      </button>
       <a class="btn btn-silent btn-sm btn-block" (click)="onFormTypeChanged()">
         Go to {{isLogin ? "Register" : "Login"}}
       </a>
