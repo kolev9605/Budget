@@ -6,6 +6,7 @@ using Budget.Core.Interfaces.Repositories;
 using Budget.Core.Interfaces.Services;
 using Budget.Core.Models.Records;
 using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -118,7 +119,7 @@ namespace Budget.Infrastructure.Services
         {
             if (recordType == RecordType.Expense)
             {
-                return amount * -1;
+                return -Math.Abs(amount);
             }
 
             return amount;
