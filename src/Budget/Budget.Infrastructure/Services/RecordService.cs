@@ -58,7 +58,7 @@ namespace Budget.Infrastructure.Services
             return recordModels;
         }
 
-        public async Task<int> CreateAsync(CreateRecordModel createRecordModel, string userId)
+        public async Task<RecordModel> CreateAsync(CreateRecordModel createRecordModel, string userId)
         {
             await ValidateCrudRecordModel(createRecordModel, userId);
 
@@ -75,10 +75,10 @@ namespace Budget.Infrastructure.Services
 
             var createdRecord = await _recordRepository.CreateAsync(record);
 
-            return createdRecord.Id;
+            return RecordModel.FromRecord(createdRecord);
         }
 
-        public async Task<int> UpdateAsync(UpdateRecordModel updateRecordModel, string userId)
+        public async Task<RecordModel> UpdateAsync(UpdateRecordModel updateRecordModel, string userId)
         {
             var record = await _recordRepository.GetRecordByIdAsync(updateRecordModel.Id);
             if (record == null)
@@ -98,10 +98,10 @@ namespace Budget.Infrastructure.Services
 
             var updatedRecord = await _recordRepository.UpdateAsync(record);
 
-            return updatedRecord.Id;
+            return RecordModel.FromRecord(updatedRecord);
         }
 
-        public async Task<int> DeleteAsync(int recordId)
+        public async Task<RecordModel> DeleteAsync(int recordId)
         {
             var record = await _recordRepository.GetByIdAsync(recordId);
             if (record == null)
@@ -112,7 +112,7 @@ namespace Budget.Infrastructure.Services
 
             var deletedRecord = await _recordRepository.DeleteAsync(recordId);
 
-            return deletedRecord.Id;
+            return RecordModel.FromRecord(deletedRecord);
         }
 
         private decimal GetAmountByRecordType(decimal amount, RecordType recordType)
@@ -122,11 +122,17 @@ namespace Budget.Infrastructure.Services
                 return -Math.Abs(amount);
             }
 
-            return amount;
+            return Math.Abs(amount);
         }
 
         private async Task ValidateCrudRecordModel(BaseCrudRecordModel model, string userId)
         {
+            if (model == null)
+            {
+                throw new BudgetValidationException(
+                    string.Format(ValidationMessages.Common.IsNotNull, nameof(model)));
+            }
+
             var account = await _accountRepository.GetByIdAsync(model.AccountId);
             if (account == null)
             {

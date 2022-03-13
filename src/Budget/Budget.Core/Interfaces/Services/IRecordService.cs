@@ -1,5 +1,4 @@
-﻿using Budget.Core.Entities;
-using Budget.Core.Models.Records;
+﻿using Budget.Core.Models.Records;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -11,10 +10,10 @@ namespace Budget.Core.Interfaces.Services
 
         Task<IEnumerable<RecordModel>> GetAllAsync();
 
-        Task<int> CreateAsync(CreateRecordModel createRecordModel, string userId);
+        Task<RecordModel> CreateAsync(CreateRecordModel createRecordModel, string userId);
 
-        Task<int> UpdateAsync(UpdateRecordModel updateRecordModel, string userId);
+        Task<RecordModel> UpdateAsync(UpdateRecordModel updateRecordModel, string userId);
 
-        Task<int> DeleteAsync(int recordId);
+        Task<RecordModel> DeleteAsync(int recordId);
     }
 }
