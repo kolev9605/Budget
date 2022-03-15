@@ -5,9 +5,9 @@ namespace Budget.Core.Interfaces.Repositories
 {
     public interface IRepository<T>
     {
-        Task<IEnumerable<T>> AllAsync();
+        Task<IEnumerable<T>> BaseAllAsync();
 
-        Task<T> GetByIdAsync(int id);
+        Task<T> BaseGetByIdAsync(int id);
         
         Task<T> CreateAsync(T entity, bool saveChanges = true);
         

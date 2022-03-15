@@ -17,7 +17,7 @@ namespace Budget.Repositories
             _budgetDbContext = budgetDbContext;
         }
 
-        public async Task<IEnumerable<T>> AllAsync()
+        public async Task<IEnumerable<T>> BaseAllAsync()
             => await _budgetDbContext.Set<T>().ToListAsync();
 
         public async Task<T> CreateAsync(T entity, bool saveChanges = true)
@@ -45,7 +45,7 @@ namespace Budget.Repositories
             return entity;
         }
 
-        public async Task<T> GetByIdAsync(int id)
+        public async Task<T> BaseGetByIdAsync(int id)
             => await _budgetDbContext.Set<T>().FirstOrDefaultAsync(e => e.Id == id);
 
         public async Task<T> UpdateAsync(T entity, bool saveChanges = true)

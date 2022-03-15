@@ -19,7 +19,7 @@ namespace Budget.Infrastructure.Services
 
         public async Task<IEnumerable<CurrencyModel>> GetAllAsync()
         {
-            var currencies = await _repository.AllAsync();
+            var currencies = await _repository.BaseAllAsync();
 
             var currencyModels = currencies
                 .Select(c => new CurrencyModel()

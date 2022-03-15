@@ -19,7 +19,7 @@ namespace Budget.Infrastructure.Services
 
         public async Task<IEnumerable<PaymentTypeModel>> GetAllAsync()
         {
-            var paymentTypes = await _paymentTypesRepository.AllAsync();
+            var paymentTypes = await _paymentTypesRepository.BaseAllAsync();
 
             var paymentTypeModels = paymentTypes.Select(pt => new PaymentTypeModel()
             {

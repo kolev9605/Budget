@@ -19,7 +19,7 @@ namespace Budget.Infrastructure.Services
 
         public async Task<IEnumerable<CategoryModel>> GetAllAsync()
         {
-            var categories = await _categoriesRepository.AllAsync();
+            var categories = await _categoriesRepository.BaseAllAsync();
 
             var categoryModels = categories.Select(c => new CategoryModel()
             {

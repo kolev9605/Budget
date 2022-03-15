@@ -19,7 +19,7 @@ namespace Budget.Tests.Core
                 .Returns(Task.FromResult(record));
 
             recordRepositoryMock
-                .Setup(x => x.GetByIdAsync(DefaultValueConstants.Common.Id))
+                .Setup(x => x.BaseGetByIdAsync(DefaultValueConstants.Common.Id))
                 .Returns(Task.FromResult(record));
 
             recordRepositoryMock
@@ -38,7 +38,7 @@ namespace Budget.Tests.Core
             var accountRepositoryMock = new Mock<IAccountRepository>();
 
             accountRepositoryMock
-                .Setup(x => x.GetByIdAsync(DefaultValueConstants.Common.Id))
+                .Setup(x => x.BaseGetByIdAsync(DefaultValueConstants.Common.Id))
                 .Returns(Task.FromResult(account));
 
             return accountRepositoryMock.Object;
@@ -49,7 +49,7 @@ namespace Budget.Tests.Core
             var categoryRepositoryMock = new Mock<IRepository<Category>>();
 
             categoryRepositoryMock
-                .Setup(x => x.GetByIdAsync(DefaultValueConstants.Common.Id))
+                .Setup(x => x.BaseGetByIdAsync(DefaultValueConstants.Common.Id))
                 .Returns(Task.FromResult(category));
 
             return categoryRepositoryMock.Object;
@@ -60,7 +60,7 @@ namespace Budget.Tests.Core
             var paymentTypeRepositoryMock = new Mock<IRepository<PaymentType>>();
 
             paymentTypeRepositoryMock
-                .Setup(x => x.GetByIdAsync(DefaultValueConstants.Common.Id))
+                .Setup(x => x.BaseGetByIdAsync(DefaultValueConstants.Common.Id))
                 .Returns(Task.FromResult(paymentType));
 
             return paymentTypeRepositoryMock.Object;
@@ -71,7 +71,7 @@ namespace Budget.Tests.Core
             var currencyRepositoryMock = new Mock<IRepository<Currency>>();
 
             currencyRepositoryMock
-                .Setup(x => x.GetByIdAsync(DefaultValueConstants.Common.Id))
+                .Setup(x => x.BaseGetByIdAsync(DefaultValueConstants.Common.Id))
                 .Returns(Task.FromResult(currency));
 
             return currencyRepositoryMock.Object;

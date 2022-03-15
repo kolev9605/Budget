@@ -103,7 +103,7 @@ namespace Budget.Infrastructure.Services
 
         public async Task<int> DeleteAsync(int recordId)
         {
-            var record = await _recordRepository.GetByIdAsync(recordId);
+            var record = await _recordRepository.BaseGetByIdAsync(recordId);
             if (record == null)
             {
                 throw new BudgetValidationException(
@@ -133,7 +133,7 @@ namespace Budget.Infrastructure.Services
                     string.Format(ValidationMessages.Common.IsNotNull, nameof(model)));
             }
 
-            var account = await _accountRepository.GetByIdAsync(model.AccountId);
+            var account = await _accountRepository.BaseGetByIdAsync(model.AccountId);
             if (account == null)
             {
                 throw new BudgetValidationException(
@@ -153,14 +153,14 @@ namespace Budget.Infrastructure.Services
                     string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(user), userId));
             }
 
-            var category = await _categoriesRepository.GetByIdAsync(model.CategoryId);
+            var category = await _categoriesRepository.BaseGetByIdAsync(model.CategoryId);
             if (category == null)
             {
                 throw new BudgetValidationException(
                     string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(category), model.CategoryId));
             }
 
-            var paymentType = await _paymentTypesRepository.GetByIdAsync(model.PaymentTypeId);
+            var paymentType = await _paymentTypesRepository.BaseGetByIdAsync(model.PaymentTypeId);
             if (paymentType == null)
             {
                 throw new BudgetValidationException(

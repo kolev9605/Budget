@@ -50,7 +50,7 @@ namespace Budget.Infrastructure.Services
         {
             Guard.IsNotNullOrEmpty(createAccountModel.Name, nameof(createAccountModel.Name));
 
-            var currency = await _currencyRepository.GetByIdAsync(createAccountModel.CurrencyId);
+            var currency = await _currencyRepository.BaseGetByIdAsync(createAccountModel.CurrencyId);
             if (currency == null)
             {
                 throw new BudgetValidationException(
@@ -93,7 +93,7 @@ namespace Budget.Infrastructure.Services
 
         public async Task<int> DeleteAccountAsync(int accountId)
         {
-            var account = await _accountRepository.GetByIdAsync(accountId);
+            var account = await _accountRepository.BaseGetByIdAsync(accountId);
             if (account == null)
             {
                 throw new BudgetValidationException(
