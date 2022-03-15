@@ -1,5 +1,8 @@
 ﻿using Budget.Core.Entities;
 using Budget.Core.Models.Currencies;
+using Budget.Core.Models.Records;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Budget.Core.Models.Accounts
 {
@@ -11,6 +14,8 @@ namespace Budget.Core.Models.Accounts
 
         public decimal InitialBalance { get; set; }
 
+        public decimal Balance { get; set; }
+
         public CurrencyModel Currency { get; set; }
 
         public static AccountModel FromAccount(Account account)
@@ -21,6 +26,7 @@ namespace Budget.Core.Models.Accounts
                 Name = account.Name,
                 InitialBalance = account.InitialBalance,
                 Currency = CurrencyModel.FromCurrency(account.Currency),
+                Balance = account.Records.Select(r => r.Amount).Sum() + account.InitialBalance
             };
         }
     }
