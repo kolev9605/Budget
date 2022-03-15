@@ -1,4 +1,18 @@
 <app-form-wrapper [formTitle]="inEditMode ? 'Edit Record' : 'Create Record'">
+  <ul
+    *ngIf="recordTypes && recordTypes.length > 0"
+    class="nav nav-tabs card-header-tabs nav-justified mb-2"
+    data-bs-tabs="tabs">
+    <li *ngFor="let recordType of recordTypes" class="nav-item">
+      <a
+        class="nav-link"
+        [ngClass]="{ 'active': recordType === recordForm.value.recordType }"
+        (click)="recordTypeChanged(recordType)"
+        data-bs-toggle="tab"
+        >{{recordType}}</a
+      >
+    </li>
+  </ul>
   <form [formGroup]="recordForm" (ngSubmit)="onFormSubmitted()">
     <div class="form-group py-2">
       <label class="form-label" for="amount">Amount</label>
@@ -30,12 +44,6 @@
         <option *ngFor="let paymentType of paymentTypes" [value]="paymentType.id">
           {{paymentType.name}}
         </option>
-      </select>
-    </div>
-    <div class="form-group py-2">
-      <label class="form-label" for="recordType">Record Type</label>
-      <select class="form-control form-control-lg" id="recordType" formControlName="recordType">
-        <option *ngFor="let recordType of recordTypes" [value]="recordType">{{recordType}}</option>
       </select>
     </div>
 

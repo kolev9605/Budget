@@ -11,6 +11,7 @@ import { AccountService } from 'src/app/shared/services/account.service';
 import { CategoryService } from 'src/app/shared/services/category.service';
 import { PaymentTypeService } from 'src/app/shared/services/payment-type.service';
 import { RecordService } from 'src/app/shared/services/record.service';
+import { RecordTypes } from 'src/app/shared/constants';
 
 @Component({
   selector: 'app-create-record',
@@ -43,7 +44,7 @@ export class CreateRecordComponent implements OnInit {
       account: [null, [Validators.required]],
       category: [null, [Validators.required]],
       paymentType: [null, [Validators.required]],
-      recordType: [null, [Validators.required]],
+      recordType: [RecordTypes.Expense, [Validators.required]],
     });
 
     forkJoin({

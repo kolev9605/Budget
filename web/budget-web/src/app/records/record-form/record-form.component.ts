@@ -3,6 +3,7 @@ import { FormGroup } from '@angular/forms';
 import { AccountModel } from 'src/app/shared/models/accounts/account.model';
 import { CategoryModel } from 'src/app/shared/models/categories/category.model';
 import { PaymentTypeModel } from 'src/app/shared/models/payment-types/payment-type.model';
+import { RecordTypes } from 'src/app/shared/constants';
 
 @Component({
   selector: 'app-record-form',
@@ -30,5 +31,9 @@ export class RecordFormComponent implements OnInit {
 
   onFormSubmitted(): void {
     this.formSubmitted.emit();
+  }
+
+  recordTypeChanged(recordType: string) {
+    this.recordForm.value.recordType = recordType;
   }
 }

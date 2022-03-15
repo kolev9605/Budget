@@ -5,3 +5,9 @@ export const ColorConstants = {
 export const LocalStorageKeys = {
   UserData: 'userData',
 };
+
+export const RecordTypes = {
+  Income: 'Income',
+  Expense: 'Expense',
+  Transfer: 'Transfer',
+};
