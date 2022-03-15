@@ -17,9 +17,7 @@ export class AccountFormComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit(): void {
-    console.log(this.accountForm.value);
-  }
+  ngOnInit(): void {}
 
   onFormSubmitted(): void {
     this.formSubmitted.emit();

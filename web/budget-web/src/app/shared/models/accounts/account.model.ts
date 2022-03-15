@@ -5,4 +5,5 @@ export class AccountModel {
   public name: string;
   public initialBalance: number;
   public currency: CurrencyModel;
+  public balance: number;
 }
