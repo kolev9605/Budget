@@ -10,10 +10,10 @@ namespace Budget.Core.Interfaces.Services
 
         Task<IEnumerable<RecordModel>> GetAllAsync();
 
-        Task<RecordModel> CreateAsync(CreateRecordModel createRecordModel, string userId);
+        Task<int> CreateAsync(CreateRecordModel createRecordModel, string userId);
 
-        Task<RecordModel> UpdateAsync(UpdateRecordModel updateRecordModel, string userId);
+        Task<int> UpdateAsync(UpdateRecordModel updateRecordModel, string userId);
 
-        Task<RecordModel> DeleteAsync(int recordId);
+        Task<int> DeleteAsync(int recordId);
     }
 }
