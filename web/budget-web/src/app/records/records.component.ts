@@ -27,7 +27,6 @@ export class RecordsComponent implements OnInit {
         this.isLoading = false;
 
         this.records = response;
-        console.log('records', this.records);
       },
       (error) => {
         this.isLoading = false;
