@@ -66,7 +66,7 @@ namespace Budget.Infrastructure.Services
             {
                 AccountId = createRecordModel.AccountId,
                 Amount = GetAmountByRecordType(createRecordModel.Amount, createRecordModel.RecordType),
-                DateAdded = _dateTimeProvider.Now,
+                DateCreated = _dateTimeProvider.Now,
                 Note = createRecordModel.Note,
                 CategoryId = createRecordModel.CategoryId,
                 PaymentTypeId = createRecordModel.PaymentTypeId,

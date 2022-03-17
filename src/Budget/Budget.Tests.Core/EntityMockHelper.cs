@@ -19,7 +19,7 @@ namespace Budget.Tests.Core
                 PaymentType = paymentType,
                 Amount = recordType == RecordType.Expense ? -Math.Abs(amount) : Math.Abs(amount),
                 Category = category,
-                DateAdded = DateTime.UtcNow,
+                DateCreated = DateTime.UtcNow,
                 Note = $"Note{id}",
                 RecordType = recordType
             };

@@ -9,7 +9,7 @@ namespace Budget.Core.Entities
 
         public string Note { get; set; }
 
-        public DateTime DateAdded { get; set; }
+        public DateTime DateCreated { get; set; }
 
         public DateTime RecordDate { get; set; }
 

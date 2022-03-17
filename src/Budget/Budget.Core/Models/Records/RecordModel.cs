@@ -20,7 +20,7 @@ namespace Budget.Core.Models.Records
 
         public CategoryModel Category { get; set; }
 
-        public DateTime DateAdded { get; set; }
+        public DateTime DateCreated { get; set; }
 
         public DateTime RecordDate { get; set; }
 
@@ -36,7 +36,7 @@ namespace Budget.Core.Models.Records
                 RecordType = record.RecordType,
                 PaymentType = PaymentTypeModel.FromPaymentType(record.PaymentType),
                 Category = CategoryModel.FromCategory(record.Category),
-                DateAdded = record.DateAdded,
+                DateCreated = record.DateCreated,
                 RecordDate = record.RecordDate,
                 Amount = record.Amount,
             };
