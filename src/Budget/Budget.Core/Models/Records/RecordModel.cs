@@ -22,6 +22,8 @@ namespace Budget.Core.Models.Records
 
         public DateTime DateAdded { get; set; }
 
+        public DateTime RecordDate { get; set; }
+
         public decimal Amount { get; set; }
 
         public static RecordModel FromRecord(Record record)
@@ -35,6 +37,7 @@ namespace Budget.Core.Models.Records
                 PaymentType = PaymentTypeModel.FromPaymentType(record.PaymentType),
                 Category = CategoryModel.FromCategory(record.Category),
                 DateAdded = record.DateAdded,
+                RecordDate = record.RecordDate,
                 Amount = record.Amount,
             };
         }

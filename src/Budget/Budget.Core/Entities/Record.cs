@@ -11,6 +11,8 @@ namespace Budget.Core.Entities
 
         public DateTime DateAdded { get; set; }
 
+        public DateTime RecordDate { get; set; }
+
         public decimal Amount { get; set; }
 
         public int AccountId { get; set; }
