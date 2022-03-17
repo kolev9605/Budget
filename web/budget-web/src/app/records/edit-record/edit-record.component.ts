@@ -7,13 +7,15 @@ import { first } from 'rxjs/operators';
 import { AccountModel } from 'src/app/shared/models/accounts/account.model';
 import { CategoryModel } from 'src/app/shared/models/categories/category.model';
 import { PaymentTypeModel } from 'src/app/shared/models/payment-types/payment-type.model';
-import { CreateRecordModel } from 'src/app/shared/models/records/create-record.model';
 import { RecordModel } from 'src/app/shared/models/records/record.model';
 import { UpdateRecordModel } from 'src/app/shared/models/records/update-record.model';
 import { AccountService } from 'src/app/shared/services/account.service';
 import { CategoryService } from 'src/app/shared/services/category.service';
 import { PaymentTypeService } from 'src/app/shared/services/payment-type.service';
 import { RecordService } from 'src/app/shared/services/record.service';
+import { format } from 'date-fns';
+import { DateService } from 'src/app/shared/services/date.service';
+import { Formats } from '../../shared/constants';
 
 @Component({
   selector: 'app-edit-record',
@@ -39,6 +41,7 @@ export class EditRecordComponent implements OnInit {
     private recordService: RecordService,
     private router: Router,
     private route: ActivatedRoute,
+    private dateService: DateService,
   ) {}
 
   ngOnInit(): void {
@@ -49,6 +52,7 @@ export class EditRecordComponent implements OnInit {
       category: [null, [Validators.required]],
       paymentType: [null, [Validators.required]],
       recordType: [null, [Validators.required]],
+      recordDate: [null, [Validators.required]],
     });
 
     forkJoin({
@@ -74,6 +78,7 @@ export class EditRecordComponent implements OnInit {
           category: this.record.category.id,
           paymentType: this.record.paymentType.id,
           recordType: this.record.recordType,
+          recordDate: format(new Date(this.record.recordDate), Formats.DateFormt),
         });
       },
       (error) => {
@@ -86,6 +91,10 @@ export class EditRecordComponent implements OnInit {
   onSubmit(): void {
     this.isLoading = true;
 
+    const date = this.dateService.subtractUserTimezoneOffset(
+      new Date(this.editRecordForm.value.recordDate),
+    );
+
     const updateRecordModel = new UpdateRecordModel(
       this.record.id,
       this.editRecordForm.value.note,
@@ -94,6 +103,7 @@ export class EditRecordComponent implements OnInit {
       +this.editRecordForm.value.category,
       +this.editRecordForm.value.paymentType,
       this.editRecordForm.value.recordType,
+      date,
     );
 
     this.recordService.updateRecord(updateRecordModel).subscribe(

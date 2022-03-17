@@ -11,3 +11,7 @@ export const RecordTypes = {
   Expense: 'Expense',
   Transfer: 'Transfer',
 };
+
+export const Formats = {
+  DateFormt: 'yyyy/MM/dd HH:mm',
+};

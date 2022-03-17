@@ -3,6 +3,7 @@ import { FormGroup } from '@angular/forms';
 import { AccountModel } from 'src/app/shared/models/accounts/account.model';
 import { CategoryModel } from 'src/app/shared/models/categories/category.model';
 import { PaymentTypeModel } from 'src/app/shared/models/payment-types/payment-type.model';
+import flatpickr from 'flatpickr';
 
 @Component({
   selector: 'app-record-form',
@@ -22,7 +23,12 @@ export class RecordFormComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    flatpickr('#date', {
+      enableTime: true,
+      dateFormat: 'Y/m/d H:i',
+    });
+  }
 
   onRecordDelete(): void {
     this.recordDeleted.emit();

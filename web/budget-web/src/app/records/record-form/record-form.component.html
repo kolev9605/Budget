@@ -27,6 +27,14 @@
       <input type="text" id="note" formControlName="note" class="form-control form-control-lg" />
     </div>
     <div class="form-group py-2">
+      <label class="form-label" for="note">Date</label>
+      <input
+        type="text"
+        id="date"
+        formControlName="recordDate"
+        class="form-control form-control-lg" />
+    </div>
+    <div class="form-group py-2">
       <label class="form-label" for="recordType">Category</label>
       <select class="form-control form-control-lg" id="category" formControlName="category">
         <option *ngFor="let category of categories" [value]="category.id">{{category.name}}</option>

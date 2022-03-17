@@ -1,4 +1,5 @@
 ﻿using Budget.Core.Entities;
+using System;
 
 namespace Budget.Core.Models.Records
 {
@@ -15,5 +16,7 @@ namespace Budget.Core.Models.Records
         public int PaymentTypeId { get; set; }
 
         public RecordType RecordType { get; set; }
+
+        public DateTime RecordDate { get; set; }
     }
 }

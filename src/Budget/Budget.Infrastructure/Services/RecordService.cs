@@ -71,6 +71,7 @@ namespace Budget.Infrastructure.Services
                 CategoryId = createRecordModel.CategoryId,
                 PaymentTypeId = createRecordModel.PaymentTypeId,
                 RecordType = createRecordModel.RecordType,
+                RecordDate = createRecordModel.RecordDate,
             };
 
             var createdRecord = await _recordRepository.CreateAsync(record);
@@ -95,6 +96,7 @@ namespace Budget.Infrastructure.Services
             record.CategoryId = updateRecordModel.CategoryId;
             record.PaymentTypeId = updateRecordModel.PaymentTypeId;
             record.RecordType = updateRecordModel.RecordType;
+            record.RecordDate = updateRecordModel.RecordDate;
 
             var updatedRecord = await _recordRepository.UpdateAsync(record);
 

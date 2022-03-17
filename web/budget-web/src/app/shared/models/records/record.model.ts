@@ -10,5 +10,6 @@ export class RecordModel {
   public paymentType: PaymentTypeModel;
   public category: CategoryModel;
   public dateAdded: Date;
+  public recordDate: Date;
   public amount: number;
 }

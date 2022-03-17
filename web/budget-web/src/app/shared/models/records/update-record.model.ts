@@ -7,5 +7,6 @@ export class UpdateRecordModel {
     public categoryId: number,
     public paymentTypeId: number,
     public recordType: string,
+    public recordDate: Date,
   ) {}
 }

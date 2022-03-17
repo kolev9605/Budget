@@ -6,5 +6,6 @@ export class CreateRecordModel {
     public categoryId: number,
     public paymentTypeId: number,
     public recordType: string,
+    public recordDate: Date,
   ) {}
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -12,6 +12,7 @@ import { CategoryService } from 'src/app/shared/services/category.service';
 import { PaymentTypeService } from 'src/app/shared/services/payment-type.service';
 import { RecordService } from 'src/app/shared/services/record.service';
 import { RecordTypes } from 'src/app/shared/constants';
+import { DateService } from 'src/app/shared/services/date.service';
 
 @Component({
   selector: 'app-create-record',
@@ -35,6 +36,7 @@ export class CreateRecordComponent implements OnInit {
     private paymentTypeService: PaymentTypeService,
     private recordService: RecordService,
     private router: Router,
+    private dateService: DateService,
   ) {}
 
   ngOnInit(): void {
@@ -45,6 +47,7 @@ export class CreateRecordComponent implements OnInit {
       category: [null, [Validators.required]],
       paymentType: [null, [Validators.required]],
       recordType: [RecordTypes.Expense, [Validators.required]],
+      recordDate: [null, [Validators.required]],
     });
 
     forkJoin({
@@ -71,6 +74,10 @@ export class CreateRecordComponent implements OnInit {
   onSubmit(): void {
     this.isLoading = true;
 
+    const date = this.dateService.subtractUserTimezoneOffset(
+      new Date(this.createRecordForm.value.recordDate),
+    );
+
     const createRecordModel = new CreateRecordModel(
       this.createRecordForm.value.note,
       this.createRecordForm.value.amount,
@@ -78,6 +85,7 @@ export class CreateRecordComponent implements OnInit {
       +this.createRecordForm.value.category,
       +this.createRecordForm.value.paymentType,
       this.createRecordForm.value.recordType,
+      date,
     );
 
     this.recordService.createRecord(createRecordModel).subscribe(

@@ -14,7 +14,7 @@
         <div class="row">
           <div class="col">Category</div>
           <div class="col">Account</div>
-          <div class="col">Date Added</div>
+          <div class="col">Date</div>
           <div class="col">Amount</div>
         </div>
       </div>
@@ -28,7 +28,7 @@
           <div class="row">
             <div class="col">{{record.category.name}}</div>
             <div class="col">{{record.account.name}}</div>
-            <div class="col">{{record.dateAdded | date}}</div>
+            <div class="col">{{record.recordDate | date}}</div>
             <div class="col">
               {{record.amount | currency: record.account.currency.abbreviation :'symbol'}}
             </div>
