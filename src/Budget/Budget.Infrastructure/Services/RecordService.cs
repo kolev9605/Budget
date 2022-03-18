@@ -47,15 +47,23 @@ namespace Budget.Infrastructure.Services
             return recordDto;
         }
 
-        public async Task<IEnumerable<RecordModel>> GetAllAsync()
+        public async Task<IEnumerable<RecordsGroupModel>> GetAllAsync()
         {
             var records = await _recordRepository.GetAllAsync();
 
-            var recordModels = records
-                .ToList()
-                .Select(r => RecordModel.FromRecord(r));
+            var models = new List<RecordsGroupModel>();
 
-            return recordModels;
+            var recordsGroupedByDate = records
+                .GroupBy(r => r.RecordDate.Date)
+                .ToDictionary(r => r.Key, r => r.ToList())
+                .OrderByDescending(r => r.Key)
+                .Select(r => new RecordsGroupModel()
+                {
+                    Date = r.Key,
+                    Records = r.Value.Select(rm => RecordModel.FromRecord(rm))
+                });
+
+            return recordsGroupedByDate;
         }
 
         public async Task<int> CreateAsync(CreateRecordModel createRecordModel, string userId)

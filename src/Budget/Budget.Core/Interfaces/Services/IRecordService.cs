@@ -8,7 +8,7 @@ namespace Budget.Core.Interfaces.Services
     {
         Task<RecordModel> GetByIdAsync(int id);
 
-        Task<IEnumerable<RecordModel>> GetAllAsync();
+        Task<IEnumerable<RecordsGroupModel>> GetAllAsync();
 
         Task<int> CreateAsync(CreateRecordModel createRecordModel, string userId);
 

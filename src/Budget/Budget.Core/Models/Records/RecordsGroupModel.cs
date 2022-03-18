@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Budget.Core.Entities;
+using System;
 using System.Collections.Generic;
 
 namespace Budget.Core.Models.Records
 {
-    public class RecordListModel
+    public class RecordsGroupModel
     {
         public DateTime Date { get; set; }
 

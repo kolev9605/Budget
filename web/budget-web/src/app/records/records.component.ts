@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { RecordModel } from '../shared/models/records/record.model';
+import { RecordsGroupModel } from '../shared/models/records/records-group.model';
 import { RecordService } from '../shared/services/record.service';
 
 @Component({
@@ -11,7 +12,7 @@ import { RecordService } from '../shared/services/record.service';
 })
 export class RecordsComponent implements OnInit {
   isLoading: boolean = false;
-  records: RecordModel[];
+  recordGroups: RecordsGroupModel[];
 
   constructor(
     private recordService: RecordService,
@@ -26,7 +27,7 @@ export class RecordsComponent implements OnInit {
       (response) => {
         this.isLoading = false;
 
-        this.records = response;
+        this.recordGroups = response;
       },
       (error) => {
         this.isLoading = false;

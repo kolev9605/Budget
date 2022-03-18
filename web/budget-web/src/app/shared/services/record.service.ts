@@ -5,6 +5,7 @@ import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { CreateRecordModel } from '../models/records/create-record.model';
 import { RecordModel } from '../models/records/record.model';
+import { RecordsGroupModel } from '../models/records/records-group.model';
 import { UpdateRecordModel } from '../models/records/update-record.model';
 import { ErrorService } from './error.service';
 
@@ -26,9 +27,9 @@ export class RecordService {
       .pipe(catchError(this.errorService.handleError));
   }
 
-  getAll(): Observable<RecordModel[]> {
+  getAll(): Observable<RecordsGroupModel[]> {
     return this.http
-      .get<RecordModel[]>(`${environment.apiUrl}${this.controller}/GetAll`)
+      .get<RecordsGroupModel[]>(`${environment.apiUrl}${this.controller}/GetAll`)
       .pipe(catchError(this.errorService.handleError));
   }
 

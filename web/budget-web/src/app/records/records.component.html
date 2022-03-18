@@ -7,34 +7,31 @@
       Add Record
     </div>
   </div>
-
-  <div class="card" *ngIf="records && records.length > 0">
-    <div class="card-header">
-      <div class="container">
-        <div class="row">
-          <div class="col">Category</div>
-          <div class="col">Account</div>
-          <div class="col">Date</div>
-          <div class="col">Amount</div>
-        </div>
-      </div>
-    </div>
-    <ul class="list-group list-group-flush">
-      <li
-        class="list-group-item"
-        *ngFor="let record of records"
-        [routerLink]="['/records/edit', record.id]">
+  <div *ngIf="recordGroups && recordGroups.length > 0">
+    <div class="card my-2" *ngFor="let recordGroup of recordGroups">
+      <div class="card-header">
         <div class="container">
           <div class="row">
-            <div class="col">{{record.category.name}}</div>
-            <div class="col">{{record.account.name}}</div>
-            <div class="col">{{record.recordDate | date}}</div>
-            <div class="col">
-              {{record.amount | currency: record.account.currency.abbreviation :'symbol'}}
-            </div>
+            <div class="col">{{recordGroup.date | date}}</div>
           </div>
         </div>
-      </li>
-    </ul>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li
+          class="list-group-item"
+          *ngFor="let record of recordGroup.records"
+          [routerLink]="['/records/edit', record.id]">
+          <div class="container">
+            <div class="row">
+              <div class="col">{{record.category.name}}</div>
+              <div class="col">{{record.account.name}}</div>
+              <div class="col">
+                {{record.amount | currency: record.account.currency.abbreviation :'symbol'}}
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
   </div>
 </div>
