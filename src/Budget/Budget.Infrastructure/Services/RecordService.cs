@@ -60,6 +60,7 @@ namespace Budget.Infrastructure.Services
                 .Select(r => new RecordsGroupModel()
                 {
                     Date = r.Key,
+                    Sum = r.Value.Sum(r => r.Amount),
                     Records = r.Value.Select(rm => RecordModel.FromRecord(rm))
                 });
 
