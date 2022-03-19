@@ -17,6 +17,11 @@ namespace Budget.Persistance.Configurations
             builder.HasMany(c => c.Records)
                 .WithOne(r => r.Category)
                 .HasForeignKey(r => r.CategoryId);
+
+            builder.HasMany(pc => pc.SubCategories)
+                .WithOne(sc => sc.ParentCategory)
+                .HasForeignKey(sc => sc.ParentCategoryId);
+
         }
     }
 }

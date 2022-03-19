@@ -12,5 +12,11 @@ namespace Budget.Core.Entities
         public ICollection<Record> Records { get; set; } = new List<Record>();
 
         public CategoryType CategoryType { get; set; }
+
+        public int? ParentCategoryId { get; set; }
+
+        public Category ParentCategory { get; set; }
+
+        public ICollection<Category> SubCategories { get; set; } = new List<Category>();
     }
 }
