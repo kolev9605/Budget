@@ -10,23 +10,18 @@ namespace Budget.Infrastructure.Services
 {
     public class CategoryService : ICategoryService
     {
-        private readonly IRepository<Category> _categoriesRepository;
+        private readonly ICategoryRepository _categoriesRepository;
 
-        public CategoryService(IRepository<Category> categoriesRepository)
+        public CategoryService(ICategoryRepository categoriesRepository)
         {
             _categoriesRepository = categoriesRepository;
         }
 
         public async Task<IEnumerable<CategoryModel>> GetAllAsync()
         {
-            var categories = await _categoriesRepository.BaseAllAsync();
+            var categories = await _categoriesRepository.GetAllWithSubcategoriesAsync();
 
-            var categoryModels = categories.Select(c => new CategoryModel()
-            {
-                Id = c.Id,
-                Name = c.Name,
-                CategoryType = c.CategoryType,
-            });
+            var categoryModels = categories.Select(c => CategoryModel.FromCategory(c));
 
             return categoryModels;
         }
