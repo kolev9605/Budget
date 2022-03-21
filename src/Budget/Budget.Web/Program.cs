@@ -31,8 +31,8 @@ builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(JwtOptio
 // Adding JWT Authentication
 builder.Services.AddJwtAuthentication(builder.Configuration);
 
-builder.Services.AddRepositories();
 builder.Services.AddMemoryCache();
+builder.Services.AddRepositories();
 builder.Services.AddServices();
 
 builder.Services.AddControllers().AddJsonOptions(opt =>
