@@ -25,5 +25,25 @@ namespace Budget.Infrastructure.Services
 
             return categoryModels;
         }
+
+        public async Task<IEnumerable<CategoryModel>> GetAllPrimaryAsync()
+        {
+            var categories = await _categoriesRepository.GetAllPrimaryAsync();
+
+            var categoryModels = categories
+                .Select(c => CategoryModel.FromCategory(c));
+
+            return categoryModels;
+        }
+
+        public async Task<IEnumerable<CategoryModel>> GetAllSubcategoriesByParentCategoryId(int parentCategoryId)
+        {
+            var categories = await _categoriesRepository.GetSubcategoriesByParentCategoryId(parentCategoryId);
+
+            var categoryModels = categories
+                .Select(c => CategoryModel.FromCategory(c));
+
+            return categoryModels;
+        }
     }
 }

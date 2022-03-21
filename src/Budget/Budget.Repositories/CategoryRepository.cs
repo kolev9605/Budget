@@ -22,9 +22,31 @@ namespace Budget.Repositories
         {
             var categories = await _budgetDbContext.Categories
                 .Include(c => c.SubCategories)
+                .OrderBy(c => c.ParentCategoryId ?? c.Id)
+                .ThenBy(c => c.Id)
                 .ToListAsync();
 
             return categories;
+        }
+
+        public async Task<IEnumerable<Category>> GetAllPrimaryAsync()
+        {
+            var categories = await _budgetDbContext.Categories
+                .Include(c => c.SubCategories)
+                .Where(c => !c.ParentCategoryId.HasValue)
+                .ToListAsync();
+
+            return categories;
+        }
+
+        public async Task<IEnumerable<Category>> GetSubcategoriesByParentCategoryId(int parentCategoryId)
+        {
+            var subcategories = await _budgetDbContext.Categories
+                .Include(c => c.ParentCategory)
+                .Where(c => c.ParentCategoryId.HasValue && c.ParentCategoryId == parentCategoryId)
+                .ToListAsync();
+
+            return subcategories;
         }
     }
 }

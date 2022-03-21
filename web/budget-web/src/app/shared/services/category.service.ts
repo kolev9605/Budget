@@ -19,4 +19,20 @@ export class CategoryService {
       .get<CategoryModel[]>(`${environment.apiUrl}${this.controller}/GetAll`)
       .pipe(catchError(this.errorService.handleError));
   }
+
+  getAllPrimary(): Observable<CategoryModel[]> {
+    return this.http
+      .get<CategoryModel[]>(`${environment.apiUrl}${this.controller}/GetAllPrimary`)
+      .pipe(catchError(this.errorService.handleError));
+  }
+
+  getAllSubcategories(parentCategoryId: number): Observable<CategoryModel[]> {
+    return this.http
+      .get<CategoryModel[]>(`${environment.apiUrl}${this.controller}/GetAllSubcategories`, {
+        params: {
+          parentCategoryId: parentCategoryId,
+        },
+      })
+      .pipe(catchError(this.errorService.handleError));
+  }
 }

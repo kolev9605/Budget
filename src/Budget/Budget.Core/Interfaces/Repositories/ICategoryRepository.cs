@@ -7,5 +7,9 @@ namespace Budget.Core.Interfaces.Repositories
     public interface ICategoryRepository : IRepository<Category>
     {
         Task<IEnumerable<Category>> GetAllWithSubcategoriesAsync();
+
+        Task<IEnumerable<Category>> GetAllPrimaryAsync();
+
+        Task<IEnumerable<Category>> GetSubcategoriesByParentCategoryId(int parentCategoryId);
     }
 }

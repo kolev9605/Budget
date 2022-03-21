@@ -89,8 +89,6 @@ export class EditRecordComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.isLoading = true;
-
     const date = this.dateService.subtractUserTimezoneOffset(
       new Date(this.editRecordForm.value.recordDate),
     );
@@ -106,6 +104,7 @@ export class EditRecordComponent implements OnInit {
       date,
     );
 
+    this.isLoading = true;
     this.recordService.updateRecord(updateRecordModel).subscribe(
       (response) => {
         this.isLoading = false;

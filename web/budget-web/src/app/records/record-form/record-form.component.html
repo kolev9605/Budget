@@ -37,7 +37,9 @@
     <div class="form-group py-2">
       <label class="form-label" for="recordType">Category</label>
       <select class="form-control form-control-lg" id="category" formControlName="category">
-        <option *ngFor="let category of categories" [value]="category.id">{{category.name}}</option>
+        <option *ngFor="let category of categories" [value]="category.id">
+          {{category.parentCategoryId ? '&#x2192; ' : ''}}{{category.name}}
+        </option>
       </select>
     </div>
     <div class="form-group py-2">

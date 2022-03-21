@@ -51,7 +51,7 @@ namespace Budget.Persistance.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Accounts");
+                    b.ToTable("Accounts", (string)null);
                 });
 
             modelBuilder.Entity("Budget.Core.Entities.ApplicationUser", b =>
@@ -143,7 +143,7 @@ namespace Budget.Persistance.Migrations
 
                     b.HasIndex("ParentCategoryId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("Budget.Core.Entities.Currency", b =>
@@ -166,7 +166,7 @@ namespace Budget.Persistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Currencies");
+                    b.ToTable("Currencies", (string)null);
                 });
 
             modelBuilder.Entity("Budget.Core.Entities.PaymentType", b =>
@@ -184,7 +184,7 @@ namespace Budget.Persistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PaymentTypes");
+                    b.ToTable("PaymentTypes", (string)null);
                 });
 
             modelBuilder.Entity("Budget.Core.Entities.Record", b =>
@@ -228,7 +228,7 @@ namespace Budget.Persistance.Migrations
 
                     b.HasIndex("PaymentTypeId");
 
-                    b.ToTable("Records");
+                    b.ToTable("Records", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

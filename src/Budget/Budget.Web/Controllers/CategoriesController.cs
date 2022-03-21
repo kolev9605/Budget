@@ -20,5 +20,15 @@ namespace Budget.Web.Controllers
         [Route(nameof(GetAll))]
         public async Task<IActionResult> GetAll()
             => Ok(await _categoryService.GetAllAsync());
+
+        [HttpGet]
+        [Route(nameof(GetAllPrimary))]
+        public async Task<IActionResult> GetAllPrimary()
+            => Ok(await _categoryService.GetAllPrimaryAsync());
+
+        [HttpGet]
+        [Route(nameof(GetAllSubcategories))]
+        public async Task<IActionResult> GetAllSubcategories(int parentCategoryId)
+            => Ok(await _categoryService.GetAllSubcategoriesByParentCategoryId(parentCategoryId));
     }
 }
