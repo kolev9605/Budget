@@ -11,6 +11,8 @@ namespace Budget.Core.Models.Records
 
         public int AccountId { get; set; }
 
+        public int? FromAccountId { get; set; }
+
         public int CategoryId { get; set; }
 
         public int PaymentTypeId { get; set; }

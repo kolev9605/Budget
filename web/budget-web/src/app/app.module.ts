@@ -22,6 +22,8 @@ import { RecordsComponent } from './records/records.component';
 import { CreateRecordComponent } from './records/create-record/create-record.component';
 import { RecordFormComponent } from './records/record-form/record-form.component';
 import { EditRecordComponent } from './records/edit-record/edit-record.component';
+import { ChartComponent } from './shared/components/charts/chart/chart.component';
+import { CashFlowChartComponent } from './shared/components/charts/cash-flow-chart/cash-flow-chart.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +41,8 @@ import { EditRecordComponent } from './records/edit-record/edit-record.component
     CreateRecordComponent,
     RecordFormComponent,
     EditRecordComponent,
+    ChartComponent,
+    CashFlowChartComponent,
   ],
   imports: [
     BrowserModule,

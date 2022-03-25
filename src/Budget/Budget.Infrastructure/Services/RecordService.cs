@@ -38,18 +38,18 @@ namespace Budget.Infrastructure.Services
             _userManager = userManager;
         }
 
-        public async Task<RecordModel> GetByIdAsync(int id)
+        public async Task<RecordModel> GetByIdAsync(int id, string userId)
         {
-            var recordEntity = await _recordRepository.GetRecordByIdAsync(id);
+            var recordEntity = await _recordRepository.GetRecordByIdAsync(id, userId);
 
             var recordDto = RecordModel.FromRecord(recordEntity);
 
             return recordDto;
         }
 
-        public async Task<IEnumerable<RecordsGroupModel>> GetAllAsync()
+        public async Task<IEnumerable<RecordsGroupModel>> GetAllAsync(string userId)
         {
-            var records = await _recordRepository.GetAllAsync();
+            var records = await _recordRepository.GetAllAsync(userId);
 
             var models = new List<RecordsGroupModel>();
 
@@ -71,11 +71,30 @@ namespace Budget.Infrastructure.Services
         {
             await ValidateCrudRecordModel(createRecordModel, userId);
 
+            var now = _dateTimeProvider.Now;
+            if (createRecordModel.FromAccountId.HasValue && createRecordModel.RecordType == RecordType.Transfer)
+            {
+                var transferRecord = new Record()
+                {
+                    AccountId = createRecordModel.FromAccountId.Value,
+                    Amount = GetAmountByRecordType(createRecordModel.Amount, createRecordModel.RecordType),
+                    DateCreated = now,
+                    Note = createRecordModel.Note,
+                    CategoryId = createRecordModel.CategoryId,
+                    PaymentTypeId = createRecordModel.PaymentTypeId,
+                    RecordType = createRecordModel.RecordType,
+                    RecordDate = createRecordModel.RecordDate,
+                };
+
+                await _recordRepository.CreateAsync(transferRecord);
+
+            }
+
             var record = new Record()
             {
                 AccountId = createRecordModel.AccountId,
                 Amount = GetAmountByRecordType(createRecordModel.Amount, createRecordModel.RecordType),
-                DateCreated = _dateTimeProvider.Now,
+                DateCreated = now,
                 Note = createRecordModel.Note,
                 CategoryId = createRecordModel.CategoryId,
                 PaymentTypeId = createRecordModel.PaymentTypeId,
@@ -90,7 +109,7 @@ namespace Budget.Infrastructure.Services
 
         public async Task<int> UpdateAsync(UpdateRecordModel updateRecordModel, string userId)
         {
-            var record = await _recordRepository.GetRecordByIdAsync(updateRecordModel.Id);
+            var record = await _recordRepository.GetRecordByIdAsync(updateRecordModel.Id, userId);
             if (record == null)
             {
                 throw new BudgetValidationException(
@@ -112,9 +131,9 @@ namespace Budget.Infrastructure.Services
             return updatedRecord.Id;
         }
 
-        public async Task<int> DeleteAsync(int recordId)
+        public async Task<int> DeleteAsync(int recordId, string userId)
         {
-            var record = await _recordRepository.BaseGetByIdAsync(recordId);
+            var record = await _recordRepository.GetRecordByIdAsync(recordId, userId);
             if (record == null)
             {
                 throw new BudgetValidationException(
@@ -144,18 +163,7 @@ namespace Budget.Infrastructure.Services
                     string.Format(ValidationMessages.Common.IsNotNull, nameof(model)));
             }
 
-            var account = await _accountRepository.BaseGetByIdAsync(model.AccountId);
-            if (account == null)
-            {
-                throw new BudgetValidationException(
-                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(account), model.AccountId));
-            }
-
-            if (account.UserId != userId)
-            {
-                throw new BudgetValidationException(
-                    string.Format(ValidationMessages.Accounts.InvalidAccount, account.Name));
-            }
+            await ValidateAccount(model.AccountId, userId);
 
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
@@ -176,6 +184,22 @@ namespace Budget.Infrastructure.Services
             {
                 throw new BudgetValidationException(
                     string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(paymentType), model.PaymentTypeId));
+            }
+        }
+
+        private async Task ValidateAccount(int accountId, string userId)
+        {
+            var account = await _accountRepository.BaseGetByIdAsync(accountId);
+            if (account == null)
+            {
+                throw new BudgetValidationException(
+                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(account), accountId));
+            }
+
+            if (account.UserId != userId)
+            {
+                throw new BudgetValidationException(
+                    string.Format(ValidationMessages.Accounts.InvalidAccount, account.Name));
             }
         }
     }

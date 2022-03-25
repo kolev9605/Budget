@@ -23,12 +23,12 @@ namespace Budget.Web.Controllers
         [HttpGet]
         [Route(nameof(GetById))]
         public async Task<IActionResult> GetById(int recordId)
-            => Ok(await _recordService.GetByIdAsync(recordId));
+            => Ok(await _recordService.GetByIdAsync(recordId, LoggedInUserId));
 
         [HttpGet]
         [Route(nameof(GetAll))]
         public async Task<ActionResult<IEnumerable<RecordModel>>> GetAll()
-            => Ok(await _recordService.GetAllAsync());
+            => Ok(await _recordService.GetAllAsync(LoggedInUserId));
 
         [HttpPost]
         [Route(nameof(Create))]
@@ -43,7 +43,7 @@ namespace Budget.Web.Controllers
         [HttpGet]
         [Route(nameof(Delete))]
         public async Task<IActionResult> Delete(int recordId)
-            => Ok(await _recordService.DeleteAsync(recordId));
+            => Ok(await _recordService.DeleteAsync(recordId, LoggedInUserId));
 
         [HttpGet]
         [Route(nameof(GetRecordTypes))]

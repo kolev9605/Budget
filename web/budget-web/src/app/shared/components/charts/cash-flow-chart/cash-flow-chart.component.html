@@ -1,0 +1,16 @@
+<div class="bg-white p-4" *ngIf="cashFlowData">
+  <h4 class="text-center">Cash Flow</h4>
+  <div class="d-flex justify-content-center">
+    <div class="align-middle p-3">
+      <span (click)="previousMonth()" class="border border-primary p-1 m-1 rounded-3" role="button">
+        <i class="bi bi-chevron-left"></i>
+      </span>
+      {{monthName}}
+      <span (click)="nextMonth()" class="border border-primary p-1 m-1 rounded-3" role="button">
+        <i class="bi bi-chevron-right"></i>
+      </span>
+    </div>
+  </div>
+
+  <app-chart *ngIf="cashFlowData" [options]="options" [data]="data" [type]="type"></app-chart>
+</div>

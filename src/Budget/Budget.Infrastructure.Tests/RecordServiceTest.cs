@@ -194,7 +194,7 @@ namespace Budget.Infrastructure.Tests
             var recordService = ServiceMockHelper.SetupRecordService();
 
             // Act
-            var result = await recordService.DeleteAsync(DefaultValueConstants.Common.Id);
+            var result = await recordService.DeleteAsync(DefaultValueConstants.Common.Id, DefaultValueConstants.User.UserId);
 
             // Assert
             Assert.Equal(result, DefaultValueConstants.Common.Id);
@@ -207,7 +207,7 @@ namespace Budget.Infrastructure.Tests
             var recordService = ServiceMockHelper.SetupRecordService();
 
             // Act
-            var act = async () => await recordService.DeleteAsync(DefaultValueConstants.Common.InvalidId);
+            var act = async () => await recordService.DeleteAsync(DefaultValueConstants.Common.InvalidId, DefaultValueConstants.User.UserId);
 
             // Assert
             var exception = await Assert.ThrowsAsync<BudgetValidationException>(act);

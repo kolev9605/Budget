@@ -6,8 +6,10 @@ namespace Budget.Core.Interfaces.Repositories
 {
     public interface IRecordRepository : IRepository<Record>
     {
-        Task<IEnumerable<Record>> GetAllAsync();
+        Task<Record> GetRecordByIdAsync(int id, string userId);
 
-        Task<Record> GetRecordByIdAsync(int id);
+        Task<IEnumerable<Record>> GetAllAsync(string userId);
+
+        Task<IEnumerable<Record>> GetAllByMonthAsync(string userId, int month);
     }
 }

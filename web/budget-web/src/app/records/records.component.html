@@ -29,6 +29,7 @@
             <div class="row">
               <div class="col">{{record.category.name}}</div>
               <div class="col">{{record.account.name}}</div>
+              <div class="col">{{record.note}}</div>
               <div class="col align-self-end text-end">
                 {{record.amount | currency: record.account.currency.abbreviation :'symbol'}}
               </div>

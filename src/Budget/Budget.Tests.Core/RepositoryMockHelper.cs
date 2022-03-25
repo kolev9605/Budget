@@ -15,7 +15,7 @@ namespace Budget.Tests.Core
                 .Returns(Task.FromResult(record));
 
             recordRepositoryMock
-                .Setup(x => x.GetRecordByIdAsync(DefaultValueConstants.Common.Id))
+                .Setup(x => x.GetRecordByIdAsync(DefaultValueConstants.Common.Id, It.IsAny<string>()))
                 .Returns(Task.FromResult(record));
 
             recordRepositoryMock

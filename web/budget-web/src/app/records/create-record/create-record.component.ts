@@ -65,6 +65,11 @@ export class CreateRecordComponent implements OnInit {
         this.accounts = accounts;
         this.paymentTypes = paymentTypes;
         this.recordTypes = recordTypes;
+
+        this.createRecordForm.patchValue({
+          account: this.accounts[0].id,
+          paymentType: this.paymentTypes.find((x) => (x.name = 'Debit Card'))?.id,
+        });
       },
       (error) => {
         this.isLoading = false;
@@ -74,7 +79,6 @@ export class CreateRecordComponent implements OnInit {
   }
 
   onSubmit(): void {
-
     const date = this.dateService.subtractUserTimezoneOffset(
       new Date(this.createRecordForm.value.recordDate),
     );

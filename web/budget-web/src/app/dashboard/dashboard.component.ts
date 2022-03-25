@@ -11,8 +11,8 @@ import { AccountService } from '../shared/services/account.service';
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
-  public accounts: AccountModel[];
-  public isLoading: boolean = false;
+  accounts: AccountModel[];
+  isLoading: boolean = false;
 
   constructor(
     private accountService: AccountService,

@@ -73,9 +73,10 @@ namespace Budget.Persistance.Seeders
                         CategoryType = CategoryType.Need,
                         SubCategories = new List<Category>
                         {
-                            new Category() { Name = "Taxe", CategoryType = CategoryType.Need },
+                            new Category() { Name = "Taxes", CategoryType = CategoryType.Need },
                             new Category() { Name = "Charges & Fees", CategoryType = CategoryType.Need },
                             new Category() { Name = "Fines", CategoryType = CategoryType.Need },
+                            new Category() { Name = "Bank fees", CategoryType = CategoryType.Need },
                         }
                     },
                 };
