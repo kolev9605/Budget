@@ -18,6 +18,7 @@ export class RecordFormComponent implements OnInit {
   @Input() paymentTypes: PaymentTypeModel[];
   @Input() recordTypes: string[];
   @Input() selectedRecordType: string;
+  @Output() selectedRecordTypeChange = new EventEmitter();
 
   @Output() formSubmitted = new EventEmitter();
   @Output() recordDeleted = new EventEmitter();
@@ -41,5 +42,6 @@ export class RecordFormComponent implements OnInit {
 
   recordTypeChanged(recordType: string) {
     this.selectedRecordType = recordType;
+    this.selectedRecordTypeChange.emit(recordType);
   }
 }
