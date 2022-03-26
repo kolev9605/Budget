@@ -27,6 +27,7 @@ export class CreateRecordComponent implements OnInit {
   accounts: AccountModel[];
   paymentTypes: PaymentTypeModel[];
   recordTypes: string[];
+  selectedRecordType: string;
 
   constructor(
     private fb: FormBuilder,
@@ -43,10 +44,10 @@ export class CreateRecordComponent implements OnInit {
     this.createRecordForm = this.fb.group({
       note: ['', [Validators.required]],
       amount: [null, [Validators.required]],
+      fromAccount: [null],
       account: [null, [Validators.required]],
       category: [null, [Validators.required]],
       paymentType: [null, [Validators.required]],
-      recordType: [RecordTypes.Expense, [Validators.required]],
       recordDate: [null, [Validators.required]],
     });
 
@@ -65,6 +66,11 @@ export class CreateRecordComponent implements OnInit {
         this.accounts = accounts;
         this.paymentTypes = paymentTypes;
         this.recordTypes = recordTypes;
+
+        var expenseRecordType = recordTypes.find((rt) => rt === RecordTypes.Expense);
+        if (expenseRecordType) {
+          this.selectedRecordType = expenseRecordType;
+        }
 
         this.createRecordForm.patchValue({
           account: this.accounts[0].id,
@@ -89,7 +95,7 @@ export class CreateRecordComponent implements OnInit {
       +this.createRecordForm.value.account,
       +this.createRecordForm.value.category,
       +this.createRecordForm.value.paymentType,
-      this.createRecordForm.value.recordType,
+      this.selectedRecordType,
       date,
     );
 

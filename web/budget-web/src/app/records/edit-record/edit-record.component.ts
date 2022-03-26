@@ -31,6 +31,7 @@ export class EditRecordComponent implements OnInit {
   accounts: AccountModel[];
   paymentTypes: PaymentTypeModel[];
   recordTypes: string[];
+  selectedRecordType: string;
 
   constructor(
     private fb: FormBuilder,
@@ -51,7 +52,6 @@ export class EditRecordComponent implements OnInit {
       account: [null, [Validators.required]],
       category: [null, [Validators.required]],
       paymentType: [null, [Validators.required]],
-      recordType: [null, [Validators.required]],
       recordDate: [null, [Validators.required]],
     });
 
@@ -71,13 +71,14 @@ export class EditRecordComponent implements OnInit {
         this.recordTypes = recordTypes;
         this.record = editRecord;
 
+        this.selectedRecordType = this.record.recordType;
+
         this.editRecordForm.patchValue({
           note: this.record.note,
           amount: this.record.amount,
           account: this.record.account.id,
           category: this.record.category.id,
           paymentType: this.record.paymentType.id,
-          recordType: this.record.recordType,
           recordDate: format(new Date(this.record.recordDate), Formats.DateFormt),
         });
       },
@@ -100,7 +101,7 @@ export class EditRecordComponent implements OnInit {
       +this.editRecordForm.value.account,
       +this.editRecordForm.value.category,
       +this.editRecordForm.value.paymentType,
-      this.editRecordForm.value.recordType,
+      this.selectedRecordType,
       date,
     );
 
