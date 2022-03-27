@@ -21,6 +21,8 @@
         public static class Accounts
         {
             public const string InvalidAccount = "The account {0} is not valid";
+            public const string SameAccountsInTransfer = "Transfers must be between two different accounts";
+
         }
     }
 }

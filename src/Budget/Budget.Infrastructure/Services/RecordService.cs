@@ -104,6 +104,8 @@ namespace Budget.Infrastructure.Services
 
             if (createRecordModel.FromAccountId.HasValue && createRecordModel.RecordType == RecordType.Transfer)
             {
+                await ValidateTransferRecord(createRecordModel.AccountId, createRecordModel.FromAccountId.Value);
+
                 var negativeTransferRecord = await CreateNegativeTransferRecord(createRecordModel, now);
 
                 record.FromAccountId = negativeTransferRecord.AccountId;
@@ -137,8 +139,10 @@ namespace Budget.Infrastructure.Services
 
             if (updateRecordModel.FromAccountId.HasValue && updateRecordModel.RecordType == RecordType.Transfer)
             {
+                await ValidateTransferRecord(updateRecordModel.AccountId, updateRecordModel.FromAccountId.Value);
+
                 existingTransferRecord.AccountId = updateRecordModel.FromAccountId.Value;
-                existingTransferRecord.Amount = -Math.Abs(record.Amount);
+                existingTransferRecord.Amount = GetAmountByRecordType(record.Amount, existingTransferRecord.RecordType, true);
                 existingTransferRecord.Note = updateRecordModel.Note;
                 existingTransferRecord.CategoryId = updateRecordModel.CategoryId;
                 existingTransferRecord.PaymentTypeId = updateRecordModel.PaymentTypeId;
@@ -183,20 +187,9 @@ namespace Budget.Infrastructure.Services
 
         private decimal GetAmountByRecordType(decimal amount, RecordType recordType, bool isNegativeTransferRecord = false)
         {
-            if (recordType == RecordType.Expense)
+            if (recordType == RecordType.Expense || (recordType == RecordType.Transfer && isNegativeTransferRecord))
             {
                 return -Math.Abs(amount);
-            }
-            else if (recordType == RecordType.Transfer)
-            {
-                if (isNegativeTransferRecord)
-                {
-                    return -Math.Abs(amount);
-                }
-                else
-                {
-                    return Math.Abs(amount);
-                }
             }
 
             return Math.Abs(amount);
@@ -267,6 +260,28 @@ namespace Budget.Infrastructure.Services
             {
                 throw new BudgetValidationException(
                     string.Format(ValidationMessages.Accounts.InvalidAccount, account.Name));
+            }
+        }
+
+        private async Task ValidateTransferRecord(int accountId, int fromAccountId)
+        {
+            var account = await _accountRepository.BaseGetByIdAsync(accountId);
+            if (account == null)
+            {
+                throw new BudgetValidationException(
+                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(account), accountId));
+            }
+
+            var fromAccount = await _accountRepository.BaseGetByIdAsync(fromAccountId);
+            if (fromAccount == null)
+            {
+                throw new BudgetValidationException(
+                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(fromAccount), fromAccountId));
+            }
+
+            if (account.Id == fromAccount.Id)
+            {
+                throw new BudgetValidationException(ValidationMessages.Accounts.SameAccountsInTransfer);
             }
         }
     }
