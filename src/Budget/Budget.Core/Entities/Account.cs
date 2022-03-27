@@ -15,6 +15,8 @@ namespace Budget.Core.Entities
 
         public ICollection<Record> Records { get; set; } = new List<Record>();
 
+        public ICollection<Record> TransferRecords { get; set; } = new List<Record>();
+
         public int CurrencyId { get; set; }
 
         public Currency Currency { get; set; }

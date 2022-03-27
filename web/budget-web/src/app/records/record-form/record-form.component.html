@@ -43,18 +43,19 @@
       </select>
     </div>
     <div *ngIf="selectedRecordType === 'Transfer'" class="form-group py-2">
-      <label class="form-label" for="account">From Account</label>
+      <label class="form-label" for="fromAccount">From Account</label>
       <select class="form-control form-control-lg" id="fromAccount" formControlName="fromAccount">
         <option *ngFor="let account of accounts" [value]="account.id">{{account.name}}</option>
       </select>
     </div>
     <div class="form-group py-2">
-      <label class="form-label" for="account">Account</label>
+      <label class="form-label" for="account"
+        >{{"selectedRecordType === 'Transfer'" ? 'To Account' : 'Account'}}</label
+      >
       <select class="form-control form-control-lg" id="account" formControlName="account">
         <option *ngFor="let account of accounts" [value]="account.id">{{account.name}}</option>
       </select>
     </div>
-
     <div class="form-group py-2">
       <label class="form-label" for="recordType">Payment Type</label>
       <select class="form-control form-control-lg" id="paymentType" formControlName="paymentType">

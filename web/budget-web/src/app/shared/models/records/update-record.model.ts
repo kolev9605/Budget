@@ -8,5 +8,6 @@ export class UpdateRecordModel {
     public paymentTypeId: number,
     public recordType: string,
     public recordDate: Date,
+    public fromAccountId: number,
   ) {}
 }
