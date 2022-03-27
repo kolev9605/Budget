@@ -27,6 +27,16 @@ export class RecordService {
       .pipe(catchError(this.errorService.handleError));
   }
 
+  getByIdForUpdate(recordId: number): Observable<RecordModel> {
+    return this.http
+      .get<RecordModel>(`${environment.apiUrl}${this.controller}/GetByIdForUpdate`, {
+        params: {
+          recordId: recordId,
+        },
+      })
+      .pipe(catchError(this.errorService.handleError));
+  }
+
   getAll(): Observable<RecordsGroupModel[]> {
     return this.http
       .get<RecordsGroupModel[]>(`${environment.apiUrl}${this.controller}/GetAll`)

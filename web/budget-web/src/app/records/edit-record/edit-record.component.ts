@@ -49,6 +49,7 @@ export class EditRecordComponent implements OnInit {
     this.editRecordForm = this.fb.group({
       note: ['', [Validators.required]],
       amount: [null, [Validators.required]],
+      fromAccount: [null, [Validators.required]],
       account: [null, [Validators.required]],
       category: [null, [Validators.required]],
       paymentType: [null, [Validators.required]],
@@ -56,7 +57,9 @@ export class EditRecordComponent implements OnInit {
     });
 
     forkJoin({
-      editRecord: this.recordService.getById(this.route.snapshot.params['accountId']).pipe(first()),
+      editRecord: this.recordService
+        .getByIdForUpdate(this.route.snapshot.params['accountId'])
+        .pipe(first()),
       categories: this.categoryService.getAll(),
       accounts: this.accountService.getAll(),
       paymentTypes: this.paymentTypeService.getAll(),
@@ -77,6 +80,7 @@ export class EditRecordComponent implements OnInit {
           note: this.record.note,
           amount: this.record.amount,
           account: this.record.account.id,
+          fromAccount: this.record.fromAccount?.id,
           category: this.record.category.id,
           paymentType: this.record.paymentType.id,
           recordDate: format(new Date(this.record.recordDate), Formats.DateFormt),
@@ -103,6 +107,7 @@ export class EditRecordComponent implements OnInit {
       +this.editRecordForm.value.paymentType,
       this.selectedRecordType,
       date,
+      this.editRecordForm.value.fromAccount,
     );
 
     this.isLoading = true;

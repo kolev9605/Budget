@@ -27,7 +27,7 @@ namespace Budget.Infrastructure.Services
             IAccountRepository accountRepository,
             IDateTimeProvider dateTimeProvider,
             IRepository<Category> categoriesRepository,
-            IRepository<PaymentType> paymentTypesRepository, 
+            IRepository<PaymentType> paymentTypesRepository,
             UserManager<ApplicationUser> userManager)
         {
             _recordRepository = recordsRepository;
@@ -40,11 +40,27 @@ namespace Budget.Infrastructure.Services
 
         public async Task<RecordModel> GetByIdAsync(int id, string userId)
         {
-            var recordEntity = await _recordRepository.GetRecordByIdAsync(id, userId);
+            var record = await _recordRepository.GetRecordByIdAsync(id, userId);
 
-            var recordDto = RecordModel.FromRecord(recordEntity);
+            return RecordModel.FromRecord(record);
+        }
 
-            return recordDto;
+        /// <summary>
+        /// Gets the record for update. In case of updating a transfer record, returning the positive among the two records.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public async Task<RecordModel> GetByIdForUpdateAsync(int id, string userId)
+        {
+            var record = await _recordRepository.GetRecordByIdAsync(id, userId);
+            if (record.RecordType == RecordType.Transfer)
+            {
+                var positiveTransferRecord = await _recordRepository.GetPositiveTransferRecordAsync(record);
+                return RecordModel.FromRecord(positiveTransferRecord);
+            }
+
+            return RecordModel.FromRecord(record);
         }
 
         public async Task<IEnumerable<RecordsGroupModel>> GetAllAsync(string userId)
@@ -72,35 +88,24 @@ namespace Budget.Infrastructure.Services
             await ValidateCrudRecordModel(createRecordModel, userId);
 
             var now = _dateTimeProvider.Now;
-            if (createRecordModel.FromAccountId.HasValue && createRecordModel.RecordType == RecordType.Transfer)
-            {
-                var transferRecord = new Record()
-                {
-                    AccountId = createRecordModel.FromAccountId.Value,
-                    Amount = GetAmountByRecordType(createRecordModel.Amount, createRecordModel.RecordType),
-                    DateCreated = now,
-                    Note = createRecordModel.Note,
-                    CategoryId = createRecordModel.CategoryId,
-                    PaymentTypeId = createRecordModel.PaymentTypeId,
-                    RecordType = createRecordModel.RecordType,
-                    RecordDate = createRecordModel.RecordDate,
-                };
-
-                await _recordRepository.CreateAsync(transferRecord);
-
-            }
-
             var record = new Record()
             {
                 AccountId = createRecordModel.AccountId,
                 Amount = GetAmountByRecordType(createRecordModel.Amount, createRecordModel.RecordType),
-                DateCreated = now,
                 Note = createRecordModel.Note,
+                DateCreated = now,
                 CategoryId = createRecordModel.CategoryId,
                 PaymentTypeId = createRecordModel.PaymentTypeId,
                 RecordType = createRecordModel.RecordType,
                 RecordDate = createRecordModel.RecordDate,
             };
+
+            if (createRecordModel.FromAccountId.HasValue && createRecordModel.RecordType == RecordType.Transfer)
+            {
+                var negativeTransferRecord = await CreateNegativeTransferRecord(createRecordModel, now);
+
+                record.FromAccountId = negativeTransferRecord.AccountId;
+            }
 
             var createdRecord = await _recordRepository.CreateAsync(record);
 
@@ -118,6 +123,8 @@ namespace Budget.Infrastructure.Services
 
             await ValidateCrudRecordModel(updateRecordModel, userId);
 
+            var existingTransferRecord = await _recordRepository.GetNegativeTransferRecordAsync(record);
+
             record.AccountId = updateRecordModel.AccountId;
             record.Amount = GetAmountByRecordType(updateRecordModel.Amount, updateRecordModel.RecordType);
             record.Note = updateRecordModel.Note;
@@ -125,6 +132,26 @@ namespace Budget.Infrastructure.Services
             record.PaymentTypeId = updateRecordModel.PaymentTypeId;
             record.RecordType = updateRecordModel.RecordType;
             record.RecordDate = updateRecordModel.RecordDate;
+
+            if (updateRecordModel.FromAccountId.HasValue && updateRecordModel.RecordType == RecordType.Transfer)
+            {
+                existingTransferRecord.AccountId = updateRecordModel.FromAccountId.Value;
+                existingTransferRecord.Amount = -Math.Abs(record.Amount);
+                existingTransferRecord.Note = updateRecordModel.Note;
+                existingTransferRecord.CategoryId = updateRecordModel.CategoryId;
+                existingTransferRecord.PaymentTypeId = updateRecordModel.PaymentTypeId;
+                existingTransferRecord.RecordType = updateRecordModel.RecordType;
+                existingTransferRecord.RecordDate = updateRecordModel.RecordDate;
+                existingTransferRecord.FromAccountId = record.AccountId;
+
+                await _recordRepository.UpdateAsync(existingTransferRecord);
+
+                record.FromAccountId = existingTransferRecord.AccountId;
+            }
+            else
+            {
+                record.FromAccountId = null;
+            }
 
             var updatedRecord = await _recordRepository.UpdateAsync(record);
 
@@ -140,19 +167,57 @@ namespace Budget.Infrastructure.Services
                     string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(record), recordId));
             }
 
+            var existingTransferRecord = await _recordRepository.GetNegativeTransferRecordAsync(record);
+
+            if (existingTransferRecord != null)
+            {
+                await _recordRepository.DeleteAsync(existingTransferRecord.Id);
+            }
+
             var deletedRecord = await _recordRepository.DeleteAsync(recordId);
 
             return deletedRecord.Id;
         }
 
-        private decimal GetAmountByRecordType(decimal amount, RecordType recordType)
+        private decimal GetAmountByRecordType(decimal amount, RecordType recordType, bool isNegativeTransferRecord = false)
         {
             if (recordType == RecordType.Expense)
             {
                 return -Math.Abs(amount);
             }
+            else if (recordType == RecordType.Transfer)
+            {
+                if (isNegativeTransferRecord)
+                {
+                    return -Math.Abs(amount);
+                }
+                else
+                {
+                    return Math.Abs(amount);
+                }
+            }
 
             return Math.Abs(amount);
+        }
+
+        private async Task<Record> CreateNegativeTransferRecord(BaseCrudRecordModel createRecordModel, DateTime date)
+        {
+            var negativeTransferRecord = new Record()
+            {
+                AccountId = createRecordModel.FromAccountId.Value,
+                Amount = GetAmountByRecordType(createRecordModel.Amount, createRecordModel.RecordType, true),
+                DateCreated = date,
+                Note = createRecordModel.Note,
+                CategoryId = createRecordModel.CategoryId,
+                PaymentTypeId = createRecordModel.PaymentTypeId,
+                RecordType = createRecordModel.RecordType,
+                RecordDate = createRecordModel.RecordDate,
+                FromAccountId = createRecordModel.AccountId,
+            };
+
+            var negativeTransferRecordCreated = await _recordRepository.CreateAsync(negativeTransferRecord);
+
+            return negativeTransferRecordCreated;
         }
 
         private async Task ValidateCrudRecordModel(BaseCrudRecordModel model, string userId)

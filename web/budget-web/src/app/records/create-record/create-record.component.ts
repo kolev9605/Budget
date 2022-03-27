@@ -44,7 +44,7 @@ export class CreateRecordComponent implements OnInit {
     this.createRecordForm = this.fb.group({
       note: ['', [Validators.required]],
       amount: [null, [Validators.required]],
-      fromAccount: [null],
+      fromAccount: [null, [Validators.required]],
       account: [null, [Validators.required]],
       category: [null, [Validators.required]],
       paymentType: [null, [Validators.required]],
@@ -97,6 +97,7 @@ export class CreateRecordComponent implements OnInit {
       +this.createRecordForm.value.paymentType,
       this.selectedRecordType,
       date,
+      this.createRecordForm.value.fromAccount,
     );
 
     this.isLoading = true;

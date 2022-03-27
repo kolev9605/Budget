@@ -31,7 +31,51 @@ export class CashFlowChartComponent implements OnInit {
   ngOnInit(): void {
     console.log('oninit cash flow');
 
+    this.loadChart();
+  }
+
+  loadChart(): void {
+    this.isLoading = true;
+
     this.chartDate = startOfMonth(new Date());
+    this.monthName = format(this.chartDate, 'LLLL yyyy');
+    this.monthNumber = +format(this.chartDate, 'M');
+
+    this.chartService.getCashFlowData(this.monthNumber).subscribe(
+      (response) => {
+        this.isLoading = false;
+
+        this.chartDate = startOfMonth(new Date());
+
+        this.monthName = format(this.chartDate, 'LLLL yyyy');
+        this.monthNumber = +format(this.chartDate, 'M');
+
+        const newData = { ...this.cashFlowData };
+        console.log('newData', newData);
+
+        this.cashFlowData = response;
+
+        this.data = this.getData(this.cashFlowData.items);
+        this.options = this.getOptions();
+        this.type = this.getType();
+
+        this.chRef.detectChanges();
+      },
+      (error) => {
+        this.isLoading = false;
+
+        this.toastr.error(error);
+      },
+    );
+  }
+
+  nextMonth(): any {
+    this.chartDate = addMonths(this.chartDate, 1);
+    this.loadChart();
+  }
+
+  previousMonth(): any {
+    this.chartDate = addMonths(this.chartDate, -1);
     this.loadChart();
   }
 
@@ -73,41 +117,5 @@ export class CashFlowChartComponent implements OnInit {
 
   getType(): any {
     return 'line';
-  }
-
-  loadChart(): void {
-    this.monthName = format(this.chartDate, 'LLLL yyyy');
-    this.monthNumber = +format(this.chartDate, 'M');
-
-    this.isLoading = true;
-
-    this.chartService.getCashFlowData(this.monthNumber).subscribe(
-      (response) => {
-        this.isLoading = false;
-
-        this.cashFlowData = response;
-
-        this.data = this.getData(this.cashFlowData.items);
-        this.options = this.getOptions();
-        this.type = this.getType();
-
-        this.chRef.detectChanges();
-      },
-      (error) => {
-        this.isLoading = false;
-
-        this.toastr.error(error);
-      },
-    );
-  }
-
-  nextMonth(): any {
-    this.chartDate = addMonths(this.chartDate, 1);
-    this.loadChart();
-  }
-
-  previousMonth(): any {
-    this.chartDate = addMonths(this.chartDate, -1);
-    this.loadChart();
   }
 }

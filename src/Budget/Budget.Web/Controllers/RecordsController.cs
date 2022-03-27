@@ -26,6 +26,11 @@ namespace Budget.Web.Controllers
             => Ok(await _recordService.GetByIdAsync(recordId, LoggedInUserId));
 
         [HttpGet]
+        [Route(nameof(GetByIdForUpdate))]
+        public async Task<IActionResult> GetByIdForUpdate(int recordId)
+            => Ok(await _recordService.GetByIdForUpdateAsync(recordId, LoggedInUserId));
+
+        [HttpGet]
         [Route(nameof(GetAll))]
         public async Task<ActionResult<IEnumerable<RecordModel>>> GetAll()
             => Ok(await _recordService.GetAllAsync(LoggedInUserId));

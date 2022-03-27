@@ -19,6 +19,10 @@ namespace Budget.Core.Entities
 
         public Account Account { get; set; }
 
+        public int? FromAccountId { get; set; }
+
+        public Account FromAccount { get; set; }
+
         public int PaymentTypeId { get; set; }
 
         public PaymentType PaymentType { get; set; }

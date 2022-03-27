@@ -25,6 +25,11 @@ namespace Budget.Persistance.Configurations
                 .HasForeignKey(r => r.AccountId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            builder.HasMany(a => a.TransferRecords)
+                .WithOne(r => r.FromAccount)
+                .HasForeignKey(r => r.FromAccountId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             builder.HasOne(a => a.Currency)
                 .WithMany(c => c.Accounts)
                 .HasForeignKey(a => a.CurrencyId)

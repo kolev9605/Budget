@@ -5,6 +5,7 @@ import { PaymentTypeModel } from '../payment-types/payment-type.model';
 export class RecordModel {
   public id: number;
   public note: string;
+  public fromAccount: AccountModel;
   public account: AccountModel;
   public recordType: string;
   public paymentType: PaymentTypeModel;

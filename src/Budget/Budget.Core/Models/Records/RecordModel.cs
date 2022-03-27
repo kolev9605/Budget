@@ -12,6 +12,8 @@ namespace Budget.Core.Models.Records
 
         public string Note { get; set; }
 
+        public AccountModel FromAccount { get; set; }
+
         public AccountModel Account { get; set; }
 
         public RecordType RecordType { get; set; }
@@ -33,6 +35,7 @@ namespace Budget.Core.Models.Records
                 Id = record.Id,
                 Note = record.Note,
                 Account = AccountModel.FromAccount(record.Account),
+                FromAccount = record.FromAccountId.HasValue ? AccountModel.FromAccount(record.FromAccount) : null,
                 RecordType = record.RecordType,
                 PaymentType = PaymentTypeModel.FromPaymentType(record.PaymentType),
                 Category = CategoryModel.FromCategory(record.Category),
