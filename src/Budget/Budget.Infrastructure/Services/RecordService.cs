@@ -54,6 +54,8 @@ namespace Budget.Infrastructure.Services
         public async Task<RecordModel> GetByIdForUpdateAsync(int id, string userId)
         {
             var record = await _recordRepository.GetRecordByIdAsync(id, userId);
+            
+            // Only the positive transfer record should be edited to simplify the update process
             if (record.RecordType == RecordType.Transfer)
             {
                 var positiveTransferRecord = await _recordRepository.GetPositiveTransferRecordAsync(record);
