@@ -26,9 +26,13 @@ export class RecordFormComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    flatpickr('#date', {
+    flatpickr('#recordDate', {
       enableTime: true,
+      altInput: true,
+      altFormat: 'F j, Y H:i',
       dateFormat: 'Y/m/d H:i',
+      defaultDate: this.inEditMode ? this.recordForm.value.recordDate : new Date(),
+      time_24hr: true,
     });
   }
 
