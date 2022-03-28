@@ -33,12 +33,16 @@ namespace Budget.Infrastructure.Services
                 .Select(r => new CashFlowItemModel(GetCashFlow(records, r.Key), r.Key))
                 .ToList();
 
+            if (!cashFlowItems.Any())
+            {
+                return new CashFlowChartModel();
+            }
 
-            var startDate = records.Min(r => r.RecordDate.Date);
-            var endDate = records.Max(r => r.RecordDate.Date);
+            var startDate = cashFlowItems.Min(r => r.Date);
+            var endDate = cashFlowItems.Max(r => r.Date);
             var monthBalance = records.Sum(r => r.Amount);
 
-            cashFlowItems = FillInbetweenDates(cashFlowItems, records, startDate, endDate, monthBalance);
+            //cashFlowItems = FillInbetweenDates(cashFlowItems, records, startDate, endDate, monthBalance);
 
             var chartData = new CashFlowChartModel()
             {
@@ -83,7 +87,7 @@ namespace Budget.Infrastructure.Services
                 cashFlowItems.Add(item);
             }
 
-            cashFlowItems.Add(new CashFlowItemModel(monthBalance, _dateTimeProvider.Today));
+            //cashFlowItems.Add(new CashFlowItemModel(monthBalance, _dateTimeProvider.Today));
 
             return cashFlowItems
                 .OrderBy(i => i.Date)

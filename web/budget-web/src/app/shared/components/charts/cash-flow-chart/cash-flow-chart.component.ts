@@ -1,10 +1,12 @@
-import { ChangeDetectorRef, Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, EventEmitter } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { CashFlowChartModel } from 'src/app/shared/models/charts/cash-flow-chart.model';
 import { CashFlowItemModel } from 'src/app/shared/models/charts/cash-flow-item.model';
 import { ChartService } from 'src/app/shared/services/chart.service';
 import { ChartColors } from '../../../constants';
-import { addMonths, format, startOfMonth } from 'date-fns';
+import { addMonths, startOfMonth } from 'date-fns';
+import { from, Subscription } from 'rxjs';
+import { concatMap, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-cash-flow-chart',
@@ -15,68 +17,53 @@ export class CashFlowChartComponent implements OnInit {
   isLoading: boolean;
   cashFlowData: CashFlowChartModel;
   chartDate: Date;
-  monthName: string;
-  monthNumber: number;
-
+  cashFlowDataSubscription: Subscription;
+  monthEventEmitter: EventEmitter<number> = new EventEmitter();
   data: any;
   options: any;
   type: any;
 
-  constructor(
-    private chartService: ChartService,
-    private toastr: ToastrService,
-    private chRef: ChangeDetectorRef,
-  ) {}
+  constructor(private chartService: ChartService, private toastr: ToastrService) {}
 
   ngOnInit(): void {
     console.log('oninit cash flow');
+    this.chartDate = startOfMonth(new Date());
 
-    this.loadChart();
+    this.cashFlowDataSubscription = from(this.monthEventEmitter)
+      .pipe(
+        tap(() => (this.isLoading = true)),
+        concatMap((month) => this.chartService.getCashFlowData(month)),
+      )
+      .subscribe(
+        (response) => {
+          this.cashFlowData = response;
+          this.data = this.getData(this.cashFlowData.items);
+          this.options = this.getOptions();
+          this.type = this.getType();
+        },
+        (error) => {
+          this.toastr.error(error);
+        },
+        () => {
+          this.isLoading = false;
+        },
+      );
+
+    this.loadData();
   }
 
-  loadChart(): void {
-    this.isLoading = true;
-
-    this.chartDate = startOfMonth(new Date());
-    this.monthName = format(this.chartDate, 'LLLL yyyy');
-    this.monthNumber = +format(this.chartDate, 'M');
-
-    this.chartService.getCashFlowData(this.monthNumber).subscribe(
-      (response) => {
-        this.isLoading = false;
-
-        this.chartDate = startOfMonth(new Date());
-
-        this.monthName = format(this.chartDate, 'LLLL yyyy');
-        this.monthNumber = +format(this.chartDate, 'M');
-
-        const newData = { ...this.cashFlowData };
-        console.log('newData', newData);
-
-        this.cashFlowData = response;
-
-        this.data = this.getData(this.cashFlowData.items);
-        this.options = this.getOptions();
-        this.type = this.getType();
-
-        this.chRef.detectChanges();
-      },
-      (error) => {
-        this.isLoading = false;
-
-        this.toastr.error(error);
-      },
-    );
+  loadData(): void {
+    this.monthEventEmitter.emit(this.chartDate.getMonth() + 1);
   }
 
   nextMonth(): any {
     this.chartDate = addMonths(this.chartDate, 1);
-    this.loadChart();
+    this.loadData();
   }
 
   previousMonth(): any {
     this.chartDate = addMonths(this.chartDate, -1);
-    this.loadChart();
+    this.loadData();
   }
 
   getData(items: CashFlowItemModel[]): any {
@@ -117,5 +104,9 @@ export class CashFlowChartComponent implements OnInit {
 
   getType(): any {
     return 'line';
+  }
+
+  ngOnDestroy() {
+    this.cashFlowDataSubscription.unsubscribe();
   }
 }

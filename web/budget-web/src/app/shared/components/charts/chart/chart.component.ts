@@ -1,4 +1,13 @@
-import { Component, ElementRef, Input, OnInit, ViewChild, ViewChildren } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+  ViewChild,
+  ViewChildren,
+} from '@angular/core';
 import { Chart, registerables } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 
@@ -7,7 +16,7 @@ import 'chartjs-adapter-date-fns';
   templateUrl: './chart.component.html',
   styleUrls: ['./chart.component.scss'],
 })
-export class ChartComponent implements OnInit {
+export class ChartComponent implements OnInit, OnChanges {
   @Input() type: any;
   @Input() options: any;
   @Input() data: any;
@@ -15,7 +24,19 @@ export class ChartComponent implements OnInit {
 
   @ViewChild('canvas') canvas: ElementRef<HTMLCanvasElement>;
 
+  chart: Chart;
+
   constructor() {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    // console.log('changes detected', changes);
+    console.log('data', this.data);
+    if (this.chart) {
+      this.chart.data = this.data;
+      this.chart.options = this.options;
+      this.chart.update();
+    }
+  }
 
   ngOnInit(): void {
     console.log('ngOnInit');
@@ -27,7 +48,7 @@ export class ChartComponent implements OnInit {
     const context = this.canvas.nativeElement.getContext('2d');
     if (context !== null) {
       Chart.register(...registerables);
-      const myChart = new Chart(context, {
+      this.chart = new Chart(context, {
         type: this.type,
         data: this.data,
         options: this.options,
