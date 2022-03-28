@@ -54,7 +54,7 @@ namespace Budget.Infrastructure.Services
             if (currency == null)
             {
                 throw new BudgetValidationException(
-                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(currency), createAccountModel.CurrencyId));
+                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(currency)));
             }
 
             var account = new Account()
@@ -79,7 +79,7 @@ namespace Budget.Infrastructure.Services
             if (account == null)
             {
                 throw new BudgetValidationException(
-                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(account), accountModel.Id));
+                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(account)));
             }
 
             account.CurrencyId = accountModel.CurrencyId;
@@ -97,7 +97,7 @@ namespace Budget.Infrastructure.Services
             if (account == null)
             {
                 throw new BudgetValidationException(
-                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(account), accountId));
+                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(account)));
             }
 
             var deletedAccount = await _accountRepository.DeleteAsync(accountId);

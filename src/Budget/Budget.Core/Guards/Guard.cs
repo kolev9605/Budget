@@ -17,7 +17,7 @@ namespace Budget.Core.Guards
         {
             if (string.IsNullOrEmpty(argumentValue))
             {
-                throw new BudgetValidationException(string.Format(ValidationMessages.Common.IsNotNullOrEmpty, argumentName));
+                throw new BudgetValidationException(string.Format(ValidationMessages.Common.IsNotNull, argumentName));
             }
         }
     }

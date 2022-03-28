@@ -122,7 +122,7 @@ namespace Budget.Infrastructure.Services
             if (record == null)
             {
                 throw new BudgetValidationException(
-                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(record), updateRecordModel.Id));
+                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(record)));
             }
 
             await ValidateCrudRecordModel(updateRecordModel, userId);
@@ -170,7 +170,7 @@ namespace Budget.Infrastructure.Services
             if (record == null)
             {
                 throw new BudgetValidationException(
-                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(record), recordId));
+                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(record)));
             }
 
             var existingTransferRecord = await _recordRepository.GetNegativeTransferRecordAsync(record);
@@ -229,21 +229,21 @@ namespace Budget.Infrastructure.Services
             if (user == null)
             {
                 throw new BudgetValidationException(
-                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(user), userId));
+                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(user)));
             }
 
             var category = await _categoriesRepository.BaseGetByIdAsync(model.CategoryId);
             if (category == null)
             {
                 throw new BudgetValidationException(
-                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(category), model.CategoryId));
+                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(category)));
             }
 
             var paymentType = await _paymentTypesRepository.BaseGetByIdAsync(model.PaymentTypeId);
             if (paymentType == null)
             {
                 throw new BudgetValidationException(
-                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(paymentType), model.PaymentTypeId));
+                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(paymentType)));
             }
         }
 
@@ -253,7 +253,7 @@ namespace Budget.Infrastructure.Services
             if (account == null)
             {
                 throw new BudgetValidationException(
-                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(account), accountId));
+                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(account)));
             }
 
             if (account.UserId != userId)
@@ -269,14 +269,14 @@ namespace Budget.Infrastructure.Services
             if (account == null)
             {
                 throw new BudgetValidationException(
-                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(account), accountId));
+                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(account)));
             }
 
             var fromAccount = await _accountRepository.BaseGetByIdAsync(fromAccountId);
             if (fromAccount == null)
             {
                 throw new BudgetValidationException(
-                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(fromAccount), fromAccountId));
+                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(fromAccount)));
             }
 
             if (account.Id == fromAccount.Id)
