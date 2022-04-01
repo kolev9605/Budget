@@ -89,18 +89,18 @@ namespace Budget.Infrastructure.Services
             }
 
             var initialCategories = await _categoryRepository.GetInitialCategories();
-
-            var userCategories = initialCategories.Select(c => new UserCategory()
-            {
-                Category = c,
-            });
+            var userCategories = initialCategories
+                .Select(c => new UserCategory()
+                {
+                    Category = c,
+                }).ToList();
 
             ApplicationUser user = new()
             {
                 Email = registerModel.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
                 UserName = registerModel.Username,
-                Categories = userCategories.ToList()
+                Categories = userCategories
             };
 
             var result = await _userManager.CreateAsync(user, registerModel.Password);
