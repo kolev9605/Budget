@@ -37,10 +37,11 @@ export class DashboardComponent implements OnInit {
     this.selectedDate = startOfMonth(new Date());
 
     this.cashFlowDateObservable = this.cashFlowRequestSubject.pipe(
+      tap(() => (this.isLoading = true)),
       concatMap((request) => this.chartService.getCashFlowData(request)),
     );
 
-    this.cashFlowDateObservable.pipe(tap(() => (this.isLoading = true))).subscribe(
+    this.cashFlowDateObservable.subscribe(
       (response) => {
         this.cashFlowData = response;
         this.isLoading = false;
