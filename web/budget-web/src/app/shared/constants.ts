@@ -13,7 +13,8 @@ export const RecordTypes = {
 };
 
 export const Formats = {
-  DateFormt: 'yyyy/MM/dd HH:mm',
+  DateTimeFormt: 'yyyy/MM/dd HH:mm',
+  DateFormt: 'yyyy/MM/dd',
 };
 
 export const ChartColors = {

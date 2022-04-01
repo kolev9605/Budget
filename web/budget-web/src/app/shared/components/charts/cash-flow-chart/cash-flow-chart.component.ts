@@ -1,72 +1,43 @@
-import { ChangeDetectorRef, Component, OnInit, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { endOfMonth, startOfMonth } from 'date-fns';
 import { ToastrService } from 'ngx-toastr';
 import { CashFlowChartModel } from 'src/app/shared/models/charts/cash-flow-chart.model';
 import { CashFlowItemModel } from 'src/app/shared/models/charts/cash-flow-item.model';
 import { ChartService } from 'src/app/shared/services/chart.service';
-import { ChartColors } from '../../../constants';
-import { addMonths, startOfMonth } from 'date-fns';
-import { from, Subscription } from 'rxjs';
-import { concatMap, tap } from 'rxjs/operators';
+import { ChartColors, Formats } from '../../../constants';
 
 @Component({
   selector: 'app-cash-flow-chart',
   templateUrl: './cash-flow-chart.component.html',
   styleUrls: ['./cash-flow-chart.component.scss'],
 })
-export class CashFlowChartComponent implements OnInit {
-  isLoading: boolean;
-  cashFlowData: CashFlowChartModel;
-  chartDate: Date;
-  cashFlowDataSubscription: Subscription;
-  monthEventEmitter: EventEmitter<number> = new EventEmitter();
+export class CashFlowChartComponent implements OnInit, OnChanges {
+  @Input() cashFlowData: CashFlowChartModel;
   data: any;
   options: any;
   type: any;
 
-  constructor(private chartService: ChartService, private toastr: ToastrService) {}
+  constructor() {}
+  ngOnChanges(changes: SimpleChanges): void {
+    this.loadChart();
+  }
 
   ngOnInit(): void {
-    console.log('oninit cash flow');
-    this.chartDate = startOfMonth(new Date());
-
-    this.cashFlowDataSubscription = from(this.monthEventEmitter)
-      .pipe(
-        tap(() => (this.isLoading = true)),
-        concatMap((month) => this.chartService.getCashFlowData(month)),
-      )
-      .subscribe(
-        (response) => {
-          this.cashFlowData = response;
-          this.data = this.getData(this.cashFlowData.items);
-          this.options = this.getOptions();
-          this.type = this.getType();
-        },
-        (error) => {
-          this.toastr.error(error);
-        },
-        () => {
-          this.isLoading = false;
-        },
-      );
-
-    this.loadData();
+    this.loadChart();
   }
 
-  loadData(): void {
-    this.monthEventEmitter.emit(this.chartDate.getMonth() + 1);
-  }
-
-  nextMonth(): any {
-    this.chartDate = addMonths(this.chartDate, 1);
-    this.loadData();
-  }
-
-  previousMonth(): any {
-    this.chartDate = addMonths(this.chartDate, -1);
-    this.loadData();
+  loadChart() {
+    if (this.cashFlowData) {
+      this.data = this.getData(this.cashFlowData.items);
+      this.options = this.getOptions();
+      this.type = this.getType();
+    }
   }
 
   getData(items: CashFlowItemModel[]): any {
+    const firstDayOfCurrentMonth = startOfMonth(new Date(this.cashFlowData.startDate));
+    items.splice(0, 0, { sum: 0, date: firstDayOfCurrentMonth });
+
     let data = {
       labels: [],
       datasets: [
@@ -82,6 +53,9 @@ export class CashFlowChartComponent implements OnInit {
   }
 
   getOptions(): any {
+    const firstDayOfCurrentMonth = startOfMonth(new Date(this.cashFlowData.startDate));
+    const lastDayOfCurrentMonth = endOfMonth(new Date(this.cashFlowData.endDate));
+
     let options = {
       responsive: true,
       aspectRatio: 1.7,
@@ -90,7 +64,10 @@ export class CashFlowChartComponent implements OnInit {
           type: 'time',
           time: {
             unit: 'week',
+            tooltipFormat: Formats.DateFormt,
           },
+          min: firstDayOfCurrentMonth,
+          max: lastDayOfCurrentMonth,
         },
       },
       parsing: {
@@ -104,9 +81,5 @@ export class CashFlowChartComponent implements OnInit {
 
   getType(): any {
     return 'line';
-  }
-
-  ngOnDestroy() {
-    this.cashFlowDataSubscription.unsubscribe();
   }
 }

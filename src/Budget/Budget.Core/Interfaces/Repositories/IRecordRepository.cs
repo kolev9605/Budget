@@ -15,6 +15,6 @@ namespace Budget.Core.Interfaces.Repositories
 
         Task<IEnumerable<Record>> GetAllAsync(string userId);
 
-        Task<IEnumerable<Record>> GetAllByMonthAsync(string userId, int month);
+        Task<IEnumerable<Record>> GetAllByMonthAndAccountsAsync(string userId, int month, IEnumerable<int> accountIds);
     }
 }

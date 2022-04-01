@@ -10,11 +10,13 @@
 
   <div class="row h-100">
     <div
-      [routerLink]="['/accounts/edit', account.id]"
       *ngFor="let account of accounts"
       role="button"
       class="col-12 col-md-6 col-lg-4 col-xl-3 p-1">
-      <div class="card text-white bg-primary h-100">
+      <div
+        class="card text-white h-100"
+        [ngClass]="{ 'bg-primary': isAccountSelected(account.id), 'bg-disabled' : !isAccountSelected(account.id) }"
+        (click)="onAccountSelected(account.id)">
         <div class="card-body">
           <div class="text-bold">{{account.name}}</div>
           <div class="fs-6 text fw-ligh">
@@ -25,9 +27,22 @@
     </div>
   </div>
 
+  <h1 class="text-center my-4">Insights</h1>
+  <div class="d-flex justify-content-center">
+    <div class="align-middle p-3">
+      <span (click)="previousMonth()" class="border border-primary p-1 m-1 rounded-3" role="button">
+        <i class="bi bi-chevron-left"></i>
+      </span>
+      {{selectedDate | date}}
+      <span (click)="nextMonth()" class="border border-primary p-1 m-1 rounded-3" role="button">
+        <i class="bi bi-chevron-right"></i>
+      </span>
+    </div>
+  </div>
+
   <div class="row mt-4">
     <div class="col col-lg-6 col-12">
-      <app-cash-flow-chart></app-cash-flow-chart>
+      <app-cash-flow-chart [cashFlowData]="cashFlowData"></app-cash-flow-chart>
     </div>
   </div>
 </div>

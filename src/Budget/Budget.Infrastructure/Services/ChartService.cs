@@ -23,9 +23,14 @@ namespace Budget.Infrastructure.Services
             _dateTimeProvider = dateTimeProvider;
         }
 
-        public async Task<CashFlowChartModel> GetCashFlowChartData(string userId, int month)
+        public async Task<CashFlowChartModel> GetCashFlowChartData(CashFlowChartRequestModel cashFlowChartRequestModel, string userId)
         {
-            var records = await _recordRepository.GetAllByMonthAsync(userId, month);
+            var records = await _recordRepository.GetAllByMonthAndAccountsAsync(userId, cashFlowChartRequestModel.Month, cashFlowChartRequestModel.AccountIds);
+
+            if (!records.Any())
+            {
+                return null;
+            }
 
             var cashFlowItems = records
                 .GroupBy(r => r.RecordDate.Date)
@@ -33,16 +38,9 @@ namespace Budget.Infrastructure.Services
                 .Select(r => new CashFlowItemModel(GetCashFlow(records, r.Key), r.Key))
                 .ToList();
 
-            if (!cashFlowItems.Any())
-            {
-                return new CashFlowChartModel();
-            }
-
             var startDate = cashFlowItems.Min(r => r.Date);
             var endDate = cashFlowItems.Max(r => r.Date);
             var monthBalance = records.Sum(r => r.Amount);
-
-            //cashFlowItems = FillInbetweenDates(cashFlowItems, records, startDate, endDate, monthBalance);
 
             var chartData = new CashFlowChartModel()
             {
@@ -57,42 +55,7 @@ namespace Budget.Infrastructure.Services
 
         private decimal GetCashFlow(IEnumerable<Record> records, DateTime date)
             => records
-                .Where(r => r.RecordDate <= date)
+                .Where(r => r.RecordDate.Date <= date.Date)
                 .Sum(r => r.Amount);
-
-        private List<CashFlowItemModel> FillInbetweenDates(
-            ICollection<CashFlowItemModel> cashFlowItems, 
-            IEnumerable<Record> records, 
-            DateTime startDate, 
-            DateTime endDate, 
-            decimal monthBalance)
-        {
-            var startDay = startDate.Day;
-            var endDay = endDate.Day;
-
-            for (var day = startDay; day <= endDay; day++)
-            {
-                var date = new DateTime(startDate.Year, startDate.Month, day);
-                if (cashFlowItems.Any(i => i.Date == date))
-                {
-                    continue;
-                }
-
-                var sum = records
-                    .Where(r => r.RecordDate <= date)
-                    .Sum(r => r.Amount);
-
-                var item = new CashFlowItemModel(sum, date);
-
-                cashFlowItems.Add(item);
-            }
-
-            //cashFlowItems.Add(new CashFlowItemModel(monthBalance, _dateTimeProvider.Today));
-
-            return cashFlowItems
-                .OrderBy(i => i.Date)
-                .ToList();
-        }
-
     }
 }

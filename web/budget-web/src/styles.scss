@@ -3,11 +3,13 @@
 $primary: #686de0;
 $secondary: #f2ecff;
 $accent: #6cbaa2;
+$disabled: #b1b1b1;
 
 $custom-theme-colors: (
   'primary': $primary,
   'secondary': $secondary,
   'accent': $accent,
+  'disabled': $disabled,
 );
 
 @import '../node_modules/bootstrap/scss/functions';

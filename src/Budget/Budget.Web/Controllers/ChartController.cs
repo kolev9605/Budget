@@ -1,4 +1,5 @@
 ﻿using Budget.Core.Interfaces.Services;
+using Budget.Core.Models.Charts.CashFlow;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -17,9 +18,9 @@ namespace Budget.Web.Controllers
             _chartService = chartService;
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route(nameof(GetCashFlowData))]
-        public async Task<IActionResult> GetCashFlowData(int month)
-            => Ok(await _chartService.GetCashFlowChartData(LoggedInUserId, month));
+        public async Task<IActionResult> GetCashFlowData(CashFlowChartRequestModel cashFlowChartRequestModel)
+            => Ok(await _chartService.GetCashFlowChartData(cashFlowChartRequestModel, LoggedInUserId));
     }
 }

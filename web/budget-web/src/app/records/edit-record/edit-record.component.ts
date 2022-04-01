@@ -83,7 +83,7 @@ export class EditRecordComponent implements OnInit {
           fromAccount: this.record.fromAccount?.id,
           category: this.record.category.id,
           paymentType: this.record.paymentType.id,
-          recordDate: format(new Date(this.record.recordDate), Formats.DateFormt),
+          recordDate: format(new Date(this.record.recordDate), Formats.DateTimeFormt),
         });
       },
       (error) => {

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { CashFlowChartRequestModel } from '../models/charts/cash-flow-chart-request.model';
 import { CashFlowChartModel } from '../models/charts/cash-flow-chart.model';
 import { ErrorService } from './error.service';
 
@@ -14,13 +15,12 @@ export class ChartService {
 
   constructor(private http: HttpClient, private errorService: ErrorService) {}
 
-  getCashFlowData(month: number): Observable<CashFlowChartModel> {
+  getCashFlowData(requestModel: CashFlowChartRequestModel): Observable<CashFlowChartModel> {
     return this.http
-      .get<CashFlowChartModel>(`${environment.apiUrl}${this.controller}/GetCashFlowData`, {
-        params: {
-          month: month,
-        },
-      })
+      .post<CashFlowChartModel>(
+        `${environment.apiUrl}${this.controller}/GetCashFlowData`,
+        requestModel,
+      )
       .pipe(catchError(this.errorService.handleError));
   }
 }

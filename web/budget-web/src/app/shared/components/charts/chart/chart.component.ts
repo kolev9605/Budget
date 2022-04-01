@@ -6,7 +6,6 @@ import {
   OnInit,
   SimpleChanges,
   ViewChild,
-  ViewChildren,
 } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
 import 'chartjs-adapter-date-fns';
@@ -24,27 +23,22 @@ export class ChartComponent implements OnInit, OnChanges {
 
   @ViewChild('canvas') canvas: ElementRef<HTMLCanvasElement>;
 
-  chart: Chart;
+  chart: any;
 
   constructor() {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    // console.log('changes detected', changes);
-    console.log('data', this.data);
     if (this.chart) {
       this.chart.data = this.data;
       this.chart.options = this.options;
+      this.chart.plugins = this.plugins;
       this.chart.update();
     }
   }
 
-  ngOnInit(): void {
-    console.log('ngOnInit');
-  }
+  ngOnInit(): void {}
 
   ngAfterViewInit(): void {
-    console.log('ngAfterViewInit');
-
     const context = this.canvas.nativeElement.getContext('2d');
     if (context !== null) {
       Chart.register(...registerables);
