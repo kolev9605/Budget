@@ -67,6 +67,12 @@ export class CreateRecordComponent implements OnInit {
         this.paymentTypes = paymentTypes;
         this.recordTypes = recordTypes;
 
+        if (!accounts || accounts.length === 0) {
+          this.toastr.warning('You have to create an account first');
+          this.router.navigate(['accounts/create']);
+          return;
+        }
+
         var expenseRecordType = recordTypes.find((rt) => rt === RecordTypes.Expense);
         if (expenseRecordType) {
           this.selectedRecordType = expenseRecordType;
