@@ -18,5 +18,10 @@ namespace Budget.Core.Entities
         public Category ParentCategory { get; set; }
 
         public ICollection<Category> SubCategories { get; set; } = new List<Category>();
+
+        public ICollection<UserCategory> Users { get; set; } = new List<UserCategory>();
+
+        public bool IsInitial { get; set; } = true;
+
     }
 }

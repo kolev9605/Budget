@@ -1,7 +1,6 @@
 ﻿using Budget.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
 
 namespace Budget.Persistance.Configurations
 {
@@ -21,7 +20,6 @@ namespace Budget.Persistance.Configurations
             builder.HasMany(pc => pc.SubCategories)
                 .WithOne(sc => sc.ParentCategory)
                 .HasForeignKey(sc => sc.ParentCategoryId);
-
         }
     }
 }

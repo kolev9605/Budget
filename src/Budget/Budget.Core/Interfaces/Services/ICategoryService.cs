@@ -6,10 +6,10 @@ namespace Budget.Core.Interfaces.Services
 {
     public interface ICategoryService
     {
-        Task<IEnumerable<CategoryModel>> GetAllAsync();
+        Task<IEnumerable<CategoryModel>> GetAllAsync(string userId);
 
-        Task<IEnumerable<CategoryModel>> GetAllPrimaryAsync();
+        Task<IEnumerable<CategoryModel>> GetAllPrimaryAsync(string userId);
 
-        Task<IEnumerable<CategoryModel>> GetAllSubcategoriesByParentCategoryId(int parentCategoryId);
+        Task<IEnumerable<CategoryModel>> GetAllSubcategoriesByParentCategoryId(int parentCategoryId, string userId);
     }
 }

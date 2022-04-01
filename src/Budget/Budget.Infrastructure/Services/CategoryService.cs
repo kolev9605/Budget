@@ -17,18 +17,18 @@ namespace Budget.Infrastructure.Services
             _categoriesRepository = categoriesRepository;
         }
 
-        public async Task<IEnumerable<CategoryModel>> GetAllAsync()
+        public async Task<IEnumerable<CategoryModel>> GetAllAsync(string userId)
         {
-            var categories = await _categoriesRepository.GetAllWithSubcategoriesAsync();
+            var categories = await _categoriesRepository.GetAllWithSubcategoriesAsync(userId);
 
             var categoryModels = categories.Select(c => CategoryModel.FromCategory(c));
 
             return categoryModels;
         }
 
-        public async Task<IEnumerable<CategoryModel>> GetAllPrimaryAsync()
+        public async Task<IEnumerable<CategoryModel>> GetAllPrimaryAsync(string userId)
         {
-            var categories = await _categoriesRepository.GetAllPrimaryAsync();
+            var categories = await _categoriesRepository.GetAllPrimaryAsync(userId);
 
             var categoryModels = categories
                 .Select(c => CategoryModel.FromCategory(c));
@@ -36,9 +36,9 @@ namespace Budget.Infrastructure.Services
             return categoryModels;
         }
 
-        public async Task<IEnumerable<CategoryModel>> GetAllSubcategoriesByParentCategoryId(int parentCategoryId)
+        public async Task<IEnumerable<CategoryModel>> GetAllSubcategoriesByParentCategoryId(int parentCategoryId, string userId)
         {
-            var categories = await _categoriesRepository.GetSubcategoriesByParentCategoryId(parentCategoryId);
+            var categories = await _categoriesRepository.GetSubcategoriesByParentCategoryId(parentCategoryId, userId);
 
             var categoryModels = categories
                 .Select(c => CategoryModel.FromCategory(c));

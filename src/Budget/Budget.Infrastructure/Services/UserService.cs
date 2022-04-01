@@ -1,6 +1,7 @@
 ﻿using Budget.Core.Entities;
 using Budget.Core.Exceptions;
 using Budget.Core.Guards;
+using Budget.Core.Interfaces.Repositories;
 using Budget.Core.Interfaces.Services;
 using Budget.Core.Models.Authentication;
 using Budget.Core.Options;
@@ -13,6 +14,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
 using static Budget.Core.Constants.ValidationMessages;
 
 namespace Budget.Infrastructure.Services
@@ -21,13 +23,16 @@ namespace Budget.Infrastructure.Services
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly JwtOptions _jwtOptions;
+        private readonly ICategoryRepository _categoryRepository;
 
         public UserService(
-            UserManager<ApplicationUser> userManager, 
-            IOptions<JwtOptions> jwtOptions)
+            UserManager<ApplicationUser> userManager,
+            IOptions<JwtOptions> jwtOptions, 
+            ICategoryRepository categoryRepository)
         {
             _userManager = userManager;
             _jwtOptions = jwtOptions.Value;
+            _categoryRepository = categoryRepository;
         }
 
         public async Task<TokenModel> LoginAsync(LoginModel loginModel)
@@ -83,11 +88,19 @@ namespace Budget.Infrastructure.Services
                 throw new BudgetAuthenticationException(Authentication.UserExists, registerModel.Username);
             }
 
+            var initialCategories = await _categoryRepository.GetInitialCategories();
+
+            var userCategories = initialCategories.Select(c => new UserCategory()
+            {
+                Category = c,
+            });
+
             ApplicationUser user = new()
             {
                 Email = registerModel.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
                 UserName = registerModel.Username,
+                Categories = userCategories.ToList()
             };
 
             var result = await _userManager.CreateAsync(user, registerModel.Password);

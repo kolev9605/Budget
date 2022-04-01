@@ -22,6 +22,8 @@ namespace Budget.Persistance
 
         public DbSet<Category> Categories { get; set; }
 
+        public DbSet<UserCategory> UserCategories { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(BudgetDbContext).Assembly);
