@@ -9,12 +9,11 @@
             public const string UserExists = "User with username {0} already exists";
             public const string UserDoesNotExists = "User with username {0} does not exists";
             public const string IncorrectPassword = "Incorrect password";
-            public const string UsernameRequred = "Username field is required";
         }
 
         public static class Common
         {
-            public const string IsNotNull = "The argument {0} is required";
+            public const string IsNotNull = "{0} is required";
             public const string EntityDoesNotExist = "{0} does not exist";
         }
 
