@@ -1,12 +1,6 @@
 <div class="container my-5">
   <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
-  <h1 class="text-center mb-4">Accounts</h1>
-
-  <div class="text-center mb-4">
-    <div role="button" class="btn btn-accent text-white" (click)="onAddAccountPressed()">
-      Add Account
-    </div>
-  </div>
+  <h1 class="text-center mb-4">Dashboard</h1>
 
   <div class="row h-100">
     <div
@@ -31,18 +25,26 @@
   <div class="d-flex justify-content-center">
     <div class="align-middle p-3">
       <span (click)="previousMonth()" class="border border-primary p-1 m-1 rounded-3" role="button">
-        <i class="bi bi-chevron-left"></i>
+        <i class="bi bi-chevron-left text-primary"></i>
       </span>
-      {{selectedDate | date}}
+      {{selectedDate | date: 'MMMM yyyy'}}
       <span (click)="nextMonth()" class="border border-primary p-1 m-1 rounded-3" role="button">
-        <i class="bi bi-chevron-right"></i>
+        <i class="bi bi-chevron-right text-primary"></i>
       </span>
     </div>
   </div>
 
   <div class="row mt-4">
-    <div class="col col-lg-6 col-12">
-      <app-cash-flow-chart [cashFlowData]="cashFlowData"></app-cash-flow-chart>
+    <div class="col col-lg-6 col-12 my-2">
+      <div class="bg-white p-4 card">
+        <h4 class="text-center">Cash Flow</h4>
+        <app-cash-flow-chart [cashFlowData]="cashFlowData"></app-cash-flow-chart>
+      </div>
+    </div>
+    <div class="col col-lg-6 col-12 my-2">
+      <div class="bg-white p-4 card">
+        <h4 class="text-center">Statistics</h4>
+      </div>
     </div>
   </div>
 </div>

@@ -1,5 +1,2 @@
-<div class="bg-white p-4">
-  <h4 class="text-center">Cash Flow</h4>
-  <app-chart *ngIf="cashFlowData" [options]="options" [data]="data" [type]="type"></app-chart>
-  <h6 *ngIf="!cashFlowData" class="text-center">Not Enough Data to display the Cash Flow Chart</h6>
-</div>
+<app-chart *ngIf="cashFlowData" [options]="options" [data]="data" [type]="type"></app-chart>
+<h6 *ngIf="!cashFlowData" class="text-center">Not Enough Data to display the Cash Flow Chart</h6>

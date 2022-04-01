@@ -33,4 +33,8 @@ export class AccountsComponent implements OnInit {
       },
     );
   }
+
+  onAddAccountPressed(): void {
+    this.router.navigate(['accounts/create']);
+  }
 }

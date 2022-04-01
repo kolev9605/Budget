@@ -2,6 +2,13 @@
   <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
   <h1 class="text-center mb-4">Accounts</h1>
 
+    <div class="text-center mb-4">
+    <div role="button" class="btn btn-accent text-white" (click)="onAddAccountPressed()">
+      Add Account
+    </div>
+  </div>
+
+
   <div class="row">
     <ul class="list-group list-group-flush">
       <li

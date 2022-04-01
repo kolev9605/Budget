@@ -69,10 +69,6 @@ export class DashboardComponent implements OnInit {
       );
   }
 
-  onAddAccountPressed(): void {
-    this.router.navigate(['accounts/create']);
-  }
-
   onAccountSelected(accountId: number) {
     if (this.selectedAccountIds.some((a) => a == accountId)) {
       this.selectedAccountIds = this.selectedAccountIds.filter((a) => a !== accountId);
