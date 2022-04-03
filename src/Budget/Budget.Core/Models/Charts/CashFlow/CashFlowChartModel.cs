@@ -9,7 +9,7 @@ namespace Budget.Core.Models.Charts.CashFlow
 
         public DateTime EndDate { get; set; }
 
-        public decimal Balance { get; set; }
+        public decimal CashFlowForPeriod { get; set; }
 
         public IEnumerable<CashFlowItemModel> Items { get; set; }
     }

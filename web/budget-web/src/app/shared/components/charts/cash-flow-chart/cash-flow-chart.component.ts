@@ -36,7 +36,7 @@ export class CashFlowChartComponent implements OnInit, OnChanges {
 
   getData(items: CashFlowItemModel[]): any {
     const firstDayOfCurrentMonth = startOfMonth(new Date(this.cashFlowData.startDate));
-    items.splice(0, 0, { sum: 0, date: firstDayOfCurrentMonth });
+    items.splice(0, 0, { cashFlow: 0, date: firstDayOfCurrentMonth });
 
     let data = {
       labels: [],
@@ -72,7 +72,7 @@ export class CashFlowChartComponent implements OnInit, OnChanges {
       },
       parsing: {
         xAxisKey: 'date',
-        yAxisKey: 'sum',
+        yAxisKey: 'cashFlow',
       },
     };
 

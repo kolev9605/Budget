@@ -40,7 +40,7 @@ namespace Budget.Infrastructure.Services
                 Items = cashFlowItems,
                 StartDate = cashFlowItems.Min(r => r.Date),
                 EndDate = cashFlowItems.Max(r => r.Date),
-                Balance = records.Sum(r => r.Amount),
+                CashFlowForPeriod = records.Sum(r => r.Amount),
 
             };
 

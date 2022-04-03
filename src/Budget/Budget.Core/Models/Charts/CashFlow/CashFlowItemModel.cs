@@ -4,13 +4,13 @@ namespace Budget.Core.Models.Charts.CashFlow
 {
     public class CashFlowItemModel
     {
-        public CashFlowItemModel(decimal sum, DateTime date)
+        public CashFlowItemModel(decimal cashFlow, DateTime date)
         {
-            Sum = sum;
+            CashFlow = cashFlow;
             Date = date;
         }
 
-        public decimal Sum { get; set; }
+        public decimal CashFlow { get; set; }
 
         public DateTime Date { get; set; }
     }

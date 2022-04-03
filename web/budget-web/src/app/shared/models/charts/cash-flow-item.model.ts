@@ -1,4 +1,4 @@
 export class CashFlowItemModel {
-  public sum: number;
+  public cashFlow: number;
   public date: Date;
 }
