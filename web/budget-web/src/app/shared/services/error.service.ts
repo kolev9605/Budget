@@ -10,6 +10,8 @@ export class ErrorService {
     let errorMessage;
     if (errorResponse.error && errorResponse.error.message) {
       errorMessage = errorResponse.error.message;
+    } else if (errorResponse && errorResponse.status === 401) {
+      errorMessage = 'Your session has expired, please log in again.';
     } else {
       errorMessage = 'Something went wrong.';
     }

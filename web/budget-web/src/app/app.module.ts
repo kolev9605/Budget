@@ -24,6 +24,8 @@ import { RecordFormComponent } from './records/record-form/record-form.component
 import { EditRecordComponent } from './records/edit-record/edit-record.component';
 import { ChartComponent } from './shared/components/charts/chart/chart.component';
 import { CashFlowChartComponent } from './shared/components/charts/cash-flow-chart/cash-flow-chart.component';
+import { AuthService } from './shared/services/auth.service';
+import { Router } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -58,6 +60,7 @@ import { CashFlowChartComponent } from './shared/components/charts/cash-flow-cha
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true,
+      deps: [AuthService, Router],
     },
   ],
   bootstrap: [AppComponent],
