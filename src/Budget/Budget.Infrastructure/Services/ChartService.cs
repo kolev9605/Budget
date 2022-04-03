@@ -13,14 +13,11 @@ namespace Budget.Infrastructure.Services
     public class ChartService : IChartService
     {
         private readonly IRecordRepository _recordRepository;
-        private readonly IDateTimeProvider _dateTimeProvider;
 
         public ChartService(
-            IRecordRepository recordRepository, 
-            IDateTimeProvider dateTimeProvider)
+            IRecordRepository recordRepository)
         {
             _recordRepository = recordRepository;
-            _dateTimeProvider = dateTimeProvider;
         }
 
         public async Task<CashFlowChartModel> GetCashFlowChartData(CashFlowChartRequestModel cashFlowChartRequestModel, string userId)
@@ -38,16 +35,13 @@ namespace Budget.Infrastructure.Services
                 .Select(r => new CashFlowItemModel(GetCashFlow(records, r.Key), r.Key))
                 .ToList();
 
-            var startDate = cashFlowItems.Min(r => r.Date);
-            var endDate = cashFlowItems.Max(r => r.Date);
-            var monthBalance = records.Sum(r => r.Amount);
-
             var chartData = new CashFlowChartModel()
             {
                 Items = cashFlowItems,
-                StartDate = startDate,
-                EndDate = endDate,
-                Balance = monthBalance
+                StartDate = cashFlowItems.Min(r => r.Date),
+                EndDate = cashFlowItems.Max(r => r.Date),
+                Balance = records.Sum(r => r.Amount),
+
             };
 
             return chartData;
