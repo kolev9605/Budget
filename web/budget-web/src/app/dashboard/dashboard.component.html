@@ -21,14 +21,26 @@
     </div>
   </div>
 
-  <div class="d-flex justify-content-center">
+  <div class="d-flex justify-content-center" *ngIf="recordsDateRange">
     <div class="align-middle p-3">
-      <span (click)="previousMonth()" class="border border-primary p-1 m-1 rounded-3" role="button">
-        <i class="bi bi-chevron-left text-primary"></i>
+      <span
+        (click)="previousMonth()"
+        class="border border-primary p-1 m-1 rounded-3"
+        [ngClass]="{ 'border-primary': hasPreviousMonth, 'border-disabled' : !hasPreviousMonth }"
+        role="button">
+        <i
+          class="bi bi-chevron-left text-primary"
+          [ngClass]="{ 'text-primary': hasPreviousMonth, 'text-disabled' : !hasPreviousMonth }"></i>
       </span>
       {{selectedDate | date: 'MMMM yyyy'}}
-      <span (click)="nextMonth()" class="border border-primary p-1 m-1 rounded-3" role="button">
-        <i class="bi bi-chevron-right text-primary"></i>
+      <span
+        (click)="nextMonth()"
+        class="border border-primary p-1 m-1 rounded-3"
+        [ngClass]="{ 'border-primary': hasNextMonth, 'border-disabled' : !hasNextMonth }"
+        role="button">
+        <i
+          class="bi bi-chevron-right text-primary"
+          [ngClass]="{ 'text-primary': hasNextMonth, 'text-disabled' : !hasNextMonth }"></i>
       </span>
     </div>
   </div>

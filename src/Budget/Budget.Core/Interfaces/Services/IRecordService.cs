@@ -1,4 +1,5 @@
 ﻿using Budget.Core.Models.Records;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -23,5 +24,7 @@ namespace Budget.Core.Interfaces.Services
         Task<int> UpdateAsync(UpdateRecordModel updateRecordModel, string userId);
 
         Task<int> DeleteAsync(int recordId, string userId);
+
+        Task<RecordsDateRangeModel> GetRecordsDateRangeAsync(string userId);
     }
 }

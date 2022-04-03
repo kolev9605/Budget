@@ -5,6 +5,7 @@ import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { CreateRecordModel } from '../models/records/create-record.model';
 import { RecordModel } from '../models/records/record.model';
+import { RecordsDateRangeModel } from '../models/records/records-date-range.model';
 import { RecordsGroupModel } from '../models/records/records-group.model';
 import { UpdateRecordModel } from '../models/records/update-record.model';
 import { ErrorService } from './error.service';
@@ -68,6 +69,12 @@ export class RecordService {
   getRecordTypes(): Observable<string[]> {
     return this.http
       .get<string[]>(`${environment.apiUrl}${this.controller}/GetRecordTypes`)
+      .pipe(catchError(this.errorService.handleError));
+  }
+
+  getRecordsDateRange(): Observable<RecordsDateRangeModel> {
+    return this.http
+      .get<RecordsDateRangeModel>(`${environment.apiUrl}${this.controller}/GetRecordsDateRange`)
       .pipe(catchError(this.errorService.handleError));
   }
 }

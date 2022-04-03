@@ -185,6 +185,16 @@ namespace Budget.Infrastructure.Services
             return deletedRecord.Id;
         }
 
+        public async Task<RecordsDateRangeModel> GetRecordsDateRangeAsync(string userId)
+        {
+            var allRecords = await _recordRepository.GetAllAsync(userId);
+
+            var minRecordDate = allRecords.Min(r => r.RecordDate);
+            var maxRecordDate = allRecords.Max(r => r.RecordDate);
+
+            return new RecordsDateRangeModel(minRecordDate, maxRecordDate);
+        }
+
         private decimal GetAmountByRecordType(decimal amount, RecordType recordType, bool isNegativeTransferRecord = false)
         {
             if (recordType == RecordType.Expense || (recordType == RecordType.Transfer && isNegativeTransferRecord))

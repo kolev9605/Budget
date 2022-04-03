@@ -54,5 +54,10 @@ namespace Budget.Web.Controllers
         [Route(nameof(GetRecordTypes))]
         public IActionResult GetRecordTypes()
             => Ok(EnumHelpers.GetListFromEnum<RecordType>());
+
+        [HttpGet]
+        [Route(nameof(GetRecordsDateRange))]
+        public async Task<IActionResult> GetRecordsDateRange()
+            => Ok(await _recordService.GetRecordsDateRangeAsync(LoggedInUserId));
     }
 }
