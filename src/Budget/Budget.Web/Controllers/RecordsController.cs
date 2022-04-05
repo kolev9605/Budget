@@ -32,11 +32,6 @@ namespace Budget.Web.Controllers
             => Ok(await _recordService.GetByIdForUpdateAsync(recordId, LoggedInUserId));
 
         [HttpGet]
-        [Route(nameof(GetAll))]
-        public async Task<ActionResult<IEnumerable<RecordModel>>> GetAll()
-            => Ok(await _recordService.GetAllAsync(LoggedInUserId));
-
-        [HttpGet]
         [Route(nameof(GetAllPaginated))]
         public async Task<ActionResult<IEnumerable<RecordModel>>> GetAllPaginated([FromQuery] PaginatedRequestModel requestModel)
              => Ok(await _recordService.GetAllPaginatedAsync(requestModel, LoggedInUserId));

@@ -40,12 +40,6 @@ export class RecordService {
       .pipe(catchError(this.errorService.handleError));
   }
 
-  getAll(): Observable<RecordsGroupModel[]> {
-    return this.http
-      .get<RecordsGroupModel[]>(`${environment.apiUrl}${this.controller}/GetAll`)
-      .pipe(catchError(this.errorService.handleError));
-  }
-
   getAllPaginated(
     paginatedRequestModel: PaginatedRequestModel,
   ): Observable<PaginationModel<RecordsGroupModel>> {

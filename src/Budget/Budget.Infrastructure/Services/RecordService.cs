@@ -66,24 +66,6 @@ namespace Budget.Infrastructure.Services
             return RecordModel.FromRecord(record);
         }
 
-        public async Task<IEnumerable<RecordsGroupModel>> GetAllAsync(string userId)
-        {
-            var paginatedRecords = await _recordRepository.GetAllAsync(userId);
-
-            var recordsGroupedByDate = paginatedRecords
-                .GroupBy(r => r.RecordDate.Date)
-                .ToDictionary(r => r.Key, r => r.ToList())
-                .OrderByDescending(r => r.Key)
-                .Select(r => new RecordsGroupModel()
-                {
-                    Date = r.Key,
-                    Sum = r.Value.Sum(r => r.Amount),
-                    Records = r.Value.Select(rm => RecordModel.FromRecord(rm))
-                });
-
-            return recordsGroupedByDate;
-        }
-
         public async Task<PaginationModel<RecordsGroupModel>> GetAllPaginatedAsync(PaginatedRequestModel requestModel, string userId)
         {
             var paginatedRecords = await _recordRepository.GetAllPaginatedAsync(userId, requestModel);
