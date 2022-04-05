@@ -63,5 +63,13 @@ namespace Budget.Repositories
 
             return categories;
         }
+
+        public async Task<Category> GetByName(string name)
+        {
+            var category = await _budgetDbContext.Categories
+                .FirstOrDefaultAsync(c => c.Name == name);
+
+            return category;
+        }
     }
 }

@@ -13,5 +13,7 @@ namespace Budget.Core.Interfaces.Repositories
         Task<IEnumerable<Category>> GetSubcategoriesByParentCategoryId(int parentCategoryId, string userId);
 
         Task<IEnumerable<Category>> GetInitialCategories();
+
+        Task<Category> GetByName(string name);
     }
 }
