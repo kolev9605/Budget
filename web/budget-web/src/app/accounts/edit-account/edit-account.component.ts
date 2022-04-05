@@ -88,8 +88,8 @@ export class EditAccountComponent implements OnInit {
     const updateAccountModel = new UpdateAccountModel(
       this.account.id,
       this.editAccountForm.value.accountName,
-      this.editAccountForm.value.currency,
       this.editAccountForm.value.initialBalance,
+      this.editAccountForm.value.currency,
     );
 
     this.accountService.updateAccount(updateAccountModel).subscribe(
