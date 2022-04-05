@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Budget.Common\Budget.Common.csproj" />
     <ProjectReference Include="..\Budget.Core\Budget.Core.csproj" />
+    <ProjectReference Include="..\Budget.CsvParser\Budget.CsvParser.csproj" />
     <ProjectReference Include="..\Budget.Infrastructure\Budget.Infrastructure.csproj" />
     <ProjectReference Include="..\Budget.Persistance\Budget.Persistance.csproj" />
     <ProjectReference Include="..\Budget.Repositories\Budget.Repositories.csproj" />

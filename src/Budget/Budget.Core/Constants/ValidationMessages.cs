@@ -23,5 +23,10 @@
             public const string SameAccountsInTransfer = "Transfers must be between two different accounts";
 
         }
+
+        public static class CsvParser
+        {
+            public const string InvalidCsv = "The CSV is invalid";
+        }
     }
 }
