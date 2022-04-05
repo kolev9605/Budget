@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Budget.Core.Models.Charts.CashFlow
 {
@@ -6,6 +7,8 @@ namespace Budget.Core.Models.Charts.CashFlow
     {
         public IEnumerable<int> AccountIds { get; set; } = new List<int>();
 
-        public int Month { get; set; }
+        public DateTime StartDate { get; set; }
+
+        public DateTime EndDate { get; set; }
     }
 }

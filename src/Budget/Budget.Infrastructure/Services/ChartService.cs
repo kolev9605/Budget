@@ -22,7 +22,7 @@ namespace Budget.Infrastructure.Services
 
         public async Task<CashFlowChartModel> GetCashFlowChartData(CashFlowChartRequestModel cashFlowChartRequestModel, string userId)
         {
-            var records = await _recordRepository.GetAllByMonthAndAccountsAsync(userId, cashFlowChartRequestModel.Month, cashFlowChartRequestModel.AccountIds);
+            var records = await _recordRepository.GetAllByMonthAndAccountsAsync(userId, cashFlowChartRequestModel.StartDate, cashFlowChartRequestModel.EndDate, cashFlowChartRequestModel.AccountIds);
 
             if (!records.Any())
             {

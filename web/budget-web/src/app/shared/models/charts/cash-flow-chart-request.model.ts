@@ -1,3 +1,3 @@
 export class CashFlowChartRequestModel {
-  constructor(public month: number, public accountIds: number[]) {}
+  constructor(public startDate: Date, public endDate: Date, public accountIds: number[]) {}
 }

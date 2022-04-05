@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { endOfMonth, startOfMonth } from 'date-fns';
+import { endOfMonth, isEqual, startOfMonth } from 'date-fns';
 import { ToastrService } from 'ngx-toastr';
 import { CashFlowChartModel } from 'src/app/shared/models/charts/cash-flow-chart.model';
 import { CashFlowItemModel } from 'src/app/shared/models/charts/cash-flow-item.model';
@@ -36,7 +36,11 @@ export class CashFlowChartComponent implements OnInit, OnChanges {
 
   getData(items: CashFlowItemModel[]): any {
     const firstDayOfCurrentMonth = startOfMonth(new Date(this.cashFlowData.startDate));
-    items.splice(0, 0, { cashFlow: 0, date: firstDayOfCurrentMonth });
+
+    const firstDayRecord = items.find((i) => isEqual(new Date(i.date), firstDayOfCurrentMonth));
+    if (!firstDayRecord) {
+      items.splice(0, 0, { cashFlow: 0, date: firstDayOfCurrentMonth });
+    }
 
     let data = {
       labels: [],

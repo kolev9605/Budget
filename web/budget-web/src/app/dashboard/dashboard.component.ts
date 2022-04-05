@@ -5,12 +5,13 @@ import { AccountModel } from '../shared/models/accounts/account.model';
 import { AccountService } from '../shared/services/account.service';
 import { forkJoin, Observable, Subject, Subscription } from 'rxjs';
 import { CashFlowChartRequestModel } from '../shared/models/charts/cash-flow-chart-request.model';
-import { addMonths, startOfMonth } from 'date-fns';
+import { addMonths, startOfMonth, endOfMonth } from 'date-fns';
 import { concatMap, tap } from 'rxjs/operators';
 import { ChartService } from '../shared/services/chart.service';
 import { CashFlowChartModel } from '../shared/models/charts/cash-flow-chart.model';
 import { RecordService } from '../shared/services/record.service';
 import { RecordsDateRangeModel } from '../shared/models/records/records-date-range.model';
+import { DateService } from '../shared/services/date.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -37,6 +38,7 @@ export class DashboardComponent implements OnInit {
     private router: Router,
     private chartService: ChartService,
     private recordService: RecordService,
+    private dateService: DateService,
   ) {}
 
   ngOnInit(): void {
@@ -136,7 +138,8 @@ export class DashboardComponent implements OnInit {
 
   loadData(): void {
     const requestModel = new CashFlowChartRequestModel(
-      this.selectedDate.getMonth() + 1,
+      this.dateService.subtractUserTimezoneOffset(startOfMonth(this.selectedDate)),
+      this.dateService.subtractUserTimezoneOffset(endOfMonth(this.selectedDate)),
       this.selectedAccountIds,
     );
 

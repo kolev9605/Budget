@@ -81,12 +81,12 @@ namespace Budget.Repositories
             return records;
         }
 
-        public async Task<IEnumerable<Record>> GetAllByMonthAndAccountsAsync(string userId, int month, IEnumerable<int> accountIds)
+        public async Task<IEnumerable<Record>> GetAllByMonthAndAccountsAsync(string userId, DateTime startDate, DateTime endDate, IEnumerable<int> accountIds)
         {
             var records = await _budgetDbContext.Records
                 .Include(r => r.Account)
                 .Where(r => r.Account.UserId == userId)
-                .Where(r => r.RecordDate.Month == month)
+                .Where(r => r.RecordDate >= startDate && r.RecordDate <= endDate)
                 .Where(r => accountIds.Contains(r.AccountId))
                 .OrderBy(r => r.RecordDate)
                 .ToListAsync();
