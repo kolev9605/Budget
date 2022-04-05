@@ -1,5 +1,7 @@
 ﻿using Budget.Core.Entities;
 using Budget.Core.Interfaces.Repositories;
+using Budget.Core.Interfaces.Services;
+using Budget.Core.Models.Pagination;
 using Budget.Persistance;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -11,8 +13,13 @@ namespace Budget.Repositories
 {
     public class RecordRepository : Repository<Record>, IRecordRepository
     {
-        public RecordRepository(BudgetDbContext budgetDbContext) : base(budgetDbContext)
+        private readonly IPaginationManager _paginationManager;
+
+        public RecordRepository(
+            BudgetDbContext budgetDbContext,
+            IPaginationManager paginationManager) : base(budgetDbContext)
         {
+            _paginationManager = paginationManager;
         }
 
         public async Task<Record> GetRecordByIdAsync(int id, string userId)
@@ -79,6 +86,22 @@ namespace Budget.Repositories
                 .ToListAsync();
 
             return records;
+        }
+
+        public async Task<PaginationModel<Record>> GetAllPaginatedAsync(string userId, QueryStringParameters queryStringParameters)
+        {
+            var query = _budgetDbContext.Records
+                .Include(r => r.Account)
+                    .ThenInclude(a => a.Currency)
+                .Include(r => r.FromAccount)
+                .Include(r => r.PaymentType)
+                .Include(r => r.Category)
+                .Where(r => r.Account.UserId == userId)
+                .OrderByDescending(r => r.RecordDate);
+
+            var paginatedRecords = await _paginationManager.CreateAsync(query, queryStringParameters.PageNumber, queryStringParameters.PageSize);
+
+            return paginatedRecords;
         }
 
         public async Task<IEnumerable<Record>> GetAllByMonthAndAccountsAsync(string userId, DateTime startDate, DateTime endDate, IEnumerable<int> accountIds)

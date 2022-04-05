@@ -4,6 +4,7 @@ using Budget.Core.Exceptions;
 using Budget.Core.Interfaces;
 using Budget.Core.Interfaces.Repositories;
 using Budget.Core.Interfaces.Services;
+using Budget.Core.Models.Pagination;
 using Budget.Core.Models.Records;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -67,11 +68,12 @@ namespace Budget.Infrastructure.Services
 
         public async Task<IEnumerable<RecordsGroupModel>> GetAllAsync(string userId)
         {
-            var records = await _recordRepository.GetAllAsync(userId);
+            var query = new QueryStringParameters();
+            var records = await _recordRepository.GetAllPaginatedAsync(userId, query);
 
             var models = new List<RecordsGroupModel>();
 
-            var recordsGroupedByDate = records
+            var recordsGroupedByDate = records.Items
                 .GroupBy(r => r.RecordDate.Date)
                 .ToDictionary(r => r.Key, r => r.ToList())
                 .OrderByDescending(r => r.Key)

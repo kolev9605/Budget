@@ -54,6 +54,7 @@ namespace Budget.Infrastructure
             services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 
             services.AddScoped<ICacheManager, CacheManager>();
+            services.AddScoped<IPaginationManager, PaginationManager>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IRecordService, RecordService>();
             services.AddScoped<IAccountService, AccountService>();
