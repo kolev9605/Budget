@@ -50,12 +50,15 @@ export class RecordService {
     paginatedRequestModel: PaginatedRequestModel,
   ): Observable<PaginationModel<RecordsGroupModel>> {
     return this.http
-      .get<PaginationModel<RecordsGroupModel>>(`${environment.apiUrl}${this.controller}/GetAll`, {
-        params: {
-          pageNumber: paginatedRequestModel.pageNumber,
-          pageSize: paginatedRequestModel.pageSize,
+      .get<PaginationModel<RecordsGroupModel>>(
+        `${environment.apiUrl}${this.controller}/GetAllPaginated`,
+        {
+          params: {
+            pageNumber: paginatedRequestModel.pageNumber,
+            pageSize: paginatedRequestModel.pageSize,
+          },
         },
-      })
+      )
       .pipe(catchError(this.errorService.handleError));
   }
 
