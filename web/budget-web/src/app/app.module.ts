@@ -7,7 +7,6 @@ import { AppComponent } from './app.component';
 import { NavigationComponent } from './layout/navigation/navigation.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AuthenticationComponent } from './authentication/authentication.component';
-import { OverlayModule } from '@angular/cdk/overlay';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -49,7 +48,6 @@ import { Router } from '@angular/router';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    OverlayModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
     HttpClientModule,
