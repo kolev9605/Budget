@@ -21,6 +21,6 @@ namespace Budget.Web.Controllers
         [HttpPost]
         [Route(nameof(GetCashFlowData))]
         public async Task<IActionResult> GetCashFlowData(CashFlowChartRequestModel cashFlowChartRequestModel)
-            => Ok(await _chartService.GetCashFlowChartData(cashFlowChartRequestModel, LoggedInUserId));
+            => Ok(await _chartService.GetCashFlowChartDataAsync(cashFlowChartRequestModel, LoggedInUserId));
     }
 }

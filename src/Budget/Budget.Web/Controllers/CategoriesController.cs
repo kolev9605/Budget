@@ -29,6 +29,6 @@ namespace Budget.Web.Controllers
         [HttpGet]
         [Route(nameof(GetAllSubcategories))]
         public async Task<IActionResult> GetAllSubcategories(int parentCategoryId)
-            => Ok(await _categoryService.GetAllSubcategoriesByParentCategoryId(parentCategoryId, LoggedInUserId));
+            => Ok(await _categoryService.GetAllSubcategoriesByParentCategoryIdAsync(parentCategoryId, LoggedInUserId));
     }
 }

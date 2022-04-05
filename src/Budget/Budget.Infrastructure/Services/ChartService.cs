@@ -20,7 +20,7 @@ namespace Budget.Infrastructure.Services
             _recordRepository = recordRepository;
         }
 
-        public async Task<CashFlowChartModel> GetCashFlowChartData(CashFlowChartRequestModel cashFlowChartRequestModel, string userId)
+        public async Task<CashFlowChartModel> GetCashFlowChartDataAsync(CashFlowChartRequestModel cashFlowChartRequestModel, string userId)
         {
             var records = await _recordRepository.GetAllInRangeAndAccountsAsync(userId, cashFlowChartRequestModel.StartDate, cashFlowChartRequestModel.EndDate, cashFlowChartRequestModel.AccountIds);
 

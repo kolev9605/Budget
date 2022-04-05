@@ -10,6 +10,6 @@ namespace Budget.Core.Interfaces.Services
 
         Task<IEnumerable<CategoryModel>> GetAllPrimaryAsync(string userId);
 
-        Task<IEnumerable<CategoryModel>> GetAllSubcategoriesByParentCategoryId(int parentCategoryId, string userId);
+        Task<IEnumerable<CategoryModel>> GetAllSubcategoriesByParentCategoryIdAsync(int parentCategoryId, string userId);
     }
 }

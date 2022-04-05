@@ -10,10 +10,10 @@ namespace Budget.Core.Interfaces.Repositories
 
         Task<IEnumerable<Category>> GetAllPrimaryAsync(string userId);
 
-        Task<IEnumerable<Category>> GetSubcategoriesByParentCategoryId(int parentCategoryId, string userId);
+        Task<IEnumerable<Category>> GetSubcategoriesByParentCategoryIdAsync(int parentCategoryId, string userId);
 
-        Task<IEnumerable<Category>> GetInitialCategories();
+        Task<IEnumerable<Category>> GetInitialCategoriesAsync();
 
-        Task<Category> GetByName(string name);
+        Task<Category> GetByNameAsync(string name);
     }
 }

@@ -5,6 +5,6 @@ namespace Budget.Core.Interfaces.Services
 {
     public interface IChartService
     {
-        Task<CashFlowChartModel> GetCashFlowChartData(CashFlowChartRequestModel cashFlowChartRequestModel, string userId);
+        Task<CashFlowChartModel> GetCashFlowChartDataAsync(CashFlowChartRequestModel cashFlowChartRequestModel, string userId);
     }
 }

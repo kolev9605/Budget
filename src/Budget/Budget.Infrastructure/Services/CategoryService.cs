@@ -36,9 +36,9 @@ namespace Budget.Infrastructure.Services
             return categoryModels;
         }
 
-        public async Task<IEnumerable<CategoryModel>> GetAllSubcategoriesByParentCategoryId(int parentCategoryId, string userId)
+        public async Task<IEnumerable<CategoryModel>> GetAllSubcategoriesByParentCategoryIdAsync(int parentCategoryId, string userId)
         {
-            var categories = await _categoriesRepository.GetSubcategoriesByParentCategoryId(parentCategoryId, userId);
+            var categories = await _categoriesRepository.GetSubcategoriesByParentCategoryIdAsync(parentCategoryId, userId);
 
             var categoryModels = categories
                 .Select(c => CategoryModel.FromCategory(c));

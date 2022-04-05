@@ -36,7 +36,7 @@ namespace Budget.Repositories
             return categories;
         }
 
-        public async Task<IEnumerable<Category>> GetSubcategoriesByParentCategoryId(int parentCategoryId, string userId)
+        public async Task<IEnumerable<Category>> GetSubcategoriesByParentCategoryIdAsync(int parentCategoryId, string userId)
         {
             var subcategories = await GetUserCategories(userId)
                 .Include(c => c.ParentCategory)
@@ -46,7 +46,7 @@ namespace Budget.Repositories
             return subcategories;
         }
 
-        public async Task<IEnumerable<Category>> GetInitialCategories()
+        public async Task<IEnumerable<Category>> GetInitialCategoriesAsync()
         {
             var categories = await _budgetDbContext.Categories
                 .Where(c => c.IsInitial)
@@ -64,7 +64,7 @@ namespace Budget.Repositories
             return categories;
         }
 
-        public async Task<Category> GetByName(string name)
+        public async Task<Category> GetByNameAsync(string name)
         {
             var category = await _budgetDbContext.Categories
                 .FirstOrDefaultAsync(c => c.Name == name);

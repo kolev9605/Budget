@@ -88,7 +88,7 @@ namespace Budget.Infrastructure.Services
                 throw new BudgetAuthenticationException(Authentication.UserExists, registerModel.Username);
             }
 
-            var initialCategories = await _categoryRepository.GetInitialCategories();
+            var initialCategories = await _categoryRepository.GetInitialCategoriesAsync();
             var userCategories = initialCategories
                 .Select(c => new UserCategory()
                 {
