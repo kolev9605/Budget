@@ -42,7 +42,7 @@ namespace Budget.Repositories
                 .Where(r => Math.Abs(r.Amount) == Math.Abs(record.Amount))
                 .Where(r => r.Amount > 0)
                 .Where(r => r.RecordType == RecordType.Transfer)
-                .Where(r => r.DateCreated == record.DateCreated)
+                .Where(r => r.RecordDate == record.RecordDate)
                 .Where(r => r.CategoryId == record.CategoryId)
                 .FirstOrDefaultAsync();
 
