@@ -23,15 +23,20 @@ namespace Budget.Persistance.Seeders
                         Name = "Kids",
                         CategoryType = CategoryType.Need,
                     },
-                    new Category() 
-                    { 
-                        Name = "Housing", 
+                    new Category()
+                    {
+                        Name = "Housing",
                         CategoryType = CategoryType.Need,
                         SubCategories= new List<Category>
                         {
                             new Category() { Name = "Bills", CategoryType = CategoryType.Need },
                             new Category() { Name = "Mortgage", CategoryType = CategoryType.Need },
                             new Category() { Name = "Rent", CategoryType = CategoryType.Need },
+                            new Category() { Name = "Furniture", CategoryType = CategoryType.Need },
+                            new Category() { Name = "Maintenance, repairs", CategoryType = CategoryType.Need },
+                            new Category() { Name = "Services", CategoryType = CategoryType.Need },
+                            new Category() { Name = "Internet", CategoryType = CategoryType.Need },
+                            new Category() { Name = "Phone, mobile phone", CategoryType = CategoryType.Need },
                         }
                     },
                     new Category()
@@ -46,8 +51,8 @@ namespace Budget.Persistance.Seeders
                             new Category() { Name = "Car Insurance", CategoryType = CategoryType.Need },
                         }
                     },
-                    new Category() 
-                    { 
+                    new Category()
+                    {
                         Name = "Healh Care",
                         CategoryType = CategoryType.Need,
                         SubCategories = new List<Category>
@@ -57,8 +62,8 @@ namespace Budget.Persistance.Seeders
                             new Category() { Name = "Dentist", CategoryType = CategoryType.Need },
                         }
                     },
-                    new Category() 
-                    { 
+                    new Category()
+                    {
                         Name = "Transportation",
                         CategoryType = CategoryType.Need,
                         SubCategories = new List<Category>
@@ -67,8 +72,8 @@ namespace Budget.Persistance.Seeders
                             new Category() { Name = "Public Transport", CategoryType = CategoryType.Need },
                         }
                     },
-                    new Category() 
-                    { 
+                    new Category()
+                    {
                         Name = "Financial Expenses",
                         CategoryType = CategoryType.Need,
                         SubCategories = new List<Category>
@@ -94,8 +99,8 @@ namespace Budget.Persistance.Seeders
                             new Category() { Name = "Bar Cafe", CategoryType = CategoryType.Want },
                         }
                     },
-                    new Category() 
-                    { 
+                    new Category()
+                    {
                         Name = "Shopping",
                         CategoryType= CategoryType.Want,
                         SubCategories = new List<Category>
@@ -103,10 +108,14 @@ namespace Budget.Persistance.Seeders
                             new Category() { Name = "Clothes", CategoryType = CategoryType.Want },
                             new Category() { Name = "Electronics", CategoryType = CategoryType.Want },
                             new Category() { Name = "Books", CategoryType = CategoryType.Want },
-                        }                        
+                            new Category() { Name = "Gifts", CategoryType = CategoryType.Want },
+                            new Category() { Name = "Partner", CategoryType = CategoryType.Want },
+                            new Category() { Name = "Pets", CategoryType = CategoryType.Want },
+                            new Category() { Name = "Stationery, tools", CategoryType = CategoryType.Want },
+                        }
                     },
-                    new Category() 
-                    { 
+                    new Category()
+                    {
                         Name = "Life",
                         CategoryType = CategoryType.Want,
                         SubCategories = new List<Category>
@@ -116,6 +125,11 @@ namespace Budget.Persistance.Seeders
                             new Category() { Name = "Sports", CategoryType = CategoryType.Want },
                             new Category() { Name = "Education", CategoryType = CategoryType.Want },
                             new Category() { Name = "Online Services", CategoryType = CategoryType.Want },
+                            new Category() { Name = "Alcohol, tobacco", CategoryType = CategoryType.Want },
+                            new Category() { Name = "Holiday, trips, hotels", CategoryType = CategoryType.Want },
+                            new Category() { Name = "Wellness, beauty", CategoryType = CategoryType.Want },
+                            new Category() { Name = "Charity", CategoryType = CategoryType.Want },
+                            new Category() { Name = "Cinema", CategoryType = CategoryType.Want },
                         }
                     },
                     new Category()
@@ -127,8 +141,8 @@ namespace Budget.Persistance.Seeders
                             new Category() { Name = "Savings Account", CategoryType = CategoryType.Want },
                         }
                     },
-                    new Category() 
-                    { 
+                    new Category()
+                    {
                         Name = "Other",
                         CategoryType = CategoryType.Want,
                         SubCategories= new List<Category>
@@ -148,6 +162,8 @@ namespace Budget.Persistance.Seeders
                         {
                             new Category() { Name = "Salary", CategoryType = CategoryType.Income },
                             new Category() { Name = "Bank Loan", CategoryType = CategoryType.Income },
+                            new Category() { Name = "Refunds (tax, purchase)", CategoryType = CategoryType.Income },
+                            new Category() { Name = "Interests, dividends", CategoryType = CategoryType.Income },
                         }
                     },
                 };
