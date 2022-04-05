@@ -27,5 +27,11 @@ namespace Budget.Repositories
                 .Include(a => a.Records)
                 .Where(a => a.UserId == userId)
                 .ToListAsync();
+
+        public async Task<Account> GetByNameAsync(string userId, string accountName)
+            => await _budgetDbContext.Accounts
+                .Where(a => a.UserId == userId)
+                .Where(a => a.Name == accountName)
+                .FirstOrDefaultAsync();
     }
 }

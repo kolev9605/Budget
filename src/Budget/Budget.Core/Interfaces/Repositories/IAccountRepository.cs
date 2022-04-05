@@ -9,5 +9,7 @@ namespace Budget.Core.Interfaces.Repositories
         Task<IEnumerable<Account>> GetAllByUserIdAsync(string userId);
 
         Task<Account> GetByIdWithCurrencyAsync(int accountId);
+
+        Task<Account> GetByNameAsync(string userId, string accountName);
     }
 }
