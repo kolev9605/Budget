@@ -89,7 +89,8 @@ namespace Budget.Tests.Core
                 SetupDateTimeProvider(),
                 RepositoryMockHelper.SetupCategoryRepository(category),
                 RepositoryMockHelper.SetupPaymentTypeRepository(paymentType),
-                SetupUserService(user)
+                SetupUserService(user),
+                new Mock<PaginationManager>().Object
                 );
 
             return recordService;

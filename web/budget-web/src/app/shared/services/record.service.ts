@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { PaginatedRequestModel } from '../models/pagination/paginated-request.model';
+import { PaginationModel } from '../models/pagination/pagination.model';
 import { CreateRecordModel } from '../models/records/create-record.model';
 import { RecordModel } from '../models/records/record.model';
 import { RecordsDateRangeModel } from '../models/records/records-date-range.model';
@@ -41,6 +43,19 @@ export class RecordService {
   getAll(): Observable<RecordsGroupModel[]> {
     return this.http
       .get<RecordsGroupModel[]>(`${environment.apiUrl}${this.controller}/GetAll`)
+      .pipe(catchError(this.errorService.handleError));
+  }
+
+  getAllPaginated(
+    paginatedRequestModel: PaginatedRequestModel,
+  ): Observable<PaginationModel<RecordsGroupModel>> {
+    return this.http
+      .get<PaginationModel<RecordsGroupModel>>(`${environment.apiUrl}${this.controller}/GetAll`, {
+        params: {
+          pageNumber: paginatedRequestModel.pageNumber,
+          pageSize: paginatedRequestModel.pageSize,
+        },
+      })
       .pipe(catchError(this.errorService.handleError));
   }
 

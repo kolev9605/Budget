@@ -66,14 +66,11 @@ namespace Budget.Infrastructure.Services
             return RecordModel.FromRecord(record);
         }
 
-        public async Task<IEnumerable<RecordsGroupModel>> GetAllAsync(string userId)
+        public async Task<PaginationModel<RecordsGroupModel>> GetAllAsync(PaginatedRequestModel requestModel, string userId)
         {
-            var query = new QueryStringParameters();
-            var records = await _recordRepository.GetAllPaginatedAsync(userId, query);
+            var paginatedRecords = await _recordRepository.GetAllPaginatedAsync(userId, requestModel);
 
-            var models = new List<RecordsGroupModel>();
-
-            var recordsGroupedByDate = records.Items
+            var recordsGroupedByDate = paginatedRecords.Items
                 .GroupBy(r => r.RecordDate.Date)
                 .ToDictionary(r => r.Key, r => r.ToList())
                 .OrderByDescending(r => r.Key)
@@ -84,7 +81,9 @@ namespace Budget.Infrastructure.Services
                     Records = r.Value.Select(rm => RecordModel.FromRecord(rm))
                 });
 
-            return recordsGroupedByDate;
+            var paginationModel = paginatedRecords.Convert(paginatedRecords, recordsGroupedByDate.ToList());
+
+            return paginationModel;
         }
 
         public async Task<int> CreateAsync(CreateRecordModel createRecordModel, string userId)

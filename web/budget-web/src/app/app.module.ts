@@ -25,6 +25,7 @@ import { ChartComponent } from './shared/components/charts/chart/chart.component
 import { CashFlowChartComponent } from './shared/components/charts/cash-flow-chart/cash-flow-chart.component';
 import { AuthService } from './shared/services/auth.service';
 import { Router } from '@angular/router';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { Router } from '@angular/router';
     ReactiveFormsModule,
     HttpClientModule,
     ToastrModule.forRoot(),
+    InfiniteScrollModule,
   ],
   providers: [
     {

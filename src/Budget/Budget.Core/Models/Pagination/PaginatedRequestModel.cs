@@ -1,6 +1,6 @@
 ﻿namespace Budget.Core.Models.Pagination
 {
-    public class QueryStringParameters
+    public class PaginatedRequestModel
     {
         public int PageSize { get; set; } = 20;
 

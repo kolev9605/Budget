@@ -1,4 +1,5 @@
-﻿using Budget.Core.Models.Records;
+﻿using Budget.Core.Models.Pagination;
+using Budget.Core.Models.Records;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -17,7 +18,7 @@ namespace Budget.Core.Interfaces.Services
         /// <returns></returns>
         Task<RecordModel> GetByIdForUpdateAsync(int id, string userId);
 
-        Task<IEnumerable<RecordsGroupModel>> GetAllAsync(string userId);
+        Task<PaginationModel<RecordsGroupModel>> GetAllAsync(PaginatedRequestModel requestModel, string userId);
 
         Task<int> CreateAsync(CreateRecordModel createRecordModel, string userId);
 

@@ -88,7 +88,7 @@ namespace Budget.Repositories
             return records;
         }
 
-        public async Task<PaginationModel<Record>> GetAllPaginatedAsync(string userId, QueryStringParameters queryStringParameters)
+        public async Task<PaginationModel<Record>> GetAllPaginatedAsync(string userId, PaginatedRequestModel queryStringParameters)
         {
             var query = _budgetDbContext.Records
                 .Include(r => r.Account)
@@ -104,7 +104,7 @@ namespace Budget.Repositories
             return paginatedRecords;
         }
 
-        public async Task<IEnumerable<Record>> GetAllByMonthAndAccountsAsync(string userId, DateTime startDate, DateTime endDate, IEnumerable<int> accountIds)
+        public async Task<IEnumerable<Record>> GetAllInRangeAndAccountsAsync(string userId, DateTime startDate, DateTime endDate, IEnumerable<int> accountIds)
         {
             var records = await _budgetDbContext.Records
                 .Include(r => r.Account)

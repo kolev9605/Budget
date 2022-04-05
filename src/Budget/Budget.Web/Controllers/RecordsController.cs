@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Budget.Core.Entities;
 using Budget.Common;
+using Budget.Core.Models.Pagination;
 
 namespace Budget.Web.Controllers
 {
@@ -32,8 +33,8 @@ namespace Budget.Web.Controllers
 
         [HttpGet]
         [Route(nameof(GetAll))]
-        public async Task<ActionResult<IEnumerable<RecordModel>>> GetAll()
-            => Ok(await _recordService.GetAllAsync(LoggedInUserId));
+        public async Task<ActionResult<IEnumerable<RecordModel>>> GetAll([FromQuery]PaginatedRequestModel requestModel)
+            => Ok(await _recordService.GetAllAsync(requestModel, LoggedInUserId));
 
         [HttpPost]
         [Route(nameof(Create))]

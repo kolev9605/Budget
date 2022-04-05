@@ -1,4 +1,8 @@
-<div class="container py-5">
+<div
+  class="container py-5"
+  infinite-scroll
+  (scrolled)="scrolled($event)"
+  (scrolledUp)="onScrollUp($event)">
   <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
   <h1 class="text-center mb-4">Records</h1>
 
