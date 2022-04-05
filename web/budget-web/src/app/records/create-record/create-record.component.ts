@@ -48,7 +48,7 @@ export class CreateRecordComponent implements OnInit {
       account: [null, [Validators.required]],
       category: [null, [Validators.required]],
       paymentType: [null, [Validators.required]],
-      recordDate: [null, [Validators.required]],
+      recordDate: [new Date(), [Validators.required]],
     });
 
     this.isLoading = true;

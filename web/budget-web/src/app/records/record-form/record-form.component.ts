@@ -31,7 +31,7 @@ export class RecordFormComponent implements OnInit {
       altInput: true,
       altFormat: 'F j, Y H:i',
       dateFormat: 'Y/m/d H:i',
-      defaultDate: this.inEditMode ? this.recordForm.value.recordDate : new Date(),
+      defaultDate: this.recordForm.value.recordDate,
       time_24hr: true,
     });
   }
