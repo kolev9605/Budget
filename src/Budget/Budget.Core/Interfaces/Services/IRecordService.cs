@@ -18,7 +18,9 @@ namespace Budget.Core.Interfaces.Services
         /// <returns></returns>
         Task<RecordModel> GetByIdForUpdateAsync(int id, string userId);
 
-        Task<PaginationModel<RecordsGroupModel>> GetAllAsync(PaginatedRequestModel requestModel, string userId);
+        Task<IEnumerable<RecordsGroupModel>> GetAllAsync(string userId);
+
+        Task<PaginationModel<RecordsGroupModel>> GetAllPaginatedAsync(PaginatedRequestModel requestModel, string userId);
 
         Task<int> CreateAsync(CreateRecordModel createRecordModel, string userId);
 

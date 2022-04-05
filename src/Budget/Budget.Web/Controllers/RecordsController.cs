@@ -33,8 +33,13 @@ namespace Budget.Web.Controllers
 
         [HttpGet]
         [Route(nameof(GetAll))]
-        public async Task<ActionResult<IEnumerable<RecordModel>>> GetAll([FromQuery]PaginatedRequestModel requestModel)
-            => Ok(await _recordService.GetAllAsync(requestModel, LoggedInUserId));
+        public async Task<ActionResult<IEnumerable<RecordModel>>> GetAll()
+            => Ok(await _recordService.GetAllAsync(LoggedInUserId));
+
+        [HttpGet]
+        [Route(nameof(GetAll))]
+        public async Task<ActionResult<IEnumerable<RecordModel>>> GetAllPaginated([FromQuery] PaginatedRequestModel requestModel)
+             => Ok(await _recordService.GetAllPaginatedAsync(requestModel, LoggedInUserId));
 
         [HttpPost]
         [Route(nameof(Create))]
