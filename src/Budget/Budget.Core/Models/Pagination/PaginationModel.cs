@@ -15,7 +15,6 @@ namespace Budget.Core.Models.Pagination
 
         private PaginationModel()
         {
-
         }
 
         public List<T> Items { get; private set; } = new List<T>();
@@ -28,11 +27,18 @@ namespace Budget.Core.Models.Pagination
 
         public bool HasNextPage => PageNumber < TotalPages;
 
+        /// <summary>
+        /// Converts PaginationModel<Entity> to PaginationModel<ViewModel>
+        /// </summary>
+        /// <typeparam name="TResult">The output Type to which the PaginationModel will be converted</typeparam>
+        /// <param name="paginationModel">The source model which are being converted</param>
+        /// <param name="items">The items that should be with the same type as the output PaginationModel</param>
+        /// <returns>Converted Pagination model from the source type (T) to the desired type (TResult)</returns>
         public PaginationModel<TResult> Convert<TResult>(PaginationModel<T> paginationModel, List<TResult> items)
         {
             return new PaginationModel<TResult>()
             {
-               Items = items,
+               Items = new List<TResult>(items),
                PageNumber = paginationModel.PageNumber,
                TotalPages = paginationModel.TotalPages,
             };

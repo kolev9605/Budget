@@ -1,6 +1,7 @@
 ﻿using Budget.Core.Constants;
 using Budget.Core.Entities;
 using Budget.Core.Exceptions;
+using Budget.Core.Extensions;
 using Budget.Core.Interfaces;
 using Budget.Core.Interfaces.Repositories;
 using Budget.Core.Interfaces.Services;
@@ -8,7 +9,6 @@ using Budget.Core.Models.Pagination;
 using Budget.Core.Models.Records;
 using Microsoft.AspNetCore.Identity;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -81,7 +81,7 @@ namespace Budget.Infrastructure.Services
                     Records = r.Value.Select(rm => RecordModel.FromRecord(rm))
                 });
 
-            var paginationModel = paginatedRecords.Convert(paginatedRecords, recordsGroupedByDate.ToList());
+            var paginationModel = paginatedRecords.Convert(recordsGroupedByDate.ToList());
 
             return paginationModel;
         }
