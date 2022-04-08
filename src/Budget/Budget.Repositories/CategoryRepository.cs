@@ -31,6 +31,8 @@ namespace Budget.Repositories
             var categories = await GetUserCategories(userId)
                 .Include(c => c.SubCategories)
                 .Where(c => !c.ParentCategoryId.HasValue)
+                .OrderBy(c => c.ParentCategoryId ?? c.Id)
+                .ThenBy(c => c.Id)
                 .ToListAsync();
 
             return categories;
@@ -55,6 +57,14 @@ namespace Budget.Repositories
             return categories;
         }
 
+        public async Task<Category> GetByNameAsync(string name)
+        {
+            var category = await _budgetDbContext.Categories
+                .FirstOrDefaultAsync(c => c.Name == name);
+
+            return category;
+        }
+
         private IQueryable<Category> GetUserCategories(string userId)
         {
             var categories = _budgetDbContext.Categories
@@ -62,14 +72,6 @@ namespace Budget.Repositories
                 .Where(c => c.Users.Where(u => u.UserId == userId).Any());
 
             return categories;
-        }
-
-        public async Task<Category> GetByNameAsync(string name)
-        {
-            var category = await _budgetDbContext.Categories
-                .FirstOrDefaultAsync(c => c.Name == name);
-
-            return category;
         }
     }
 }
