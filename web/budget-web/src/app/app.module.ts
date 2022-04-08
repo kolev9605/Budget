@@ -26,6 +26,7 @@ import { CashFlowChartComponent } from './shared/components/charts/cash-flow-cha
 import { AuthService } from './shared/services/auth.service';
 import { Router } from '@angular/router';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { CategoriesComponent } from './categories/categories.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
     EditRecordComponent,
     ChartComponent,
     CashFlowChartComponent,
+    CategoriesComponent,
   ],
   imports: [
     BrowserModule,

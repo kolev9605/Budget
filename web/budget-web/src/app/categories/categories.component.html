@@ -1,0 +1,38 @@
+<div class="container py-5">
+  <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+  <h1 class="text-center mb-4">Categories</h1>
+
+  <div class="text-center mb-4">
+    <div role="button" class="btn btn-accent text-white" (click)="onAddCategoryPressed()">
+      Add Category
+    </div>
+  </div>
+
+  <div class="row">
+    <div
+      class="card m-2 pb-2"
+      *ngFor="let category of categories"
+      data-bs-toggle="collapse"
+      [attr.href]="getCollapseId(category.id)"
+      role="button"
+      aria-expanded="false"
+      [attr.aria-controls]="getCollapseTarget(category.id)">
+      <div class="card-body">{{category.name}}</div>
+      <div
+        class="card m-1"
+        class="collapse"
+        [id]="getCollapseTarget(category.id)"
+        [routerLink]="['/categories/edit', category.id]">
+        <div class="card-body">{{category.name}}</div>
+      </div>
+      <div
+        class="card m-1"
+        class="collapse"
+        id="collapse-{{category.id}}"
+        *ngFor="let subCategory of category.subCategories"
+        [routerLink]="['/categories/edit', subCategory.id]">
+        <div class="card-body">{{subCategory.name}}</div>
+      </div>
+    </div>
+  </div>
+</div>
