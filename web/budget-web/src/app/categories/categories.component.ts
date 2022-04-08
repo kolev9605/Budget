@@ -32,7 +32,9 @@ export class CategoriesComponent implements OnInit {
     );
   }
 
-  onAddCategoryPressed(): void {}
+  onAddCategoryPressed(): void {
+    this.router.navigate(['categories/create']);
+  }
 
   getCollapseTarget(categoryId: number): string {
     return `collapse-${categoryId}`;

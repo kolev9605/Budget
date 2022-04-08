@@ -1,0 +1,39 @@
+<app-form-wrapper [formTitle]="inEditMode ? 'Edit Category' : 'Create Category'">
+  <form [formGroup]="categoryForm" (ngSubmit)="onFormSubmitted()">
+    <div class="form-group py-2">
+      <label class="form-label" for="categoryName">Category Name</label>
+      <input
+        type="text"
+        id="categoryName"
+        formControlName="name"
+        class="form-control form-control-lg"
+        [attr.disabled]="editCategory.isInitial" />
+    </div>
+
+    <div class="form-group py-2">
+      <label class="form-label" for="categoryType">Category Type</label>
+      <select
+        class="form-control form-control-lg"
+        id="categoryType"
+        formControlName="categoryType"
+        [attr.disabled]="editCategory.isInitial">
+        <option *ngFor="let categoryType of categoryTypes" [value]="categoryType">
+          {{categoryType}}
+        </option>
+      </select>
+    </div>
+
+    <div class="mt-4" *ngIf="!editCategory.isInitial">
+      <button class="mx-2 btn btn-accent text-white btn-block">
+        {{inEditMode ? 'Update' : 'Create'}}
+      </button>
+      <button
+        *ngIf="inEditMode"
+        type="button"
+        class="mx-2 btn btn-danger btn-block"
+        (click)="onCategoryDelete()">
+        Delete
+      </button>
+    </div>
+  </form>
+</app-form-wrapper>

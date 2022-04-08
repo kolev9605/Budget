@@ -6,6 +6,8 @@ namespace Budget.Core.Interfaces.Repositories
 {
     public interface ICategoryRepository : IRepository<Category>
     {
+        Task<Category> GetByIdWithSubcategoriesAsync(string userId, int categoryId);
+
         Task<IEnumerable<Category>> GetAllWithSubcategoriesAsync(string userId);
 
         Task<IEnumerable<Category>> GetAllPrimaryAsync(string userId);

@@ -27,6 +27,9 @@ import { AuthService } from './shared/services/auth.service';
 import { Router } from '@angular/router';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { CategoriesComponent } from './categories/categories.component';
+import { CategoryFormComponent } from './categories/category-form/category-form.component';
+import { CreateCategoryComponent } from './categories/create-category/create-category.component';
+import { EditCategoryComponent } from './categories/edit-category/edit-category.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +50,9 @@ import { CategoriesComponent } from './categories/categories.component';
     ChartComponent,
     CashFlowChartComponent,
     CategoriesComponent,
+    CategoryFormComponent,
+    CreateCategoryComponent,
+    EditCategoryComponent,
   ],
   imports: [
     BrowserModule,

@@ -6,6 +6,8 @@ namespace Budget.Core.Interfaces.Services
 {
     public interface ICategoryService
     {
+        Task<CategoryModel> GetByIdAsync(string userId, int categoryId);
+
         Task<IEnumerable<CategoryModel>> GetAllAsync(string userId);
 
         Task<IEnumerable<CategoryModel>> GetAllPrimaryAsync(string userId);

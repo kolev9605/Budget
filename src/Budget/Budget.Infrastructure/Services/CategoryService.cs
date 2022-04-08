@@ -1,5 +1,4 @@
-﻿using Budget.Core.Entities;
-using Budget.Core.Interfaces.Repositories;
+﻿using Budget.Core.Interfaces.Repositories;
 using Budget.Core.Interfaces.Services;
 using Budget.Core.Models.Categories;
 using System.Collections.Generic;
@@ -15,6 +14,16 @@ namespace Budget.Infrastructure.Services
         public CategoryService(ICategoryRepository categoriesRepository)
         {
             _categoriesRepository = categoriesRepository;
+        }
+
+        public async Task<CategoryModel> GetByIdAsync(string userId, int categoryId)
+        {
+            var category = await _categoriesRepository
+                .GetByIdWithSubcategoriesAsync(userId, categoryId);
+
+            var categoryModel = CategoryModel.FromCategory(category);
+
+            return categoryModel;
         }
 
         public async Task<IEnumerable<CategoryModel>> GetAllAsync(string userId)

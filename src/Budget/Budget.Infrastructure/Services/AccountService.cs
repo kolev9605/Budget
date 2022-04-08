@@ -8,7 +8,6 @@ using System.Linq;
 using Budget.Core.Guards;
 using Budget.Core.Exceptions;
 using Budget.Core.Constants;
-using Budget.Core.Models.Currencies;
 
 namespace Budget.Infrastructure.Services
 {

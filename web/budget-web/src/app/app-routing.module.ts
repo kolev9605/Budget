@@ -5,6 +5,8 @@ import { CreateAccountComponent } from './accounts/create-account/create-account
 import { EditAccountComponent } from './accounts/edit-account/edit-account.component';
 import { AuthenticationComponent } from './authentication/authentication.component';
 import { CategoriesComponent } from './categories/categories.component';
+import { CreateCategoryComponent } from './categories/create-category/create-category.component';
+import { EditCategoryComponent } from './categories/edit-category/edit-category.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { CreateRecordComponent } from './records/create-record/create-record.component';
 import { EditRecordComponent } from './records/edit-record/edit-record.component';
@@ -37,8 +39,8 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       { path: '', component: CategoriesComponent },
-      { path: 'create', component: CreateRecordComponent, pathMatch: 'full' },
-      { path: 'edit/:categoryId', component: EditRecordComponent, pathMatch: 'full' },
+      { path: 'create', component: CreateCategoryComponent, pathMatch: 'full' },
+      { path: 'edit/:categoryId', component: EditCategoryComponent, pathMatch: 'full' },
     ],
   },
 ];
