@@ -24,8 +24,6 @@ export class AdminGuard implements CanActivate {
     return this.authService.userSubject.pipe(
       take(1),
       map((user) => {
-        console.log('user', user);
-
         const isAdmin = user && user.roles.find((r) => r === Roles.Administrator);
         if (isAdmin) {
           return true;
