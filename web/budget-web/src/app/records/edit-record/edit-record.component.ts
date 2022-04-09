@@ -15,7 +15,7 @@ import { PaymentTypeService } from 'src/app/shared/services/payment-type.service
 import { RecordService } from 'src/app/shared/services/record.service';
 import { format } from 'date-fns';
 import { DateService } from 'src/app/shared/services/date.service';
-import { Formats } from '../../shared/constants';
+import { Formats } from '../../shared/constants/constants';
 
 @Component({
   selector: 'app-edit-record',
@@ -47,7 +47,7 @@ export class EditRecordComponent implements OnInit {
 
   ngOnInit(): void {
     this.editRecordForm = this.fb.group({
-      note: ['', [Validators.required]],
+      note: [null, [Validators.required]],
       amount: [null, [Validators.required]],
       fromAccount: [null, [Validators.required]],
       account: [null, [Validators.required]],

@@ -4,7 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { CashFlowChartModel } from 'src/app/shared/models/charts/cash-flow-chart.model';
 import { CashFlowItemModel } from 'src/app/shared/models/charts/cash-flow-item.model';
 import { ChartService } from 'src/app/shared/services/chart.service';
-import { ChartColors, Formats } from '../../../constants';
+import { ChartColors, Formats } from '../../../constants/constants';
 
 @Component({
   selector: 'app-cash-flow-chart',
@@ -62,7 +62,7 @@ export class CashFlowChartComponent implements OnInit, OnChanges {
 
     let options = {
       responsive: true,
-      aspectRatio: 1.7,
+      aspectRatio: 1.9,
       scales: {
         x: {
           type: 'time',

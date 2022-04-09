@@ -15,6 +15,7 @@ export const RecordTypes = {
 export const Formats = {
   DateTimeFormt: 'yyyy/MM/dd HH:mm',
   DateFormt: 'yyyy/MM/dd',
+  ShortDateFormat: 'MM/DD',
 };
 
 export const ChartColors = {

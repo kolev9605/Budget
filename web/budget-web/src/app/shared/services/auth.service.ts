@@ -8,7 +8,7 @@ import { ErrorService } from './error.service';
 import { catchError, tap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { User } from '../models/authentication/user.model';
-import { LocalStorageKeys } from 'src/app/shared/constants';
+import { LocalStorageKeys } from 'src/app/shared/constants/constants';
 
 @Injectable({
   providedIn: 'root',
