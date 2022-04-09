@@ -33,9 +33,9 @@ export class EditAccountComponent implements OnInit {
   ngOnInit(): void {
     this.isLoading = true;
     this.editAccountForm = this.fb.group({
-      accountName: ['', [Validators.required]],
-      currency: ['', [Validators.required]],
-      initialBalance: [0],
+      accountName: [null, [Validators.required]],
+      currency: [null, [Validators.required]],
+      initialBalance: [0, [Validators.required]],
     });
 
     forkJoin({
@@ -64,6 +64,15 @@ export class EditAccountComponent implements OnInit {
   }
 
   onSubmit(): void {
+    if (!this.editAccountForm.valid) {
+      Object.keys(this.editAccountForm.controls).forEach((field) => {
+        const control = this.editAccountForm.get(field);
+        control?.markAsTouched({ onlySelf: true });
+      });
+
+      return;
+    }
+
     this.updateAccount();
   }
 

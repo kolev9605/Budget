@@ -48,6 +48,7 @@ namespace Budget.Infrastructure.Services
         public async Task<int> CreateAccountAsync(CreateAccountModel createAccountModel, string userId)
         {
             Guard.IsNotNullOrEmpty(createAccountModel.Name, nameof(createAccountModel.Name));
+            Guard.ValidateMaxtLength(createAccountModel.Name, nameof(createAccountModel.Name), Validations.Accounts.NameMaxLength);
 
             var currency = await _currencyRepository.BaseGetByIdAsync(createAccountModel.CurrencyId);
             if (currency == null)
@@ -72,6 +73,7 @@ namespace Budget.Infrastructure.Services
         public async Task<int> UpdateAsync(UpdateAccountModel accountModel)
         {
             Guard.IsNotNullOrEmpty(accountModel.Name, nameof(accountModel.Name));
+            Guard.ValidateMaxtLength(accountModel.Name, nameof(accountModel.Name), Validations.Accounts.NameMaxLength);
 
             var account = await _accountRepository
                 .GetByIdWithCurrencyAsync(accountModel.Id);

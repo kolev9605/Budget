@@ -20,5 +20,13 @@ namespace Budget.Core.Guards
                 throw new BudgetValidationException(string.Format(ValidationMessages.Common.IsNotNull, argumentName));
             }
         }
+
+        public static void ValidateMaxtLength(string argumentValue, string argumentName, int maxLength)
+        {
+            if (argumentValue.Length > maxLength)
+            {
+                throw new BudgetValidationException(string.Format(ValidationMessages.Common.MaxLength, argumentName, maxLength));
+            }
+        }
     }
 }

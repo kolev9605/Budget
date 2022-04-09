@@ -15,6 +15,7 @@
         {
             public const string IsNotNull = "{0} is required";
             public const string EntityDoesNotExist = "{0} does not exist";
+            public const string MaxLength = "{0} must be less than {1} symbols";
         }
 
         public static class Accounts
