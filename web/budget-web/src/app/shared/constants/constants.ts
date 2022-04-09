@@ -23,3 +23,8 @@ export const ChartColors = {
   Accent: 'rgba(108, 186, 162, 1)',
   Secondary: 'rgba(242, 236, 255, 1)',
 };
+
+export const Roles = {
+  Administrator: 'Administrator',
+  User: 'User',
+};

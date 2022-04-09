@@ -30,6 +30,7 @@ import { CategoriesComponent } from './categories/categories.component';
 import { CategoryFormComponent } from './categories/category-form/category-form.component';
 import { CreateCategoryComponent } from './categories/create-category/create-category.component';
 import { EditCategoryComponent } from './categories/edit-category/edit-category.component';
+import { AdminComponent } from './admin/admin.component';
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import { EditCategoryComponent } from './categories/edit-category/edit-category.
     CategoryFormComponent,
     CreateCategoryComponent,
     EditCategoryComponent,
+    AdminComponent,
   ],
   imports: [
     BrowserModule,

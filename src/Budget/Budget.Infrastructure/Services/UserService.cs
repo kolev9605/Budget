@@ -16,6 +16,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
 using static Budget.Core.Constants.ValidationMessages;
+using Budget.Core.Models.Users;
+using Microsoft.EntityFrameworkCore;
 
 namespace Budget.Infrastructure.Services
 {
@@ -71,6 +73,7 @@ namespace Budget.Infrastructure.Services
             {
                 Token = token,
                 ValidTo = validTo,
+                Roles = userRoles,
             };
 
             return tokenModel;
@@ -111,6 +114,24 @@ namespace Budget.Infrastructure.Services
 
             await _userManager.AddToRoleAsync(user, Roles.User);
             return user.Id;
+        }
+
+        public async Task<IEnumerable<UserModel>> GetUsersAsync()
+        {
+            var users = await _userManager.Users.ToListAsync();
+
+            var userModels = new List<UserModel>();
+
+            foreach (var user in users)
+            {
+                var userRoles = await _userManager.GetRolesAsync(user);
+
+                var userModel = UserModel.FromApplicationUser(user, userRoles);
+
+                userModels.Add(userModel);
+            }
+
+            return userModels;
         }
 
         private (string token, DateTime validTo) GenerateToken(List<Claim> authClaims)

@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AccountsComponent } from './accounts/accounts.component';
 import { CreateAccountComponent } from './accounts/create-account/create-account.component';
 import { EditAccountComponent } from './accounts/edit-account/edit-account.component';
+import { AdminComponent } from './admin/admin.component';
 import { AuthenticationComponent } from './authentication/authentication.component';
 import { CategoriesComponent } from './categories/categories.component';
 import { CreateCategoryComponent } from './categories/create-category/create-category.component';
@@ -11,10 +12,12 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { CreateRecordComponent } from './records/create-record/create-record.component';
 import { EditRecordComponent } from './records/edit-record/edit-record.component';
 import { RecordsComponent } from './records/records.component';
+import { AdminGuard } from './shared/services/admin.guard';
 import { AuthGuard } from './shared/services/auth.guard';
 
 const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   { path: 'sign-in', component: AuthenticationComponent },
   {
     path: 'accounts',
@@ -43,6 +46,7 @@ const routes: Routes = [
       { path: 'edit/:categoryId', component: EditCategoryComponent, pathMatch: 'full' },
     ],
   },
+  { path: 'admin', component: AdminComponent, canActivate: [AdminGuard] },
 ];
 
 @NgModule({
