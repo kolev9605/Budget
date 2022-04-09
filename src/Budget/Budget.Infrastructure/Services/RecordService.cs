@@ -103,9 +103,9 @@ namespace Budget.Infrastructure.Services
                 RecordDate = createRecordModel.RecordDate,
             };
 
-            if (createRecordModel.FromAccountId.HasValue && createRecordModel.RecordType == RecordType.Transfer)
+            if (createRecordModel.RecordType == RecordType.Transfer)
             {
-                await ValidateTransferRecord(createRecordModel.AccountId, createRecordModel.FromAccountId.Value);
+                await ValidateTransferRecord(createRecordModel.AccountId, createRecordModel.FromAccountId);
 
                 var negativeTransferRecord = await CreateNegativeTransferRecord(createRecordModel, now);
 
@@ -138,7 +138,7 @@ namespace Budget.Infrastructure.Services
             record.RecordType = updateRecordModel.RecordType;
             record.RecordDate = updateRecordModel.RecordDate;
 
-            if (updateRecordModel.FromAccountId.HasValue && updateRecordModel.RecordType == RecordType.Transfer)
+            if (updateRecordModel.RecordType == RecordType.Transfer)
             {
                 await ValidateTransferRecord(updateRecordModel.AccountId, updateRecordModel.FromAccountId.Value);
 
@@ -274,8 +274,14 @@ namespace Budget.Infrastructure.Services
             }
         }
 
-        private async Task ValidateTransferRecord(int accountId, int fromAccountId)
+        private async Task ValidateTransferRecord(int accountId, int? fromAccountId)
         {
+            if (!fromAccountId.HasValue)
+            {
+                throw new BudgetValidationException(
+                    string.Format(ValidationMessages.Common.IsNotNull, nameof(fromAccountId)));
+            }
+
             var account = await _accountRepository.BaseGetByIdAsync(accountId);
             if (account == null)
             {
@@ -283,7 +289,7 @@ namespace Budget.Infrastructure.Services
                     string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(account)));
             }
 
-            var fromAccount = await _accountRepository.BaseGetByIdAsync(fromAccountId);
+            var fromAccount = await _accountRepository.BaseGetByIdAsync(fromAccountId.Value);
             if (fromAccount == null)
             {
                 throw new BudgetValidationException(
