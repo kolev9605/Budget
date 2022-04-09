@@ -11,7 +11,7 @@ import { CurrencyService } from 'src/app/shared/services/currency.service';
 @Component({
   selector: 'app-create-account',
   templateUrl: './create-account.component.html',
-  styleUrls: ['./create-account.component.scss'],
+  styleUrls: [],
 })
 export class CreateAccountComponent implements OnInit {
   createAccountForm: FormGroup;

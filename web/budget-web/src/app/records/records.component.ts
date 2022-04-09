@@ -11,7 +11,7 @@ import { RecordService } from '../shared/services/record.service';
 @Component({
   selector: 'app-records',
   templateUrl: './records.component.html',
-  styleUrls: ['./records.component.scss'],
+  styleUrls: [],
 })
 export class RecordsComponent implements OnInit {
   isLoading: boolean = false;

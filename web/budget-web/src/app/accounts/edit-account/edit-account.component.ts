@@ -13,7 +13,7 @@ import { CurrencyService } from 'src/app/shared/services/currency.service';
 @Component({
   selector: 'app-edit-account',
   templateUrl: './edit-account.component.html',
-  styleUrls: ['./edit-account.component.scss'],
+  styleUrls: [],
 })
 export class EditAccountComponent implements OnInit {
   account: AccountModel;

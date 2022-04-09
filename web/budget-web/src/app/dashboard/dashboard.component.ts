@@ -16,7 +16,7 @@ import { DateService } from '../shared/services/date.service';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss'],
+  styleUrls: [],
 })
 export class DashboardComponent implements OnInit {
   accounts: AccountModel[];

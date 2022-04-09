@@ -9,7 +9,7 @@ import { ChartColors, Formats } from '../../../constants/constants';
 @Component({
   selector: 'app-cash-flow-chart',
   templateUrl: './cash-flow-chart.component.html',
-  styleUrls: ['./cash-flow-chart.component.scss'],
+  styleUrls: [],
 })
 export class CashFlowChartComponent implements OnInit, OnChanges {
   @Input() cashFlowData: CashFlowChartModel;

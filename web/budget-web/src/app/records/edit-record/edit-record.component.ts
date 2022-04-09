@@ -20,7 +20,7 @@ import { Formats } from '../../shared/constants/constants';
 @Component({
   selector: 'app-edit-record',
   templateUrl: './edit-record.component.html',
-  styleUrls: ['./edit-record.component.scss'],
+  styleUrls: [],
 })
 export class EditRecordComponent implements OnInit {
   isLoading: boolean;

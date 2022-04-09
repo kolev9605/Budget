@@ -17,7 +17,7 @@ import { RecordsValidations } from 'src/app/shared/constants/validations';
 @Component({
   selector: 'app-create-record',
   templateUrl: './create-record.component.html',
-  styleUrls: ['./create-record.component.scss'],
+  styleUrls: [],
 })
 export class CreateRecordComponent implements OnInit {
   isLoading: boolean;
