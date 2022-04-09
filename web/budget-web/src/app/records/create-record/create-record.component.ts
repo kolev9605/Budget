@@ -11,9 +11,9 @@ import { AccountService } from 'src/app/shared/services/account.service';
 import { CategoryService } from 'src/app/shared/services/category.service';
 import { PaymentTypeService } from 'src/app/shared/services/payment-type.service';
 import { RecordService } from 'src/app/shared/services/record.service';
-import { RecordTypes } from 'src/app/shared/constants';
+import { RecordTypes } from 'src/app/shared/constants/constants';
 import { DateService } from 'src/app/shared/services/date.service';
-
+import { RecordsValidations } from 'src/app/shared/constants/validations';
 @Component({
   selector: 'app-create-record',
   templateUrl: './create-record.component.html',
@@ -42,9 +42,9 @@ export class CreateRecordComponent implements OnInit {
 
   ngOnInit(): void {
     this.createRecordForm = this.fb.group({
-      note: ['', [Validators.required]],
+      note: [null, [Validators.maxLength(RecordsValidations.NoteMaxtLength)]],
       amount: [null, [Validators.required]],
-      fromAccount: [null, [Validators.required]],
+      fromAccount: [null, []],
       account: [null, [Validators.required]],
       category: [null, [Validators.required]],
       paymentType: [null, [Validators.required]],
@@ -91,6 +91,15 @@ export class CreateRecordComponent implements OnInit {
   }
 
   onSubmit(): void {
+    if (!this.createRecordForm.valid) {
+      Object.keys(this.createRecordForm.controls).forEach((field) => {
+        const control = this.createRecordForm.get(field);
+        control?.markAsTouched({ onlySelf: true });
+      });
+
+      return;
+    }
+
     const date = this.dateService.subtractUserTimezoneOffset(
       new Date(this.createRecordForm.value.recordDate),
     );

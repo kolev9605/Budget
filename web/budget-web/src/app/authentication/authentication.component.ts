@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ColorConstants } from 'src/app/shared/constants';
+import { ColorConstants } from 'src/app/shared/constants/constants';
 import { LoginModel } from 'src/app/shared/models/authentication/login.model';
 import { RegisterModel } from 'src/app/shared/models/authentication/register.model';
 import { AuthService } from 'src/app/shared/services/auth.service';
