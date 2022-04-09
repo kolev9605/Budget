@@ -27,13 +27,22 @@ export class AuthenticationComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      username: ['', [Validators.required]],
-      password: ['', Validators.required],
-      email: ['', null],
+      username: [null, [Validators.required]],
+      password: [null, Validators.required],
+      email: [null, null],
     });
   }
 
   onSubmit(): void {
+    if (!this.form.valid) {
+      Object.keys(this.form.controls).forEach((field) => {
+        const control = this.form.get(field);
+        control?.markAsTouched({ onlySelf: true });
+      });
+
+      return;
+    }
+
     if (this.isLogin) {
       this.login();
     } else {

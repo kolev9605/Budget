@@ -8,6 +8,11 @@
         id="username"
         formControlName="username"
         class="form-control form-control-lg" />
+      <span
+        *ngIf="!form.get('username')?.valid && form.get('username')?.touched"
+        class="help-block text-danger"
+        >The username is required</span
+      >
     </div>
     <div class="form-group py-2" *ngIf="!isLogin">
       <label class="form-label" for="email">Email</label>
@@ -21,6 +26,11 @@
         id="password"
         formControlName="password"
         class="form-control form-control-lg" />
+      <span
+        *ngIf="!form.get('password')?.valid && form.get('password')?.touched"
+        class="help-block text-danger"
+        >The password is required</span
+      >
     </div>
     <div class="mt-4">
       <button class="btn btn-accent text-white btn-block">
