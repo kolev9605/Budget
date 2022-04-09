@@ -190,6 +190,11 @@ namespace Budget.Infrastructure.Services
         {
             var allRecords = await _recordRepository.GetAllAsync(userId);
 
+            if (!allRecords.Any())
+            {
+                return null;
+            }
+
             var minRecordDate = allRecords.Min(r => r.RecordDate);
             var maxRecordDate = allRecords.Max(r => r.RecordDate);
 
