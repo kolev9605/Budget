@@ -71,11 +71,14 @@ export class DashboardComponent implements OnInit {
           this.selectedAccountIds = accounts.map((a) => a.id);
 
           this.recordsDateRange = recordsDateRange;
-          this.selectedDate = startOfMonth(new Date(this.recordsDateRange.maxDate));
-          this.calculateHasNextMonth();
-          this.calculateHasPreviousMonth();
+          if (this.recordsDateRange) {
+            this.selectedDate = startOfMonth(new Date(this.recordsDateRange.maxDate));
+            this.calculateHasNextMonth();
+            this.calculateHasPreviousMonth();
+            this.loadData();
+          }
 
-          this.loadData();
+          this.isLoading = false;
         },
         (error) => {
           this.isLoading = false;
