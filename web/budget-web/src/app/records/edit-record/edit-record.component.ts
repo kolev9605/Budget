@@ -16,6 +16,7 @@ import { RecordService } from 'src/app/shared/services/record.service';
 import { format } from 'date-fns';
 import { DateService } from 'src/app/shared/services/date.service';
 import { Formats } from '../../shared/constants/constants';
+import { RecordsValidations } from 'src/app/shared/constants/validations';
 
 @Component({
   selector: 'app-edit-record',
@@ -47,13 +48,13 @@ export class EditRecordComponent implements OnInit {
 
   ngOnInit(): void {
     this.editRecordForm = this.fb.group({
-      note: [null, [Validators.required]],
+      note: [null, [Validators.maxLength(RecordsValidations.NoteMaxtLength)]],
       amount: [null, [Validators.required]],
-      fromAccount: [null, [Validators.required]],
+      fromAccount: [null, []],
       account: [null, [Validators.required]],
       category: [null, [Validators.required]],
       paymentType: [null, [Validators.required]],
-      recordDate: [null, [Validators.required]],
+      recordDate: [new Date(), [Validators.required]],
     });
 
     forkJoin({
@@ -94,6 +95,15 @@ export class EditRecordComponent implements OnInit {
   }
 
   onSubmit(): void {
+    if (!this.editRecordForm.valid) {
+      Object.keys(this.editRecordForm.controls).forEach((field) => {
+        const control = this.editRecordForm.get(field);
+        control?.markAsTouched({ onlySelf: true });
+      });
+
+      return;
+    }
+
     const date = this.dateService.subtractUserTimezoneOffset(
       new Date(this.editRecordForm.value.recordDate),
     );
