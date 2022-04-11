@@ -24,10 +24,16 @@ namespace Budget.Infrastructure.Services
             _currencyRepository = currencyRepository;
         }
 
-        public async Task<AccountModel> GetByIdAsync(int accountId)
+        public async Task<AccountModel> GetByIdAsync(int accountId, string userId)
         {
             var account = await _accountRepository
-                .GetByIdWithCurrencyAsync(accountId);
+                .GetByIdWithCurrencyAsync(accountId, userId);
+
+            if (account == null)
+            {
+                throw new BudgetValidationException(
+                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(account)));
+            }
 
             var accountModel = AccountModel.FromAccount(account);
 
@@ -70,13 +76,13 @@ namespace Budget.Infrastructure.Services
             return createdAccount.Id;
         }
 
-        public async Task<int> UpdateAsync(UpdateAccountModel accountModel)
+        public async Task<int> UpdateAsync(UpdateAccountModel accountModel, string userId)
         {
             Guard.IsNotNullOrEmpty(accountModel.Name, nameof(accountModel.Name));
             Guard.ValidateMaxtLength(accountModel.Name, nameof(accountModel.Name), Validations.Accounts.NameMaxLength);
 
             var account = await _accountRepository
-                .GetByIdWithCurrencyAsync(accountModel.Id);
+                .GetByIdWithCurrencyAsync(accountModel.Id, userId);
             if (account == null)
             {
                 throw new BudgetValidationException(
