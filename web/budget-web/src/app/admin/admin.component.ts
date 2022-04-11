@@ -3,7 +3,7 @@ import { ToastrService } from 'ngx-toastr';
 import { UserModel } from '../shared/models/users/user-model';
 import { AdminService } from '../shared/services/admin.service';
 import { Roles } from '../shared/constants/constants';
-import { concatMap, Observable, Subject, tap } from 'rxjs';
+import { concatMap, first, Observable, Subject, tap } from 'rxjs';
 import { ChangeUserRoleRequestModel } from '../shared/models/admin/change-user-role-request.model';
 
 @Component({
@@ -56,24 +56,30 @@ export class AdminComponent implements OnInit {
 
   makeAdmin(userId: string): void {
     const requestModel = new ChangeUserRoleRequestModel(userId, Roles.Administrator);
-    this.adminService.changeUserRole(requestModel).subscribe(
-      (response) => {
-        this.usersSubject.next(true);
-      },
-      (error) => {
-        this.toastr.error(error);
-      },
-    );
+    this.adminService
+      .changeUserRole(requestModel)
+      .pipe(first())
+      .subscribe(
+        (response) => {
+          this.usersSubject.next(true);
+        },
+        (error) => {
+          this.toastr.error(error);
+        },
+      );
   }
   makeUser(userId: string): void {
     const requestModel = new ChangeUserRoleRequestModel(userId, Roles.User);
-    this.adminService.changeUserRole(requestModel).subscribe(
-      (response) => {
-        this.usersSubject.next(true);
-      },
-      (error) => {
-        this.toastr.error(error);
-      },
-    );
+    this.adminService
+      .changeUserRole(requestModel)
+      .pipe(first())
+      .subscribe(
+        (response) => {
+          this.usersSubject.next(true);
+        },
+        (error) => {
+          this.toastr.error(error);
+        },
+      );
   }
 }
