@@ -28,8 +28,8 @@ export class AuthenticationComponent implements OnInit {
   ngOnInit(): void {
     this.form = this.fb.group({
       username: [null, [Validators.required]],
-      password: [null, Validators.required],
-      email: [null, null],
+      password: [null, [Validators.required]],
+      email: [null, [Validators.email]],
     });
   }
 
