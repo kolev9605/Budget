@@ -94,5 +94,26 @@ namespace Budget.Tests.Core
 
             return recordService;
         }
+
+        public static AccountService SetupAccountService(Account account, Currency currency)
+        { 
+            var accountService = new AccountService(
+                RepositoryMockHelper.SetupAccountRepository(account),
+                RepositoryMockHelper.SetupCurrencyRepository(currency)
+                );
+
+            return accountService;
+        }
+
+        public static AccountService SetupAccountService()
+        {
+            var currency = EntityMockHelper.SetupCurrency();
+
+            var account = EntityMockHelper.SetupAccount(currency);
+
+            var accountService = SetupAccountService(account, currency);
+
+            return accountService;
+        }
     }
 }

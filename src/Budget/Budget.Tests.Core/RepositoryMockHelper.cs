@@ -41,6 +41,16 @@ namespace Budget.Tests.Core
                 .Setup(x => x.BaseGetByIdAsync(DefaultValueConstants.Common.Id))
                 .Returns(Task.FromResult(account));
 
+            accountRepositoryMock
+                .Setup(x => x.GetByIdWithCurrencyAsync(DefaultValueConstants.Common.Id, DefaultValueConstants.User.UserId))
+                .Returns(Task.FromResult(account));
+
+            var accounts = new List<Account> { account };
+
+            accountRepositoryMock
+                .Setup(x => x.GetAllByUserIdAsync(DefaultValueConstants.User.UserId))
+                .Returns(Task.FromResult(accounts.AsEnumerable()));
+
             return accountRepositoryMock.Object;
         }
 
