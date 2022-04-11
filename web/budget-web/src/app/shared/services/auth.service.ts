@@ -9,6 +9,7 @@ import { catchError, tap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { AuthenticatedUserModel } from '../models/authentication/authenticated-user.model';
 import { LocalStorageKeys } from 'src/app/shared/constants/constants';
+import { RegistrationResultModel } from '../models/authentication/registration-result.model';
 
 @Injectable({
   providedIn: 'root',
@@ -20,9 +21,12 @@ export class AuthService {
 
   constructor(private http: HttpClient, private errorService: ErrorService) {}
 
-  register(signUpModel: RegisterModel): Observable<Object> {
+  register(signUpModel: RegisterModel): Observable<RegistrationResultModel> {
     return this.http
-      .post(`${environment.apiUrl}${this.controller}/Register`, signUpModel)
+      .post<RegistrationResultModel>(
+        `${environment.apiUrl}${this.controller}/Register`,
+        signUpModel,
+      )
       .pipe(catchError(this.errorService.handleError));
   }
 

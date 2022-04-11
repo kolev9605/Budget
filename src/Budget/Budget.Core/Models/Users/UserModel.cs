@@ -5,6 +5,8 @@ namespace Budget.Core.Models.Users
 {
     public class UserModel
     {
+        public string Id { get; set; }
+
         public string Username { get; set; }
 
         public IEnumerable<string> Roles { get; set; } = new List<string>();
@@ -13,6 +15,7 @@ namespace Budget.Core.Models.Users
         {
             return new UserModel
             {
+                Id = applicationUser.Id,
                 Username = applicationUser.UserName,
                 Roles = new List<string>(roles)
             };

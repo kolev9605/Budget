@@ -18,23 +18,27 @@ using System.Linq;
 using static Budget.Core.Constants.ValidationMessages;
 using Budget.Core.Models.Users;
 using Microsoft.EntityFrameworkCore;
+using Budget.Core.Models.Admin;
 
 namespace Budget.Infrastructure.Services
 {
     public class UserService : IUserService
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly JwtOptions _jwtOptions;
         private readonly ICategoryRepository _categoryRepository;
 
         public UserService(
             UserManager<ApplicationUser> userManager,
-            IOptions<JwtOptions> jwtOptions, 
-            ICategoryRepository categoryRepository)
+            IOptions<JwtOptions> jwtOptions,
+            ICategoryRepository categoryRepository,
+            RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _jwtOptions = jwtOptions.Value;
             _categoryRepository = categoryRepository;
+            _roleManager = roleManager;
         }
 
         public async Task<TokenModel> LoginAsync(LoginModel loginModel)
@@ -79,7 +83,7 @@ namespace Budget.Infrastructure.Services
             return tokenModel;
         }
 
-        public async Task<string> RegisterAsync(RegisterModel registerModel)
+        public async Task<RegistrationResultModel> RegisterAsync(RegisterModel registerModel)
         {
             Guard.IsNotNullOrEmpty(registerModel.Username, nameof(registerModel.Username));
             Guard.IsNotNullOrEmpty(registerModel.Password, nameof(registerModel.Password));
@@ -113,7 +117,7 @@ namespace Budget.Infrastructure.Services
             }
 
             await _userManager.AddToRoleAsync(user, Roles.User);
-            return user.Id;
+            return new RegistrationResultModel(user.Id);
         }
 
         public async Task<IEnumerable<UserModel>> GetUsersAsync()
@@ -132,6 +136,57 @@ namespace Budget.Infrastructure.Services
             }
 
             return userModels;
+        }
+
+        public async Task<bool> DeleteUserAsync(string userId, string currentUserId)
+        {
+            if (userId == currentUserId)
+            {
+                throw new BudgetValidationException(Admin.CannotDeleteYourAccount);
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                throw new BudgetAuthenticationException(Authentication.UserWithIdDoesNotExists, userId);
+            }
+
+            var result = await _userManager.DeleteAsync(user);
+
+            return result.Succeeded;
+        }
+
+        public async Task<bool> ChangeUserRoleAsync(ChangeUserRoleRequestModel changeUserRoleRequestModel, string currentUserId)
+        {
+            if (changeUserRoleRequestModel.UserId == currentUserId)
+            {
+                throw new BudgetValidationException(Admin.CannotChangeYourRole);
+            }
+
+            var user = await _userManager.FindByIdAsync(changeUserRoleRequestModel.UserId);
+            if (user == null)
+            {
+                throw new BudgetAuthenticationException(Authentication.UserWithIdDoesNotExists, changeUserRoleRequestModel.UserId);
+            }
+
+            var allRoles = await _roleManager.Roles.ToListAsync();
+            var newRole = allRoles.FirstOrDefault(r => r.Name == changeUserRoleRequestModel.RoleName);
+
+            if (newRole != null)
+            {
+                foreach (var role in allRoles)
+                {
+                    if (await _userManager.IsInRoleAsync(user, role.Name))
+                    {
+                        await _userManager.RemoveFromRoleAsync(user, role.Name);
+                    }
+                }
+
+                var result = await _userManager.AddToRoleAsync(user, newRole.Name);
+                return result.Succeeded;
+            }
+
+            return false;
         }
 
         private (string token, DateTime validTo) GenerateToken(List<Claim> authClaims)

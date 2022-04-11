@@ -1,1 +1,36 @@
-<p>admin works!</p>
+<div class="container py-5">
+  <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+  <h1 class="text-center mb-4">Users</h1>
+
+  <div class="row">
+    <div class="card m-2" *ngFor="let user of users">
+      <div class="card-body col">
+        <div class="row">
+          <div class="col ml-auto">
+            <div>{{user.username}} ({{user.roles}})</div>
+            <button
+              type="button"
+              class="btn btn-warning mx-1"
+              *ngIf="!isAdmin(user.roles)"
+              (click)="makeAdmin(user.id)">
+              Make Admin
+            </button>
+            <button
+              type="button"
+              class="btn btn-warning mx-1"
+              *ngIf="isAdmin(user.roles)"
+              (click)="makeUser(user.id)">
+              Make User
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger mx-1"
+              (click)="onDeleteButtonPressed(user.id)">
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
