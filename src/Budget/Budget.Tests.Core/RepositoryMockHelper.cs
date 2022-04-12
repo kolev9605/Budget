@@ -51,6 +51,18 @@ namespace Budget.Tests.Core
                 .Setup(x => x.GetAllByUserIdAsync(DefaultValueConstants.User.UserId))
                 .Returns(Task.FromResult(accounts.AsEnumerable()));
 
+            accountRepositoryMock
+                .Setup(x => x.CreateAsync(It.IsAny<Account>(), It.IsAny<bool>()))
+                .Returns(Task.FromResult(account));
+
+            accountRepositoryMock
+                .Setup(x => x.UpdateAsync(It.IsAny<Account>(), It.IsAny<bool>()))
+                .Returns(Task.FromResult(account));
+
+            accountRepositoryMock
+                .Setup(x => x.DeleteAsync(It.IsAny<int>(), It.IsAny<bool>()))
+                .Returns(Task.FromResult(account));
+
             return accountRepositoryMock.Object;
         }
 

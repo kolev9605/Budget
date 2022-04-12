@@ -31,6 +31,8 @@ namespace Budget.Tests.Core
         public static class Account
         {
             public const int NumberOfAccounts = 1;
+            public const decimal DefaultInitialBalance = 20m;
+            public const string DefaultName = "account";
         }
     }
 }

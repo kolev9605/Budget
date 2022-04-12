@@ -37,9 +37,10 @@ namespace Budget.Tests.Core
             {
                 Id = id,
                 Currency = currency,
-                Name = $"Account{id}",
+                Name = DefaultValueConstants.Account.DefaultName,
                 CurrencyId = currency.Id,
-                UserId = userId
+                UserId = userId,
+                InitialBalance = DefaultValueConstants.Account.DefaultInitialBalance
             };
 
             return account;

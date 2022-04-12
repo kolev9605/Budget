@@ -40,6 +40,6 @@ namespace Budget.Web.Controllers
         [HttpGet]
         [Route(nameof(Delete))]
         public async Task<IActionResult> Delete(int accountId)
-            => Ok(await _accountService.DeleteAccountAsync(accountId));
+            => Ok(await _accountService.DeleteAccountAsync(accountId, LoggedInUserId));
     }
 }

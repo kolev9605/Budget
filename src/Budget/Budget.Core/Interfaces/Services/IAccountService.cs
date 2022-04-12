@@ -14,6 +14,6 @@ namespace Budget.Core.Interfaces.Services
 
         Task<int> UpdateAsync(UpdateAccountModel accountModel, string userId);
 
-        Task<int> DeleteAccountAsync(int accountId);
+        Task<int> DeleteAccountAsync(int accountId, string userId);
     }
 }

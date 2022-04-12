@@ -89,7 +89,20 @@ namespace Budget.Infrastructure.Services
                     string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(account)));
             }
 
-            account.CurrencyId = accountModel.CurrencyId;
+            if (account.UserId != userId)
+            {
+                throw new BudgetValidationException(
+                    string.Format(ValidationMessages.Accounts.InvalidAccount, account.Name));
+            }
+
+            var currency = await _currencyRepository.BaseGetByIdAsync(accountModel.CurrencyId);
+            if (currency == null)
+            {
+                throw new BudgetValidationException(
+                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(currency)));
+            }
+
+            account.CurrencyId = currency.Id;
             account.Name = accountModel.Name;
             account.InitialBalance = accountModel.InitialBalance;
 
@@ -98,9 +111,9 @@ namespace Budget.Infrastructure.Services
             return account.Id;
         }
 
-        public async Task<int> DeleteAccountAsync(int accountId)
+        public async Task<int> DeleteAccountAsync(int accountId, string userId)
         {
-            var account = await _accountRepository.BaseGetByIdAsync(accountId);
+            var account = await _accountRepository.GetByIdWithCurrencyAsync(accountId, userId);
             if (account == null)
             {
                 throw new BudgetValidationException(
