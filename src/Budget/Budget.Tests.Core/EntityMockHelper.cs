@@ -25,7 +25,6 @@ namespace Budget.Tests.Core
             };
 
             return record;
-
         }
 
         public static Account SetupAccount(
