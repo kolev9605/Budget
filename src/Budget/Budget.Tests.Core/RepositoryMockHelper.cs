@@ -103,6 +103,12 @@ namespace Budget.Tests.Core
                 .Setup(x => x.BaseGetByIdAsync(DefaultValueConstants.Common.Id))
                 .Returns(Task.FromResult(paymentType));
 
+            var paymentTypes = new List<PaymentType> { paymentType };
+
+            paymentTypeRepositoryMock
+                .Setup(x => x.BaseAllAsync())
+                .Returns(Task.FromResult(paymentTypes.AsEnumerable()));
+
             return paymentTypeRepositoryMock.Object;
         }
 
@@ -113,6 +119,12 @@ namespace Budget.Tests.Core
             currencyRepositoryMock
                 .Setup(x => x.BaseGetByIdAsync(DefaultValueConstants.Common.Id))
                 .Returns(Task.FromResult(currency));
+
+            var currencies = new List<Currency> { currency };
+
+            currencyRepositoryMock
+                .Setup(x => x.BaseAllAsync())
+                .Returns(Task.FromResult(currencies.AsEnumerable()));
 
             return currencyRepositoryMock.Object;
         }

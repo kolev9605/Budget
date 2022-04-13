@@ -260,13 +260,13 @@
       "Budget.Core.Models.PaymentTypes.PaymentTypeModel": {
         "System.Int32 Budget.Core.Models.PaymentTypes.PaymentTypeModel::get_Id()": {
           "Lines": {
-            "7": 0
+            "7": 1
           },
           "Branches": []
         },
         "System.String Budget.Core.Models.PaymentTypes.PaymentTypeModel::get_Name()": {
           "Lines": {
-            "9": 0
+            "9": 1
           },
           "Branches": []
         },
@@ -370,32 +370,32 @@
       "Budget.Core.Models.Currencies.CurrencyModel": {
         "System.Int32 Budget.Core.Models.Currencies.CurrencyModel::get_Id()": {
           "Lines": {
-            "7": 0
+            "7": 3
           },
           "Branches": []
         },
         "System.String Budget.Core.Models.Currencies.CurrencyModel::get_Name()": {
           "Lines": {
-            "9": 0
+            "9": 3
           },
           "Branches": []
         },
         "System.String Budget.Core.Models.Currencies.CurrencyModel::get_Abbreviation()": {
           "Lines": {
-            "11": 0
+            "11": 3
           },
           "Branches": []
         },
         "Budget.Core.Models.Currencies.CurrencyModel Budget.Core.Models.Currencies.CurrencyModel::FromCurrency(Budget.Core.Entities.Currency)": {
           "Lines": {
-            "14": 0,
-            "15": 0,
-            "16": 0,
-            "17": 0,
-            "18": 0,
-            "19": 0,
-            "20": 0,
-            "21": 0
+            "14": 2,
+            "15": 2,
+            "16": 2,
+            "17": 2,
+            "18": 2,
+            "19": 2,
+            "20": 2,
+            "21": 2
           },
           "Branches": []
         }
@@ -481,53 +481,53 @@
       "Budget.Core.Models.Categories.CategoryModel": {
         "System.Int32 Budget.Core.Models.Categories.CategoryModel::get_Id()": {
           "Lines": {
-            "9": 0
+            "9": 5
           },
           "Branches": []
         },
         "System.String Budget.Core.Models.Categories.CategoryModel::get_Name()": {
           "Lines": {
-            "11": 0
+            "11": 4
           },
           "Branches": []
         },
         "Budget.Core.Entities.CategoryType Budget.Core.Models.Categories.CategoryModel::get_CategoryType()": {
           "Lines": {
-            "13": 0
+            "13": 4
           },
           "Branches": []
         },
         "System.Nullable`1<System.Int32> Budget.Core.Models.Categories.CategoryModel::get_ParentCategoryId()": {
           "Lines": {
-            "15": 0
+            "15": 4
           },
           "Branches": []
         },
         "System.Boolean Budget.Core.Models.Categories.CategoryModel::get_IsInitial()": {
           "Lines": {
-            "17": 0
+            "17": 4
           },
           "Branches": []
         },
         "System.Collections.Generic.IEnumerable`1<Budget.Core.Models.Categories.CategoryModel> Budget.Core.Models.Categories.CategoryModel::get_SubCategories()": {
           "Lines": {
-            "19": 0
+            "19": 8
           },
           "Branches": []
         },
         "Budget.Core.Models.Categories.CategoryModel Budget.Core.Models.Categories.CategoryModel::FromCategory(Budget.Core.Entities.Category)": {
           "Lines": {
-            "22": 0,
-            "23": 0,
-            "24": 0,
-            "25": 0,
-            "26": 0,
-            "27": 0,
-            "28": 0,
+            "22": 4,
+            "23": 4,
+            "24": 4,
+            "25": 4,
+            "26": 4,
+            "27": 4,
+            "28": 4,
             "29": 0,
-            "30": 0,
-            "31": 0,
-            "32": 0
+            "30": 4,
+            "31": 4,
+            "32": 4
           },
           "Branches": []
         },
@@ -648,46 +648,46 @@
       "Budget.Core.Models.Accounts.AccountModel": {
         "System.Int32 Budget.Core.Models.Accounts.AccountModel::get_Id()": {
           "Lines": {
-            "11": 0
+            "11": 3
           },
           "Branches": []
         },
         "System.String Budget.Core.Models.Accounts.AccountModel::get_Name()": {
           "Lines": {
-            "13": 0
+            "13": 2
           },
           "Branches": []
         },
         "System.Decimal Budget.Core.Models.Accounts.AccountModel::get_InitialBalance()": {
           "Lines": {
-            "15": 0
+            "15": 2
           },
           "Branches": []
         },
         "System.Decimal Budget.Core.Models.Accounts.AccountModel::get_Balance()": {
           "Lines": {
-            "17": 0
+            "17": 2
           },
           "Branches": []
         },
         "Budget.Core.Models.Currencies.CurrencyModel Budget.Core.Models.Accounts.AccountModel::get_Currency()": {
           "Lines": {
-            "19": 0
+            "19": 2
           },
           "Branches": []
         },
         "Budget.Core.Models.Accounts.AccountModel Budget.Core.Models.Accounts.AccountModel::FromAccount(Budget.Core.Entities.Account)": {
           "Lines": {
-            "22": 0,
-            "23": 0,
-            "24": 0,
-            "25": 0,
-            "26": 0,
-            "27": 0,
-            "28": 0,
+            "22": 2,
+            "23": 2,
+            "24": 2,
+            "25": 2,
+            "26": 2,
+            "27": 2,
+            "28": 2,
             "29": 0,
-            "30": 0,
-            "31": 0
+            "30": 2,
+            "31": 2
           },
           "Branches": []
         }
@@ -697,19 +697,19 @@
       "Budget.Core.Models.Accounts.CreateAccountModel": {
         "System.String Budget.Core.Models.Accounts.CreateAccountModel::get_Name()": {
           "Lines": {
-            "5": 0
+            "5": 6
           },
           "Branches": []
         },
         "System.Int32 Budget.Core.Models.Accounts.CreateAccountModel::get_CurrencyId()": {
           "Lines": {
-            "7": 0
+            "7": 3
           },
           "Branches": []
         },
         "System.Decimal Budget.Core.Models.Accounts.CreateAccountModel::get_InitialBalance()": {
           "Lines": {
-            "9": 0
+            "9": 3
           },
           "Branches": []
         }
@@ -719,25 +719,25 @@
       "Budget.Core.Models.Accounts.UpdateAccountModel": {
         "System.Int32 Budget.Core.Models.Accounts.UpdateAccountModel::get_Id()": {
           "Lines": {
-            "5": 0
+            "5": 8
           },
           "Branches": []
         },
         "System.String Budget.Core.Models.Accounts.UpdateAccountModel::get_Name()": {
           "Lines": {
-            "7": 0
+            "7": 13
           },
           "Branches": []
         },
         "System.Decimal Budget.Core.Models.Accounts.UpdateAccountModel::get_InitialBalance()": {
           "Lines": {
-            "9": 0
+            "9": 5
           },
           "Branches": []
         },
         "System.Int32 Budget.Core.Models.Accounts.UpdateAccountModel::get_CurrencyId()": {
           "Lines": {
-            "11": 0
+            "11": 6
           },
           "Branches": []
         }
@@ -774,11 +774,11 @@
         },
         "System.Void Budget.Core.Guards.Guard::IsNotNullOrEmpty(System.String,System.String)": {
           "Lines": {
-            "17": 0,
-            "18": 0,
-            "19": 0,
-            "20": 0,
-            "22": 0
+            "17": 6,
+            "18": 6,
+            "19": 1,
+            "20": 1,
+            "22": 5
           },
           "Branches": [
             {
@@ -787,7 +787,7 @@
               "EndOffset": 11,
               "Path": 0,
               "Ordinal": 0,
-              "Hits": 0
+              "Hits": 1
             },
             {
               "Line": 18,
@@ -795,17 +795,17 @@
               "EndOffset": 29,
               "Path": 1,
               "Ordinal": 1,
-              "Hits": 0
+              "Hits": 5
             }
           ]
         },
         "System.Void Budget.Core.Guards.Guard::ValidateMaxtLength(System.String,System.String,System.Int32)": {
           "Lines": {
-            "25": 0,
-            "26": 0,
+            "25": 5,
+            "26": 5,
             "27": 0,
             "28": 0,
-            "30": 0
+            "30": 5
           },
           "Branches": [
             {
@@ -822,7 +822,7 @@
               "EndOffset": 38,
               "Path": 1,
               "Ordinal": 1,
-              "Hits": 0
+              "Hits": 5
             }
           ]
         }
@@ -878,7 +878,7 @@
         },
         "System.Void Budget.Core.Exceptions.BudgetException::.ctor(System.String)": {
           "Lines": {
-            "10": 21
+            "10": 45
           },
           "Branches": []
         },
@@ -904,9 +904,9 @@
         },
         "System.Void Budget.Core.Exceptions.BudgetValidationException::.ctor(System.String)": {
           "Lines": {
-            "10": 7,
-            "11": 7,
-            "12": 7
+            "10": 15,
+            "11": 15,
+            "12": 15
           },
           "Branches": []
         },
@@ -924,19 +924,19 @@
       "Budget.Core.Entities.Account": {
         "System.Int32 Budget.Core.Entities.Account::get_Id()": {
           "Lines": {
-            "8": 10
+            "8": 28
           },
           "Branches": []
         },
         "System.String Budget.Core.Entities.Account::get_Name()": {
           "Lines": {
-            "10": 11
+            "10": 28
           },
           "Branches": []
         },
         "System.String Budget.Core.Entities.Account::get_UserId()": {
           "Lines": {
-            "12": 15
+            "12": 31
           },
           "Branches": []
         },
@@ -948,31 +948,31 @@
         },
         "System.Collections.Generic.ICollection`1<Budget.Core.Entities.Record> Budget.Core.Entities.Account::get_Records()": {
           "Lines": {
-            "16": 10
+            "16": 26
           },
           "Branches": []
         },
         "System.Collections.Generic.ICollection`1<Budget.Core.Entities.Record> Budget.Core.Entities.Account::get_TransferRecords()": {
           "Lines": {
-            "18": 10
+            "18": 24
           },
           "Branches": []
         },
         "System.Int32 Budget.Core.Entities.Account::get_CurrencyId()": {
           "Lines": {
-            "20": 10
+            "20": 25
           },
           "Branches": []
         },
         "Budget.Core.Entities.Currency Budget.Core.Entities.Account::get_Currency()": {
           "Lines": {
-            "22": 10
+            "22": 25
           },
           "Branches": []
         },
         "System.Decimal Budget.Core.Entities.Account::get_InitialBalance()": {
           "Lines": {
-            "24": 0
+            "24": 29
           },
           "Branches": []
         }
@@ -998,31 +998,31 @@
       "Budget.Core.Entities.Category": {
         "System.Int32 Budget.Core.Entities.Category::get_Id()": {
           "Lines": {
-            "8": 10
+            "8": 23
           },
           "Branches": []
         },
         "System.String Budget.Core.Entities.Category::get_Name()": {
           "Lines": {
-            "10": 10
+            "10": 23
           },
           "Branches": []
         },
         "System.Collections.Generic.ICollection`1<Budget.Core.Entities.Record> Budget.Core.Entities.Category::get_Records()": {
           "Lines": {
-            "12": 10
+            "12": 19
           },
           "Branches": []
         },
         "Budget.Core.Entities.CategoryType Budget.Core.Entities.Category::get_CategoryType()": {
           "Lines": {
-            "14": 10
+            "14": 23
           },
           "Branches": []
         },
         "System.Nullable`1<System.Int32> Budget.Core.Entities.Category::get_ParentCategoryId()": {
           "Lines": {
-            "16": 0
+            "16": 4
           },
           "Branches": []
         },
@@ -1034,19 +1034,19 @@
         },
         "System.Collections.Generic.ICollection`1<Budget.Core.Entities.Category> Budget.Core.Entities.Category::get_SubCategories()": {
           "Lines": {
-            "20": 10
+            "20": 23
           },
           "Branches": []
         },
         "System.Collections.Generic.ICollection`1<Budget.Core.Entities.UserCategory> Budget.Core.Entities.Category::get_Users()": {
           "Lines": {
-            "22": 10
+            "22": 19
           },
           "Branches": []
         },
         "System.Boolean Budget.Core.Entities.Category::get_IsInitial()": {
           "Lines": {
-            "24": 10
+            "24": 23
           },
           "Branches": []
         }
@@ -1056,25 +1056,25 @@
       "Budget.Core.Entities.Currency": {
         "System.Int32 Budget.Core.Entities.Currency::get_Id()": {
           "Lines": {
-            "8": 20
+            "8": 52
           },
           "Branches": []
         },
         "System.String Budget.Core.Entities.Currency::get_Name()": {
           "Lines": {
-            "10": 10
+            "10": 27
           },
           "Branches": []
         },
         "System.String Budget.Core.Entities.Currency::get_Abbreviation()": {
           "Lines": {
-            "12": 10
+            "12": 27
           },
           "Branches": []
         },
         "System.Collections.Generic.ICollection`1<Budget.Core.Entities.Account> Budget.Core.Entities.Currency::get_Accounts()": {
           "Lines": {
-            "14": 10
+            "14": 24
           },
           "Branches": []
         }
@@ -1084,19 +1084,19 @@
       "Budget.Core.Entities.PaymentType": {
         "System.Int32 Budget.Core.Entities.PaymentType::get_Id()": {
           "Lines": {
-            "8": 10
+            "8": 12
           },
           "Branches": []
         },
         "System.String Budget.Core.Entities.PaymentType::get_Name()": {
           "Lines": {
-            "10": 10
+            "10": 12
           },
           "Branches": []
         },
         "System.Collections.Generic.ICollection`1<Budget.Core.Entities.Record> Budget.Core.Entities.PaymentType::get_Records()": {
           "Lines": {
-            "12": 10
+            "12": 11
           },
           "Branches": []
         }
@@ -1297,13 +1297,13 @@
       "Budget.Infrastructure.Services.AccountService": {
         "System.Void Budget.Infrastructure.Services.AccountService::.ctor(Budget.Core.Interfaces.Repositories.IAccountRepository,Budget.Core.Interfaces.Repositories.IRepository`1<Budget.Core.Entities.Currency>)": {
           "Lines": {
-            "19": 0,
-            "20": 0,
-            "21": 0,
-            "22": 0,
-            "23": 0,
-            "24": 0,
-            "25": 0
+            "19": 13,
+            "20": 13,
+            "21": 13,
+            "22": 13,
+            "23": 13,
+            "24": 13,
+            "25": 13
           },
           "Branches": []
         }
@@ -1311,7 +1311,7 @@
       "Budget.Infrastructure.Services.AccountService/<>c": {
         "Budget.Core.Models.Accounts.AccountModel Budget.Infrastructure.Services.AccountService/<>c::<GetAllAccountsAsync>b__4_0(Budget.Core.Entities.Account)": {
           "Lines": {
-            "43": 0
+            "49": 3
           },
           "Branches": []
         }
@@ -1319,28 +1319,28 @@
       "Budget.Infrastructure.Services.AccountService/<CreateAccountAsync>d__5": {
         "System.Void Budget.Infrastructure.Services.AccountService/<CreateAccountAsync>d__5::MoveNext()": {
           "Lines": {
-            "49": 0,
-            "50": 0,
-            "51": 0,
-            "53": 0,
-            "54": 0,
-            "55": 0,
-            "56": 0,
-            "57": 0,
-            "60": 0,
+            "55": 2,
+            "56": 2,
+            "57": 1,
+            "59": 1,
+            "60": 1,
             "61": 0,
             "62": 0,
             "63": 0,
-            "64": 0,
-            "65": 0,
-            "66": 0,
-            "68": 0,
-            "70": 0,
-            "71": 0
+            "66": 1,
+            "67": 1,
+            "68": 1,
+            "69": 1,
+            "70": 1,
+            "71": 1,
+            "72": 1,
+            "74": 1,
+            "76": 1,
+            "77": 1
           },
           "Branches": [
             {
-              "Line": 54,
+              "Line": 60,
               "Offset": 229,
               "EndOffset": 231,
               "Path": 0,
@@ -1348,12 +1348,12 @@
               "Hits": 0
             },
             {
-              "Line": 54,
+              "Line": 60,
               "Offset": 229,
               "EndOffset": 253,
               "Path": 1,
               "Ordinal": 1,
-              "Hits": 0
+              "Hits": 1
             }
           ]
         }
@@ -1361,32 +1361,32 @@
       "Budget.Infrastructure.Services.AccountService/<DeleteAccountAsync>d__7": {
         "System.Void Budget.Infrastructure.Services.AccountService/<DeleteAccountAsync>d__7::MoveNext()": {
           "Lines": {
-            "96": 0,
-            "97": 0,
-            "98": 0,
-            "99": 0,
-            "100": 0,
-            "101": 0,
-            "104": 0,
-            "106": 0,
-            "107": 0
+            "115": 2,
+            "116": 2,
+            "117": 2,
+            "118": 1,
+            "119": 1,
+            "120": 1,
+            "123": 1,
+            "125": 1,
+            "126": 1
           },
           "Branches": [
             {
-              "Line": 98,
-              "Offset": 175,
-              "EndOffset": 177,
+              "Line": 117,
+              "Offset": 181,
+              "EndOffset": 183,
               "Path": 0,
               "Ordinal": 0,
-              "Hits": 0
+              "Hits": 1
             },
             {
-              "Line": 98,
-              "Offset": 175,
-              "EndOffset": 199,
+              "Line": 117,
+              "Offset": 181,
+              "EndOffset": 205,
               "Path": 1,
               "Ordinal": 1,
-              "Hits": 0
+              "Hits": 1
             }
           ]
         }
@@ -1394,12 +1394,12 @@
       "Budget.Infrastructure.Services.AccountService/<GetAllAccountsAsync>d__4": {
         "System.Void Budget.Infrastructure.Services.AccountService/<GetAllAccountsAsync>d__4::MoveNext()": {
           "Lines": {
-            "38": 0,
-            "39": 0,
-            "40": 0,
-            "42": 0,
-            "45": 0,
-            "46": 0
+            "44": 2,
+            "45": 2,
+            "46": 2,
+            "48": 2,
+            "51": 2,
+            "52": 2
           },
           "Branches": []
         }
@@ -1407,51 +1407,113 @@
       "Budget.Infrastructure.Services.AccountService/<GetByIdAsync>d__3": {
         "System.Void Budget.Infrastructure.Services.AccountService/<GetByIdAsync>d__3::MoveNext()": {
           "Lines": {
-            "28": 0,
-            "29": 0,
-            "30": 0,
-            "32": 0,
-            "34": 0,
-            "35": 0
+            "28": 3,
+            "29": 3,
+            "30": 3,
+            "32": 3,
+            "33": 2,
+            "34": 2,
+            "35": 2,
+            "38": 1,
+            "40": 1,
+            "41": 1
           },
-          "Branches": []
+          "Branches": [
+            {
+              "Line": 32,
+              "Offset": 170,
+              "EndOffset": 172,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 2
+            },
+            {
+              "Line": 32,
+              "Offset": 170,
+              "EndOffset": 194,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 1
+            }
+          ]
         }
       },
       "Budget.Infrastructure.Services.AccountService/<UpdateAsync>d__6": {
         "System.Void Budget.Infrastructure.Services.AccountService/<UpdateAsync>d__6::MoveNext()": {
           "Lines": {
-            "74": 0,
-            "75": 0,
-            "76": 0,
-            "78": 0,
-            "79": 0,
-            "80": 0,
-            "81": 0,
-            "82": 0,
-            "83": 0,
-            "86": 0,
-            "87": 0,
-            "88": 0,
-            "90": 0,
-            "92": 0,
-            "93": 0
+            "80": 4,
+            "81": 4,
+            "82": 4,
+            "84": 4,
+            "85": 4,
+            "86": 4,
+            "87": 2,
+            "88": 2,
+            "89": 2,
+            "92": 2,
+            "93": 0,
+            "94": 0,
+            "95": 0,
+            "98": 2,
+            "99": 2,
+            "100": 1,
+            "101": 1,
+            "102": 1,
+            "105": 1,
+            "106": 1,
+            "107": 1,
+            "109": 1,
+            "111": 1,
+            "112": 1
           },
           "Branches": [
             {
-              "Line": 80,
-              "Offset": 229,
-              "EndOffset": 231,
+              "Line": 86,
+              "Offset": 249,
+              "EndOffset": 251,
               "Path": 0,
               "Ordinal": 0,
+              "Hits": 2
+            },
+            {
+              "Line": 86,
+              "Offset": 249,
+              "EndOffset": 273,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 2
+            },
+            {
+              "Line": 92,
+              "Offset": 299,
+              "EndOffset": 301,
+              "Path": 0,
+              "Ordinal": 2,
               "Hits": 0
             },
             {
-              "Line": 80,
-              "Offset": 229,
-              "EndOffset": 253,
+              "Line": 92,
+              "Offset": 299,
+              "EndOffset": 329,
               "Path": 1,
-              "Ordinal": 1,
-              "Hits": 0
+              "Ordinal": 3,
+              "Hits": 2
+            },
+            {
+              "Line": 99,
+              "Offset": 486,
+              "EndOffset": 488,
+              "Path": 0,
+              "Ordinal": 4,
+              "Hits": 1
+            },
+            {
+              "Line": 99,
+              "Offset": 486,
+              "EndOffset": 510,
+              "Path": 1,
+              "Ordinal": 5,
+              "Hits": 1
             }
           ]
         }
@@ -1496,10 +1558,10 @@
       "Budget.Infrastructure.Services.CategoryService": {
         "System.Void Budget.Infrastructure.Services.CategoryService::.ctor(Budget.Core.Interfaces.Repositories.ICategoryRepository)": {
           "Lines": {
-            "14": 0,
-            "15": 0,
-            "16": 0,
-            "17": 0
+            "16": 9,
+            "17": 9,
+            "18": 9,
+            "19": 9
           },
           "Branches": []
         }
@@ -1507,19 +1569,19 @@
       "Budget.Infrastructure.Services.CategoryService/<>c": {
         "Budget.Core.Models.Categories.CategoryModel Budget.Infrastructure.Services.CategoryService/<>c::<GetAllAsync>b__3_0(Budget.Core.Entities.Category)": {
           "Lines": {
-            "33": 0
+            "42": 3
           },
           "Branches": []
         },
         "Budget.Core.Models.Categories.CategoryModel Budget.Infrastructure.Services.CategoryService/<>c::<GetAllPrimaryAsync>b__4_0(Budget.Core.Entities.Category)": {
           "Lines": {
-            "43": 0
+            "52": 3
           },
           "Branches": []
         },
         "Budget.Core.Models.Categories.CategoryModel Budget.Infrastructure.Services.CategoryService/<>c::<GetAllSubcategoriesByParentCategoryIdAsync>b__5_0(Budget.Core.Entities.Category)": {
           "Lines": {
-            "53": 0
+            "62": 4
           },
           "Branches": []
         }
@@ -1527,10 +1589,11 @@
       "Budget.Infrastructure.Services.CategoryService/<GetAllAsync>d__3": {
         "System.Void Budget.Infrastructure.Services.CategoryService/<GetAllAsync>d__3::MoveNext()": {
           "Lines": {
-            "30": 0,
-            "31": 0,
-            "35": 0,
-            "36": 0
+            "38": 2,
+            "39": 2,
+            "41": 2,
+            "44": 2,
+            "45": 2
           },
           "Branches": []
         }
@@ -1538,11 +1601,11 @@
       "Budget.Infrastructure.Services.CategoryService/<GetAllPrimaryAsync>d__4": {
         "System.Void Budget.Infrastructure.Services.CategoryService/<GetAllPrimaryAsync>d__4::MoveNext()": {
           "Lines": {
-            "39": 0,
-            "40": 0,
-            "42": 0,
-            "45": 0,
-            "46": 0
+            "48": 2,
+            "49": 2,
+            "51": 2,
+            "54": 2,
+            "55": 2
           },
           "Branches": []
         }
@@ -1550,11 +1613,11 @@
       "Budget.Infrastructure.Services.CategoryService/<GetAllSubcategoriesByParentCategoryIdAsync>d__5": {
         "System.Void Budget.Infrastructure.Services.CategoryService/<GetAllSubcategoriesByParentCategoryIdAsync>d__5::MoveNext()": {
           "Lines": {
-            "49": 0,
-            "50": 0,
-            "52": 0,
-            "55": 0,
-            "56": 0
+            "58": 3,
+            "59": 3,
+            "61": 3,
+            "64": 3,
+            "65": 3
           },
           "Branches": []
         }
@@ -1562,14 +1625,35 @@
       "Budget.Infrastructure.Services.CategoryService/<GetByIdAsync>d__2": {
         "System.Void Budget.Infrastructure.Services.CategoryService/<GetByIdAsync>d__2::MoveNext()": {
           "Lines": {
-            "20": 0,
-            "21": 0,
-            "22": 0,
-            "24": 0,
-            "26": 0,
-            "27": 0
+            "22": 2,
+            "23": 2,
+            "24": 2,
+            "26": 2,
+            "27": 1,
+            "28": 1,
+            "29": 1,
+            "32": 1,
+            "34": 1,
+            "35": 1
           },
-          "Branches": []
+          "Branches": [
+            {
+              "Line": 26,
+              "Offset": 170,
+              "EndOffset": 172,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 1
+            },
+            {
+              "Line": 26,
+              "Offset": 170,
+              "EndOffset": 194,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 1
+            }
+          ]
         }
       }
     },
@@ -1677,10 +1761,10 @@
       "Budget.Infrastructure.Services.CurrencyService": {
         "System.Void Budget.Infrastructure.Services.CurrencyService::.ctor(Budget.Core.Interfaces.Repositories.IRepository`1<Budget.Core.Entities.Currency>)": {
           "Lines": {
-            "15": 0,
-            "16": 0,
-            "17": 0,
-            "18": 0
+            "15": 1,
+            "16": 1,
+            "17": 1,
+            "18": 1
           },
           "Branches": []
         }
@@ -1688,12 +1772,12 @@
       "Budget.Infrastructure.Services.CurrencyService/<>c": {
         "Budget.Core.Models.Currencies.CurrencyModel Budget.Infrastructure.Services.CurrencyService/<>c::<GetAllAsync>b__2_0(Budget.Core.Entities.Currency)": {
           "Lines": {
-            "25": 0,
-            "26": 0,
-            "27": 0,
-            "28": 0,
-            "29": 0,
-            "30": 0
+            "25": 2,
+            "26": 2,
+            "27": 2,
+            "28": 2,
+            "29": 2,
+            "30": 2
           },
           "Branches": []
         }
@@ -1701,11 +1785,11 @@
       "Budget.Infrastructure.Services.CurrencyService/<GetAllAsync>d__2": {
         "System.Void Budget.Infrastructure.Services.CurrencyService/<GetAllAsync>d__2::MoveNext()": {
           "Lines": {
-            "21": 0,
-            "22": 0,
-            "24": 0,
-            "32": 0,
-            "33": 0
+            "21": 1,
+            "22": 1,
+            "24": 1,
+            "32": 1,
+            "33": 1
           },
           "Branches": []
         }
@@ -1739,10 +1823,10 @@
       "Budget.Infrastructure.Services.PaymentTypeService": {
         "System.Void Budget.Infrastructure.Services.PaymentTypeService::.ctor(Budget.Core.Interfaces.Repositories.IRepository`1<Budget.Core.Entities.PaymentType>)": {
           "Lines": {
-            "15": 0,
-            "16": 0,
-            "17": 0,
-            "18": 0
+            "15": 1,
+            "16": 1,
+            "17": 1,
+            "18": 1
           },
           "Branches": []
         }
@@ -1750,11 +1834,11 @@
       "Budget.Infrastructure.Services.PaymentTypeService/<>c": {
         "Budget.Core.Models.PaymentTypes.PaymentTypeModel Budget.Infrastructure.Services.PaymentTypeService/<>c::<GetAllAsync>b__2_0(Budget.Core.Entities.PaymentType)": {
           "Lines": {
-            "24": 0,
-            "25": 0,
-            "26": 0,
-            "27": 0,
-            "28": 0
+            "24": 2,
+            "25": 2,
+            "26": 2,
+            "27": 2,
+            "28": 2
           },
           "Branches": []
         }
@@ -1762,10 +1846,10 @@
       "Budget.Infrastructure.Services.PaymentTypeService/<GetAllAsync>d__2": {
         "System.Void Budget.Infrastructure.Services.PaymentTypeService/<GetAllAsync>d__2::MoveNext()": {
           "Lines": {
-            "21": 0,
-            "22": 0,
-            "30": 0,
-            "31": 0
+            "21": 1,
+            "22": 1,
+            "30": 1,
+            "31": 1
           },
           "Branches": []
         }
@@ -1817,7 +1901,7 @@
             }
           ]
         },
-        "System.Void Budget.Infrastructure.Services.RecordService::.ctor(Budget.Core.Interfaces.Repositories.IRecordRepository,Budget.Core.Interfaces.Repositories.IAccountRepository,Budget.Core.Interfaces.IDateTimeProvider,Budget.Core.Interfaces.Repositories.IRepository`1<Budget.Core.Entities.Category>,Budget.Core.Interfaces.Repositories.IRepository`1<Budget.Core.Entities.PaymentType>,Microsoft.AspNetCore.Identity.UserManager`1<Budget.Core.Entities.ApplicationUser>)": {
+        "System.Void Budget.Infrastructure.Services.RecordService::.ctor(Budget.Core.Interfaces.Repositories.IRecordRepository,Budget.Core.Interfaces.Repositories.IAccountRepository,Budget.Core.Interfaces.IDateTimeProvider,Budget.Core.Interfaces.Repositories.ICategoryRepository,Budget.Core.Interfaces.Repositories.IRepository`1<Budget.Core.Entities.PaymentType>,Microsoft.AspNetCore.Identity.UserManager`1<Budget.Core.Entities.ApplicationUser>)": {
           "Lines": {
             "26": 10,
             "27": 10,
@@ -9563,11 +9647,11 @@
       "Budget.Repositories.AccountRepository/<GetAllByUserIdAsync>d__2": {
         "System.Void Budget.Repositories.AccountRepository/<GetAllByUserIdAsync>d__2::MoveNext()": {
           "Lines": {
-            "25": 0,
             "26": 0,
             "27": 0,
             "28": 0,
-            "29": 0
+            "29": 0,
+            "30": 0
           },
           "Branches": []
         }
@@ -9578,7 +9662,8 @@
             "19": 0,
             "20": 0,
             "21": 0,
-            "22": 0
+            "22": 0,
+            "23": 0
           },
           "Branches": []
         }
@@ -9586,10 +9671,10 @@
       "Budget.Repositories.AccountRepository/<GetByNameAsync>d__3": {
         "System.Void Budget.Repositories.AccountRepository/<GetByNameAsync>d__3::MoveNext()": {
           "Lines": {
-            "32": 0,
             "33": 0,
             "34": 0,
-            "35": 0
+            "35": 0,
+            "36": 0
           },
           "Branches": []
         }
@@ -9992,6 +10077,14 @@
           },
           "Branches": []
         }
+      },
+      "Budget.Tests.Core.DefaultValueConstants/Account": {
+        "System.Void Budget.Tests.Core.DefaultValueConstants/Account::.cctor()": {
+          "Lines": {
+            "34": 0
+          },
+          "Branches": []
+        }
       }
     },
     "C:\\my-data\\my-apps\\Budget\\src\\Budget\\Budget.Tests.Core\\EntityMockHelper.cs": {
@@ -10011,7 +10104,7 @@
             "24": 10,
             "25": 10,
             "27": 10,
-            "29": 10
+            "28": 10
           },
           "Branches": [
             {
@@ -10034,58 +10127,59 @@
         },
         "Budget.Core.Entities.Account Budget.Tests.Core.EntityMockHelper::SetupAccount(Budget.Core.Entities.Currency,System.Int32,System.String)": {
           "Lines": {
-            "35": 10,
-            "36": 10,
-            "37": 10,
-            "38": 10,
-            "39": 10,
-            "40": 10,
-            "41": 10,
-            "42": 10,
-            "43": 10,
-            "45": 10,
-            "46": 10
+            "34": 23,
+            "35": 23,
+            "36": 23,
+            "37": 23,
+            "38": 23,
+            "39": 23,
+            "40": 23,
+            "41": 23,
+            "42": 23,
+            "43": 23,
+            "45": 23,
+            "46": 23
           },
           "Branches": []
         },
         "Budget.Core.Entities.Category Budget.Tests.Core.EntityMockHelper::SetupCategory(System.Int32,Budget.Core.Entities.CategoryType)": {
           "Lines": {
-            "51": 10,
-            "52": 10,
-            "53": 10,
-            "54": 10,
-            "55": 10,
-            "56": 10,
-            "57": 10,
-            "59": 10,
-            "60": 10
+            "51": 19,
+            "52": 19,
+            "53": 19,
+            "54": 19,
+            "55": 19,
+            "56": 19,
+            "57": 19,
+            "59": 19,
+            "60": 19
           },
           "Branches": []
         },
         "Budget.Core.Entities.PaymentType Budget.Tests.Core.EntityMockHelper::SetupPaymentType(System.Int32)": {
           "Lines": {
-            "63": 10,
-            "64": 10,
-            "65": 10,
-            "66": 10,
-            "67": 10,
-            "68": 10,
-            "70": 10,
-            "71": 10
+            "63": 11,
+            "64": 11,
+            "65": 11,
+            "66": 11,
+            "67": 11,
+            "68": 11,
+            "70": 11,
+            "71": 11
           },
           "Branches": []
         },
         "Budget.Core.Entities.Currency Budget.Tests.Core.EntityMockHelper::SetupCurrency(System.Int32)": {
           "Lines": {
-            "74": 10,
-            "75": 10,
-            "76": 10,
-            "77": 10,
-            "78": 10,
-            "79": 10,
-            "80": 10,
-            "82": 10,
-            "83": 10
+            "74": 24,
+            "75": 24,
+            "76": 24,
+            "77": 24,
+            "78": 24,
+            "79": 24,
+            "80": 24,
+            "82": 24,
+            "83": 24
           },
           "Branches": []
         },
@@ -10132,49 +10226,86 @@
         },
         "Budget.Core.Interfaces.Repositories.IAccountRepository Budget.Tests.Core.RepositoryMockHelper::SetupAccountRepository(Budget.Core.Entities.Account)": {
           "Lines": {
-            "37": 10,
-            "38": 10,
-            "40": 10,
-            "41": 10,
-            "42": 10,
-            "44": 10,
-            "45": 10
+            "37": 23,
+            "38": 23,
+            "40": 23,
+            "41": 23,
+            "42": 23,
+            "44": 23,
+            "45": 23,
+            "46": 23,
+            "48": 23,
+            "50": 23,
+            "51": 23,
+            "52": 23,
+            "54": 23,
+            "55": 23,
+            "56": 23,
+            "58": 23,
+            "59": 23,
+            "60": 23,
+            "62": 23,
+            "63": 23,
+            "64": 23,
+            "66": 23,
+            "67": 23
           },
           "Branches": []
         },
-        "Budget.Core.Interfaces.Repositories.IRepository`1<Budget.Core.Entities.Category> Budget.Tests.Core.RepositoryMockHelper::SetupCategoryRepository(Budget.Core.Entities.Category)": {
+        "Budget.Core.Interfaces.Repositories.ICategoryRepository Budget.Tests.Core.RepositoryMockHelper::SetupCategoryRepository(Budget.Core.Entities.Category)": {
           "Lines": {
-            "48": 10,
-            "49": 10,
-            "51": 10,
-            "52": 10,
-            "53": 10,
-            "55": 10,
-            "56": 10
+            "70": 19,
+            "71": 19,
+            "73": 19,
+            "74": 19,
+            "75": 19,
+            "77": 19,
+            "78": 19,
+            "79": 19,
+            "81": 19,
+            "83": 19,
+            "84": 19,
+            "85": 19,
+            "87": 19,
+            "88": 19,
+            "89": 19,
+            "91": 19,
+            "92": 19,
+            "93": 19,
+            "95": 19,
+            "96": 19
           },
           "Branches": []
         },
         "Budget.Core.Interfaces.Repositories.IRepository`1<Budget.Core.Entities.PaymentType> Budget.Tests.Core.RepositoryMockHelper::SetupPaymentTypeRepository(Budget.Core.Entities.PaymentType)": {
           "Lines": {
-            "59": 10,
-            "60": 10,
-            "62": 10,
-            "63": 10,
-            "64": 10,
-            "66": 10,
-            "67": 10
+            "99": 11,
+            "100": 11,
+            "102": 11,
+            "103": 11,
+            "104": 11,
+            "106": 11,
+            "108": 11,
+            "109": 11,
+            "110": 11,
+            "112": 11,
+            "113": 11
           },
           "Branches": []
         },
         "Budget.Core.Interfaces.Repositories.IRepository`1<Budget.Core.Entities.Currency> Budget.Tests.Core.RepositoryMockHelper::SetupCurrencyRepository(Budget.Core.Entities.Currency)": {
           "Lines": {
-            "70": 0,
-            "71": 0,
-            "73": 0,
-            "74": 0,
-            "75": 0,
-            "77": 0,
-            "78": 0
+            "116": 14,
+            "117": 14,
+            "119": 14,
+            "120": 14,
+            "121": 14,
+            "123": 14,
+            "125": 14,
+            "126": 14,
+            "127": 14,
+            "129": 14,
+            "130": 14
           },
           "Branches": []
         }
@@ -10222,17 +10353,17 @@
             "29": 0,
             "30": 0,
             "31": 0,
-            "32": 10,
             "33": 10,
             "34": 10,
             "35": 10,
             "36": 10,
-            "38": 10,
+            "37": 10,
             "39": 10,
-            "41": 10,
-            "43": 10,
-            "45": 10,
-            "46": 10
+            "40": 10,
+            "42": 10,
+            "44": 10,
+            "46": 10,
+            "47": 10
           },
           "Branches": [
             {
@@ -10253,142 +10384,92 @@
             }
           ]
         },
-        "Budget.Infrastructure.Services.RecordService Budget.Tests.Core.ServiceMockHelper::SetupRecordService(Budget.Core.Entities.Currency,Budget.Core.Entities.PaymentType,Budget.Core.Entities.Category,Budget.Core.Entities.Account,Budget.Core.Entities.Record,Budget.Core.Entities.ApplicationUser)": {
+        "Budget.Infrastructure.Services.RecordService Budget.Tests.Core.ServiceMockHelper::SetupRecordService(Budget.Core.Entities.PaymentType,Budget.Core.Entities.Category,Budget.Core.Entities.Account,Budget.Core.Entities.Record,Budget.Core.Entities.ApplicationUser)": {
           "Lines": {
             "55": 10,
             "56": 10,
             "57": 10,
             "58": 10,
             "59": 10,
+            "60": 10,
             "61": 10,
             "62": 10,
             "63": 10,
-            "64": 10,
-            "66": 10,
-            "67": 10,
-            "68": 10,
+            "65": 10,
+            "66": 10
+          },
+          "Branches": []
+        },
+        "Budget.Infrastructure.Services.RecordService Budget.Tests.Core.ServiceMockHelper::SetupRecordService()": {
+          "Lines": {
             "69": 10,
+            "70": 10,
             "71": 10,
             "72": 10,
             "73": 10,
             "74": 10,
-            "76": 10,
+            "75": 10,
             "77": 10,
-            "78": 10,
             "79": 10,
-            "81": 10,
-            "82": 10,
-            "83": 10,
-            "84": 10,
-            "86": 10,
-            "87": 10,
-            "88": 10,
-            "89": 10,
-            "90": 10,
-            "91": 10,
-            "92": 10,
-            "93": 10,
-            "95": 10,
-            "96": 10
+            "80": 10
           },
-          "Branches": [
-            {
-              "Line": 56,
-              "Offset": 7,
-              "EndOffset": 9,
-              "Path": 0,
-              "Ordinal": 0,
-              "Hits": 10
-            },
-            {
-              "Line": 56,
-              "Offset": 7,
-              "EndOffset": 19,
-              "Path": 1,
-              "Ordinal": 1,
-              "Hits": 10
-            },
-            {
-              "Line": 61,
-              "Offset": 25,
-              "EndOffset": 27,
-              "Path": 0,
-              "Ordinal": 2,
-              "Hits": 10
-            },
-            {
-              "Line": 61,
-              "Offset": 25,
-              "EndOffset": 37,
-              "Path": 1,
-              "Ordinal": 3,
-              "Hits": 10
-            },
-            {
-              "Line": 66,
-              "Offset": 43,
-              "EndOffset": 45,
-              "Path": 0,
-              "Ordinal": 4,
-              "Hits": 10
-            },
-            {
-              "Line": 66,
-              "Offset": 43,
-              "EndOffset": 56,
-              "Path": 1,
-              "Ordinal": 5,
-              "Hits": 10
-            },
-            {
-              "Line": 71,
-              "Offset": 64,
-              "EndOffset": 66,
-              "Path": 0,
-              "Ordinal": 6,
-              "Hits": 10
-            },
-            {
-              "Line": 71,
-              "Offset": 64,
-              "EndOffset": 82,
-              "Path": 1,
-              "Ordinal": 7,
-              "Hits": 10
-            },
-            {
-              "Line": 76,
-              "Offset": 91,
-              "EndOffset": 93,
-              "Path": 0,
-              "Ordinal": 8,
-              "Hits": 10
-            },
-            {
-              "Line": 76,
-              "Offset": 91,
-              "EndOffset": 114,
-              "Path": 1,
-              "Ordinal": 9,
-              "Hits": 10
-            },
-            {
-              "Line": 81,
-              "Offset": 123,
-              "EndOffset": 125,
-              "Path": 0,
-              "Ordinal": 10,
-              "Hits": 10
-            },
-            {
-              "Line": 81,
-              "Offset": 123,
-              "EndOffset": 144,
-              "Path": 1,
-              "Ordinal": 11,
-              "Hits": 10
-            }
-          ]
+          "Branches": []
+        },
+        "Budget.Infrastructure.Services.AccountService Budget.Tests.Core.ServiceMockHelper::SetupAccountService(Budget.Core.Entities.Account,Budget.Core.Entities.Currency)": {
+          "Lines": {
+            "83": 13,
+            "84": 13,
+            "85": 13,
+            "86": 13,
+            "87": 13,
+            "89": 13,
+            "90": 13
+          },
+          "Branches": []
+        },
+        "Budget.Infrastructure.Services.AccountService Budget.Tests.Core.ServiceMockHelper::SetupAccountService()": {
+          "Lines": {
+            "93": 13,
+            "94": 13,
+            "96": 13,
+            "98": 13,
+            "100": 13,
+            "101": 13
+          },
+          "Branches": []
+        },
+        "Budget.Infrastructure.Services.CategoryService Budget.Tests.Core.ServiceMockHelper::SetupCategoryService()": {
+          "Lines": {
+            "104": 9,
+            "105": 9,
+            "107": 9,
+            "108": 9,
+            "110": 9,
+            "111": 9
+          },
+          "Branches": []
+        },
+        "Budget.Infrastructure.Services.CurrencyService Budget.Tests.Core.ServiceMockHelper::SetupCurrencyService()": {
+          "Lines": {
+            "114": 1,
+            "115": 1,
+            "117": 1,
+            "118": 1,
+            "120": 1,
+            "121": 1
+          },
+          "Branches": []
+        },
+        "Budget.Infrastructure.Services.PaymentTypeService Budget.Tests.Core.ServiceMockHelper::SetupPaymentTypeService()": {
+          "Lines": {
+            "124": 1,
+            "125": 1,
+            "127": 1,
+            "128": 1,
+            "130": 1,
+            "131": 1
+          },
+          "Branches": []
         }
       }
     }

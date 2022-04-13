@@ -109,5 +109,25 @@ namespace Budget.Tests.Core
 
             return categoryService;
         }
+
+        public static CurrencyService SetupCurrencyService()
+        {
+            var currency = EntityMockHelper.SetupCurrency();
+
+            var categoryService = new CurrencyService(
+                RepositoryMockHelper.SetupCurrencyRepository(currency));
+
+            return categoryService;
+        }
+
+        public static PaymentTypeService SetupPaymentTypeService()
+        {
+            var paymentType = EntityMockHelper.SetupPaymentType();
+
+            var paymentTypeService = new PaymentTypeService(
+                RepositoryMockHelper.SetupPaymentTypeRepository(paymentType));
+
+            return paymentTypeService;
+        }
     }
 }
