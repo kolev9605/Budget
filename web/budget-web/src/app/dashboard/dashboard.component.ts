@@ -12,6 +12,9 @@ import { CashFlowChartModel } from '../shared/models/charts/cash-flow-chart.mode
 import { RecordService } from '../shared/services/record.service';
 import { RecordsDateRangeModel } from '../shared/models/records/records-date-range.model';
 import { DateService } from '../shared/services/date.service';
+import { StatisticsService } from '../shared/services/statistics.service';
+import { StatisticsResultModel } from '../shared/models/statistics/statistics-request.model';
+import { StatisticsRequestModel } from '../shared/models/statistics/statistics-response.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -24,9 +27,12 @@ export class DashboardComponent implements OnInit {
   isLoading: boolean = false;
   selectedDate: Date;
   cashFlowData: CashFlowChartModel;
+  statistics: StatisticsResultModel;
+
   cashFlowDataSubscription: Subscription;
   cashFlowRequestSubject: Subject<CashFlowChartRequestModel> = new Subject();
   cashFlowDateObservable: Observable<CashFlowChartModel> = new Observable();
+  statisticsObservable: Observable<StatisticsResultModel> = new Observable();
   accountsSubscription: Subscription = new Subscription();
   recordsDateRange: RecordsDateRangeModel;
   hasPreviousMonth: boolean;
@@ -39,6 +45,7 @@ export class DashboardComponent implements OnInit {
     private chartService: ChartService,
     private recordService: RecordService,
     private dateService: DateService,
+    private statisticsService: StatisticsService,
   ) {}
 
   ngOnInit(): void {
@@ -52,6 +59,26 @@ export class DashboardComponent implements OnInit {
     this.cashFlowDateObservable.subscribe(
       (response) => {
         this.cashFlowData = response;
+        this.isLoading = false;
+      },
+      (error) => {
+        this.isLoading = false;
+        this.toastr.error(error);
+      },
+    );
+
+    this.statisticsObservable = this.cashFlowRequestSubject.pipe(
+      tap(() => (this.isLoading = true)),
+      concatMap((request) =>
+        this.statisticsService.getStatistics(
+          new StatisticsRequestModel(request.startDate, request.endDate),
+        ),
+      ),
+    );
+
+    this.statisticsObservable.subscribe(
+      (response) => {
+        this.statistics = response;
         this.isLoading = false;
       },
       (error) => {

@@ -116,5 +116,17 @@ namespace Budget.Repositories
 
             return records;
         }
+
+        public async Task<IEnumerable<Record>> GetAllInRangeAsync(string userId, DateTime startDate, DateTime endDate)
+        {
+            var records = await _budgetDbContext.Records
+                .Include(r => r.Account)
+                .Where(r => r.Account.UserId == userId)
+                .Where(r => r.RecordDate >= startDate && r.RecordDate <= endDate)
+                .OrderBy(r => r.RecordDate)
+                .ToListAsync();
+
+            return records;
+        }
     }
 }

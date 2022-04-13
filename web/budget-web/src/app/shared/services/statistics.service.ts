@@ -2,21 +2,25 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ErrorService } from './error.service';
 import { environment } from '../../../environments/environment';
-import { CurrencyModel } from '../models/currencies/currency.model';
 import { catchError } from 'rxjs/operators';
+import { StatisticsResultModel } from '../models/statistics/statistics-request.model';
+import { StatisticsRequestModel } from '../models/statistics/statistics-response.model';
 import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
-export class CurrencyService {
-  private controllerName: string = 'Currency';
+export class StatisticsService {
+  private controllerName: string = 'Statistics';
 
   constructor(private http: HttpClient, private errorService: ErrorService) {}
 
-  getAll(): Observable<CurrencyModel[]> {
+  getStatistics(request: StatisticsRequestModel): Observable<StatisticsResultModel> {
     return this.http
-      .get<CurrencyModel[]>(`${environment.apiUrl}${this.controllerName}/GetAll`)
+      .post<StatisticsResultModel>(
+        `${environment.apiUrl}${this.controllerName}/GetStatistics`,
+        request,
+      )
       .pipe(catchError(this.errorService.handleError));
   }
 }

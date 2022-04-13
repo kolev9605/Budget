@@ -19,5 +19,7 @@ namespace Budget.Core.Interfaces.Repositories
         Task<PaginationModel<Record>> GetAllPaginatedAsync(string userId, PaginatedRequestModel queryStringParameters);
 
         Task<IEnumerable<Record>> GetAllInRangeAndAccountsAsync(string userId, DateTime startDate, DateTime endDate, IEnumerable<int> accountIds);
+
+        Task<IEnumerable<Record>> GetAllInRangeAsync(string userId, DateTime startDate, DateTime endDate);
     }
 }
