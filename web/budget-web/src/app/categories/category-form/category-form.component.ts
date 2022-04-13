@@ -17,9 +17,7 @@ export class CategoryFormComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit(): void {
-    console.log(this.categoryTypes);
-  }
+  ngOnInit(): void {}
 
   onFormSubmitted(): void {
     this.formSubmitted.emit();
