@@ -45,6 +45,60 @@
         }
       }
     },
+    "C:\\my-data\\my-apps\\Budget\\src\\Budget\\Budget.Core\\Models\\Statistics\\StatisticsRequestModel.cs": {
+      "Budget.Core.Models.Statistics.StatisticsRequestModel": {
+        "System.Collections.Generic.IEnumerable`1<System.Int32> Budget.Core.Models.Statistics.StatisticsRequestModel::get_AccountIds()": {
+          "Lines": {
+            "8": 0
+          },
+          "Branches": []
+        },
+        "System.DateTime Budget.Core.Models.Statistics.StatisticsRequestModel::get_StartDate()": {
+          "Lines": {
+            "10": 0
+          },
+          "Branches": []
+        },
+        "System.DateTime Budget.Core.Models.Statistics.StatisticsRequestModel::get_EndDate()": {
+          "Lines": {
+            "12": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\my-data\\my-apps\\Budget\\src\\Budget\\Budget.Core\\Models\\Statistics\\StatisticsResultModel.cs": {
+      "Budget.Core.Models.Statistics.StatisticsResultModel": {
+        "System.Decimal Budget.Core.Models.Statistics.StatisticsResultModel::get_CashFlow()": {
+          "Lines": {
+            "13": 0
+          },
+          "Branches": []
+        },
+        "System.Decimal Budget.Core.Models.Statistics.StatisticsResultModel::get_Expense()": {
+          "Lines": {
+            "15": 0
+          },
+          "Branches": []
+        },
+        "System.Decimal Budget.Core.Models.Statistics.StatisticsResultModel::get_Income()": {
+          "Lines": {
+            "17": 0
+          },
+          "Branches": []
+        },
+        "System.Void Budget.Core.Models.Statistics.StatisticsResultModel::.ctor(System.Decimal,System.Decimal)": {
+          "Lines": {
+            "7": 0,
+            "8": 0,
+            "9": 0,
+            "10": 0,
+            "11": 0
+          },
+          "Branches": []
+        }
+      }
+    },
     "C:\\my-data\\my-apps\\Budget\\src\\Budget\\Budget.Core\\Models\\Records\\BaseCrudRecordModel.cs": {
       "Budget.Core.Models.Records.BaseCrudRecordModel": {
         "System.String Budget.Core.Models.Records.BaseCrudRecordModel::get_Note()": {
@@ -1286,8 +1340,9 @@
             "62": 0,
             "63": 0,
             "64": 0,
-            "66": 0,
-            "67": 0
+            "65": 0,
+            "67": 0,
+            "68": 0
           },
           "Branches": []
         }
@@ -2485,6 +2540,61 @@
               "Hits": 0
             }
           ]
+        }
+      }
+    },
+    "C:\\my-data\\my-apps\\Budget\\src\\Budget\\Budget.Infrastructure\\Services\\StatisticsService.cs": {
+      "Budget.Infrastructure.Services.StatisticsService": {
+        "System.Void Budget.Infrastructure.Services.StatisticsService::.ctor(Budget.Core.Interfaces.Repositories.IRecordRepository)": {
+          "Lines": {
+            "14": 0,
+            "15": 0,
+            "16": 0,
+            "17": 0
+          },
+          "Branches": []
+        }
+      },
+      "Budget.Infrastructure.Services.StatisticsService/<>c": {
+        "System.Boolean Budget.Infrastructure.Services.StatisticsService/<>c::<GetStatisticsByDateAsync>b__2_0(Budget.Core.Entities.Record)": {
+          "Lines": {
+            "24": 0
+          },
+          "Branches": []
+        },
+        "System.Decimal Budget.Infrastructure.Services.StatisticsService/<>c::<GetStatisticsByDateAsync>b__2_1(Budget.Core.Entities.Record)": {
+          "Lines": {
+            "26": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean Budget.Infrastructure.Services.StatisticsService/<>c::<GetStatisticsByDateAsync>b__2_2(Budget.Core.Entities.Record)": {
+          "Lines": {
+            "29": 0
+          },
+          "Branches": []
+        },
+        "System.Decimal Budget.Infrastructure.Services.StatisticsService/<>c::<GetStatisticsByDateAsync>b__2_3(Budget.Core.Entities.Record)": {
+          "Lines": {
+            "31": 0
+          },
+          "Branches": []
+        }
+      },
+      "Budget.Infrastructure.Services.StatisticsService/<GetStatisticsByDateAsync>d__2": {
+        "System.Void Budget.Infrastructure.Services.StatisticsService/<GetStatisticsByDateAsync>d__2::MoveNext()": {
+          "Lines": {
+            "20": 0,
+            "21": 0,
+            "23": 0,
+            "25": 0,
+            "28": 0,
+            "30": 0,
+            "33": 0,
+            "35": 0,
+            "36": 0
+          },
+          "Branches": []
         }
       }
     },
@@ -9846,6 +9956,22 @@
             "115": 0,
             "117": 0,
             "118": 0
+          },
+          "Branches": []
+        }
+      },
+      "Budget.Repositories.RecordRepository/<GetAllInRangeAsync>d__8": {
+        "System.Void Budget.Repositories.RecordRepository/<GetAllInRangeAsync>d__8::MoveNext()": {
+          "Lines": {
+            "121": 0,
+            "122": 0,
+            "123": 0,
+            "124": 0,
+            "125": 0,
+            "126": 0,
+            "127": 0,
+            "129": 0,
+            "130": 0
           },
           "Branches": []
         }
