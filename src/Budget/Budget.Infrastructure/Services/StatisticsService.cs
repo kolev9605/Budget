@@ -18,14 +18,16 @@ namespace Budget.Infrastructure.Services
 
         public async Task<StatisticsResultModel> GetStatisticsByDateAsync(StatisticsRequestModel statisticsRequestModel, string userId)
         {
-            var recordsInRange = await _recordRepository.GetAllInRangeAsync(userId, statisticsRequestModel.StartDate, statisticsRequestModel.EndDate);
+            var recordsInRange = await _recordRepository.GetAllInRangeAndAccountsAsync(userId, statisticsRequestModel.StartDate, statisticsRequestModel.EndDate, statisticsRequestModel.AccountIds);
 
             var income = recordsInRange
-                .Where(r => r.RecordType == RecordType.Income)
+                .Where(r => r.Amount > 0)
+                //.Where(r => r.RecordType == RecordType.Income)
                 .Sum(r => r.Amount);
 
             var expense = recordsInRange
-                .Where(r => r.RecordType == RecordType.Expense)
+                .Where(r => r.Amount < 0)
+                //.Where(r => r.RecordType == RecordType.Expense)
                 .Sum(r => r.Amount);
 
             var resultModel = new StatisticsResultModel(income, expense);

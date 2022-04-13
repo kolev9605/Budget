@@ -71,7 +71,7 @@ export class DashboardComponent implements OnInit {
       tap(() => (this.isLoading = true)),
       concatMap((request) =>
         this.statisticsService.getStatistics(
-          new StatisticsRequestModel(request.startDate, request.endDate),
+          new StatisticsRequestModel(request.startDate, request.endDate, request.accountIds),
         ),
       ),
     );
