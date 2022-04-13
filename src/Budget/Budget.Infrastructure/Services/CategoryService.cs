@@ -1,4 +1,6 @@
-﻿using Budget.Core.Interfaces.Repositories;
+﻿using Budget.Core.Constants;
+using Budget.Core.Exceptions;
+using Budget.Core.Interfaces.Repositories;
 using Budget.Core.Interfaces.Services;
 using Budget.Core.Models.Categories;
 using System.Collections.Generic;
@@ -16,10 +18,16 @@ namespace Budget.Infrastructure.Services
             _categoriesRepository = categoriesRepository;
         }
 
-        public async Task<CategoryModel> GetByIdAsync(string userId, int categoryId)
+        public async Task<CategoryModel> GetByIdAsync(int categoryId, string userId)
         {
             var category = await _categoriesRepository
-                .GetByIdWithSubcategoriesAsync(userId, categoryId);
+                .GetByIdWithSubcategoriesAsync(categoryId, userId);
+
+            if (category == null)
+            {
+                throw new BudgetValidationException(
+                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(category)));
+            }
 
             var categoryModel = CategoryModel.FromCategory(category);
 
@@ -30,7 +38,8 @@ namespace Budget.Infrastructure.Services
         {
             var categories = await _categoriesRepository.GetAllWithSubcategoriesAsync(userId);
 
-            var categoryModels = categories.Select(c => CategoryModel.FromCategory(c));
+            var categoryModels = categories
+                .Select(c => CategoryModel.FromCategory(c));
 
             return categoryModels;
         }

@@ -19,7 +19,7 @@ namespace Budget.Infrastructure.Services
         private readonly IRecordRepository _recordRepository;
         private readonly IAccountRepository _accountRepository;
         private readonly IDateTimeProvider _dateTimeProvider;
-        private readonly IRepository<Category> _categoriesRepository;
+        private readonly ICategoryRepository _categoriesRepository;
         private readonly IRepository<PaymentType> _paymentTypesRepository;
         private readonly UserManager<ApplicationUser> _userManager;
 
@@ -27,7 +27,7 @@ namespace Budget.Infrastructure.Services
             IRecordRepository recordsRepository,
             IAccountRepository accountRepository,
             IDateTimeProvider dateTimeProvider,
-            IRepository<Category> categoriesRepository,
+            ICategoryRepository categoriesRepository,
             IRepository<PaymentType> paymentTypesRepository,
             UserManager<ApplicationUser> userManager)
         {

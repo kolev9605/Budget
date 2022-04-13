@@ -15,7 +15,7 @@ namespace Budget.Repositories
         {
         }
 
-        public async Task<Category> GetByIdWithSubcategoriesAsync(string userId, int categoryId)
+        public async Task<Category> GetByIdWithSubcategoriesAsync(int categoryId, string userId)
         {
             var categories = await GetUserCategories(userId)
                 .Include(c => c.SubCategories)

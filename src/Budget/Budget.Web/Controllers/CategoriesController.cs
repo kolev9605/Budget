@@ -21,7 +21,7 @@ namespace Budget.Web.Controllers
         [HttpGet]
         [Route(nameof(GetById))]
         public async Task<IActionResult> GetById(int categoryId)
-            => Ok(await _categoryService.GetByIdAsync(LoggedInUserId, categoryId));
+            => Ok(await _categoryService.GetByIdAsync(categoryId, LoggedInUserId));
 
         [HttpGet]
         [Route(nameof(GetAll))]
