@@ -99,5 +99,15 @@ namespace Budget.Tests.Core
 
             return accountService;
         }
+
+        public static CategoryService SetupCategoryService()
+        {
+            var category = EntityMockHelper.SetupCategory();
+
+            var categoryService = new CategoryService(
+                RepositoryMockHelper.SetupCategoryRepository(category));
+
+            return categoryService;
+        }
     }
 }

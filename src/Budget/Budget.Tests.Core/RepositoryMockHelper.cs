@@ -66,13 +66,31 @@ namespace Budget.Tests.Core
             return accountRepositoryMock.Object;
         }
 
-        public static IRepository<Category> SetupCategoryRepository(Category category)
+        public static ICategoryRepository SetupCategoryRepository(Category category)
         {
-            var categoryRepositoryMock = new Mock<IRepository<Category>>();
+            var categoryRepositoryMock = new Mock<ICategoryRepository>();
 
             categoryRepositoryMock
                 .Setup(x => x.BaseGetByIdAsync(DefaultValueConstants.Common.Id))
                 .Returns(Task.FromResult(category));
+
+            categoryRepositoryMock
+                .Setup(x => x.GetByIdWithSubcategoriesAsync(DefaultValueConstants.Common.Id, DefaultValueConstants.User.UserId))
+                .Returns(Task.FromResult(category));
+
+            var categories = new List<Category> { category };
+
+            categoryRepositoryMock
+                .Setup(x => x.GetAllWithSubcategoriesAsync(DefaultValueConstants.User.UserId))
+                .Returns(Task.FromResult(categories.AsEnumerable()));
+
+            categoryRepositoryMock
+                .Setup(x => x.GetAllPrimaryAsync(DefaultValueConstants.User.UserId))
+                .Returns(Task.FromResult(categories.AsEnumerable()));
+
+            categoryRepositoryMock
+                .Setup(x => x.GetSubcategoriesByParentCategoryIdAsync(DefaultValueConstants.Common.Id, DefaultValueConstants.User.UserId))
+                .Returns(Task.FromResult(categories.AsEnumerable()));
 
             return categoryRepositoryMock.Object;
         }
