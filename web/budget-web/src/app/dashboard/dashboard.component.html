@@ -55,9 +55,14 @@
     <div class="col col-lg-6 col-12 my-2">
       <div class="bg-white p-4 card">
         <h4 class="text-center">Statistics</h4>
-        <div class="fs-1 text-success my-2">Income: {{statistics.income}}</div>
-        <div class="fs-1 text-danger my-2">Expense: {{statistics.expense}}</div>
-        <div class="fs-1 text-primary my-2">Cash Flow: {{statistics.cashFlow}}</div>
+        <div *ngIf="statistics">
+          <div class="fs-1 text-success my-2">Income: {{statistics.income}}</div>
+          <div class="fs-1 text-danger my-2">Expense: {{statistics.expense}}</div>
+          <div class="fs-1 text-primary my-2">Cash Flow: {{statistics.cashFlow}}</div>
+        </div>
+        <div *ngIf="!statistics">
+          <h6 class="text-center">Not Enough Data to display the Statistics</h6>
+        </div>
       </div>
     </div>
   </div>
