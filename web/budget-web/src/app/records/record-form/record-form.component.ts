@@ -8,7 +8,7 @@ import flatpickr from 'flatpickr';
 @Component({
   selector: 'app-record-form',
   templateUrl: './record-form.component.html',
-  styleUrls: ['./record-form.component.scss'],
+  styleUrls: [],
 })
 export class RecordFormComponent implements OnInit {
   @Input() recordForm: FormGroup;
