@@ -31,6 +31,7 @@ import { CategoryFormComponent } from './categories/category-form/category-form.
 import { CreateCategoryComponent } from './categories/create-category/create-category.component';
 import { EditCategoryComponent } from './categories/edit-category/edit-category.component';
 import { AdminComponent } from './admin/admin.component';
+import { NgxScrollTopModule } from 'ngx-scrolltop';
 
 @NgModule({
   declarations: [
@@ -64,6 +65,7 @@ import { AdminComponent } from './admin/admin.component';
     HttpClientModule,
     ToastrModule.forRoot(),
     InfiniteScrollModule,
+    NgxScrollTopModule,
   ],
   providers: [
     {
