@@ -7,9 +7,13 @@
   <h1 class="text-center mb-4">Records</h1>
 
   <div class="text-center mb-4">
-    <div role="button" class="btn btn-accent text-white" (click)="onAddRecordPressed()">
+    <div role="button" class="btn btn-accent text-white mx-2" (click)="onAddRecordPressed()">
       Add Record
     </div>
+    <div role="button" class="btn btn-accent text-white mx-2" (click)="onExportRecordsPressed()">
+      Export Records
+    </div>
+
   </div>
   <div *ngIf="recordGroups && recordGroups.length > 0">
     <div class="card my-2" *ngFor="let recordGroup of recordGroups">

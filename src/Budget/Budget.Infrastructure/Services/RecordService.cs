@@ -9,6 +9,7 @@ using Budget.Core.Models.Pagination;
 using Budget.Core.Models.Records;
 using Microsoft.AspNetCore.Identity;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -64,6 +65,15 @@ namespace Budget.Infrastructure.Services
             }
 
             return RecordModel.FromRecord(record);
+        }
+
+        public async Task<IEnumerable<RecordsExportModel>> GetAllForExportAsync(string userId)
+        {
+            var records = await _recordRepository.GetAllAsync(userId);
+
+            var recordModels = records.Select(r => RecordsExportModel.FromRecord(r));
+
+            return recordModels;
         }
 
         public async Task<PaginationModel<RecordsGroupModel>> GetAllPaginatedAsync(PaginatedRequestModel requestModel, string userId)
