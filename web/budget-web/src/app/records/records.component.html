@@ -13,7 +13,10 @@
     <div role="button" class="btn btn-accent text-white mx-2" (click)="onExportRecordsPressed()">
       Export Records
     </div>
-
+    <input type="file"
+           (change)="onImportRecordsPressed($event)"
+           placeholder="Upload file"
+           accept=".json" />
   </div>
   <div *ngIf="recordGroups && recordGroups.length > 0">
     <div class="card my-2" *ngFor="let recordGroup of recordGroups">

@@ -38,5 +38,17 @@ namespace Budget.Core.Models.Records
                 Amount = record.Amount,
             };
         }
+
+        public static Record ToRecord(RecordsExportModel record)
+        {
+            return new Record
+            {
+                Note = record.Note,
+                RecordType = record.RecordType,
+                DateCreated = record.DateCreated,
+                RecordDate = record.RecordDate,
+                Amount = record.Amount,
+            };
+        }
     }
 }
