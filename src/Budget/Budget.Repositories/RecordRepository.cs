@@ -88,6 +88,21 @@ namespace Budget.Repositories
             return records;
         }
 
+        public async Task<IDictionary<Account, IEnumerable<Record>>> GetRecordsGroupedByAccount(string userId)
+        {
+            var records = await _budgetDbContext.Records
+                .Include(r => r.Account)
+                    .ThenInclude(a => a.Currency)
+                .Include(r => r.FromAccount)
+                .Include(r => r.PaymentType)
+                .Include(r => r.Category)
+                .Where(r => r.Account.UserId == userId)
+                .GroupBy(r => r.Account)
+                .ToDictionaryAsync(r => r.Key, r => r.AsEnumerable());
+
+            return records;
+        }
+
         public async Task<PaginationModel<Record>> GetAllPaginatedAsync(string userId, PaginatedRequestModel queryStringParameters)
         {
             var query = _budgetDbContext.Records

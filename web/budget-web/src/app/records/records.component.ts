@@ -6,6 +6,8 @@ import { PaginatedRequestModel } from '../shared/models/pagination/paginated-req
 import { PaginationModel } from '../shared/models/pagination/pagination.model';
 import { RecordModel } from '../shared/models/records/record.model';
 import { RecordsGroupModel } from '../shared/models/records/records-group.model';
+import { ExportService } from '../shared/services/export.service';
+import { ImportService } from '../shared/services/import.service';
 import { RecordService } from '../shared/services/record.service';
 
 @Component({
@@ -25,6 +27,8 @@ export class RecordsComponent implements OnInit {
     private recordService: RecordService,
     private router: Router,
     private toastr: ToastrService,
+    private exportService: ExportService,
+    private importService: ImportService,
   ) {}
 
   ngOnInit(): void {
@@ -54,6 +58,31 @@ export class RecordsComponent implements OnInit {
 
   onAddRecordPressed() {
     this.router.navigate(['records/create']);
+  }
+
+  onExportRecordsPressed() {
+    this.exportService.exportRecords().subscribe(
+      (response) => this.downloadFile(JSON.stringify(response)),
+      (error) => this.toastr.error(error),
+    );
+  }
+
+  onImportRecordsPressed($event: any) {
+    console.log($event);
+    let fileList: FileList = $event.target.files;
+    if (fileList.length > 0) {
+      let file: File = fileList[0];
+      this.importService.importRecords(file).subscribe(
+        (response) => console.log,
+        (error) => this.toastr.error(error),
+      );
+    }
+  }
+
+  downloadFile(data: any) {
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = window.URL.createObjectURL(blob);
+    window.open(url);
   }
 
   scrolled($event: any) {
