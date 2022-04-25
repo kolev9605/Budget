@@ -63,6 +63,8 @@ namespace Budget.Infrastructure
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IChartService, ChartService>();
             services.AddScoped<IStatisticsService, StatisticsService>();
+            services.AddScoped<IExportService, ExportService>();
+            services.AddScoped<IImportService, ImportService>();
 
             return services;
         }

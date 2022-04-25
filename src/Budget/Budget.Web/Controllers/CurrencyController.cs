@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 namespace Budget.Web.Controllers
 {
     [Authorize]
-    [ApiController]
     [Route("Currency")]
-    public class CurrencyController : ControllerBase
+    public class CurrencyController : BaseController
     {
         private readonly ICurrencyService _currencyService;
         private readonly ICacheManager _cacheManager;

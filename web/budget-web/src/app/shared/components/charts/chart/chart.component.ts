@@ -13,7 +13,7 @@ import 'chartjs-adapter-date-fns';
 @Component({
   selector: 'app-chart',
   templateUrl: './chart.component.html',
-  styleUrls: ['./chart.component.scss'],
+  styleUrls: [],
 })
 export class ChartComponent implements OnInit, OnChanges {
   @Input() type: any;
