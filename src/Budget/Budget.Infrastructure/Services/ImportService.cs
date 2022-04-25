@@ -28,10 +28,10 @@ namespace Budget.Infrastructure.Services
             _categoryRepository = categoryRepository;
         }
 
-        public async Task ImportRecords(string recordsFileJson)
+        public async Task ImportRecords(string recordsFileJson, string userId)
         {
             var records = JsonConvert.DeserializeObject<IEnumerable<RecordsExportModel>>(recordsFileJson);
-            var accounts = await _accountRepository.BaseAllAsync();
+            var accounts = await _accountRepository.GetAllByUserIdAsync(userId);
             var paymentTypes = await _paymentTypeRepository.BaseAllAsync();
             var categories = await _categoryRepository.BaseAllAsync();
 
