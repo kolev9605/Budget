@@ -81,6 +81,8 @@ namespace Budget.Infrastructure.Services
                     await _recordRepository.SaveChangesAsync();
                 }
             }
+
+            await _recordRepository.SaveChangesAsync();
         }
     }
 }
