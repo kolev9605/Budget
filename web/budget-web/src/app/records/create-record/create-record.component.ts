@@ -12,7 +12,6 @@ import { CategoryService } from 'src/app/shared/services/category.service';
 import { PaymentTypeService } from 'src/app/shared/services/payment-type.service';
 import { RecordService } from 'src/app/shared/services/record.service';
 import { RecordTypes } from 'src/app/shared/constants/constants';
-import { DateService } from 'src/app/shared/services/date.service';
 import { RecordsValidations } from 'src/app/shared/constants/validations';
 
 @Component({
@@ -38,7 +37,6 @@ export class CreateRecordComponent implements OnInit {
     private paymentTypeService: PaymentTypeService,
     private recordService: RecordService,
     private router: Router,
-    private dateService: DateService,
   ) {}
 
   ngOnInit(): void {
@@ -81,7 +79,7 @@ export class CreateRecordComponent implements OnInit {
 
         this.createRecordForm.patchValue({
           account: this.accounts[0].id,
-          paymentType: this.paymentTypes.find((x) => (x.name = 'Debit Card'))?.id,
+          paymentType: this.paymentTypes.find((x) => x.name == 'Debit Card')?.id,
         });
       },
       (error) => {
@@ -108,7 +106,7 @@ export class CreateRecordComponent implements OnInit {
       +this.createRecordForm.value.category,
       +this.createRecordForm.value.paymentType,
       this.selectedRecordType,
-      this.createRecordForm.value.recordDate,
+      new Date(this.createRecordForm.value.recordDate),
       this.createRecordForm.value.fromAccount,
     );
 

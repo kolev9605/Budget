@@ -11,7 +11,6 @@ import { ChartService } from '../shared/services/chart.service';
 import { CashFlowChartModel } from '../shared/models/charts/cash-flow-chart.model';
 import { RecordService } from '../shared/services/record.service';
 import { RecordsDateRangeModel } from '../shared/models/records/records-date-range.model';
-import { DateService } from '../shared/services/date.service';
 import { StatisticsService } from '../shared/services/statistics.service';
 import { StatisticsResultModel } from '../shared/models/statistics/statistics-request.model';
 import { StatisticsRequestModel } from '../shared/models/statistics/statistics-response.model';
@@ -44,7 +43,6 @@ export class DashboardComponent implements OnInit {
     private router: Router,
     private chartService: ChartService,
     private recordService: RecordService,
-    private dateService: DateService,
     private statisticsService: StatisticsService,
   ) {}
 
@@ -168,8 +166,8 @@ export class DashboardComponent implements OnInit {
 
   loadData(): void {
     const requestModel = new CashFlowChartRequestModel(
-      this.dateService.subtractUserTimezoneOffset(startOfMonth(this.selectedDate)),
-      this.dateService.subtractUserTimezoneOffset(endOfMonth(this.selectedDate)),
+      startOfMonth(this.selectedDate),
+      endOfMonth(this.selectedDate),
       this.selectedAccountIds,
     );
 
