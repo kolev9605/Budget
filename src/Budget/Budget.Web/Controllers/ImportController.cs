@@ -31,7 +31,7 @@ namespace Budget.Web.Controllers
                 fileContents = await reader.ReadToEndAsync();
             }
 
-            await _importService.ImportRecords(fileContents);
+            await _importService.ImportRecords(fileContents, LoggedInUserId);
 
             return Ok();
         }
