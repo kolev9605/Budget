@@ -80,6 +80,8 @@ namespace Budget.Infrastructure.Services
         {
             var paginatedRecords = await _recordRepository.GetAllPaginatedAsync(userId, requestModel);
 
+            paginatedRecords.Items.ForEach(r => r.RecordDate = r.RecordDate.ToLocalTime());
+
             var recordsGroupedByDate = paginatedRecords.Items
                 .GroupBy(r => r.RecordDate.Date)
                 .ToDictionary(r => r.Key, r => r.ToList())
