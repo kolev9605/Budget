@@ -101,10 +101,6 @@ export class CreateRecordComponent implements OnInit {
       return;
     }
 
-    const date = this.dateService.subtractUserTimezoneOffset(
-      new Date(this.createRecordForm.value.recordDate),
-    );
-
     const createRecordModel = new CreateRecordModel(
       this.createRecordForm.value.note,
       this.createRecordForm.value.amount,
@@ -112,7 +108,7 @@ export class CreateRecordComponent implements OnInit {
       +this.createRecordForm.value.category,
       +this.createRecordForm.value.paymentType,
       this.selectedRecordType,
-      date,
+      this.createRecordForm.value.recordDate,
       this.createRecordForm.value.fromAccount,
     );
 
