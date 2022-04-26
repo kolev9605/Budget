@@ -1,5 +1,6 @@
 ﻿using Budget.Core.Entities;
 using System;
+using Budget.Common;
 
 namespace Budget.Core.Models.Records
 {
@@ -41,12 +42,14 @@ namespace Budget.Core.Models.Records
 
         public static Record ToRecord(RecordsExportModel record)
         {
+            var recordDate = record.RecordDate.ToUniversalTime();
+
             return new Record
             {
                 Note = record.Note,
                 RecordType = record.RecordType,
-                DateCreated = record.DateCreated,
-                RecordDate = record.RecordDate,
+                DateCreated = record.DateCreated.SetKindUtc(),
+                RecordDate = recordDate.SetKindUtc(),
                 Amount = record.Amount,
             };
         }
