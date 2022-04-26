@@ -42,14 +42,12 @@ namespace Budget.Core.Models.Records
 
         public static Record ToRecord(RecordsExportModel record)
         {
-            var recordDate = record.RecordDate.ToUniversalTime();
-
             return new Record
             {
                 Note = record.Note,
                 RecordType = record.RecordType,
                 DateCreated = record.DateCreated.SetKindUtc(),
-                RecordDate = recordDate.SetKindUtc(),
+                RecordDate = record.RecordDate.SetKindUtc(),
                 Amount = record.Amount,
             };
         }
