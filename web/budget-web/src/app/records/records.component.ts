@@ -4,7 +4,6 @@ import { ToastrService } from 'ngx-toastr';
 import { concatMap, Observable, Subject, tap } from 'rxjs';
 import { PaginatedRequestModel } from '../shared/models/pagination/paginated-request.model';
 import { PaginationModel } from '../shared/models/pagination/pagination.model';
-import { RecordModel } from '../shared/models/records/record.model';
 import { RecordsGroupModel } from '../shared/models/records/records-group.model';
 import { ExportService } from '../shared/services/export.service';
 import { ImportService } from '../shared/services/import.service';
@@ -68,13 +67,15 @@ export class RecordsComponent implements OnInit {
   }
 
   onImportRecordsPressed($event: any) {
-    console.log($event);
     let fileList: FileList = $event.target.files;
     if (fileList.length > 0) {
       let file: File = fileList[0];
       this.importService.importRecords(file).subscribe(
-        (response) => console.log,
-        (error) => this.toastr.error(error),
+        (response) => ($event.target.value = null),
+        (error) => {
+          this.toastr.error(error);
+          $event.target.value = null;
+        },
       );
     }
   }

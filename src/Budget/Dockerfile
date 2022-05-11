@@ -7,7 +7,6 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-RUN ls
 COPY ["Budget.Web/Budget.Web.csproj", "Budget.Web/"]
 COPY ["Budget.Repositories/Budget.Repositories.csproj", "Budget.Repositories/"]
 COPY ["Budget.Core/Budget.Core.csproj", "Budget.Core/"]

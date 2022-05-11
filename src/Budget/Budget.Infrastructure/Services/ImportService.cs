@@ -1,4 +1,5 @@
 ﻿using Budget.Core.Entities;
+using Budget.Core.Exceptions;
 using Budget.Core.Interfaces.Repositories;
 using Budget.Core.Interfaces.Services;
 using Budget.Core.Models.Records;
@@ -31,6 +32,11 @@ namespace Budget.Infrastructure.Services
         public async Task ImportRecords(string recordsFileJson, string userId)
         {
             var records = JsonConvert.DeserializeObject<IEnumerable<RecordsExportModel>>(recordsFileJson);
+            if (records == null)
+            {
+                throw new BudgetValidationException();
+            }
+
             var accounts = await _accountRepository.GetAllByUserIdAsync(userId);
             var paymentTypes = await _paymentTypeRepository.BaseAllAsync();
             var categories = await _categoryRepository.BaseAllAsync();
@@ -43,7 +49,7 @@ namespace Budget.Infrastructure.Services
                 var account = accounts.FirstOrDefault(a => a.Name == recordModel.Account);
                 if (account == null)
                 {
-                    throw new System.Exception();
+                    throw new BudgetValidationException();
                 }
 
                 if (recordModel.FromAccount != null)
@@ -51,7 +57,7 @@ namespace Budget.Infrastructure.Services
                     var fromAccount = accounts.FirstOrDefault(a => a.Name == recordModel.FromAccount);
                     if (fromAccount == null)
                     {
-                        throw new System.Exception();
+                        throw new BudgetValidationException();
                     }
 
                     record.FromAccount = fromAccount;
@@ -60,13 +66,13 @@ namespace Budget.Infrastructure.Services
                 var paymentType = paymentTypes.FirstOrDefault(pt => pt.Name == recordModel.PaymentType);
                 if (paymentType == null)
                 {
-                    throw new System.Exception();
+                    throw new BudgetValidationException();
                 }
 
                 var category = categories.FirstOrDefault(pt => pt.Name == recordModel.Category);
                 if (category == null)
                 {
-                    throw new System.Exception();
+                    throw new BudgetValidationException();
                 }
 
                 record.Account = account;
