@@ -63,7 +63,7 @@ if (app.Environment.IsDevelopment())
 
 await app.SeedAsync();
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseCors(x => x.AllowAnyHeader()
       .AllowAnyMethod()
