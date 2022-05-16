@@ -10,7 +10,6 @@ using Budget.Core.Models.Pagination;
 
 namespace Budget.Web.Controllers
 {
-    [Authorize]
     [Route("Records")]
     public class RecordsController : BaseController
     {

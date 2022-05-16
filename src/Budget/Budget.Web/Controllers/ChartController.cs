@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 namespace Budget.Web.Controllers
 {
-    [Authorize]
     [Route("Chart")]
     public class ChartController : BaseController
     {

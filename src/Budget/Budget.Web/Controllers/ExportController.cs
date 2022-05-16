@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 namespace Budget.Web.Controllers
 {
-    [Authorize]
     [Route("Export")]
     public class ExportController : BaseController
     {

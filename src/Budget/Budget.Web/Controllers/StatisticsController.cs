@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace Budget.Web.Controllers
 {
-    [Authorize]
     [Route("Statistics")]
     public class StatisticsController : BaseController
     {

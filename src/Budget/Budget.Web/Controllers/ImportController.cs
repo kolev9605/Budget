@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace Budget.Web.Controllers
 {
-    [Authorize]
     [Route("Import")]
     public class ImportController : BaseController
     {

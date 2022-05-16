@@ -1,10 +1,12 @@
 ﻿using Budget.Core.Interfaces.Services;
 using Budget.Core.Models.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace Budget.Web.Controllers
 {
+    [AllowAnonymous]
     [Route("Authentication")]
     public class AuthenticationController : BaseController
     {

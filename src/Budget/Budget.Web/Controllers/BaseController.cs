@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace Budget.Web.Controllers
 {
+    [Authorize]
     [ApiController]
     public abstract class BaseController : ControllerBase
     {
