@@ -1,9 +1,9 @@
 {
-    "taskDefinitionArn": "arn:aws:ecs:us-east-1:534866882277:task-definition/budget-api:3",
+    "taskDefinitionArn": "arn:aws:ecs:us-east-1:534866882277:task-definition/budget-private-repo-td:1",
     "containerDefinitions": [
         {
             "name": "budget-api",
-            "image": "public.ecr.aws/d7f7q9j4/budget:latest",
+            "image": "534866882277.dkr.ecr.us-east-1.amazonaws.com/budget-repository:latest",
             "cpu": 0,
             "links": [],
             "portMappings": [
@@ -31,7 +31,7 @@
                 "logDriver": "awslogs",
                 "options": {
                     "awslogs-create-group": "true",
-                    "awslogs-group": "/ecs/budget-api",
+                    "awslogs-group": "/ecs/budget-private-repo-td",
                     "awslogs-region": "us-east-1",
                     "awslogs-stream-prefix": "ecs"
                 },
@@ -40,11 +40,11 @@
             "systemControls": []
         }
     ],
-    "family": "budget-api",
+    "family": "budget-private-repo-td",
     "taskRoleArn": "arn:aws:iam::534866882277:role/ecsTaskExecutionRole",
     "executionRoleArn": "arn:aws:iam::534866882277:role/ecsTaskExecutionRole",
     "networkMode": "awsvpc",
-    "revision": 3,
+    "revision": 1,
     "volumes": [],
     "status": "ACTIVE",
     "requiresAttributes": [
@@ -55,6 +55,9 @@
             "name": "ecs.capability.execution-role-awslogs"
         },
         {
+            "name": "com.amazonaws.ecs.capability.ecr-auth"
+        },
+        {
             "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
         },
         {
@@ -62,6 +65,9 @@
         },
         {
             "name": "com.amazonaws.ecs.capability.task-iam-role"
+        },
+        {
+            "name": "ecs.capability.execution-role-ecr-pull"
         },
         {
             "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
@@ -87,7 +93,7 @@
     ],
     "cpu": "1024",
     "memory": "3072",
-    "registeredAt": "2022-05-19T15:02:46.457Z",
+    "registeredAt": "2022-05-20T14:46:43.064Z",
     "registeredBy": "arn:aws:iam::534866882277:user/kolev9605",
     "tags": [
         {
@@ -96,7 +102,7 @@
         },
         {
             "key": "ecs:taskDefinition:stackId",
-            "value": "arn:aws:cloudformation:us-east-1:534866882277:stack/ECS-Console-V2-TaskDefinition-55069706-883e-4cf5-8af4-f81fae65df86/ba2c8ee0-d784-11ec-88c9-12a71a1a2721"
+            "value": "arn:aws:cloudformation:us-east-1:534866882277:stack/ECS-Console-V2-TaskDefinition-5d7bf9dd-c976-4a64-ac29-b01dedf919ae/a59a4360-d84b-11ec-bfdb-0a51f768d4cd"
         }
     ]
 }
