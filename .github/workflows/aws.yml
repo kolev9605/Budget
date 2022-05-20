@@ -1,6 +1,6 @@
 # This workflow will build and push a new container image to Amazon ECR,
 # and then will deploy a new task definition to Amazon ECS, when there is a push to the main branch.
-#
+# public.ecr.aws/d7f7q9j4/budget:latest
 # To use this workflow, you will need to complete the following set-up steps:
 #
 # 1. Create an ECR repository to store your images.
@@ -75,9 +75,12 @@ jobs:
         # push it to ECR so that it can
         # be deployed to ECS.
         cd src/Budget
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+        docker build -t budget .
+        docker tag budget:latest public.ecr.aws/d7f7q9j4/budget:$IMAGE_TAG
+        docker push public.ecr.aws/d7f7q9j4/budget:$IMAGE_TAG
+        # docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        # docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        # echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
     - name: Fill in the new image ID in the Amazon ECS task definition
       id: task-def
