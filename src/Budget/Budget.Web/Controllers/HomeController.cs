@@ -10,6 +10,6 @@ namespace Budget.Web.Controllers
         [HttpGet]
         [Route("")]
         public IActionResult Index()
-            => Ok("Hello from Budget! CI/CD Working?! 25/05");
+            => Ok("Hello from Budget! CI/CD Working?!");
     }
 }
