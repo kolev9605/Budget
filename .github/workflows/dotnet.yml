@@ -18,12 +18,12 @@ jobs:
       - name: Restore dependencies
         run: |
           cd src/Budget
-          dotnet restore
+          dotnet restore Budget.sln
       - name: Build
         run: |
           cd src/Budget
-          dotnet build --no-restore
+          dotnet build Budget.sln --no-restore
       - name: Test
         run: |
           cd src/Budget
-          dotnet test --no-build --verbosity normal
+          dotnet test Budget.sln --no-build --verbosity normal
