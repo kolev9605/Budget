@@ -38,7 +38,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budget.Tests.Core", "Budget
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{36125806-9278-4519-BE6B-069A63973B33}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Budget.CsvParser", "Budget.CsvParser\Budget.CsvParser.csproj", "{9697B208-C522-4E65-B741-8BE962520B8E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budget.CsvParser", "Budget.CsvParser\Budget.CsvParser.csproj", "{9697B208-C522-4E65-B741-8BE962520B8E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -82,6 +82,10 @@ Global
 		{36125806-9278-4519-BE6B-069A63973B33}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{36125806-9278-4519-BE6B-069A63973B33}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{36125806-9278-4519-BE6B-069A63973B33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9697B208-C522-4E65-B741-8BE962520B8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9697B208-C522-4E65-B741-8BE962520B8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9697B208-C522-4E65-B741-8BE962520B8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9697B208-C522-4E65-B741-8BE962520B8E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
