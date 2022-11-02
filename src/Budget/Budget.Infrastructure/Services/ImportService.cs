@@ -43,7 +43,6 @@ namespace Budget.Infrastructure.Services
             _dateTimeProvider = dateTimeProvider;
             _currencyRepository = currencyRepository;
 
-
             _walletCategoryMapping = new(StringComparer.InvariantCultureIgnoreCase)
             {
                 { "Food & Drinks", "Eating out" },
@@ -117,114 +116,12 @@ namespace Budget.Infrastructure.Services
                 { "Missing", "Missing" },
                 { "TRANSFER", "Transfer" },
             };
-
             _walletRecordTypeMapping = new(StringComparer.InvariantCultureIgnoreCase)
             {
                 { "income", RecordType.Income },
                 { "expenses", RecordType.Expense },
                 { "transfer", RecordType.Transfer }
             };
-        }
-
-        public async Task<int> ImportWalletRecordsAsync(string walletFileContent, string userId)
-        {
-            var records = _csvParser.ParseCsvString<WalletCsvExportModel>(walletFileContent);
-            var paymentTypes = await _paymentTypesRepository.BaseAllAsync();
-            var currencies = await _currencyRepository.BaseAllAsync();
-            var debitCardPaymentType = paymentTypes.FirstOrDefault(pt => pt.Name == "Debit Card");
-            var cashPaymentType = paymentTypes.FirstOrDefault(pt => pt.Name == "Cash");
-
-            var insertedRecords = new List<Record>();
-
-            foreach (var record in records)
-            {
-                var categoryFromDatabase = await MapCategoryAsync(record);
-                var account = await GetOrCreateAccountAsync(record, userId, currencies);
-                var paymentType = MapPaymentType(debitCardPaymentType, cashPaymentType, account);
-                var recordType = MapRecordType(record);
-
-                var date = record.Date.ToUniversalTime();
-
-                var recordToAdd = new Record()
-                {
-                    Account = account,
-                    Category = categoryFromDatabase,
-                    Note = record.Note,
-                    Amount = record.Amount,
-                    RecordType = recordType.Value,
-                    PaymentType = paymentType,
-                    RecordDate = date,
-                    DateCreated = _dateTimeProvider.Now,
-                };
-
-                var createdRecord = await _recordRepository.CreateAsync(recordToAdd);
-                insertedRecords.Add(createdRecord);
-            }
-
-            var allRecords = await _recordRepository.GetAllAsync(userId);
-
-            var transfers = allRecords
-                .Where(r => r.RecordType == RecordType.Transfer)
-                .GroupBy(r => new { r.RecordDate })
-                .ToDictionary(r => r.Key, r => r.ToList());
-
-            foreach (var transferPair in transfers)
-            {
-                var groupedByAmount = transferPair.Value
-                    .GroupBy(r => Math.Abs(r.Amount));
-
-                foreach (var group in groupedByAmount)
-                {
-                    var transferFromRecords = group.Where(r => r.Amount < 0);
-                    var transferToRecords = group.Where(r => r.Amount > 0);
-
-                    foreach (var transferFrom in transferFromRecords)
-                    {
-                        transferFrom.FromAccountId = transferToRecords.FirstOrDefault().AccountId;
-                        await _recordRepository.UpdateAsync(transferFrom);
-                    }
-
-                    foreach (var transferTo in transferToRecords)
-                    {
-                        transferTo.FromAccountId = transferFromRecords.FirstOrDefault().AccountId;
-                        await _recordRepository.UpdateAsync(transferTo);
-                    }
-                }
-            }
-
-            return insertedRecords.Count;
-        }
-
-        private RecordType? MapRecordType(WalletCsvExportModel record)
-        {
-            RecordType? recordType = null;
-            if (record.Transfer)
-            {
-                recordType = RecordType.Transfer;
-            }
-            else
-            {
-                recordType = _walletRecordTypeMapping.GetValueOrDefault(record.Type);
-            }
-
-            if (recordType == null)
-            {
-                throw new ArgumentNullException(nameof(recordType));
-            }
-
-            return recordType;
-        }
-
-        private static PaymentType MapPaymentType(PaymentType debitCardPaymentType, PaymentType cashPaymentType, Account account)
-        {
-            if (account.Name == "Cash")
-            {
-                return cashPaymentType;
-            }
-            else
-            {
-                return debitCardPaymentType;
-            }
         }
 
         public async Task ImportRecordsAsync(string recordsFileJson, string userId)
@@ -289,7 +186,114 @@ namespace Budget.Infrastructure.Services
             await _recordRepository.SaveChangesAsync();
         }
 
-        public async Task<Account> GetOrCreateAccountAsync(
+        public async Task<int> ImportWalletRecordsAsync(string walletFileContent, string userId)
+        {
+            var records = _csvParser.ParseCsvString<WalletCsvExportModel>(walletFileContent);
+            var paymentTypes = await _paymentTypesRepository.BaseAllAsync();
+            var currencies = await _currencyRepository.BaseAllAsync();
+            var debitCardPaymentType = paymentTypes.FirstOrDefault(pt => pt.Name == "Debit Card");
+            var cashPaymentType = paymentTypes.FirstOrDefault(pt => pt.Name == "Cash");
+
+            var insertedRecords = new List<Record>();
+
+            foreach (var record in records)
+            {
+                var categoryFromDatabase = await MapCategoryAsync(record);
+                var account = await GetOrCreateAccountAsync(record, userId, currencies);
+                var paymentType = MapPaymentType(debitCardPaymentType, cashPaymentType, account);
+                var recordType = MapRecordType(record);
+
+                // The dates in the Walled export are in local time
+                var date = record.Date.ToUniversalTime();
+
+                var recordToAdd = new Record()
+                {
+                    Account = account,
+                    Category = categoryFromDatabase,
+                    Note = record.Note,
+                    Amount = record.Amount,
+                    RecordType = recordType.Value,
+                    PaymentType = paymentType,
+                    RecordDate = date,
+                    DateCreated = _dateTimeProvider.Now,
+                };
+
+                var createdRecord = await _recordRepository.CreateAsync(recordToAdd);
+                insertedRecords.Add(createdRecord);
+            }
+
+            await LinkTransfersAsync(userId);
+
+            return insertedRecords.Count;
+        }
+
+        private async Task LinkTransfersAsync(string userId)
+        {
+            var allRecords = await _recordRepository.GetAllAsync(userId);
+
+            var transfers = allRecords
+                .Where(r => r.RecordType == RecordType.Transfer)
+                .GroupBy(r => new { r.RecordDate })
+                .ToDictionary(r => r.Key, r => r.ToList());
+
+            foreach (var transferPair in transfers)
+            {
+                var groupedByAmount = transferPair.Value
+                    .GroupBy(r => Math.Abs(r.Amount));
+
+                foreach (var group in groupedByAmount)
+                {
+                    var transferFromRecords = group.Where(r => r.Amount < 0);
+                    var transferToRecords = group.Where(r => r.Amount > 0);
+
+                    foreach (var transferFrom in transferFromRecords)
+                    {
+                        transferFrom.FromAccountId = transferToRecords.FirstOrDefault().AccountId;
+                        await _recordRepository.UpdateAsync(transferFrom);
+                    }
+
+                    foreach (var transferTo in transferToRecords)
+                    {
+                        transferTo.FromAccountId = transferFromRecords.FirstOrDefault().AccountId;
+                        await _recordRepository.UpdateAsync(transferTo);
+                    }
+                }
+            }
+        }
+
+        private RecordType? MapRecordType(WalletCsvExportModel record)
+        {
+            RecordType? recordType = null;
+            if (record.Transfer)
+            {
+                recordType = RecordType.Transfer;
+            }
+            else
+            {
+                recordType = _walletRecordTypeMapping.GetValueOrDefault(record.Type);
+            }
+
+            if (recordType == null)
+            {
+                throw new ArgumentNullException(nameof(recordType));
+            }
+
+            return recordType;
+        }
+
+        private static PaymentType MapPaymentType(PaymentType debitCardPaymentType, PaymentType cashPaymentType, Account account)
+        {
+            if (account.Name == "Cash")
+            {
+                return cashPaymentType;
+            }
+            else
+            {
+                return debitCardPaymentType;
+            }
+        }
+
+        private async Task<Account> GetOrCreateAccountAsync(
             WalletCsvExportModel record, 
             string userId, 
             IEnumerable<Currency> currencies)
