@@ -41,7 +41,13 @@ export class RecordsComponent implements OnInit {
     this.recordsObservable.subscribe({
       next: (response: PaginationModel<RecordsGroupModel>) => {
         this.isLoading = false;
-        this.recordGroups.push(...response.items);
+        let existingGroup = this.recordGroups.find((g) => g.date === response.items[0].date);
+        if (existingGroup) {
+          existingGroup.records = [...existingGroup.records, ...response.items[0].records];
+        } else {
+          this.recordGroups = [...this.recordGroups, ...response.items];
+        }
+
         this.pageNumber = response.pageNumber;
         this.hasNextPage = response.hasNextPage;
       },
