@@ -1,4 +1,5 @@
 ﻿using Budget.Core.Entities;
+using Budget.Core.Models.Pagination;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -15,6 +16,12 @@ namespace Budget.Core.Interfaces.Repositories
 
         Task<IEnumerable<Record>> GetAllAsync(string userId);
 
-        Task<IEnumerable<Record>> GetAllByMonthAndAccountsAsync(string userId, int month, IEnumerable<int> accountIds);
+        Task<IDictionary<Account, IEnumerable<Record>>> GetRecordsGroupedByAccount(string userId);
+
+        Task<PaginationModel<Record>> GetAllPaginatedAsync(string userId, PaginatedRequestModel queryStringParameters);
+
+        Task<IEnumerable<Record>> GetAllInRangeAndAccountsAsync(string userId, DateTime startDate, DateTime endDate, IEnumerable<int> accountIds);
+
+        Task<IEnumerable<Record>> GetAllInRangeAsync(string userId, DateTime startDate, DateTime endDate);
     }
 }

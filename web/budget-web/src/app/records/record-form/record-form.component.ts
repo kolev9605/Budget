@@ -8,7 +8,7 @@ import flatpickr from 'flatpickr';
 @Component({
   selector: 'app-record-form',
   templateUrl: './record-form.component.html',
-  styleUrls: ['./record-form.component.scss'],
+  styleUrls: [],
 })
 export class RecordFormComponent implements OnInit {
   @Input() recordForm: FormGroup;
@@ -31,7 +31,7 @@ export class RecordFormComponent implements OnInit {
       altInput: true,
       altFormat: 'F j, Y H:i',
       dateFormat: 'Y/m/d H:i',
-      defaultDate: this.inEditMode ? this.recordForm.value.recordDate : new Date(),
+      defaultDate: this.recordForm.value.recordDate,
       time_24hr: true,
     });
   }

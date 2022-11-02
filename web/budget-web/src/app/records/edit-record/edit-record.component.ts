@@ -14,13 +14,13 @@ import { CategoryService } from 'src/app/shared/services/category.service';
 import { PaymentTypeService } from 'src/app/shared/services/payment-type.service';
 import { RecordService } from 'src/app/shared/services/record.service';
 import { format } from 'date-fns';
-import { DateService } from 'src/app/shared/services/date.service';
-import { Formats } from '../../shared/constants';
+import { Formats } from '../../shared/constants/constants';
+import { RecordsValidations } from 'src/app/shared/constants/validations';
 
 @Component({
   selector: 'app-edit-record',
   templateUrl: './edit-record.component.html',
-  styleUrls: ['./edit-record.component.scss'],
+  styleUrls: [],
 })
 export class EditRecordComponent implements OnInit {
   isLoading: boolean;
@@ -42,18 +42,17 @@ export class EditRecordComponent implements OnInit {
     private recordService: RecordService,
     private router: Router,
     private route: ActivatedRoute,
-    private dateService: DateService,
   ) {}
 
   ngOnInit(): void {
     this.editRecordForm = this.fb.group({
-      note: ['', [Validators.required]],
+      note: [null, [Validators.maxLength(RecordsValidations.NoteMaxtLength)]],
       amount: [null, [Validators.required]],
-      fromAccount: [null, [Validators.required]],
+      fromAccount: [null, []],
       account: [null, [Validators.required]],
       category: [null, [Validators.required]],
       paymentType: [null, [Validators.required]],
-      recordDate: [null, [Validators.required]],
+      recordDate: [new Date(), [Validators.required]],
     });
 
     forkJoin({
@@ -94,9 +93,14 @@ export class EditRecordComponent implements OnInit {
   }
 
   onSubmit(): void {
-    const date = this.dateService.subtractUserTimezoneOffset(
-      new Date(this.editRecordForm.value.recordDate),
-    );
+    if (!this.editRecordForm.valid) {
+      Object.keys(this.editRecordForm.controls).forEach((field) => {
+        const control = this.editRecordForm.get(field);
+        control?.markAsTouched({ onlySelf: true });
+      });
+
+      return;
+    }
 
     const updateRecordModel = new UpdateRecordModel(
       this.record.id,
@@ -106,7 +110,7 @@ export class EditRecordComponent implements OnInit {
       +this.editRecordForm.value.category,
       +this.editRecordForm.value.paymentType,
       this.selectedRecordType,
-      date,
+      new Date(this.editRecordForm.value.recordDate),
       this.editRecordForm.value.fromAccount,
     );
 

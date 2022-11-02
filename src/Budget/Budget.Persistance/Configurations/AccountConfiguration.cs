@@ -1,4 +1,5 @@
-﻿using Budget.Core.Entities;
+﻿using Budget.Core.Constants;
+using Budget.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,7 +11,7 @@ namespace Budget.Persistance.Configurations
         {
             builder.Property(a => a.Name)
                 .IsRequired()
-                .HasMaxLength(50);
+                .HasMaxLength(Validations.Accounts.NameMaxLength);
 
             builder.Property(a => a.UserId)
                 .IsRequired();

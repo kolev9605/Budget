@@ -15,10 +15,11 @@ namespace Budget.Repositories
         {
         }
 
-        public async Task<Account> GetByIdWithCurrencyAsync(int accountId)
+        public async Task<Account> GetByIdWithCurrencyAsync(int accountId, string userId)
             => await _budgetDbContext.Accounts
                 .Include(a => a.Currency)
                 .Include(a => a.Records)
+                .Where(a => a.UserId == userId)
                 .FirstOrDefaultAsync(a => a.Id == accountId);
 
         public async Task<IEnumerable<Account>> GetAllByUserIdAsync(string userId)

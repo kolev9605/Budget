@@ -4,4 +4,5 @@ export class CategoryModel {
   public categoryType: string;
   public parentCategoryId: number;
   public subCategories: CategoryModel[];
+  public isInitial: boolean;
 }

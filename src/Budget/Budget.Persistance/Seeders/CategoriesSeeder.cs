@@ -37,6 +37,7 @@ namespace Budget.Persistance.Seeders
                             new Category() { Name = "Services", CategoryType = CategoryType.Need },
                             new Category() { Name = "Internet", CategoryType = CategoryType.Need },
                             new Category() { Name = "Phone, mobile phone", CategoryType = CategoryType.Need },
+                            new Category() { Name = "New house", CategoryType = CategoryType.Need },
                         }
                     },
                     new Category()
@@ -168,9 +169,19 @@ namespace Budget.Persistance.Seeders
                     },
                 };
 
+                var other = new List<Category>
+                {
+                    new Category()
+                    {
+                        Name = "Transfer",
+                        CategoryType = CategoryType.Transfer,
+                    },
+                };
+
                 await context.Categories.AddRangeAsync(needs);
                 await context.Categories.AddRangeAsync(wants);
                 await context.Categories.AddRangeAsync(incomes);
+                await context.Categories.AddRangeAsync(other);
             }
 
             return context;

@@ -41,16 +41,56 @@ namespace Budget.Tests.Core
                 .Setup(x => x.BaseGetByIdAsync(DefaultValueConstants.Common.Id))
                 .Returns(Task.FromResult(account));
 
+            accountRepositoryMock
+                .Setup(x => x.GetByIdWithCurrencyAsync(DefaultValueConstants.Common.Id, DefaultValueConstants.User.UserId))
+                .Returns(Task.FromResult(account));
+
+            var accounts = new List<Account> { account };
+
+            accountRepositoryMock
+                .Setup(x => x.GetAllByUserIdAsync(DefaultValueConstants.User.UserId))
+                .Returns(Task.FromResult(accounts.AsEnumerable()));
+
+            accountRepositoryMock
+                .Setup(x => x.CreateAsync(It.IsAny<Account>(), It.IsAny<bool>()))
+                .Returns(Task.FromResult(account));
+
+            accountRepositoryMock
+                .Setup(x => x.UpdateAsync(It.IsAny<Account>(), It.IsAny<bool>()))
+                .Returns(Task.FromResult(account));
+
+            accountRepositoryMock
+                .Setup(x => x.DeleteAsync(It.IsAny<int>(), It.IsAny<bool>()))
+                .Returns(Task.FromResult(account));
+
             return accountRepositoryMock.Object;
         }
 
-        public static IRepository<Category> SetupCategoryRepository(Category category)
+        public static ICategoryRepository SetupCategoryRepository(Category category)
         {
-            var categoryRepositoryMock = new Mock<IRepository<Category>>();
+            var categoryRepositoryMock = new Mock<ICategoryRepository>();
 
             categoryRepositoryMock
                 .Setup(x => x.BaseGetByIdAsync(DefaultValueConstants.Common.Id))
                 .Returns(Task.FromResult(category));
+
+            categoryRepositoryMock
+                .Setup(x => x.GetByIdWithSubcategoriesAsync(DefaultValueConstants.Common.Id, DefaultValueConstants.User.UserId))
+                .Returns(Task.FromResult(category));
+
+            var categories = new List<Category> { category };
+
+            categoryRepositoryMock
+                .Setup(x => x.GetAllWithSubcategoriesAsync(DefaultValueConstants.User.UserId))
+                .Returns(Task.FromResult(categories.AsEnumerable()));
+
+            categoryRepositoryMock
+                .Setup(x => x.GetAllPrimaryAsync(DefaultValueConstants.User.UserId))
+                .Returns(Task.FromResult(categories.AsEnumerable()));
+
+            categoryRepositoryMock
+                .Setup(x => x.GetSubcategoriesByParentCategoryIdAsync(DefaultValueConstants.Common.Id, DefaultValueConstants.User.UserId))
+                .Returns(Task.FromResult(categories.AsEnumerable()));
 
             return categoryRepositoryMock.Object;
         }
@@ -63,6 +103,12 @@ namespace Budget.Tests.Core
                 .Setup(x => x.BaseGetByIdAsync(DefaultValueConstants.Common.Id))
                 .Returns(Task.FromResult(paymentType));
 
+            var paymentTypes = new List<PaymentType> { paymentType };
+
+            paymentTypeRepositoryMock
+                .Setup(x => x.BaseAllAsync())
+                .Returns(Task.FromResult(paymentTypes.AsEnumerable()));
+
             return paymentTypeRepositoryMock.Object;
         }
 
@@ -73,6 +119,12 @@ namespace Budget.Tests.Core
             currencyRepositoryMock
                 .Setup(x => x.BaseGetByIdAsync(DefaultValueConstants.Common.Id))
                 .Returns(Task.FromResult(currency));
+
+            var currencies = new List<Currency> { currency };
+
+            currencyRepositoryMock
+                .Setup(x => x.BaseAllAsync())
+                .Returns(Task.FromResult(currencies.AsEnumerable()));
 
             return currencyRepositoryMock.Object;
         }

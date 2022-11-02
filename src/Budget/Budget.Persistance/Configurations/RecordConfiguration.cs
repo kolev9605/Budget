@@ -1,4 +1,5 @@
-﻿using Budget.Core.Entities;
+﻿using Budget.Core.Constants;
+using Budget.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -9,7 +10,7 @@ namespace Budget.Persistance.Configurations
         public void Configure(EntityTypeBuilder<Record> builder)
         {
             builder.Property(p => p.Note)
-                .HasMaxLength(100);
+                .HasMaxLength(Validations.Records.NoteMaxLength);
 
             builder.HasOne(r => r.PaymentType)
                 .WithMany(pt => pt.Records)

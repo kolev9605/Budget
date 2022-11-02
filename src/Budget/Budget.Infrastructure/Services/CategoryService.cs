@@ -1,4 +1,5 @@
-﻿using Budget.Core.Entities;
+﻿using Budget.Core.Constants;
+using Budget.Core.Exceptions;
 using Budget.Core.Interfaces.Repositories;
 using Budget.Core.Interfaces.Services;
 using Budget.Core.Models.Categories;
@@ -17,11 +18,28 @@ namespace Budget.Infrastructure.Services
             _categoriesRepository = categoriesRepository;
         }
 
+        public async Task<CategoryModel> GetByIdAsync(int categoryId, string userId)
+        {
+            var category = await _categoriesRepository
+                .GetByIdWithSubcategoriesAsync(categoryId, userId);
+
+            if (category == null)
+            {
+                throw new BudgetValidationException(
+                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(category)));
+            }
+
+            var categoryModel = CategoryModel.FromCategory(category);
+
+            return categoryModel;
+        }
+
         public async Task<IEnumerable<CategoryModel>> GetAllAsync(string userId)
         {
             var categories = await _categoriesRepository.GetAllWithSubcategoriesAsync(userId);
 
-            var categoryModels = categories.Select(c => CategoryModel.FromCategory(c));
+            var categoryModels = categories
+                .Select(c => CategoryModel.FromCategory(c));
 
             return categoryModels;
         }
@@ -36,9 +54,9 @@ namespace Budget.Infrastructure.Services
             return categoryModels;
         }
 
-        public async Task<IEnumerable<CategoryModel>> GetAllSubcategoriesByParentCategoryId(int parentCategoryId, string userId)
+        public async Task<IEnumerable<CategoryModel>> GetAllSubcategoriesByParentCategoryIdAsync(int parentCategoryId, string userId)
         {
-            var categories = await _categoriesRepository.GetSubcategoriesByParentCategoryId(parentCategoryId, userId);
+            var categories = await _categoriesRepository.GetSubcategoriesByParentCategoryIdAsync(parentCategoryId, userId);
 
             var categoryModels = categories
                 .Select(c => CategoryModel.FromCategory(c));

@@ -21,11 +21,23 @@
         id="amount"
         formControlName="amount"
         class="form-control form-control-lg" />
+      <span
+        *ngIf="!recordForm.get('amount')?.valid && recordForm.get('amount')?.touched"
+        class="help-block text-danger"
+        >The amount is required</span
+      >
     </div>
+
     <div class="form-group py-2">
       <label class="form-label" for="note">Note</label>
       <input type="text" id="note" formControlName="note" class="form-control form-control-lg" />
+      <span
+        *ngIf="!recordForm.get('note')?.valid && recordForm.get('note')?.touched"
+        class="help-block text-danger"
+        >The notes must be less than 100 characters</span
+      >
     </div>
+
     <div class="form-group py-2">
       <label class="form-label" for="note">Date</label>
       <input
@@ -33,7 +45,11 @@
         id="recordDate"
         formControlName="recordDate"
         class="form-control form-control-lg" />
+      <span *ngIf="!recordForm.get('recordDate')?.valid" class="help-block text-danger"
+        >The date is required</span
+      >
     </div>
+
     <div class="form-group py-2">
       <label class="form-label" for="recordType">Category</label>
       <select class="form-control form-control-lg" id="category" formControlName="category">
@@ -41,21 +57,40 @@
           {{category.parentCategoryId ? '&#x2192; ' : ''}}{{category.name}}
         </option>
       </select>
+      <span
+        *ngIf="!recordForm.get('category')?.valid && recordForm.get('category')?.touched"
+        class="help-block text-danger"
+        >The category is required</span
+      >
     </div>
+
     <div *ngIf="selectedRecordType === 'Transfer'" class="form-group py-2">
       <label class="form-label" for="fromAccount">From Account</label>
       <select class="form-control form-control-lg" id="fromAccount" formControlName="fromAccount">
         <option *ngFor="let account of accounts" [value]="account.id">{{account.name}}</option>
       </select>
+      <span
+        *ngIf="!recordForm.get('fromAccount')?.valid && recordForm.get('fromAccount')?.touched"
+        class="help-block text-danger"
+        >The source account is required</span
+      >
     </div>
+
     <div class="form-group py-2">
       <label class="form-label" for="account"
         >{{"selectedRecordType === 'Transfer'" ? 'To Account' : 'Account'}}</label
       >
+      {{selectedRecordType}}
       <select class="form-control form-control-lg" id="account" formControlName="account">
         <option *ngFor="let account of accounts" [value]="account.id">{{account.name}}</option>
       </select>
+      <span
+        *ngIf="!recordForm.get('account')?.valid && recordForm.get('account')?.touched"
+        class="help-block text-danger"
+        >The account is required</span
+      >
     </div>
+
     <div class="form-group py-2">
       <label class="form-label" for="recordType">Payment Type</label>
       <select class="form-control form-control-lg" id="paymentType" formControlName="paymentType">
@@ -63,6 +98,11 @@
           {{paymentType.name}}
         </option>
       </select>
+      <span
+        *ngIf="!recordForm.get('paymentType')?.valid && recordForm.get('paymentType')?.touched"
+        class="help-block text-danger"
+        >The payment type is required</span
+      >
     </div>
 
     <div class="mt-4">

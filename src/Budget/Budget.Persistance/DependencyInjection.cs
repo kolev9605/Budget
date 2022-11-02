@@ -9,7 +9,10 @@ namespace Budget.Persistance
         public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<BudgetDbContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("Budget")));
+                options.UseNpgsql(configuration.GetConnectionString("BudgetPosgres")));
+
+            //services.AddDbContext<BudgetDbContext>(options =>
+            //    options.UseSqlServer(configuration.GetConnectionString("BudgetSqlServer")));
 
             return services;
         }

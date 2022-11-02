@@ -5,17 +5,20 @@ import { AccountModel } from '../shared/models/accounts/account.model';
 import { AccountService } from '../shared/services/account.service';
 import { forkJoin, Observable, Subject, Subscription } from 'rxjs';
 import { CashFlowChartRequestModel } from '../shared/models/charts/cash-flow-chart-request.model';
-import { addMonths, startOfMonth } from 'date-fns';
+import { addMonths, startOfMonth, endOfMonth } from 'date-fns';
 import { concatMap, tap } from 'rxjs/operators';
 import { ChartService } from '../shared/services/chart.service';
 import { CashFlowChartModel } from '../shared/models/charts/cash-flow-chart.model';
 import { RecordService } from '../shared/services/record.service';
 import { RecordsDateRangeModel } from '../shared/models/records/records-date-range.model';
+import { StatisticsService } from '../shared/services/statistics.service';
+import { StatisticsResultModel } from '../shared/models/statistics/statistics-request.model';
+import { StatisticsRequestModel } from '../shared/models/statistics/statistics-response.model';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss'],
+  styleUrls: [],
 })
 export class DashboardComponent implements OnInit {
   accounts: AccountModel[];
@@ -23,9 +26,12 @@ export class DashboardComponent implements OnInit {
   isLoading: boolean = false;
   selectedDate: Date;
   cashFlowData: CashFlowChartModel;
+  statistics: StatisticsResultModel;
+
   cashFlowDataSubscription: Subscription;
   cashFlowRequestSubject: Subject<CashFlowChartRequestModel> = new Subject();
   cashFlowDateObservable: Observable<CashFlowChartModel> = new Observable();
+  statisticsObservable: Observable<StatisticsResultModel> = new Observable();
   accountsSubscription: Subscription = new Subscription();
   recordsDateRange: RecordsDateRangeModel;
   hasPreviousMonth: boolean;
@@ -37,6 +43,7 @@ export class DashboardComponent implements OnInit {
     private router: Router,
     private chartService: ChartService,
     private recordService: RecordService,
+    private statisticsService: StatisticsService,
   ) {}
 
   ngOnInit(): void {
@@ -58,6 +65,26 @@ export class DashboardComponent implements OnInit {
       },
     );
 
+    this.statisticsObservable = this.cashFlowRequestSubject.pipe(
+      tap(() => (this.isLoading = true)),
+      concatMap((request) =>
+        this.statisticsService.getStatistics(
+          new StatisticsRequestModel(request.startDate, request.endDate, request.accountIds),
+        ),
+      ),
+    );
+
+    this.statisticsObservable.subscribe(
+      (response) => {
+        this.statistics = response;
+        this.isLoading = false;
+      },
+      (error) => {
+        this.isLoading = false;
+        this.toastr.error(error);
+      },
+    );
+
     forkJoin({
       accounts: this.accountService.getAll(),
       recordsDateRange: this.recordService.getRecordsDateRange(),
@@ -69,11 +96,14 @@ export class DashboardComponent implements OnInit {
           this.selectedAccountIds = accounts.map((a) => a.id);
 
           this.recordsDateRange = recordsDateRange;
-          this.selectedDate = startOfMonth(new Date(this.recordsDateRange.maxDate));
-          this.calculateHasNextMonth();
-          this.calculateHasPreviousMonth();
+          if (this.recordsDateRange) {
+            this.selectedDate = startOfMonth(new Date(this.recordsDateRange.maxDate));
+            this.calculateHasNextMonth();
+            this.calculateHasPreviousMonth();
+            this.loadData();
+          }
 
-          this.loadData();
+          this.isLoading = false;
         },
         (error) => {
           this.isLoading = false;
@@ -136,7 +166,8 @@ export class DashboardComponent implements OnInit {
 
   loadData(): void {
     const requestModel = new CashFlowChartRequestModel(
-      this.selectedDate.getMonth() + 1,
+      startOfMonth(this.selectedDate),
+      endOfMonth(this.selectedDate),
       this.selectedAccountIds,
     );
 

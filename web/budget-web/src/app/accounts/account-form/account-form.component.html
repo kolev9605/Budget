@@ -7,12 +7,22 @@
         id="accountName"
         formControlName="accountName"
         class="form-control form-control-lg" />
+      <span
+        *ngIf="!accountForm.get('accountName')?.valid && accountForm.get('accountName')?.touched"
+        class="help-block text-danger"
+        >The account name is invalid</span
+      >
     </div>
     <div class="form-group py-2">
       <label class="form-label" for="currency">Currency</label>
       <select class="form-control form-control-lg" id="currency" formControlName="currency">
         <option *ngFor="let currency of currencies" [value]="currency.id">{{currency.name}}</option>
       </select>
+      <span
+        *ngIf="!accountForm.get('currency')?.valid && accountForm.get('currency')?.touched"
+        class="help-block text-danger"
+        >The currency is required</span
+      >
     </div>
     <div class="form-group py-2">
       <label class="form-label" for="initialBalance">Initial Balance</label>
@@ -21,6 +31,11 @@
         id="initialBalance"
         formControlName="initialBalance"
         class="form-control form-control-lg" />
+      <span
+        *ngIf="!accountForm.get('initialBalance')?.valid && accountForm.get('initialBalance')?.touched"
+        class="help-block text-danger"
+        >The initial balance is required</span
+      >
     </div>
 
     <div class="mt-4">

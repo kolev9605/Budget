@@ -2,25 +2,18 @@
   <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
   <h1 class="text-center mb-4">Accounts</h1>
 
-    <div class="text-center mb-4">
+  <div class="text-center mb-4">
     <div role="button" class="btn btn-accent text-white" (click)="onAddAccountPressed()">
       Add Account
     </div>
   </div>
 
-
   <div class="row">
-    <ul class="list-group list-group-flush">
-      <li
-        class="list-group-item my-1"
-        *ngFor="let account of accounts"
-        [routerLink]="['/accounts/edit', account.id]">
-        <div class="container">
-          <div class="row">
-            <div class="col">{{account.name}}</div>
-          </div>
-        </div>
-      </li>
-    </ul>
+    <div
+      class="card m-2"
+      *ngFor="let account of accounts"
+      [routerLink]="['/accounts/edit', account.id]">
+      <div class="card-body">{{account.name}}</div>
+    </div>
   </div>
 </div>

@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { forkJoin } from 'rxjs';
 import { CreateAccountModel } from 'src/app/shared/models/accounts/create-account.model';
 import { CurrencyModel } from 'src/app/shared/models/currencies/currency.model';
 import { AccountService } from 'src/app/shared/services/account.service';
@@ -11,7 +10,7 @@ import { CurrencyService } from 'src/app/shared/services/currency.service';
 @Component({
   selector: 'app-create-account',
   templateUrl: './create-account.component.html',
-  styleUrls: ['./create-account.component.scss'],
+  styleUrls: [],
 })
 export class CreateAccountComponent implements OnInit {
   createAccountForm: FormGroup;
@@ -29,9 +28,9 @@ export class CreateAccountComponent implements OnInit {
   ngOnInit(): void {
     this.isLoading = true;
     this.createAccountForm = this.fb.group({
-      accountName: ['', [Validators.required]],
-      currency: ['', [Validators.required]],
-      initialBalance: 0,
+      accountName: [null, [Validators.required]],
+      currency: [null, [Validators.required]],
+      initialBalance: [0, [Validators.required]],
     });
 
     this.currencyService.getAll().subscribe(
@@ -49,6 +48,15 @@ export class CreateAccountComponent implements OnInit {
   }
 
   onSubmit(): void {
+    if (!this.createAccountForm.valid) {
+      Object.keys(this.createAccountForm.controls).forEach((field) => {
+        const control = this.createAccountForm.get(field);
+        control?.markAsTouched({ onlySelf: true });
+      });
+
+      return;
+    }
+
     this.createAccount();
   }
 

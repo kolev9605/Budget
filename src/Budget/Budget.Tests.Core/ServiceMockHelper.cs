@@ -29,6 +29,7 @@ namespace Budget.Tests.Core
             {
                 user = EntityMockHelper.SetupUser();
             }
+
             var store = new Mock<IUserStore<ApplicationUser>>();
             var userManagerMock = new Mock<UserManager<ApplicationUser>>(store.Object, null, null, null, null, null, null, null, null);
             userManagerMock
@@ -46,43 +47,12 @@ namespace Budget.Tests.Core
         }
 
         public static RecordService SetupRecordService(
-            Currency currency = null,
-            PaymentType paymentType = null,
-            Category category = null,
-            Account account = null,
-            Record record = null,
-            ApplicationUser user = null)
+            PaymentType paymentType,
+            Category category,
+            Account account,
+            Record record,
+            ApplicationUser user)
         {
-            if (currency == null)
-            {
-                currency = EntityMockHelper.SetupCurrency();
-            }
-
-            if (paymentType == null)
-            {
-                paymentType = EntityMockHelper.SetupPaymentType();
-            }
-
-            if (category == null)
-            {
-                category = EntityMockHelper.SetupCategory();
-            }
-
-            if (account == null)
-            {
-                account = EntityMockHelper.SetupAccount(currency);
-            }
-
-            if (record == null)
-            {
-                record = EntityMockHelper.SetupRecord(account, paymentType, category);
-            }
-
-            if (user == null)
-            {
-                user = EntityMockHelper.SetupUser();
-            }
-
             var recordService = new RecordService(
                 RepositoryMockHelper.SetupRecordRepository(record),
                 RepositoryMockHelper.SetupAccountRepository(account),
@@ -93,6 +63,71 @@ namespace Budget.Tests.Core
                 );
 
             return recordService;
+        }
+
+        public static RecordService SetupRecordService()
+        {
+            var currency = EntityMockHelper.SetupCurrency();
+            var paymentType = EntityMockHelper.SetupPaymentType();
+            var category = EntityMockHelper.SetupCategory();
+            var account = EntityMockHelper.SetupAccount(currency);
+            var record = EntityMockHelper.SetupRecord(account, paymentType, category);
+            var user = EntityMockHelper.SetupUser();
+
+            var recordService = SetupRecordService(paymentType, category, account, record, user);
+
+            return recordService;
+        }
+
+        public static AccountService SetupAccountService(Account account, Currency currency)
+        {
+            var accountService = new AccountService(
+                RepositoryMockHelper.SetupAccountRepository(account),
+                RepositoryMockHelper.SetupCurrencyRepository(currency)
+                );
+
+            return accountService;
+        }
+
+        public static AccountService SetupAccountService()
+        {
+            var currency = EntityMockHelper.SetupCurrency();
+
+            var account = EntityMockHelper.SetupAccount(currency);
+
+            var accountService = SetupAccountService(account, currency);
+
+            return accountService;
+        }
+
+        public static CategoryService SetupCategoryService()
+        {
+            var category = EntityMockHelper.SetupCategory();
+
+            var categoryService = new CategoryService(
+                RepositoryMockHelper.SetupCategoryRepository(category));
+
+            return categoryService;
+        }
+
+        public static CurrencyService SetupCurrencyService()
+        {
+            var currency = EntityMockHelper.SetupCurrency();
+
+            var categoryService = new CurrencyService(
+                RepositoryMockHelper.SetupCurrencyRepository(currency));
+
+            return categoryService;
+        }
+
+        public static PaymentTypeService SetupPaymentTypeService()
+        {
+            var paymentType = EntityMockHelper.SetupPaymentType();
+
+            var paymentTypeService = new PaymentTypeService(
+                RepositoryMockHelper.SetupPaymentTypeRepository(paymentType));
+
+            return paymentTypeService;
         }
     }
 }

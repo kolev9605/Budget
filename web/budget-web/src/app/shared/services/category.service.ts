@@ -14,6 +14,16 @@ export class CategoryService {
 
   constructor(private http: HttpClient, private errorService: ErrorService) {}
 
+  getById(categoryId: number): Observable<CategoryModel> {
+    return this.http
+      .get<CategoryModel>(`${environment.apiUrl}${this.controller}/GetById`, {
+        params: {
+          categoryId: categoryId,
+        },
+      })
+      .pipe(catchError(this.errorService.handleError));
+  }
+
   getAll(): Observable<CategoryModel[]> {
     return this.http
       .get<CategoryModel[]>(`${environment.apiUrl}${this.controller}/GetAll`)
@@ -33,6 +43,12 @@ export class CategoryService {
           parentCategoryId: parentCategoryId,
         },
       })
+      .pipe(catchError(this.errorService.handleError));
+  }
+
+  getCategoryTypes(): Observable<string[]> {
+    return this.http
+      .get<string[]>(`${environment.apiUrl}${this.controller}/getCategoryTypes`)
       .pipe(catchError(this.errorService.handleError));
   }
 }

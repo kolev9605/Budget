@@ -8,7 +8,6 @@ using System.Linq;
 using Budget.Core.Guards;
 using Budget.Core.Exceptions;
 using Budget.Core.Constants;
-using Budget.Core.Models.Currencies;
 
 namespace Budget.Infrastructure.Services
 {
@@ -25,10 +24,16 @@ namespace Budget.Infrastructure.Services
             _currencyRepository = currencyRepository;
         }
 
-        public async Task<AccountModel> GetByIdAsync(int accountId)
+        public async Task<AccountModel> GetByIdAsync(int accountId, string userId)
         {
             var account = await _accountRepository
-                .GetByIdWithCurrencyAsync(accountId);
+                .GetByIdWithCurrencyAsync(accountId, userId);
+
+            if (account == null)
+            {
+                throw new BudgetValidationException(
+                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(account)));
+            }
 
             var accountModel = AccountModel.FromAccount(account);
 
@@ -49,6 +54,7 @@ namespace Budget.Infrastructure.Services
         public async Task<int> CreateAccountAsync(CreateAccountModel createAccountModel, string userId)
         {
             Guard.IsNotNullOrEmpty(createAccountModel.Name, nameof(createAccountModel.Name));
+            Guard.ValidateMaxtLength(createAccountModel.Name, nameof(createAccountModel.Name), Validations.Accounts.NameMaxLength);
 
             var currency = await _currencyRepository.BaseGetByIdAsync(createAccountModel.CurrencyId);
             if (currency == null)
@@ -70,19 +76,33 @@ namespace Budget.Infrastructure.Services
             return createdAccount.Id;
         }
 
-        public async Task<int> UpdateAsync(UpdateAccountModel accountModel)
+        public async Task<int> UpdateAsync(UpdateAccountModel accountModel, string userId)
         {
             Guard.IsNotNullOrEmpty(accountModel.Name, nameof(accountModel.Name));
+            Guard.ValidateMaxtLength(accountModel.Name, nameof(accountModel.Name), Validations.Accounts.NameMaxLength);
 
             var account = await _accountRepository
-                .GetByIdWithCurrencyAsync(accountModel.Id);
+                .GetByIdWithCurrencyAsync(accountModel.Id, userId);
             if (account == null)
             {
                 throw new BudgetValidationException(
                     string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(account)));
             }
 
-            account.CurrencyId = accountModel.CurrencyId;
+            if (account.UserId != userId)
+            {
+                throw new BudgetValidationException(
+                    string.Format(ValidationMessages.Accounts.InvalidAccount, account.Name));
+            }
+
+            var currency = await _currencyRepository.BaseGetByIdAsync(accountModel.CurrencyId);
+            if (currency == null)
+            {
+                throw new BudgetValidationException(
+                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(currency)));
+            }
+
+            account.CurrencyId = currency.Id;
             account.Name = accountModel.Name;
             account.InitialBalance = accountModel.InitialBalance;
 
@@ -91,9 +111,9 @@ namespace Budget.Infrastructure.Services
             return account.Id;
         }
 
-        public async Task<int> DeleteAccountAsync(int accountId)
+        public async Task<int> DeleteAccountAsync(int accountId, string userId)
         {
-            var account = await _accountRepository.BaseGetByIdAsync(accountId);
+            var account = await _accountRepository.GetByIdWithCurrencyAsync(accountId, userId);
             if (account == null)
             {
                 throw new BudgetValidationException(

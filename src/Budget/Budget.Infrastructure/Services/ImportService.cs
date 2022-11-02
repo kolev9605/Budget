@@ -1,8 +1,11 @@
 ﻿using Budget.Core.Entities;
+using Budget.Core.Exceptions;
 using Budget.Core.Interfaces;
 using Budget.Core.Interfaces.Repositories;
 using Budget.Core.Interfaces.Services;
+using Budget.Core.Models.Records;
 using Budget.CsvParser.CsvModels;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +21,6 @@ namespace Budget.Infrastructure.Services
         private readonly IAccountRepository _accountRepository;
         private readonly IRepository<PaymentType> _paymentTypesRepository;
         private readonly IDateTimeProvider _dateTimeProvider;
-
         private readonly Dictionary<string, string> _walletCategoryMapping;
         private readonly Dictionary<string, RecordType> _walletRecordTypeMapping;
 
@@ -108,6 +110,7 @@ namespace Budget.Infrastructure.Services
                 { "Missing", "Missing" },
                 { "TRANSFER", "Transfer" },
             };
+
             _walletRecordTypeMapping = new(StringComparer.InvariantCultureIgnoreCase)
             {
                 { "income", RecordType.Income },
@@ -126,69 +129,68 @@ namespace Budget.Infrastructure.Services
 
             var insertedRecords = new List<Record>();
 
-            //foreach (var record in records)
-            //{
-            //    var category = _walletCategoryMapping.GetValueOrDefault(record.Category);
+            foreach (var record in records)
+            {
+                var category = _walletCategoryMapping.GetValueOrDefault(record.Category);
 
-            //    if (category == null)
-            //    {
-            //        throw new ArgumentNullException(nameof(category));
-            //    }
+                if (category == null)
+                {
+                    throw new ArgumentNullException(nameof(category));
+                }
 
-            //    var categoryFromDatabase = await _categoryRepository.GetByName(category);
+                var categoryFromDatabase = await _categoryRepository.GetByNameAsync(category);
 
-            //    if (categoryFromDatabase == null)
-            //    {
-            //        throw new ArgumentNullException(nameof(categoryFromDatabase));
-            //    }
+                if (categoryFromDatabase == null)
+                {
+                    throw new ArgumentNullException(nameof(categoryFromDatabase));
+                }
 
-            //    var account = await _accountRepository.GetByNameAsync(userId, record.Account);
-            //    if (account == null)
-            //    {
-            //        throw new ArgumentNullException(nameof(account));
-            //    }
+                var account = await _accountRepository.GetByNameAsync(userId, record.Account);
+                if (account == null)
+                {
+                    throw new ArgumentNullException(nameof(account));
+                }
 
+                PaymentType paymentType = null;
+                if (account.Name == "Cash")
+                {
+                    paymentType = cashPaymentType;
+                }
+                else
+                {
+                    paymentType = debitCardPaymentType;
+                }
 
-            //    PaymentType paymentType = null;
-            //    if (account.Name == "Cash")
-            //    {
-            //        paymentType = cashPaymentType;
-            //    }
-            //    else
-            //    {
-            //        paymentType = debitCardPaymentType;
-            //    }
+                RecordType? recordType = null;
+                if (record.Transfer)
+                {
+                    recordType = RecordType.Transfer;
+                }
+                else
+                {
+                    recordType = _walletRecordTypeMapping.GetValueOrDefault(record.Type);
+                }
 
-            //    RecordType? recordType = null;
-            //    if (record.Transfer)
-            //    {
-            //        recordType = RecordType.Transfer;
-            //    }
-            //    else
-            //    {                 
-            //        recordType = _walletRecordTypeMapping.GetValueOrDefault(record.Type);
-            //    }
+                if (recordType == null)
+                {
+                    throw new ArgumentNullException(nameof(recordType));
+                }
 
-            //    if (recordType == null)
-            //    {
-            //        throw new ArgumentNullException(nameof(recordType));
-            //    }
+                var recordToAdd = new Record()
+                {
+                    Account = account,
+                    Category = categoryFromDatabase,
+                    Note = record.Note,
+                    Amount = record.Amount,
+                    RecordType = recordType.Value,
+                    PaymentType = paymentType,
+                    RecordDate = record.Date,
+                    DateCreated = _dateTimeProvider.Now,
+                };
 
-            //    var recordToAdd = new Record()
-            //    {
-            //        Account = account,
-            //        Category = categoryFromDatabase,
-            //        Note = record.Note,
-            //        Amount = record.Amount,
-            //        RecordType = recordType.Value,
-            //        PaymentType = paymentType,
-            //        RecordDate = record.Date,
-            //        DateCreated = _dateTimeProvider.Now,
-            //    };
-
-            //    var createdRecord = await _recordRepository.CreateAsync(recordToAdd);
-            //    insertedRecords.Add(createdRecord);
-            //}
+                var createdRecord = await _recordRepository.CreateAsync(recordToAdd);
+                insertedRecords.Add(createdRecord);
+            }
 
             var allRecords = await _recordRepository.GetAllAsync(userId);
 
@@ -222,6 +224,68 @@ namespace Budget.Infrastructure.Services
             }
 
             return "ok";
+        }
+
+        public async Task ImportRecords(string recordsFileJson, string userId)
+        {
+            var records = JsonConvert.DeserializeObject<IEnumerable<RecordsExportModel>>(recordsFileJson);
+            if (records == null)
+            {
+                throw new BudgetValidationException();
+            }
+
+            var accounts = await _accountRepository.GetAllByUserIdAsync(userId);
+            var paymentTypes = await _paymentTypesRepository.BaseAllAsync();
+            var categories = await _categoryRepository.BaseAllAsync();
+
+            var counter = 0;
+            foreach (var recordModel in records)
+            {
+                var record = RecordsExportModel.ToRecord(recordModel);
+
+                var account = accounts.FirstOrDefault(a => a.Name == recordModel.Account);
+                if (account == null)
+                {
+                    throw new BudgetValidationException();
+                }
+
+                if (recordModel.FromAccount != null)
+                {
+                    var fromAccount = accounts.FirstOrDefault(a => a.Name == recordModel.FromAccount);
+                    if (fromAccount == null)
+                    {
+                        throw new BudgetValidationException();
+                    }
+
+                    record.FromAccount = fromAccount;
+                }
+
+                var paymentType = paymentTypes.FirstOrDefault(pt => pt.Name == recordModel.PaymentType);
+                if (paymentType == null)
+                {
+                    throw new BudgetValidationException();
+                }
+
+                var category = categories.FirstOrDefault(pt => pt.Name == recordModel.Category);
+                if (category == null)
+                {
+                    throw new BudgetValidationException();
+                }
+
+                record.Account = account;
+                record.PaymentType = paymentType;
+                record.Category = category;
+
+                await _recordRepository.CreateAsync(record, saveChanges: false);
+
+                counter++;
+                if (counter % 500 == 0)
+                {
+                    await _recordRepository.SaveChangesAsync();
+                }
+            }
+
+            await _recordRepository.SaveChangesAsync();
         }
     }
 }

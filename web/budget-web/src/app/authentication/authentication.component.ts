@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ColorConstants } from 'src/app/shared/constants';
+import { ColorConstants } from 'src/app/shared/constants/constants';
 import { LoginModel } from 'src/app/shared/models/authentication/login.model';
 import { RegisterModel } from 'src/app/shared/models/authentication/register.model';
 import { AuthService } from 'src/app/shared/services/auth.service';
@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-authentication',
   templateUrl: './authentication.component.html',
-  styleUrls: ['./authentication.component.scss'],
+  styleUrls: [],
 })
 export class AuthenticationComponent implements OnInit {
   public isLogin: boolean = true;
@@ -27,13 +27,22 @@ export class AuthenticationComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      username: ['', [Validators.required]],
-      password: ['', Validators.required],
-      email: ['', null],
+      username: [null, [Validators.required]],
+      password: [null, [Validators.required]],
+      email: [null, [Validators.email]],
     });
   }
 
   onSubmit(): void {
+    if (!this.form.valid) {
+      Object.keys(this.form.controls).forEach((field) => {
+        const control = this.form.get(field);
+        control?.markAsTouched({ onlySelf: true });
+      });
+
+      return;
+    }
+
     if (this.isLogin) {
       this.login();
     } else {

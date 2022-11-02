@@ -54,6 +54,7 @@ namespace Budget.Infrastructure
             services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 
             services.AddScoped<ICacheManager, CacheManager>();
+            services.AddScoped<IPaginationManager, PaginationManager>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IRecordService, RecordService>();
             services.AddScoped<IAccountService, AccountService>();
@@ -61,6 +62,8 @@ namespace Budget.Infrastructure
             services.AddScoped<IPaymentTypeService, PaymentTypeService>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IChartService, ChartService>();
+            services.AddScoped<IStatisticsService, StatisticsService>();
+            services.AddScoped<IExportService, ExportService>();
             services.AddScoped<IImportService, ImportService>();
 
             return services;

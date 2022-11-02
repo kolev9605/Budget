@@ -8,18 +8,27 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Budget.CsvParser
 {
     public class CsvParser : ICsvParser
     {
+        private readonly CsvConfiguration _csvConfiguration;
+
+        public CsvParser()
+        {
+            _csvConfiguration = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                Delimiter = ";",
+            };
+        }
+
         public IEnumerable<T> ParseCsvString<T>(string csvString) 
         {
             try
             {
                 using (var reader = new StringReader(csvString))
-                using (var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture))
+                using (var csvReader = new CsvReader(reader, _csvConfiguration))
                 {
                     var records = csvReader.GetRecords<T>();
 
@@ -34,15 +43,10 @@ namespace Budget.CsvParser
 
         public IEnumerable<T> ParseFromFile<T>(string path)
         {
-            var config = new CsvConfiguration(CultureInfo.InvariantCulture)
-            {
-                Delimiter = ";",
-            };
-
             try
             {
                 using (var reader = new StreamReader(path))
-                using (var csvReader = new CsvReader(reader, config))
+                using (var csvReader = new CsvReader(reader, _csvConfiguration))
                 {
                     var records = csvReader.GetRecords<T>();
 

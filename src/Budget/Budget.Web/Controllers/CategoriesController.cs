@@ -1,11 +1,12 @@
-﻿using Budget.Core.Interfaces.Services;
+﻿using Budget.Common;
+using Budget.Core.Entities;
+using Budget.Core.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace Budget.Web.Controllers
 {
-    [Authorize]
     [Route("Categories")]
     public class CategoriesController : BaseController
     {
@@ -15,6 +16,11 @@ namespace Budget.Web.Controllers
         {
             _categoryService = categoryService;
         }
+
+        [HttpGet]
+        [Route(nameof(GetById))]
+        public async Task<IActionResult> GetById(int categoryId)
+            => Ok(await _categoryService.GetByIdAsync(categoryId, LoggedInUserId));
 
         [HttpGet]
         [Route(nameof(GetAll))]
@@ -29,6 +35,11 @@ namespace Budget.Web.Controllers
         [HttpGet]
         [Route(nameof(GetAllSubcategories))]
         public async Task<IActionResult> GetAllSubcategories(int parentCategoryId)
-            => Ok(await _categoryService.GetAllSubcategoriesByParentCategoryId(parentCategoryId, LoggedInUserId));
+            => Ok(await _categoryService.GetAllSubcategoriesByParentCategoryIdAsync(parentCategoryId, LoggedInUserId));
+
+        [HttpGet]
+        [Route(nameof(GetCategoryTypes))]
+        public IActionResult GetCategoryTypes()
+            => Ok(EnumHelpers.GetListFromEnum<CategoryType>());
     }
 }

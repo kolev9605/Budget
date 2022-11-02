@@ -15,6 +15,15 @@ namespace Budget.Repositories
         {
         }
 
+        public async Task<Category> GetByIdWithSubcategoriesAsync(int categoryId, string userId)
+        {
+            var categories = await GetUserCategories(userId)
+                .Include(c => c.SubCategories)
+                .FirstOrDefaultAsync(c => c.Id == categoryId);
+
+            return categories;
+        }
+
         public async Task<IEnumerable<Category>> GetAllWithSubcategoriesAsync(string userId)
         {
             var categories = await GetUserCategories(userId)
@@ -31,12 +40,14 @@ namespace Budget.Repositories
             var categories = await GetUserCategories(userId)
                 .Include(c => c.SubCategories)
                 .Where(c => !c.ParentCategoryId.HasValue)
+                .OrderBy(c => c.ParentCategoryId ?? c.Id)
+                .ThenBy(c => c.Id)
                 .ToListAsync();
 
             return categories;
         }
 
-        public async Task<IEnumerable<Category>> GetSubcategoriesByParentCategoryId(int parentCategoryId, string userId)
+        public async Task<IEnumerable<Category>> GetSubcategoriesByParentCategoryIdAsync(int parentCategoryId, string userId)
         {
             var subcategories = await GetUserCategories(userId)
                 .Include(c => c.ParentCategory)
@@ -46,13 +57,21 @@ namespace Budget.Repositories
             return subcategories;
         }
 
-        public async Task<IEnumerable<Category>> GetInitialCategories()
+        public async Task<IEnumerable<Category>> GetInitialCategoriesAsync()
         {
             var categories = await _budgetDbContext.Categories
                 .Where(c => c.IsInitial)
                 .ToListAsync();
 
             return categories;
+        }
+
+        public async Task<Category> GetByNameAsync(string name)
+        {
+            var category = await _budgetDbContext.Categories
+                .FirstOrDefaultAsync(c => c.Name == name);
+
+            return category;
         }
 
         private IQueryable<Category> GetUserCategories(string userId)
@@ -62,14 +81,6 @@ namespace Budget.Repositories
                 .Where(c => c.Users.Where(u => u.UserId == userId).Any());
 
             return categories;
-        }
-
-        public async Task<Category> GetByName(string name)
-        {
-            var category = await _budgetDbContext.Categories
-                .FirstOrDefaultAsync(c => c.Name == name);
-
-            return category;
         }
     }
 }

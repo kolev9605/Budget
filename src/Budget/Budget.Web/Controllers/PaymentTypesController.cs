@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 
 namespace Budget.Web.Controllers
 {
-    [Authorize]
     [Route("PaymentTypes")]
     public class PaymentTypesController : BaseController
     {

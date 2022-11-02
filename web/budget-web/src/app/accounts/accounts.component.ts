@@ -8,7 +8,7 @@ import { AccountService } from '../shared/services/account.service';
 @Component({
   selector: 'app-accounts',
   templateUrl: './accounts.component.html',
-  styleUrls: ['./accounts.component.scss'],
+  styleUrls: [],
 })
 export class AccountsComponent implements OnInit {
   isLoading: boolean;

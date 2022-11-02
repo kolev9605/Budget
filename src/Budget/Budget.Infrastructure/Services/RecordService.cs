@@ -1,9 +1,11 @@
 ﻿using Budget.Core.Constants;
 using Budget.Core.Entities;
 using Budget.Core.Exceptions;
+using Budget.Core.Extensions;
 using Budget.Core.Interfaces;
 using Budget.Core.Interfaces.Repositories;
 using Budget.Core.Interfaces.Services;
+using Budget.Core.Models.Pagination;
 using Budget.Core.Models.Records;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -18,7 +20,7 @@ namespace Budget.Infrastructure.Services
         private readonly IRecordRepository _recordRepository;
         private readonly IAccountRepository _accountRepository;
         private readonly IDateTimeProvider _dateTimeProvider;
-        private readonly IRepository<Category> _categoriesRepository;
+        private readonly ICategoryRepository _categoriesRepository;
         private readonly IRepository<PaymentType> _paymentTypesRepository;
         private readonly UserManager<ApplicationUser> _userManager;
 
@@ -26,7 +28,7 @@ namespace Budget.Infrastructure.Services
             IRecordRepository recordsRepository,
             IAccountRepository accountRepository,
             IDateTimeProvider dateTimeProvider,
-            IRepository<Category> categoriesRepository,
+            ICategoryRepository categoriesRepository,
             IRepository<PaymentType> paymentTypesRepository,
             UserManager<ApplicationUser> userManager)
         {
@@ -65,13 +67,22 @@ namespace Budget.Infrastructure.Services
             return RecordModel.FromRecord(record);
         }
 
-        public async Task<IEnumerable<RecordsGroupModel>> GetAllAsync(string userId)
+        public async Task<IEnumerable<RecordsExportModel>> GetAllForExportAsync(string userId)
         {
             var records = await _recordRepository.GetAllAsync(userId);
 
-            var models = new List<RecordsGroupModel>();
+            var recordModels = records.Select(r => RecordsExportModel.FromRecord(r));
 
-            var recordsGroupedByDate = records
+            return recordModels;
+        }
+
+        public async Task<PaginationModel<RecordsGroupModel>> GetAllPaginatedAsync(PaginatedRequestModel requestModel, string userId)
+        {
+            var paginatedRecords = await _recordRepository.GetAllPaginatedAsync(userId, requestModel);
+
+            paginatedRecords.Items.ForEach(r => r.RecordDate = r.RecordDate.ToLocalTime());
+
+            var recordsGroupedByDate = paginatedRecords.Items
                 .GroupBy(r => r.RecordDate.Date)
                 .ToDictionary(r => r.Key, r => r.ToList())
                 .OrderByDescending(r => r.Key)
@@ -82,7 +93,9 @@ namespace Budget.Infrastructure.Services
                     Records = r.Value.Select(rm => RecordModel.FromRecord(rm))
                 });
 
-            return recordsGroupedByDate;
+            var paginationModel = paginatedRecords.Convert(recordsGroupedByDate.ToList());
+
+            return paginationModel;
         }
 
         public async Task<int> CreateAsync(CreateRecordModel createRecordModel, string userId)
@@ -102,9 +115,9 @@ namespace Budget.Infrastructure.Services
                 RecordDate = createRecordModel.RecordDate,
             };
 
-            if (createRecordModel.FromAccountId.HasValue && createRecordModel.RecordType == RecordType.Transfer)
+            if (createRecordModel.RecordType == RecordType.Transfer)
             {
-                await ValidateTransferRecord(createRecordModel.AccountId, createRecordModel.FromAccountId.Value);
+                await ValidateTransferRecord(createRecordModel.AccountId, createRecordModel.FromAccountId);
 
                 var negativeTransferRecord = await CreateNegativeTransferRecord(createRecordModel, now);
 
@@ -137,7 +150,7 @@ namespace Budget.Infrastructure.Services
             record.RecordType = updateRecordModel.RecordType;
             record.RecordDate = updateRecordModel.RecordDate;
 
-            if (updateRecordModel.FromAccountId.HasValue && updateRecordModel.RecordType == RecordType.Transfer)
+            if (updateRecordModel.RecordType == RecordType.Transfer)
             {
                 await ValidateTransferRecord(updateRecordModel.AccountId, updateRecordModel.FromAccountId.Value);
 
@@ -188,6 +201,11 @@ namespace Budget.Infrastructure.Services
         public async Task<RecordsDateRangeModel> GetRecordsDateRangeAsync(string userId)
         {
             var allRecords = await _recordRepository.GetAllAsync(userId);
+
+            if (!allRecords.Any())
+            {
+                return null;
+            }
 
             var minRecordDate = allRecords.Min(r => r.RecordDate);
             var maxRecordDate = allRecords.Max(r => r.RecordDate);
@@ -273,8 +291,14 @@ namespace Budget.Infrastructure.Services
             }
         }
 
-        private async Task ValidateTransferRecord(int accountId, int fromAccountId)
+        private async Task ValidateTransferRecord(int accountId, int? fromAccountId)
         {
+            if (!fromAccountId.HasValue)
+            {
+                throw new BudgetValidationException(
+                    string.Format(ValidationMessages.Common.IsNotNull, nameof(fromAccountId)));
+            }
+
             var account = await _accountRepository.BaseGetByIdAsync(accountId);
             if (account == null)
             {
@@ -282,7 +306,7 @@ namespace Budget.Infrastructure.Services
                     string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(account)));
             }
 
-            var fromAccount = await _accountRepository.BaseGetByIdAsync(fromAccountId);
+            var fromAccount = await _accountRepository.BaseGetByIdAsync(fromAccountId.Value);
             if (fromAccount == null)
             {
                 throw new BudgetValidationException(

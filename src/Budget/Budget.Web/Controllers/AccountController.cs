@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace Budget.Web.Controllers
 {
-    [Authorize]
     [Route("Account")]
     public class AccountController : BaseController
     {
@@ -20,7 +19,7 @@ namespace Budget.Web.Controllers
         [HttpGet]
         [Route(nameof(GetById))]
         public async Task<IActionResult> GetById(int accountId)
-            => Ok(await _accountService.GetByIdAsync(accountId));
+            => Ok(await _accountService.GetByIdAsync(accountId, LoggedInUserId));
 
         [HttpGet]
         [Route(nameof(GetAll))]
@@ -35,11 +34,11 @@ namespace Budget.Web.Controllers
         [HttpPost]
         [Route(nameof(Update))]
         public async Task<IActionResult> Update(UpdateAccountModel updateAccountModel)
-            => Ok(await _accountService.UpdateAsync(updateAccountModel));
+            => Ok(await _accountService.UpdateAsync(updateAccountModel, LoggedInUserId));
 
         [HttpGet]
         [Route(nameof(Delete))]
         public async Task<IActionResult> Delete(int accountId)
-            => Ok(await _accountService.DeleteAccountAsync(accountId));
+            => Ok(await _accountService.DeleteAccountAsync(accountId, LoggedInUserId));
     }
 }

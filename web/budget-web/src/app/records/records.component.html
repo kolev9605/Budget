@@ -1,10 +1,27 @@
-<div class="container py-5">
+<div
+  class="container py-5"
+  infinite-scroll
+  (scrolled)="scrolled($event)"
+  (scrolledUp)="onScrollUp($event)">
   <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
   <h1 class="text-center mb-4">Records</h1>
 
   <div class="text-center mb-4">
-    <div role="button" class="btn btn-accent text-white" (click)="onAddRecordPressed()">
+    <div role="button" class="btn btn-accent text-white mx-2" (click)="onAddRecordPressed()">
       Add Record
+    </div>
+    <div role="button" class="btn btn-accent text-white mx-2" (click)="onExportRecordsPressed()">
+      Export Records
+    </div>
+    <div role="button" class="btn btn-accent text-white mx-2">
+      <input 
+        type="file" 
+        id="formFile" 
+        accept=".json"
+        hidden 
+        (change)="onImportRecordsPressed($event)"/>
+
+      <label for="formFile">Import Records</label>
     </div>
   </div>
   <div *ngIf="recordGroups && recordGroups.length > 0">

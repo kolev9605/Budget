@@ -14,6 +14,8 @@ namespace Budget.Core.Models.Categories
 
         public int? ParentCategoryId { get; set; }
 
+        public bool IsInitial { get; set; }
+
         public IEnumerable<CategoryModel> SubCategories { get; set; } = new List<CategoryModel>();
 
         public static CategoryModel FromCategory(Category category)
@@ -24,7 +26,8 @@ namespace Budget.Core.Models.Categories
                 Name = category.Name,
                 CategoryType = category.CategoryType,
                 ParentCategoryId = category.ParentCategoryId,
-                SubCategories = category.SubCategories.Select(c => MapSubCategory(c))
+                SubCategories = category.SubCategories.Select(c => MapSubCategory(c)),
+                IsInitial = category.IsInitial
             };
         }
 
@@ -35,7 +38,8 @@ namespace Budget.Core.Models.Categories
                 Id = category.Id,
                 Name = category.Name,
                 CategoryType = category.CategoryType,
-                ParentCategoryId = category.ParentCategoryId
+                ParentCategoryId = category.ParentCategoryId,
+                IsInitial = category.IsInitial
             };
 
             return subCategoryModel;
