@@ -14,12 +14,14 @@
       Export Records
     </div>
     <div role="button" class="btn btn-accent text-white mx-2">
-      <input
-        type="file"
-        id="formFile"
-        (change)="onImportRecordsPressed($event)"
-        placeholder="Upload file"
-        accept=".json" />
+      <input 
+        type="file" 
+        id="formFile" 
+        accept=".json"
+        hidden 
+        (change)="onImportRecordsPressed($event)"/>
+        
+      <label for="formFile">Choose File</label>
     </div>
   </div>
   <div *ngIf="recordGroups && recordGroups.length > 0">
