@@ -11,10 +11,12 @@ namespace Budget.Web.Controllers
     public class AuthenticationController : BaseController
     {
         private readonly IUserService _userService;
+        private readonly IImportService _importService;
 
-        public AuthenticationController(IUserService userService)
+        public AuthenticationController(IUserService userService, IImportService importService)
         {
             _userService = userService;
+            _importService = importService;
         }
 
         [HttpPost]

@@ -19,4 +19,12 @@ export class ImportService {
       .post(`${environment.apiUrl}${this.controller}/ImportRecords`, formData)
       .pipe(catchError(this.errorService.handleError));
   }
+
+  importWalletRecords(file: File): Observable<any> {
+    let formData: FormData = new FormData();
+    formData.append('uploadFile', file, file.name);
+    return this.http
+      .post(`${environment.apiUrl}${this.controller}/ImportWalletRecords`, formData)
+      .pipe(catchError(this.errorService.handleError));
+  }
 }

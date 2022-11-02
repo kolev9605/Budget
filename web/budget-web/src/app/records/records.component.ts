@@ -86,6 +86,20 @@ export class RecordsComponent implements OnInit {
     }
   }
 
+    onImportWalletRecordsPressed($event: any) {
+    let fileList: FileList = $event.target.files;
+    if (fileList.length > 0) {
+      let file: File = fileList[0];
+      this.importService.importWalletRecords(file).subscribe(
+        (response) => ($event.target.value = null),
+        (error) => {
+          this.toastr.error(error);
+          $event.target.value = null;
+        },
+      );
+    }
+  }
+
   downloadFile(data: any) {
     const blob = new Blob([data], { type: 'application/json' });
     const url = window.URL.createObjectURL(blob);

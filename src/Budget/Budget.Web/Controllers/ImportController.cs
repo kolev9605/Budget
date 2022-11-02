@@ -30,9 +30,26 @@ namespace Budget.Web.Controllers
                 fileContents = await reader.ReadToEndAsync();
             }
 
-            await _importService.ImportRecords(fileContents, LoggedInUserId);
+            await _importService.ImportRecordsAsync(fileContents, LoggedInUserId);
 
             return Ok();
+        }
+
+        [HttpPost]
+        [Route(nameof(ImportWalletRecords))]
+        public async Task<IActionResult> ImportWalletRecords()
+        {
+            var file = Request.Form.Files[0];
+            string fileContents;
+            using (var stream = file.OpenReadStream())
+            using (var reader = new StreamReader(stream))
+            {
+                fileContents = await reader.ReadToEndAsync();
+            }
+
+            var recordsInserted = await _importService.ImportWalletRecordsAsync(fileContents, LoggedInUserId);
+
+            return Ok(recordsInserted);
         }
     }
 }

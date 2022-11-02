@@ -1,5 +1,7 @@
 using Budget.Core.Entities;
+using Budget.Core.Interfaces;
 using Budget.Core.Options;
+using Budget.CsvParser;
 using Budget.Infrastructure;
 using Budget.Persistance;
 using Budget.Persistance.Seeders;
@@ -35,6 +37,7 @@ builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddMemoryCache();
 builder.Services.AddRepositories();
 builder.Services.AddServices();
+builder.Services.AddScoped<ICsvParser, CsvParser>();
 
 builder.Services.AddControllers().AddJsonOptions(opt =>
 {

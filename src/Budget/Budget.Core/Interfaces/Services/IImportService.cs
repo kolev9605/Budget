@@ -4,6 +4,8 @@ namespace Budget.Core.Interfaces.Services
 {
     public interface IImportService
     {
-        Task ImportRecords(string recordsFileJson, string userId);
+        Task ImportRecordsAsync(string recordsFileJson, string userId);
+
+        Task<int> ImportWalletRecordsAsync(string walletFileContent, string userId);
     }
 }
