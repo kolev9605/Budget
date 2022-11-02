@@ -1,4 +1,5 @@
-﻿using Budget.Core.Entities;
+﻿using Budget.Common;
+using Budget.Core.Entities;
 using Budget.Core.Exceptions;
 using Budget.Core.Interfaces;
 using Budget.Core.Interfaces.Repositories;
@@ -21,6 +22,7 @@ namespace Budget.Infrastructure.Services
         private readonly IAccountRepository _accountRepository;
         private readonly IRepository<PaymentType> _paymentTypesRepository;
         private readonly IDateTimeProvider _dateTimeProvider;
+        private readonly IRepository<Currency> _currencyRepository;
         private readonly Dictionary<string, string> _walletCategoryMapping;
         private readonly Dictionary<string, RecordType> _walletRecordTypeMapping;
 
@@ -30,7 +32,8 @@ namespace Budget.Infrastructure.Services
             ICategoryRepository categoryRepository,
             IAccountRepository accountRepository,
             IRepository<PaymentType> paymentTypesRepository,
-            IDateTimeProvider dateTimeProvider)
+            IDateTimeProvider dateTimeProvider,
+            IRepository<Currency> currencyRepository)
         {
             _csvParser = csvParser;
             _recordRepository = recordRepository;
@@ -38,6 +41,8 @@ namespace Budget.Infrastructure.Services
             _accountRepository = accountRepository;
             _paymentTypesRepository = paymentTypesRepository;
             _dateTimeProvider = dateTimeProvider;
+            _currencyRepository = currencyRepository;
+
 
             _walletCategoryMapping = new(StringComparer.InvariantCultureIgnoreCase)
             {
@@ -63,9 +68,11 @@ namespace Budget.Infrastructure.Services
                 { "Mortgage", "Mortgage" },
                 { "Services", "Services" },
                 { "Rent", "Rent" },
+                { "Furniture", "Furniture" },
+                { "New house", "New house" },
 
                 { "Transportation", "Transportation" },
-                { "Public transport", "Public transport" },
+                { "Public transport", "Public Transport" },
                 { "Taxi", "Taxi" },
 
                 { "Vehicle", "Car" },
@@ -119,11 +126,11 @@ namespace Budget.Infrastructure.Services
             };
         }
 
-        public async Task<string> Parse(string userId)
+        public async Task<int> ImportWalletRecordsAsync(string walletFileContent, string userId)
         {
-            userId = "45663575-b1e7-4717-b424-0c22c5862738";
-            var records = _csvParser.ParseFromFile<WalletCsvExportModel>("wallet.csv");
+            var records = _csvParser.ParseCsvString<WalletCsvExportModel>(walletFileContent);
             var paymentTypes = await _paymentTypesRepository.BaseAllAsync();
+            var currencies = await _currencyRepository.BaseAllAsync();
             var debitCardPaymentType = paymentTypes.FirstOrDefault(pt => pt.Name == "Debit Card");
             var cashPaymentType = paymentTypes.FirstOrDefault(pt => pt.Name == "Cash");
 
@@ -131,50 +138,12 @@ namespace Budget.Infrastructure.Services
 
             foreach (var record in records)
             {
-                var category = _walletCategoryMapping.GetValueOrDefault(record.Category);
+                var categoryFromDatabase = await MapCategoryAsync(record);
+                var account = await GetOrCreateAccountAsync(record, userId, currencies);
+                var paymentType = MapPaymentType(debitCardPaymentType, cashPaymentType, account);
+                var recordType = MapRecordType(record);
 
-                if (category == null)
-                {
-                    throw new ArgumentNullException(nameof(category));
-                }
-
-                var categoryFromDatabase = await _categoryRepository.GetByNameAsync(category);
-
-                if (categoryFromDatabase == null)
-                {
-                    throw new ArgumentNullException(nameof(categoryFromDatabase));
-                }
-
-                var account = await _accountRepository.GetByNameAsync(userId, record.Account);
-                if (account == null)
-                {
-                    throw new ArgumentNullException(nameof(account));
-                }
-
-                PaymentType paymentType = null;
-                if (account.Name == "Cash")
-                {
-                    paymentType = cashPaymentType;
-                }
-                else
-                {
-                    paymentType = debitCardPaymentType;
-                }
-
-                RecordType? recordType = null;
-                if (record.Transfer)
-                {
-                    recordType = RecordType.Transfer;
-                }
-                else
-                {
-                    recordType = _walletRecordTypeMapping.GetValueOrDefault(record.Type);
-                }
-
-                if (recordType == null)
-                {
-                    throw new ArgumentNullException(nameof(recordType));
-                }
+                var date = record.Date.ToUniversalTime();
 
                 var recordToAdd = new Record()
                 {
@@ -184,7 +153,7 @@ namespace Budget.Infrastructure.Services
                     Amount = record.Amount,
                     RecordType = recordType.Value,
                     PaymentType = paymentType,
-                    RecordDate = record.Date,
+                    RecordDate = date,
                     DateCreated = _dateTimeProvider.Now,
                 };
 
@@ -223,10 +192,42 @@ namespace Budget.Infrastructure.Services
                 }
             }
 
-            return "ok";
+            return insertedRecords.Count;
         }
 
-        public async Task ImportRecords(string recordsFileJson, string userId)
+        private RecordType? MapRecordType(WalletCsvExportModel record)
+        {
+            RecordType? recordType = null;
+            if (record.Transfer)
+            {
+                recordType = RecordType.Transfer;
+            }
+            else
+            {
+                recordType = _walletRecordTypeMapping.GetValueOrDefault(record.Type);
+            }
+
+            if (recordType == null)
+            {
+                throw new ArgumentNullException(nameof(recordType));
+            }
+
+            return recordType;
+        }
+
+        private static PaymentType MapPaymentType(PaymentType debitCardPaymentType, PaymentType cashPaymentType, Account account)
+        {
+            if (account.Name == "Cash")
+            {
+                return cashPaymentType;
+            }
+            else
+            {
+                return debitCardPaymentType;
+            }
+        }
+
+        public async Task ImportRecordsAsync(string recordsFileJson, string userId)
         {
             var records = JsonConvert.DeserializeObject<IEnumerable<RecordsExportModel>>(recordsFileJson);
             if (records == null)
@@ -286,6 +287,58 @@ namespace Budget.Infrastructure.Services
             }
 
             await _recordRepository.SaveChangesAsync();
+        }
+
+        public async Task<Account> GetOrCreateAccountAsync(
+            WalletCsvExportModel record, 
+            string userId, 
+            IEnumerable<Currency> currencies)
+        {
+            var account = await _accountRepository.GetByNameAsync(userId, record.Account);
+            if (account != null)
+            {
+                return account;
+            }
+            else
+            {
+                var currency = currencies.FirstOrDefault(c => c.Abbreviation == record.Currency);
+
+                if (currency == null)
+                {
+                    currency = currencies.FirstOrDefault(c => c.Abbreviation == "BGN");
+                }
+
+                var accountToCreate = new Account()
+                {
+                    Currency = currency,
+                    InitialBalance = 0,
+                    Name = record.Account,
+                    UserId = userId
+                };
+
+                var createdAccount = await _accountRepository.CreateAsync(accountToCreate);
+
+                return createdAccount;
+            }
+        }
+
+        private async Task<Category> MapCategoryAsync(WalletCsvExportModel record)
+        {
+            var category = _walletCategoryMapping.GetValueOrDefault(record.Category);
+
+            if (category == null)
+            {
+                throw new ArgumentNullException(nameof(category));
+            }
+
+            var categoryFromDatabase = await _categoryRepository.GetByNameAsync(category);
+
+            if (categoryFromDatabase == null)
+            {
+                throw new ArgumentNullException(nameof(categoryFromDatabase));
+            }
+
+            return categoryFromDatabase;
         }
     }
 }

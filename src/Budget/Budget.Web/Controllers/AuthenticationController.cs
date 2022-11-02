@@ -1,6 +1,4 @@
-﻿
-using Budget.Core.Interfaces;
-using Budget.Core.Interfaces.Services;
+﻿using Budget.Core.Interfaces.Services;
 using Budget.Core.Models.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -30,10 +28,5 @@ namespace Budget.Web.Controllers
         [Route(nameof(Register))]
         public async Task<IActionResult> Register(RegisterModel model)
             => Ok(await _userService.RegisterAsync(model));
-
-        [HttpGet]
-        [Route(nameof(Parse))]
-        public async Task<IActionResult> Parse()
-            => Ok(await _importService.Parse(LoggedInUserId));
     }
 }
