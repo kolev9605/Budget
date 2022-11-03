@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { first, forkJoin } from 'rxjs';
@@ -13,12 +13,12 @@ import { CategoryService } from 'src/app/shared/services/category.service';
 })
 export class EditCategoryComponent implements OnInit {
   isLoading: boolean;
-  editCategoryForm: FormGroup;
+  editCategoryForm: UntypedFormGroup;
   categoryTypes: string[];
   category: CategoryModel;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private categoryService: CategoryService,
     private toastr: ToastrService,
     private router: Router,
