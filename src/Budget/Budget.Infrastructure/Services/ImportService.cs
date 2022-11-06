@@ -212,7 +212,7 @@ namespace Budget.Infrastructure.Services
                     Category = categoryFromDatabase,
                     Note = record.Note,
                     Amount = record.Amount,
-                    RecordType = recordType.Value,
+                    RecordType = recordType,
                     PaymentType = paymentType,
                     RecordDate = date,
                     DateCreated = _dateTimeProvider.Now,
@@ -261,7 +261,7 @@ namespace Budget.Infrastructure.Services
             }
         }
 
-        private RecordType? MapRecordType(WalletCsvExportModel record)
+        private RecordType MapRecordType(WalletCsvExportModel record)
         {
             RecordType? recordType = null;
             if (record.Transfer)
@@ -278,7 +278,7 @@ namespace Budget.Infrastructure.Services
                 throw new ArgumentNullException(nameof(recordType));
             }
 
-            return recordType;
+            return recordType.Value;
         }
 
         private static PaymentType MapPaymentType(PaymentType debitCardPaymentType, PaymentType cashPaymentType, Account account)
