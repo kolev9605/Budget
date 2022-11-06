@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { forkJoin } from 'rxjs';
@@ -17,13 +17,13 @@ import { CurrencyService } from 'src/app/shared/services/currency.service';
 })
 export class EditAccountComponent implements OnInit {
   account: AccountModel;
-  editAccountForm: FormGroup;
+  editAccountForm: UntypedFormGroup;
   isLoading: boolean = false;
   currencies: CurrencyModel[];
 
   constructor(
     private accountService: AccountService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private currencyService: CurrencyService,
     private toastr: ToastrService,
     private router: Router,

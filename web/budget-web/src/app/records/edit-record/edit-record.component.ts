@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { forkJoin } from 'rxjs';
@@ -26,7 +26,7 @@ export class EditRecordComponent implements OnInit {
   isLoading: boolean;
 
   record: RecordModel;
-  editRecordForm: FormGroup;
+  editRecordForm: UntypedFormGroup;
   categories: CategoryModel[];
   accounts: AccountModel[];
   paymentTypes: PaymentTypeModel[];
@@ -34,7 +34,7 @@ export class EditRecordComponent implements OnInit {
   selectedRecordType: string;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private categoryService: CategoryService,
     private toastr: ToastrService,
     private accountService: AccountService,

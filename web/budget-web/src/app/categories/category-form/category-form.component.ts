@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { CategoryModel } from 'src/app/shared/models/categories/category.model';
 
 @Component({
@@ -8,7 +8,7 @@ import { CategoryModel } from 'src/app/shared/models/categories/category.model';
   styleUrls: [],
 })
 export class CategoryFormComponent implements OnInit {
-  @Input() categoryForm: FormGroup;
+  @Input() categoryForm: UntypedFormGroup;
   @Input() inEditMode: boolean;
   @Input() categoryTypes: string[];
   @Input() editCategory: CategoryModel;
