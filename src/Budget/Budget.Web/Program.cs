@@ -59,7 +59,7 @@ builder.Services.AddHealthChecks();
 
 var app = builder.Build();
 
-app.MapHealthChecks("/health");
+app.MapHealthChecks("/");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -70,7 +70,7 @@ if (app.Environment.IsDevelopment())
 
 await app.SeedAsync();
 
-//app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
 app.UseCors(x => x.AllowAnyHeader()
       .AllowAnyMethod()
