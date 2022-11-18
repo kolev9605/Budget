@@ -36,8 +36,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budget.Infrastructure.Tests
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budget.Tests.Core", "Budget.Tests.Core\Budget.Tests.Core.csproj", "{F18EF13E-2E20-4ECC-83A8-8C9270A43CAD}"
 EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{36125806-9278-4519-BE6B-069A63973B33}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budget.CsvParser", "Budget.CsvParser\Budget.CsvParser.csproj", "{9697B208-C522-4E65-B741-8BE962520B8E}"
 EndProject
 Global

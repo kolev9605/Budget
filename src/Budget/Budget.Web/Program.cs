@@ -55,7 +55,11 @@ builder.Services.Configure<FormOptions>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddHealthChecks();
+
 var app = builder.Build();
+
+app.MapHealthChecks("/");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -66,7 +70,7 @@ if (app.Environment.IsDevelopment())
 
 await app.SeedAsync();
 
-//app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
 app.UseCors(x => x.AllowAnyHeader()
       .AllowAnyMethod()
