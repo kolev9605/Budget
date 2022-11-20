@@ -70,7 +70,9 @@ if (app.Environment.IsDevelopment())
 
 await app.SeedAsync();
 
-app.UseHttpsRedirection();
+// Disable HTTPS redirection so the HTTP port works
+// Temp solution
+// app.UseHttpsRedirection();
 
 app.UseCors(x => x.AllowAnyHeader()
       .AllowAnyMethod()
