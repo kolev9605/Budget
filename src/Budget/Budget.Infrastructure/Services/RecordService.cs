@@ -78,11 +78,12 @@ namespace Budget.Infrastructure.Services
 
         public async Task<PaginationModel<RecordsGroupModel>> GetAllPaginatedAsync(PaginatedRequestModel requestModel, string userId)
         {
-            var paginatedRecords = await _recordRepository.GetAllPaginatedAsync(userId, requestModel);
+            var paginatedRecordEntities = await _recordRepository.GetAllPaginatedAsync(userId, requestModel);
 
-            paginatedRecords.Items.ForEach(r => r.RecordDate = r.RecordDate.ToLocalTime());
+            // The RecordDate is converted to local time before the grouping to produce groups based on Local time
+            paginatedRecordEntities.Items.ForEach(r => r.RecordDate = r.RecordDate.ToLocalTime());
 
-            var recordsGroupedByDate = paginatedRecords.Items
+            var recordsGroupedByDate = paginatedRecordEntities.Items
                 .GroupBy(r => r.RecordDate.Date)
                 .ToDictionary(r => r.Key, r => r.ToList())
                 .OrderByDescending(r => r.Key)
@@ -93,9 +94,9 @@ namespace Budget.Infrastructure.Services
                     Records = r.Value.Select(rm => RecordModel.FromRecord(rm))
                 });
 
-            var paginationModel = paginatedRecords.Convert(recordsGroupedByDate.ToList());
+            var paginatedRecordModels = paginatedRecordEntities.Convert(recordsGroupedByDate.ToList());
 
-            return paginationModel;
+            return paginatedRecordModels;
         }
 
         public async Task<int> CreateAsync(CreateRecordModel createRecordModel, string userId)

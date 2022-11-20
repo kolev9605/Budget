@@ -30,5 +30,10 @@
             public const string CannotDeleteYourAccount = "You cannot delete your own account";
             public const string CannotChangeYourRole = "You cannot change your own role";
         }
+
+        public static class CsvParser
+        {
+            public const string InvalidCsv = "The CSV is invalid";
+        }
     }
 }

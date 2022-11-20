@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CreateAccountModel } from 'src/app/shared/models/accounts/create-account.model';
@@ -13,13 +13,13 @@ import { CurrencyService } from 'src/app/shared/services/currency.service';
   styleUrls: [],
 })
 export class CreateAccountComponent implements OnInit {
-  createAccountForm: FormGroup;
+  createAccountForm: UntypedFormGroup;
   isLoading: boolean = false;
   currencies: CurrencyModel[];
 
   constructor(
     private accountService: AccountService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private currencyService: CurrencyService,
     private toastr: ToastrService,
     private router: Router,

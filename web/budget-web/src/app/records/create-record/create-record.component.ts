@@ -1,5 +1,5 @@
 import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { forkJoin } from 'rxjs';
@@ -22,7 +22,7 @@ import { RecordsValidations } from 'src/app/shared/constants/validations';
 export class CreateRecordComponent implements OnInit {
   isLoading: boolean;
 
-  createRecordForm: FormGroup;
+  createRecordForm: UntypedFormGroup;
   categories: CategoryModel[];
   accounts: AccountModel[];
   paymentTypes: PaymentTypeModel[];
@@ -30,7 +30,7 @@ export class CreateRecordComponent implements OnInit {
   selectedRecordType: string;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private categoryService: CategoryService,
     private toastr: ToastrService,
     private accountService: AccountService,

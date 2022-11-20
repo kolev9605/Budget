@@ -14,12 +14,24 @@
       Export Records
     </div>
     <div role="button" class="btn btn-accent text-white mx-2">
-      <input
-        type="file"
-        id="formFile"
-        (change)="onImportRecordsPressed($event)"
-        placeholder="Upload file"
-        accept=".json" />
+      <input 
+        type="file" 
+        id="formFile" 
+        accept=".json"
+        hidden 
+        (change)="onImportRecordsPressed($event)"/>
+
+      <label for="formFile">Import Records</label>
+    </div>
+        <div role="button" class="btn btn-accent text-white mx-2">
+      <input 
+        type="file" 
+        id="walletRecords" 
+        accept=".csv"
+        hidden 
+        (change)="onImportWalletRecordsPressed($event)"/>
+
+      <label for="walletRecords">Import Wallet Records</label>
     </div>
   </div>
   <div *ngIf="recordGroups && recordGroups.length > 0">

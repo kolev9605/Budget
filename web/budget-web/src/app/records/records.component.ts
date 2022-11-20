@@ -41,7 +41,13 @@ export class RecordsComponent implements OnInit {
     this.recordsObservable.subscribe({
       next: (response: PaginationModel<RecordsGroupModel>) => {
         this.isLoading = false;
-        this.recordGroups.push(...response.items);
+        let existingGroup = this.recordGroups.find((g) => g.date === response.items[0].date);
+        if (existingGroup) {
+          existingGroup.records = [...existingGroup.records, ...response.items[0].records];
+        } else {
+          this.recordGroups = [...this.recordGroups, ...response.items];
+        }
+
         this.pageNumber = response.pageNumber;
         this.hasNextPage = response.hasNextPage;
       },
@@ -71,6 +77,20 @@ export class RecordsComponent implements OnInit {
     if (fileList.length > 0) {
       let file: File = fileList[0];
       this.importService.importRecords(file).subscribe(
+        (response) => ($event.target.value = null),
+        (error) => {
+          this.toastr.error(error);
+          $event.target.value = null;
+        },
+      );
+    }
+  }
+
+    onImportWalletRecordsPressed($event: any) {
+    let fileList: FileList = $event.target.files;
+    if (fileList.length > 0) {
+      let file: File = fileList[0];
+      this.importService.importWalletRecords(file).subscribe(
         (response) => ($event.target.value = null),
         (error) => {
           this.toastr.error(error);

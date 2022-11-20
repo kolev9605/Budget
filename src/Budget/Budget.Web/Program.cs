@@ -1,5 +1,7 @@
 using Budget.Core.Entities;
+using Budget.Core.Interfaces;
 using Budget.Core.Options;
+using Budget.CsvParser;
 using Budget.Infrastructure;
 using Budget.Persistance;
 using Budget.Persistance.Seeders;
@@ -35,6 +37,7 @@ builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddMemoryCache();
 builder.Services.AddRepositories();
 builder.Services.AddServices();
+builder.Services.AddScoped<ICsvParser, CsvParser>();
 
 builder.Services.AddControllers().AddJsonOptions(opt =>
 {
@@ -52,7 +55,11 @@ builder.Services.Configure<FormOptions>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddHealthChecks();
+
 var app = builder.Build();
+
+app.MapHealthChecks("/");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -63,7 +70,9 @@ if (app.Environment.IsDevelopment())
 
 await app.SeedAsync();
 
-//app.UseHttpsRedirection();
+// Disable HTTPS redirection so the HTTP port works
+// Temp solution
+// app.UseHttpsRedirection();
 
 app.UseCors(x => x.AllowAnyHeader()
       .AllowAnyMethod()

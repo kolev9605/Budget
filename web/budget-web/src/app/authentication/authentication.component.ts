@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ColorConstants } from 'src/app/shared/constants/constants';
 import { LoginModel } from 'src/app/shared/models/authentication/login.model';
 import { RegisterModel } from 'src/app/shared/models/authentication/register.model';
@@ -16,10 +16,10 @@ export class AuthenticationComponent implements OnInit {
   public isLogin: boolean = true;
   public isLoading: boolean = false;
   public backgroundColor = ColorConstants.Background;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private authService: AuthService,
     private toastr: ToastrService,
     private router: Router,

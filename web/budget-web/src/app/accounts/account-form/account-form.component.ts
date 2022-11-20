@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { AccountModel } from 'src/app/shared/models/accounts/account.model';
 import { CurrencyModel } from 'src/app/shared/models/currencies/currency.model';
 
@@ -10,7 +10,7 @@ import { CurrencyModel } from 'src/app/shared/models/currencies/currency.model';
 })
 export class AccountFormComponent implements OnInit {
   @Input() currencies: CurrencyModel[];
-  @Input() accountForm: FormGroup;
+  @Input() accountForm: UntypedFormGroup;
   @Input() inEditMode: boolean;
   @Output() formSubmitted = new EventEmitter();
   @Output() accountDeleted = new EventEmitter();

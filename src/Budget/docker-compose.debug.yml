@@ -10,3 +10,7 @@ services:
       dockerfile: Budget.Web/Dockerfile
     ports:
       - 5000:5000
+    environment:
+      - ASPNETCORE_ENVIRONMENT=DevelopmentDocker
+    volumes:
+      - ~/.vsdbg:/remote_debugger:rw

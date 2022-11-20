@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Budget.Core\Budget.Core.csproj" />
+    <ProjectReference Include="..\Budget.CsvParser\Budget.CsvParser.csproj" />
     <ProjectReference Include="..\Budget.Repositories\Budget.Repositories.csproj" />
   </ItemGroup>
 
