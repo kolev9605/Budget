@@ -9,6 +9,6 @@ FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS publish
 WORKDIR /app
 COPY --from=build /app/publish .
 
-ENV ASPNETCORE_URLS=http://+:5000
+ENV ASPNETCORE_URLS=http://+:80
 EXPOSE 80
 ENTRYPOINT ["dotnet", "Budget.Web.dll"]
