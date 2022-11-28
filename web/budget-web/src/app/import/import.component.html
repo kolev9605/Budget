@@ -1,0 +1,27 @@
+<div class="container py-5">
+  <div class="text-center mb-4">
+    <div role="button" class="btn btn-accent text-white mx-2" (click)="onExportRecordsPressed()">
+      Export Records
+    </div>
+    <div role="button" class="btn btn-accent text-white mx-2">
+      <input
+        type="file"
+        id="formFile"
+        accept=".json"
+        hidden
+        (change)="onImportRecordsPressed($event)" />
+
+      <label for="formFile">Import Records</label>
+    </div>
+    <div role="button" class="btn btn-accent text-white mx-2">
+      <input
+        type="file"
+        id="walletRecords"
+        accept=".csv"
+        hidden
+        (change)="onImportWalletRecordsPressed($event)" />
+
+      <label for="walletRecords">Import Wallet Records</label>
+    </div>
+  </div>
+</div>

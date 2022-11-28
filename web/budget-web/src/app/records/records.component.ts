@@ -5,8 +5,6 @@ import { concatMap, Observable, Subject, tap } from 'rxjs';
 import { PaginatedRequestModel } from '../shared/models/pagination/paginated-request.model';
 import { PaginationModel } from '../shared/models/pagination/pagination.model';
 import { RecordsGroupModel } from '../shared/models/records/records-group.model';
-import { ExportService } from '../shared/services/export.service';
-import { ImportService } from '../shared/services/import.service';
 import { RecordService } from '../shared/services/record.service';
 
 @Component({
@@ -26,8 +24,6 @@ export class RecordsComponent implements OnInit {
     private recordService: RecordService,
     private router: Router,
     private toastr: ToastrService,
-    private exportService: ExportService,
-    private importService: ImportService,
   ) {}
 
   ngOnInit(): void {
@@ -63,47 +59,6 @@ export class RecordsComponent implements OnInit {
 
   onAddRecordPressed() {
     this.router.navigate(['records/create']);
-  }
-
-  onExportRecordsPressed() {
-    this.exportService.exportRecords().subscribe(
-      (response) => this.downloadFile(JSON.stringify(response)),
-      (error) => this.toastr.error(error),
-    );
-  }
-
-  onImportRecordsPressed($event: any) {
-    let fileList: FileList = $event.target.files;
-    if (fileList.length > 0) {
-      let file: File = fileList[0];
-      this.importService.importRecords(file).subscribe(
-        (response) => ($event.target.value = null),
-        (error) => {
-          this.toastr.error(error);
-          $event.target.value = null;
-        },
-      );
-    }
-  }
-
-    onImportWalletRecordsPressed($event: any) {
-    let fileList: FileList = $event.target.files;
-    if (fileList.length > 0) {
-      let file: File = fileList[0];
-      this.importService.importWalletRecords(file).subscribe(
-        (response) => ($event.target.value = null),
-        (error) => {
-          this.toastr.error(error);
-          $event.target.value = null;
-        },
-      );
-    }
-  }
-
-  downloadFile(data: any) {
-    const blob = new Blob([data], { type: 'application/json' });
-    const url = window.URL.createObjectURL(blob);
-    window.open(url);
   }
 
   scrolled($event: any) {

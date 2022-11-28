@@ -10,29 +10,6 @@
     <div role="button" class="btn btn-accent text-white mx-2" (click)="onAddRecordPressed()">
       Add Record
     </div>
-    <div role="button" class="btn btn-accent text-white mx-2" (click)="onExportRecordsPressed()">
-      Export Records
-    </div>
-    <div role="button" class="btn btn-accent text-white mx-2">
-      <input 
-        type="file" 
-        id="formFile" 
-        accept=".json"
-        hidden 
-        (change)="onImportRecordsPressed($event)"/>
-
-      <label for="formFile">Import Records</label>
-    </div>
-        <div role="button" class="btn btn-accent text-white mx-2">
-      <input 
-        type="file" 
-        id="walletRecords" 
-        accept=".csv"
-        hidden 
-        (change)="onImportWalletRecordsPressed($event)"/>
-
-      <label for="walletRecords">Import Wallet Records</label>
-    </div>
   </div>
   <div *ngIf="recordGroups && recordGroups.length > 0">
     <div class="card my-2" *ngFor="let recordGroup of recordGroups">
