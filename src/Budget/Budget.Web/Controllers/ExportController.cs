@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 namespace Budget.Web.Controllers
 {
-    [Route("Export")]
     public class ExportController : BaseController
     {
         private readonly IRecordService _recordService;

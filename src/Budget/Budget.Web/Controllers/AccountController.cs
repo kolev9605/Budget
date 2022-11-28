@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace Budget.Web.Controllers
 {
-    [Route("Account")]
     public class AccountController : BaseController
     {
         private readonly IAccountService _accountService;

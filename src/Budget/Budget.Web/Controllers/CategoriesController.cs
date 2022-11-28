@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 namespace Budget.Web.Controllers
 {
-    [Route("Categories")]
     public class CategoriesController : BaseController
     {
         private readonly ICategoryService _categoryService;

@@ -6,6 +6,7 @@ namespace Budget.Web.Controllers
 {
     [Authorize]
     [ApiController]
+    [Route("[controller]")]
     public abstract class BaseController : ControllerBase
     {
         protected string LoggedInUserId
