@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { CategoryModel } from '../models/categories/category.model';
+import { CreateCategoryModel } from '../models/categories/create-category.model';
 import { ErrorService } from './error.service';
 
 @Injectable({
@@ -49,6 +50,12 @@ export class CategoryService {
   getCategoryTypes(): Observable<string[]> {
     return this.http
       .get<string[]>(`${environment.apiUrl}${this.controller}/getCategoryTypes`)
+      .pipe(catchError(this.errorService.handleError));
+  }
+
+  createCategory(createCategoryModel: CreateCategoryModel): Observable<CategoryModel> {
+    return this.http
+      .post<CategoryModel>(`${environment.apiUrl}${this.controller}/Create`, createCategoryModel)
       .pipe(catchError(this.errorService.handleError));
   }
 }

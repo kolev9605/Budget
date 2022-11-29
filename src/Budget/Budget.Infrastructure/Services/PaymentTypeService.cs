@@ -2,6 +2,7 @@
 using Budget.Core.Interfaces.Repositories;
 using Budget.Core.Interfaces.Services;
 using Budget.Core.Models.PaymentTypes;
+using Budget.Infrastructure.Factories;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,15 +20,10 @@ namespace Budget.Infrastructure.Services
 
         public async Task<IEnumerable<PaymentTypeModel>> GetAllAsync()
         {
-            var paymentTypes = await _paymentTypesRepository.BaseAllAsync();
+            var paymentTypes = (await _paymentTypesRepository.BaseAllAsync())
+                .ToPaymentTypeModels();
 
-            var paymentTypeModels = paymentTypes.Select(pt => new PaymentTypeModel()
-            {
-                Id = pt.Id,
-                Name = pt.Name,
-            });
-
-            return paymentTypeModels;
+            return paymentTypes;
         }
     }
 }

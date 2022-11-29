@@ -7,6 +7,7 @@ using Budget.Core.Interfaces.Repositories;
 using Budget.Core.Interfaces.Services;
 using Budget.Core.Models.Pagination;
 using Budget.Core.Models.Records;
+using Budget.Infrastructure.Factories;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -44,7 +45,7 @@ namespace Budget.Infrastructure.Services
         {
             var record = await _recordRepository.GetRecordByIdAsync(id, userId);
 
-            return RecordModel.FromRecord(record);
+            return record.ToRecordModel();
         }
 
         /// <summary>
@@ -61,10 +62,10 @@ namespace Budget.Infrastructure.Services
             if (record.RecordType == RecordType.Transfer)
             {
                 var positiveTransferRecord = await _recordRepository.GetPositiveTransferRecordAsync(record);
-                return RecordModel.FromRecord(positiveTransferRecord);
+                return positiveTransferRecord.ToRecordModel();
             }
 
-            return RecordModel.FromRecord(record);
+            return record.ToRecordModel();
         }
 
         public async Task<IEnumerable<RecordsExportModel>> GetAllForExportAsync(string userId)
@@ -91,7 +92,7 @@ namespace Budget.Infrastructure.Services
                 {
                     Date = r.Key,
                     Sum = r.Value.Sum(r => r.Amount),
-                    Records = r.Value.Select(rm => RecordModel.FromRecord(rm))
+                    Records = r.Value.Select(rm => rm.ToRecordModel())
                 });
 
             var paginatedRecordModels = paginatedRecordEntities.Convert(recordsGroupedByDate.ToList());
@@ -104,17 +105,8 @@ namespace Budget.Infrastructure.Services
             await ValidateCrudRecordModel(createRecordModel, userId);
 
             var now = _dateTimeProvider.Now;
-            var record = new Record()
-            {
-                AccountId = createRecordModel.AccountId,
-                Amount = GetAmountByRecordType(createRecordModel.Amount, createRecordModel.RecordType),
-                Note = createRecordModel.Note,
-                DateCreated = now,
-                CategoryId = createRecordModel.CategoryId,
-                PaymentTypeId = createRecordModel.PaymentTypeId,
-                RecordType = createRecordModel.RecordType,
-                RecordDate = createRecordModel.RecordDate,
-            };
+            var amount = GetAmountByRecordType(createRecordModel.Amount, createRecordModel.RecordType);
+            var record = createRecordModel.ToRecord(now, amount);
 
             if (createRecordModel.RecordType == RecordType.Transfer)
             {

@@ -1,8 +1,11 @@
 ﻿using Budget.Core.Constants;
+using Budget.Core.Entities;
 using Budget.Core.Exceptions;
+using Budget.Core.Guards;
 using Budget.Core.Interfaces.Repositories;
 using Budget.Core.Interfaces.Services;
 using Budget.Core.Models.Categories;
+using Budget.Infrastructure.Factories;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,7 +32,7 @@ namespace Budget.Infrastructure.Services
                     string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(category)));
             }
 
-            var categoryModel = CategoryModel.FromCategory(category);
+            var categoryModel = category.ToCategoryModel();
 
             return categoryModel;
         }
@@ -38,8 +41,7 @@ namespace Budget.Infrastructure.Services
         {
             var categories = await _categoriesRepository.GetAllWithSubcategoriesAsync(userId);
 
-            var categoryModels = categories
-                .Select(c => CategoryModel.FromCategory(c));
+            var categoryModels = categories.ToCategoryModels();
 
             return categoryModels;
         }
@@ -48,8 +50,7 @@ namespace Budget.Infrastructure.Services
         {
             var categories = await _categoriesRepository.GetAllPrimaryAsync(userId);
 
-            var categoryModels = categories
-                .Select(c => CategoryModel.FromCategory(c));
+            var categoryModels = categories.ToCategoryModels();
 
             return categoryModels;
         }
@@ -58,10 +59,40 @@ namespace Budget.Infrastructure.Services
         {
             var categories = await _categoriesRepository.GetSubcategoriesByParentCategoryIdAsync(parentCategoryId, userId);
 
-            var categoryModels = categories
-                .Select(c => CategoryModel.FromCategory(c));
+            var categoryModels = categories.ToCategoryModels();
 
             return categoryModels;
+        }
+
+        public async Task<CategoryModel> CreateAsync(CreateCategoryModel model, string userId)
+        {
+            var existingCategory = await _categoriesRepository.GetByNameWithUsersAsync(model.Name);
+            if (existingCategory != null &&
+                existingCategory.CategoryType == model.CategoryType &&
+                existingCategory.ParentCategoryId == model.ParentCategoryId)
+            {
+                if (existingCategory.Users.Any(uc => uc.UserId == userId))
+                {
+                    throw new BudgetValidationException(string.Format(ValidationMessages.Categories.AlreadyExist, existingCategory.Name));
+                }
+
+                existingCategory.Users.Add(new UserCategory
+                {
+                    UserId = userId
+                });
+
+                var updatedCategory = (await _categoriesRepository.UpdateAsync(existingCategory)).ToCategoryModel();
+
+                return updatedCategory;
+            }
+            else
+            {
+                var category = model.ToCategory(userId);
+
+                var createdCategoryModel = (await _categoriesRepository.CreateAsync(category)).ToCategoryModel();
+
+                return createdCategoryModel;
+            }
         }
     }
 }

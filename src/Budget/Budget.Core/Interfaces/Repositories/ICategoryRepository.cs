@@ -17,5 +17,7 @@ namespace Budget.Core.Interfaces.Repositories
         Task<IEnumerable<Category>> GetInitialCategoriesAsync();
 
         Task<Category> GetByNameAsync(string name);
+
+        Task<Category> GetByNameWithUsersAsync(string name);
     }
 }

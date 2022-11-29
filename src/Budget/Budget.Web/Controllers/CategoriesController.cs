@@ -1,6 +1,7 @@
 ﻿using Budget.Common;
 using Budget.Core.Entities;
 using Budget.Core.Interfaces.Services;
+using Budget.Core.Models.Categories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -40,5 +41,10 @@ namespace Budget.Web.Controllers
         [Route(nameof(GetCategoryTypes))]
         public IActionResult GetCategoryTypes()
             => Ok(EnumHelpers.GetListFromEnum<CategoryType>());
+
+        [HttpPost]
+        [Route(nameof(Create))]
+        public async Task<IActionResult> Create(CreateCategoryModel model)
+            => Ok(await _categoryService.CreateAsync(model, LoggedInUserId));
     }
 }

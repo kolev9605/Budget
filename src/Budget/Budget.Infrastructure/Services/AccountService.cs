@@ -8,6 +8,7 @@ using System.Linq;
 using Budget.Core.Guards;
 using Budget.Core.Exceptions;
 using Budget.Core.Constants;
+using Budget.Infrastructure.Factories;
 
 namespace Budget.Infrastructure.Services
 {
@@ -35,20 +36,18 @@ namespace Budget.Infrastructure.Services
                     string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(account)));
             }
 
-            var accountModel = AccountModel.FromAccount(account);
+            var accountModel = account.ToAccountModel();
 
             return accountModel;
         }
 
         public async Task<IEnumerable<AccountModel>> GetAllAccountsAsync(string userId)
         {
-            var accounts = await _accountRepository
-                .GetAllByUserIdAsync(userId);
+            var accounts = (await _accountRepository
+                .GetAllByUserIdAsync(userId))
+                .ToAccountModels();
 
-            var accountModels = accounts
-                .Select(a => AccountModel.FromAccount(a));
-
-            return accountModels;
+            return accounts;
         }
 
         public async Task<int> CreateAccountAsync(CreateAccountModel createAccountModel, string userId)
@@ -63,15 +62,9 @@ namespace Budget.Infrastructure.Services
                     string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(currency)));
             }
 
-            var account = new Account()
-            {
-                Name = createAccountModel.Name,
-                InitialBalance = createAccountModel.InitialBalance,
-                CurrencyId = currency.Id,
-                UserId = userId,
-            };
+            var account = createAccountModel.ToAccount(userId);
 
-            var createdAccount = await _accountRepository.CreateAsync(account);
+            var createdAccount = (await _accountRepository.CreateAsync(account)).ToAccountModel();
 
             return createdAccount.Id;
         }

@@ -35,5 +35,10 @@
         {
             public const string InvalidCsv = "The CSV is invalid";
         }
+
+        public static class Categories
+        {
+            public const string AlreadyExist = "Category {0} already exist";
+        }
     }
 }

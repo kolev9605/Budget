@@ -74,6 +74,15 @@ namespace Budget.Repositories
             return category;
         }
 
+        public async Task<Category> GetByNameWithUsersAsync(string name)
+        {
+            var category = await _budgetDbContext.Categories
+                .Include(c => c.Users)
+                .FirstOrDefaultAsync(c => c.Name == name);
+
+            return category;
+        }
+
         private IQueryable<Category> GetUserCategories(string userId)
         {
             var categories = _budgetDbContext.Categories
