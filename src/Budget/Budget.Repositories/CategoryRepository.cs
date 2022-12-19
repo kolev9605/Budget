@@ -10,7 +10,7 @@ namespace Budget.Repositories
 {
     public class CategoryRepository : Repository<Category>, ICategoryRepository
     {
-        public CategoryRepository(BudgetDbContext budgetDbContext) 
+        public CategoryRepository(BudgetDbContext budgetDbContext)
             : base(budgetDbContext)
         {
         }
@@ -81,6 +81,18 @@ namespace Budget.Repositories
                 .FirstOrDefaultAsync(c => c.Name == name);
 
             return category;
+        }
+
+        public async Task<Category> GetForDeletion(int categoryId, string userId)
+        {
+            var categories = await GetUserCategories(userId)
+                .Include(c => c.SubCategories)
+                    .ThenInclude(sc => sc.Records)
+                .Include(c => c.Records)
+                .Include(c => c.Users)
+                .FirstOrDefaultAsync(c => c.Id == categoryId);
+
+            return categories;
         }
 
         private IQueryable<Category> GetUserCategories(string userId)

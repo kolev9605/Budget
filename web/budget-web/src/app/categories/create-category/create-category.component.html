@@ -1,8 +1,9 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
 <app-category-form
-  *ngIf="categoryTypes"
+  *ngIf="categoryTypes && primaryCategories"
   [categoryTypes]="categoryTypes"
+  [primaryCategories]="primaryCategories"
   (formSubmitted)="onSubmit()"
   [inEditMode]="false"
   [categoryForm]="createCategoryForm"></app-category-form>

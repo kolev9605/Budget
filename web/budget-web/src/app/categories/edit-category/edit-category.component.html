@@ -3,7 +3,9 @@
 <app-category-form
   *ngIf="category && categoryTypes"
   [categoryTypes]="categoryTypes"
+  [primaryCategories]="primaryCategories"
   (formSubmitted)="onSubmit()"
+  (categoryDeleted)="deleteCategory()"
   [inEditMode]="true"
   [categoryForm]="editCategoryForm"
   [editCategory]="category"></app-category-form>

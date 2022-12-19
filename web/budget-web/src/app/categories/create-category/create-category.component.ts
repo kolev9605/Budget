@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { forkJoin } from 'rxjs';
+import { CategoryModel } from 'src/app/shared/models/categories/category.model';
 import { CreateCategoryModel } from 'src/app/shared/models/categories/create-category.model';
 import { CategoryService } from 'src/app/shared/services/category.service';
 import { PaymentTypeService } from 'src/app/shared/services/payment-type.service';
@@ -15,6 +17,7 @@ export class CreateCategoryComponent implements OnInit {
   isLoading: boolean;
   createCategoryForm: UntypedFormGroup;
   categoryTypes: string[];
+  primaryCategories: CategoryModel[];
 
   constructor(
     private fb: UntypedFormBuilder,
@@ -27,23 +30,32 @@ export class CreateCategoryComponent implements OnInit {
     this.createCategoryForm = this.fb.group({
       name: [null, [Validators.required]],
       categoryType: [null, [Validators.required]],
+      isPrimary: [false],
+      parentCategoryId: [null],
     });
 
-    this.categoryService.getCategoryTypes().subscribe(
-      (response) => {
-        this.categoryTypes = response;
+    forkJoin({
+      categoryTypes: this.categoryService.getCategoryTypes(),
+      primaryCategories: this.categoryService.getAllPrimary(),
+    }).subscribe(
+      ({ categoryTypes: categoryTypes, primaryCategories: primaryCategories }) => {
+        this.isLoading = false;
+
+        this.categoryTypes = categoryTypes;
+        this.primaryCategories = primaryCategories;
       },
       (error) => {
+        this.isLoading = false;
         this.toastr.error(error);
       },
     );
   }
 
   onSubmit(): void {
-    console.log(this.createCategoryForm);
     const createCategoryModel = new CreateCategoryModel(
       this.createCategoryForm.value.name,
       this.createCategoryForm.value.categoryType,
+      this.createCategoryForm.value.parentCategoryId,
     );
 
     this.isLoading = true;

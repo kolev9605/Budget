@@ -5,6 +5,7 @@ import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { CategoryModel } from '../models/categories/category.model';
 import { CreateCategoryModel } from '../models/categories/create-category.model';
+import { UpdateCategoryModel } from '../models/categories/update-category.model';
 import { ErrorService } from './error.service';
 
 @Injectable({
@@ -56,6 +57,22 @@ export class CategoryService {
   createCategory(createCategoryModel: CreateCategoryModel): Observable<CategoryModel> {
     return this.http
       .post<CategoryModel>(`${environment.apiUrl}${this.controller}/Create`, createCategoryModel)
+      .pipe(catchError(this.errorService.handleError));
+  }
+
+  updateCategory(updateCategoryModel: UpdateCategoryModel): Observable<CategoryModel> {
+    return this.http
+      .post<CategoryModel>(`${environment.apiUrl}${this.controller}/Update`, updateCategoryModel)
+      .pipe(catchError(this.errorService.handleError));
+  }
+
+  deleteCategory(categoryId: number): Observable<CategoryModel> {
+    return this.http
+      .delete<CategoryModel>(`${environment.apiUrl}${this.controller}/Delete`, {
+        params: {
+          categoryId: categoryId,
+        },
+      })
       .pipe(catchError(this.errorService.handleError));
   }
 }

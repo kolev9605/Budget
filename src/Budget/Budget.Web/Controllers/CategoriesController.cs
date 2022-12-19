@@ -46,5 +46,15 @@ namespace Budget.Web.Controllers
         [Route(nameof(Create))]
         public async Task<IActionResult> Create(CreateCategoryModel model)
             => Ok(await _categoryService.CreateAsync(model, LoggedInUserId));
+
+        [HttpDelete]
+        [Route(nameof(Delete))]
+        public async Task<IActionResult> Delete(int categoryId)
+            => Ok(await _categoryService.DeleteAsync(categoryId, LoggedInUserId));
+
+        [HttpPost]
+        [Route(nameof(Update))]
+        public async Task<IActionResult> Update(UpdateCategoryModel updateCategoryModel)
+            => Ok(await _categoryService.UpdateAsync(updateCategoryModel, LoggedInUserId));
     }
 }
