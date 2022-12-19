@@ -70,10 +70,10 @@ export class CreateAccountComponent implements OnInit {
     );
 
     this.accountService.createAccount(createAccountModel).subscribe(
-      (res) => {
+      (account) => {
         this.isLoading = false;
 
-        this.toastr.success('Account created!');
+        this.toastr.success(`Account ${account.name} created!`);
         this.router.navigate(['dashboard']);
       },
       (err) => {

@@ -10,10 +10,10 @@ namespace Budget.Core.Interfaces.Services
 
         Task<IEnumerable<AccountModel>> GetAllAccountsAsync(string userId);
 
-        Task<int> CreateAccountAsync(CreateAccountModel createAccountModel, string userId);
+        Task<AccountModel> CreateAccountAsync(CreateAccountModel createAccountModel, string userId);
 
-        Task<int> UpdateAsync(UpdateAccountModel accountModel, string userId);
+        Task<AccountModel> UpdateAsync(UpdateAccountModel accountModel, string userId);
 
-        Task<int> DeleteAccountAsync(int accountId, string userId);
+        Task<AccountModel> DeleteAccountAsync(int accountId, string userId);
     }
 }

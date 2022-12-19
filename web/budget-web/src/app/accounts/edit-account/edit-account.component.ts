@@ -78,10 +78,10 @@ export class EditAccountComponent implements OnInit {
 
   deleteAccount(): void {
     this.accountService.deleteAccount(this.account.id).subscribe(
-      (res) => {
+      (account) => {
         this.isLoading = false;
 
-        this.toastr.success('Account deleted!');
+        this.toastr.success(`Account ${account.name} deleted!`);
         this.router.navigate(['dashboard']);
       },
       (err) => {
@@ -102,10 +102,10 @@ export class EditAccountComponent implements OnInit {
     );
 
     this.accountService.updateAccount(updateAccountModel).subscribe(
-      (res) => {
+      (account) => {
         this.isLoading = false;
 
-        this.toastr.success('Account updated!');
+        this.toastr.success(`Account ${account.name} updated!`);
         this.router.navigate(['dashboard']);
       },
       (err) => {

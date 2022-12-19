@@ -35,7 +35,7 @@ namespace Budget.Web.Controllers
         public async Task<IActionResult> Update(UpdateAccountModel updateAccountModel)
             => Ok(await _accountService.UpdateAsync(updateAccountModel, LoggedInUserId));
 
-        [HttpGet]
+        [HttpDelete]
         [Route(nameof(Delete))]
         public async Task<IActionResult> Delete(int accountId)
             => Ok(await _accountService.DeleteAccountAsync(accountId, LoggedInUserId));
