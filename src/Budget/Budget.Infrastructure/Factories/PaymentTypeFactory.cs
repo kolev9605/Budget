@@ -20,7 +20,7 @@ namespace Budget.Infrastructure.Factories
 
         public static IEnumerable<PaymentTypeModel> ToPaymentTypeModels(this IEnumerable<PaymentType> paymentTypes)
         {
-            if (paymentTypes == null) return null;
+            if (paymentTypes == null) return Enumerable.Empty<PaymentTypeModel>();
 
             return paymentTypes.Select(pt => pt.ToPaymentTypeModel());
         }

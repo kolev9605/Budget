@@ -23,7 +23,7 @@ namespace Budget.Infrastructure.Factories
 
         public static IEnumerable<AccountModel> ToAccountModels(this IEnumerable<Account> accounts)
         {
-            if (accounts == null) return null;
+            if (accounts == null) return Enumerable.Empty<AccountModel>();
 
             return accounts.Select(a => a.ToAccountModel());
         }

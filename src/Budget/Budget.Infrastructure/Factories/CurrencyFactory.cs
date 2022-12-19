@@ -21,7 +21,7 @@ namespace Budget.Infrastructure.Factories
 
         public static IEnumerable<CurrencyModel> ToCurrencyModels(this IEnumerable<Currency> currencies)
         {
-            if (currencies == null) return null;
+            if (currencies == null) return Enumerable.Empty<CurrencyModel>();
 
             return currencies.Select(c => c.ToCurrencyModel());
         }

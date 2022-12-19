@@ -40,12 +40,12 @@ namespace Budget.Infrastructure.Factories
                 IsInitial = category.IsInitial
             };
 
-          return categoryModel;
+            return categoryModel;
         }
 
         public static IEnumerable<CategoryModel> ToCategoryModels(this IEnumerable<Category> categories)
         {
-            if (categories == null) return null;
+            if (categories == null) return Enumerable.Empty<CategoryModel>();
 
             return categories.Select(c => c.ToCategoryModel());
         }
