@@ -56,21 +56,21 @@ export class RecordService {
       .pipe(catchError(this.errorService.handleError));
   }
 
-  createRecord(createRecordModel: CreateRecordModel): Observable<number> {
+  createRecord(createRecordModel: CreateRecordModel): Observable<RecordModel> {
     return this.http
-      .post<number>(`${environment.apiUrl}${this.controller}/Create`, createRecordModel)
+      .post<RecordModel>(`${environment.apiUrl}${this.controller}/Create`, createRecordModel)
       .pipe(catchError(this.errorService.handleError));
   }
 
-  updateRecord(updateRecordModel: UpdateRecordModel): Observable<number> {
+  updateRecord(updateRecordModel: UpdateRecordModel): Observable<RecordModel> {
     return this.http
-      .post<number>(`${environment.apiUrl}${this.controller}/Update`, updateRecordModel)
+      .post<RecordModel>(`${environment.apiUrl}${this.controller}/Update`, updateRecordModel)
       .pipe(catchError(this.errorService.handleError));
   }
 
-  deleteRecord(recordId: number): Observable<number> {
+  deleteRecord(recordId: number): Observable<RecordModel> {
     return this.http
-      .get<number>(`${environment.apiUrl}${this.controller}/Delete`, {
+      .delete<RecordModel>(`${environment.apiUrl}${this.controller}/Delete`, {
         params: {
           recordId: recordId,
         },

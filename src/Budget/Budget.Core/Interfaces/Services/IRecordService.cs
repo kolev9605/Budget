@@ -22,11 +22,11 @@ namespace Budget.Core.Interfaces.Services
 
         Task<PaginationModel<RecordsGroupModel>> GetAllPaginatedAsync(PaginatedRequestModel requestModel, string userId);
 
-        Task<int> CreateAsync(CreateRecordModel createRecordModel, string userId);
+        Task<RecordModel> CreateAsync(CreateRecordModel createRecordModel, string userId);
 
-        Task<int> UpdateAsync(UpdateRecordModel updateRecordModel, string userId);
+        Task<RecordModel> UpdateAsync(UpdateRecordModel updateRecordModel, string userId);
 
-        Task<int> DeleteAsync(int recordId, string userId);
+        Task<RecordModel> DeleteAsync(int recordId, string userId);
 
         Task<RecordsDateRangeModel> GetRecordsDateRangeAsync(string userId);
     }

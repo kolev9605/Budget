@@ -57,7 +57,7 @@ namespace Budget.Infrastructure.Services
         public async Task<RecordModel> GetByIdForUpdateAsync(int id, string userId)
         {
             var record = await _recordRepository.GetRecordByIdAsync(id, userId);
-            
+
             // Only the positive transfer record should be edited to simplify the update process
             if (record.RecordType == RecordType.Transfer)
             {
@@ -100,7 +100,7 @@ namespace Budget.Infrastructure.Services
             return paginatedRecordModels;
         }
 
-        public async Task<int> CreateAsync(CreateRecordModel createRecordModel, string userId)
+        public async Task<RecordModel> CreateAsync(CreateRecordModel createRecordModel, string userId)
         {
             await ValidateCrudRecordModel(createRecordModel, userId);
 
@@ -117,12 +117,12 @@ namespace Budget.Infrastructure.Services
                 record.FromAccountId = negativeTransferRecord.AccountId;
             }
 
-            var createdRecord = await _recordRepository.CreateAsync(record);
+            var createdRecord = (await _recordRepository.CreateAsync(record)).ToRecordModel();
 
-            return createdRecord.Id;
+            return createdRecord;
         }
 
-        public async Task<int> UpdateAsync(UpdateRecordModel updateRecordModel, string userId)
+        public async Task<RecordModel> UpdateAsync(UpdateRecordModel updateRecordModel, string userId)
         {
             var record = await _recordRepository.GetRecordByIdAsync(updateRecordModel.Id, userId);
             if (record == null)
@@ -165,12 +165,12 @@ namespace Budget.Infrastructure.Services
                 record.FromAccountId = null;
             }
 
-            var updatedRecord = await _recordRepository.UpdateAsync(record);
+            var updatedRecord = (await _recordRepository.UpdateAsync(record)).ToRecordModel();
 
-            return updatedRecord.Id;
+            return updatedRecord;
         }
 
-        public async Task<int> DeleteAsync(int recordId, string userId)
+        public async Task<RecordModel> DeleteAsync(int recordId, string userId)
         {
             var record = await _recordRepository.GetRecordByIdAsync(recordId, userId);
             if (record == null)
@@ -186,9 +186,9 @@ namespace Budget.Infrastructure.Services
                 await _recordRepository.DeleteAsync(existingTransferRecord.Id);
             }
 
-            var deletedRecord = await _recordRepository.DeleteAsync(recordId);
+            var deletedRecord = (await _recordRepository.DeleteAsync(recordId)).ToRecordModel();
 
-            return deletedRecord.Id;
+            return deletedRecord;
         }
 
         public async Task<RecordsDateRangeModel> GetRecordsDateRangeAsync(string userId)

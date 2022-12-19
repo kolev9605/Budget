@@ -112,10 +112,10 @@ export class CreateRecordComponent implements OnInit {
 
     this.isLoading = true;
     this.recordService.createRecord(createRecordModel).subscribe(
-      (response) => {
+      (record) => {
         this.isLoading = false;
 
-        this.toastr.success('Record created!');
+        this.toastr.success(`Record created in ${record.category.name}!`);
         this.router.navigate(['records']);
       },
       (error) => {

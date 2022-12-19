@@ -116,10 +116,10 @@ export class EditRecordComponent implements OnInit {
 
     this.isLoading = true;
     this.recordService.updateRecord(updateRecordModel).subscribe(
-      (response) => {
+      (record) => {
         this.isLoading = false;
 
-        this.toastr.success('Record updated!');
+        this.toastr.success(`Record updated from ${record.category.name}!`);
         this.router.navigate(['records']);
       },
       (error) => {
@@ -132,10 +132,10 @@ export class EditRecordComponent implements OnInit {
 
   deleteRecord(): void {
     this.recordService.deleteRecord(this.record.id).subscribe(
-      (res) => {
+      (record) => {
         this.isLoading = false;
 
-        this.toastr.success('Record deleted!');
+        this.toastr.success(`Record deleted from ${record.category.name}!`);
         this.router.navigate(['records']);
       },
       (err) => {
