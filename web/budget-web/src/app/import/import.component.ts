@@ -18,23 +18,23 @@ export class ImportComponent implements OnInit {
   ngOnInit(): void {}
 
   onExportRecordsPressed() {
-    this.exportService.exportRecords().subscribe(
-      (response) => this.downloadFile(JSON.stringify(response)),
-      (error) => this.toastr.error(error),
-    );
+    this.exportService.exportRecords().subscribe({
+      next: (response) => this.downloadFile(JSON.stringify(response)),
+      error: (error) => this.toastr.error(error),
+    });
   }
 
   onImportRecordsPressed($event: any) {
     let fileList: FileList = $event.target.files;
     if (fileList.length > 0) {
       let file: File = fileList[0];
-      this.importService.importRecords(file).subscribe(
-        (response) => ($event.target.value = null),
-        (error) => {
+      this.importService.importRecords(file).subscribe({
+        next: (response) => ($event.target.value = null),
+        error: (error) => {
           this.toastr.error(error);
           $event.target.value = null;
         },
-      );
+      });
     }
   }
 
@@ -42,13 +42,13 @@ export class ImportComponent implements OnInit {
     let fileList: FileList = $event.target.files;
     if (fileList.length > 0) {
       let file: File = fileList[0];
-      this.importService.importWalletRecords(file).subscribe(
-        (response) => ($event.target.value = null),
-        (error) => {
+      this.importService.importWalletRecords(file).subscribe({
+        next: (response) => ($event.target.value = null),
+        error: (error) => {
           this.toastr.error(error);
           $event.target.value = null;
         },
-      );
+      });
     }
   }
 

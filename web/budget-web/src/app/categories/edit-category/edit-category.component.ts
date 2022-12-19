@@ -41,19 +41,15 @@ export class EditCategoryComponent implements OnInit {
         .pipe(first()),
       categoryTypes: this.categoryService.getCategoryTypes(),
       primaryCategories: this.categoryService.getAllPrimary(),
-    }).subscribe(
-      ({
+    }).subscribe({
+      next: ({
         editCategory: editCategory,
         categoryTypes: categoryTypes,
         primaryCategories: primaryCategories,
       }) => {
-        this.isLoading = false;
-
         this.category = editCategory;
         this.categoryTypes = categoryTypes;
         this.primaryCategories = primaryCategories;
-
-        console.log('editCategory.parentCategoryId', editCategory.parentCategoryId);
 
         this.editCategoryForm.patchValue({
           name: editCategory.name,
@@ -62,11 +58,11 @@ export class EditCategoryComponent implements OnInit {
           isPrimary: editCategory.parentCategoryId === null,
         });
       },
-      (error) => {
-        this.isLoading = false;
+      error: (error) => {
         this.toastr.error(error);
       },
-    );
+      complete: () => (this.isLoading = false),
+    });
   }
 
   onSubmit(): void {
@@ -87,34 +83,28 @@ export class EditCategoryComponent implements OnInit {
     );
 
     this.isLoading = true;
-    this.categoryService.updateCategory(updateCategoryModel).subscribe(
-      (category) => {
-        this.isLoading = false;
-
+    this.categoryService.updateCategory(updateCategoryModel).subscribe({
+      next: (category) => {
         this.toastr.success(`Category ${category.name} updated!`);
         this.router.navigate(['categories']);
       },
-      (error) => {
-        this.isLoading = false;
-
+      error: (error) => {
         this.toastr.error(error);
       },
-    );
+      complete: () => (this.isLoading = false),
+    });
   }
 
   deleteCategory(): void {
-    this.categoryService.deleteCategory(this.category.id).subscribe(
-      (category) => {
-        this.isLoading = false;
-
+    this.categoryService.deleteCategory(this.category.id).subscribe({
+      next: (category) => {
         this.toastr.success(`Category ${category.name} deleted!`);
         this.router.navigate(['categories']);
       },
-      (err) => {
-        this.isLoading = false;
-
+      error: (err) => {
         this.toastr.error(err);
       },
-    );
+      complete: () => (this.isLoading = false),
+    });
   }
 }

@@ -57,10 +57,8 @@ export class CreateRecordComponent implements OnInit {
       accounts: this.accountService.getAll(),
       paymentTypes: this.paymentTypeService.getAll(),
       recordTypes: this.recordService.getRecordTypes(),
-    }).subscribe(
-      ({ categories, accounts, paymentTypes, recordTypes }) => {
-        this.isLoading = false;
-
+    }).subscribe({
+      next: ({ categories, accounts, paymentTypes, recordTypes }) => {
         this.categories = categories;
         this.accounts = accounts;
         this.paymentTypes = paymentTypes;
@@ -82,11 +80,11 @@ export class CreateRecordComponent implements OnInit {
           paymentType: this.paymentTypes.find((x) => x.name == 'Debit Card')?.id,
         });
       },
-      (error) => {
-        this.isLoading = false;
+      error: (error) => {
         this.toastr.error(error);
       },
-    );
+      complete: () => (this.isLoading = false),
+    });
   }
 
   onSubmit(): void {
@@ -111,18 +109,15 @@ export class CreateRecordComponent implements OnInit {
     );
 
     this.isLoading = true;
-    this.recordService.createRecord(createRecordModel).subscribe(
-      (record) => {
-        this.isLoading = false;
-
+    this.recordService.createRecord(createRecordModel).subscribe({
+      next: (record) => {
         this.toastr.success(`Record created in ${record.category.name}!`);
         this.router.navigate(['records']);
       },
-      (error) => {
-        this.isLoading = false;
-
+      error: (error) => {
         this.toastr.error(error);
       },
-    );
+      complete: () => (this.isLoading = false),
+    });
   }
 }

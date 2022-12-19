@@ -37,18 +37,16 @@ export class CreateCategoryComponent implements OnInit {
     forkJoin({
       categoryTypes: this.categoryService.getCategoryTypes(),
       primaryCategories: this.categoryService.getAllPrimary(),
-    }).subscribe(
-      ({ categoryTypes: categoryTypes, primaryCategories: primaryCategories }) => {
-        this.isLoading = false;
-
+    }).subscribe({
+      next: ({ categoryTypes: categoryTypes, primaryCategories: primaryCategories }) => {
         this.categoryTypes = categoryTypes;
         this.primaryCategories = primaryCategories;
       },
-      (error) => {
-        this.isLoading = false;
+      error: (error) => {
         this.toastr.error(error);
       },
-    );
+      complete: () => (this.isLoading = false),
+    });
   }
 
   onSubmit(): void {
@@ -59,18 +57,15 @@ export class CreateCategoryComponent implements OnInit {
     );
 
     this.isLoading = true;
-    this.categoryService.createCategory(createCategoryModel).subscribe(
-      (category) => {
-        this.isLoading = false;
-
+    this.categoryService.createCategory(createCategoryModel).subscribe({
+      next: (category) => {
         this.toastr.success(`Category ${category.name} created!`);
         this.router.navigate(['categories']);
       },
-      (error) => {
-        this.isLoading = false;
-
+      error: (error) => {
         this.toastr.error(error);
       },
-    );
+      complete: () => (this.isLoading = false),
+    });
   }
 }
