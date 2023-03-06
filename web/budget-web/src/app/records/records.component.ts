@@ -27,7 +27,7 @@ export class RecordsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.isLoading = true;
+    // this.isLoading = true;
 
     this.recordsObservable = this.recordsRequestSubject.pipe(
       tap(() => (this.isLoading = true)),
@@ -45,11 +45,12 @@ export class RecordsComponent implements OnInit {
 
         this.pageNumber = response.pageNumber;
         this.hasNextPage = response.hasNextPage;
+        this.isLoading = false;
       },
       error: (error: string) => {
         this.toastr.error(error);
-      },
-      complete: () => (this.isLoading = false),
+        this.isLoading = false;
+      }
     });
 
     var paginatedRequestModel: PaginatedRequestModel = new PaginatedRequestModel(this.pageNumber);
