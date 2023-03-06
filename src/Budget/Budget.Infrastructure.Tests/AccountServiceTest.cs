@@ -90,10 +90,10 @@ namespace Budget.Infrastructure.Tests
             };
 
             // Act
-            var accountId = await accountService.CreateAccountAsync(createAccountRequest, DefaultValueConstants.User.UserId); ;
+            var account = await accountService.CreateAccountAsync(createAccountRequest, DefaultValueConstants.User.UserId); ;
 
             // Assert
-            Assert.Equal(DefaultValueConstants.Common.Id, accountId);
+            Assert.Equal(DefaultValueConstants.Common.Id, account.Id);
         }
 
         [Fact]
@@ -129,10 +129,10 @@ namespace Budget.Infrastructure.Tests
             };
 
             // Act
-            var accountId = await accountService.UpdateAsync(updateAccountRequest, DefaultValueConstants.User.UserId); ;
+            var account = await accountService.UpdateAsync(updateAccountRequest, DefaultValueConstants.User.UserId); ;
 
             // Assert
-            Assert.Equal(DefaultValueConstants.Common.Id, accountId);
+            Assert.Equal(DefaultValueConstants.Common.Id, account.Id);
         }
 
         [Fact]
@@ -202,10 +202,10 @@ namespace Budget.Infrastructure.Tests
             var accountService = ServiceMockHelper.SetupAccountService();
 
             // Act
-            var accountId = await accountService.DeleteAccountAsync(DefaultValueConstants.Common.Id, DefaultValueConstants.User.UserId); ;
+            var account = await accountService.DeleteAccountAsync(DefaultValueConstants.Common.Id, DefaultValueConstants.User.UserId); ;
 
             // Assert
-            Assert.Equal(DefaultValueConstants.Common.Id, accountId);
+            Assert.Equal(DefaultValueConstants.Common.Id, account.Id);
         }
 
         [Fact]

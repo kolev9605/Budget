@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace Budget.Web.Controllers
 {
-    [Route("Import")]
     public class ImportController : BaseController
     {
         private readonly IImportService _importService;

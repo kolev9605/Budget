@@ -35,5 +35,15 @@
         {
             public const string InvalidCsv = "The CSV is invalid";
         }
+
+        public static class Categories
+        {
+            public const string AlreadyExist = "Category {0} already exist";
+            public const string AlreadyDoesNotExist = "Category doesn't exist";
+            public const string HasRecords = "Category {0} has records and cannot be deleted.";
+            public const string HasSubCategoriesCannotBeDeleted = "Category {0} has sub-categories linked to it and cannot be deleted.";
+            public const string HasSubCategoriesCannotBecomeSubcategory = "Category {0} has sub-categories linked to it and cannot be made sub-category itself.";
+
+        }
     }
 }

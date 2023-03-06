@@ -54,16 +54,15 @@ export class DashboardComponent implements OnInit {
       concatMap((request) => this.chartService.getCashFlowData(request)),
     );
 
-    this.cashFlowDateObservable.subscribe(
-      (response) => {
+    this.cashFlowDateObservable.subscribe({
+      next: (response) => {
         this.cashFlowData = response;
-        this.isLoading = false;
       },
-      (error) => {
-        this.isLoading = false;
+      error: (error) => {
         this.toastr.error(error);
       },
-    );
+      complete: () => (this.isLoading = false),
+    });
 
     this.statisticsObservable = this.cashFlowRequestSubject.pipe(
       tap(() => (this.isLoading = true)),
@@ -74,24 +73,23 @@ export class DashboardComponent implements OnInit {
       ),
     );
 
-    this.statisticsObservable.subscribe(
-      (response) => {
+    this.statisticsObservable.subscribe({
+      next: (response) => {
         this.statistics = response;
-        this.isLoading = false;
       },
-      (error) => {
-        this.isLoading = false;
+      error: (error) => {
         this.toastr.error(error);
       },
-    );
+      complete: () => (this.isLoading = false),
+    });
 
     forkJoin({
       accounts: this.accountService.getAll(),
       recordsDateRange: this.recordService.getRecordsDateRange(),
     })
       .pipe(tap(() => (this.isLoading = true)))
-      .subscribe(
-        ({ accounts, recordsDateRange }) => {
+      .subscribe({
+        next: ({ accounts, recordsDateRange }) => {
           this.accounts = accounts;
           this.selectedAccountIds = accounts.map((a) => a.id);
 
@@ -102,14 +100,12 @@ export class DashboardComponent implements OnInit {
             this.calculateHasPreviousMonth();
             this.loadData();
           }
-
-          this.isLoading = false;
         },
-        (error) => {
-          this.isLoading = false;
+        error: (error) => {
           this.toastr.error(error);
         },
-      );
+        complete: () => (this.isLoading = false),
+      });
   }
 
   onAccountSelected(accountId: number) {

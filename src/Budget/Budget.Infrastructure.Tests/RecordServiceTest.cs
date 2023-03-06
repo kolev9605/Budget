@@ -29,7 +29,7 @@ namespace Budget.Infrastructure.Tests
             var result = await recordService.CreateAsync(model, DefaultValueConstants.User.UserId);
 
             // Assert
-            Assert.Equal(result, DefaultValueConstants.Common.Id);
+            Assert.Equal(result.Id, DefaultValueConstants.Common.Id);
         }
 
         [Fact]
@@ -131,7 +131,7 @@ namespace Budget.Infrastructure.Tests
             var recordService = ServiceMockHelper.SetupRecordService();
 
             CreateRecordModel model = null;
-            
+
             // Act
             var act = async () => await recordService.CreateAsync(model, DefaultValueConstants.User.UserId);
 
@@ -184,7 +184,7 @@ namespace Budget.Infrastructure.Tests
             var result = await recordService.UpdateAsync(model, DefaultValueConstants.User.UserId);
 
             // Assert
-            Assert.Equal(result, DefaultValueConstants.Common.Id);
+            Assert.Equal(result.Id, DefaultValueConstants.Common.Id);
         }
 
         [Fact]
@@ -197,7 +197,7 @@ namespace Budget.Infrastructure.Tests
             var result = await recordService.DeleteAsync(DefaultValueConstants.Common.Id, DefaultValueConstants.User.UserId);
 
             // Assert
-            Assert.Equal(result, DefaultValueConstants.Common.Id);
+            Assert.Equal(result.Id, DefaultValueConstants.Common.Id);
         }
 
         [Fact]

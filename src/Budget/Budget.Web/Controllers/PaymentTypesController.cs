@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 
 namespace Budget.Web.Controllers
 {
-    [Route("PaymentTypes")]
     public class PaymentTypesController : BaseController
     {
         private readonly IPaymentTypeService _paymentTypeService;

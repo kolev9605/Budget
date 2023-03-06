@@ -7,6 +7,7 @@ using Budget.Core.Interfaces.Repositories;
 using Budget.Core.Interfaces.Services;
 using Budget.Core.Models.Pagination;
 using Budget.Core.Models.Records;
+using Budget.Infrastructure.Factories;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -44,7 +45,7 @@ namespace Budget.Infrastructure.Services
         {
             var record = await _recordRepository.GetRecordByIdAsync(id, userId);
 
-            return RecordModel.FromRecord(record);
+            return record.ToRecordModel();
         }
 
         /// <summary>
@@ -56,15 +57,15 @@ namespace Budget.Infrastructure.Services
         public async Task<RecordModel> GetByIdForUpdateAsync(int id, string userId)
         {
             var record = await _recordRepository.GetRecordByIdAsync(id, userId);
-            
+
             // Only the positive transfer record should be edited to simplify the update process
             if (record.RecordType == RecordType.Transfer)
             {
                 var positiveTransferRecord = await _recordRepository.GetPositiveTransferRecordAsync(record);
-                return RecordModel.FromRecord(positiveTransferRecord);
+                return positiveTransferRecord.ToRecordModel();
             }
 
-            return RecordModel.FromRecord(record);
+            return record.ToRecordModel();
         }
 
         public async Task<IEnumerable<RecordsExportModel>> GetAllForExportAsync(string userId)
@@ -91,7 +92,7 @@ namespace Budget.Infrastructure.Services
                 {
                     Date = r.Key,
                     Sum = r.Value.Sum(r => r.Amount),
-                    Records = r.Value.Select(rm => RecordModel.FromRecord(rm))
+                    Records = r.Value.Select(rm => rm.ToRecordModel())
                 });
 
             var paginatedRecordModels = paginatedRecordEntities.Convert(recordsGroupedByDate.ToList());
@@ -99,22 +100,13 @@ namespace Budget.Infrastructure.Services
             return paginatedRecordModels;
         }
 
-        public async Task<int> CreateAsync(CreateRecordModel createRecordModel, string userId)
+        public async Task<RecordModel> CreateAsync(CreateRecordModel createRecordModel, string userId)
         {
             await ValidateCrudRecordModel(createRecordModel, userId);
 
             var now = _dateTimeProvider.Now;
-            var record = new Record()
-            {
-                AccountId = createRecordModel.AccountId,
-                Amount = GetAmountByRecordType(createRecordModel.Amount, createRecordModel.RecordType),
-                Note = createRecordModel.Note,
-                DateCreated = now,
-                CategoryId = createRecordModel.CategoryId,
-                PaymentTypeId = createRecordModel.PaymentTypeId,
-                RecordType = createRecordModel.RecordType,
-                RecordDate = createRecordModel.RecordDate,
-            };
+            var amount = GetAmountByRecordType(createRecordModel.Amount, createRecordModel.RecordType);
+            var record = createRecordModel.ToRecord(now, amount);
 
             if (createRecordModel.RecordType == RecordType.Transfer)
             {
@@ -125,12 +117,12 @@ namespace Budget.Infrastructure.Services
                 record.FromAccountId = negativeTransferRecord.AccountId;
             }
 
-            var createdRecord = await _recordRepository.CreateAsync(record);
+            var createdRecord = (await _recordRepository.CreateAsync(record)).ToRecordModel();
 
-            return createdRecord.Id;
+            return createdRecord;
         }
 
-        public async Task<int> UpdateAsync(UpdateRecordModel updateRecordModel, string userId)
+        public async Task<RecordModel> UpdateAsync(UpdateRecordModel updateRecordModel, string userId)
         {
             var record = await _recordRepository.GetRecordByIdAsync(updateRecordModel.Id, userId);
             if (record == null)
@@ -173,12 +165,12 @@ namespace Budget.Infrastructure.Services
                 record.FromAccountId = null;
             }
 
-            var updatedRecord = await _recordRepository.UpdateAsync(record);
+            var updatedRecord = (await _recordRepository.UpdateAsync(record)).ToRecordModel();
 
-            return updatedRecord.Id;
+            return updatedRecord;
         }
 
-        public async Task<int> DeleteAsync(int recordId, string userId)
+        public async Task<RecordModel> DeleteAsync(int recordId, string userId)
         {
             var record = await _recordRepository.GetRecordByIdAsync(recordId, userId);
             if (record == null)
@@ -194,9 +186,9 @@ namespace Budget.Infrastructure.Services
                 await _recordRepository.DeleteAsync(existingTransferRecord.Id);
             }
 
-            var deletedRecord = await _recordRepository.DeleteAsync(recordId);
+            var deletedRecord = (await _recordRepository.DeleteAsync(recordId)).ToRecordModel();
 
-            return deletedRecord.Id;
+            return deletedRecord;
         }
 
         public async Task<RecordsDateRangeModel> GetRecordsDateRangeAsync(string userId)

@@ -27,22 +27,5 @@ namespace Budget.Core.Models.Records
         public DateTime RecordDate { get; set; }
 
         public decimal Amount { get; set; }
-
-        public static RecordModel FromRecord(Record record)
-        {
-            return new RecordModel
-            {
-                Id = record.Id,
-                Note = record.Note,
-                Account = AccountModel.FromAccount(record.Account),
-                FromAccount = record.FromAccountId.HasValue ? AccountModel.FromAccount(record.FromAccount) : null,
-                RecordType = record.RecordType,
-                PaymentType = PaymentTypeModel.FromPaymentType(record.PaymentType),
-                Category = CategoryModel.FromCategory(record.Category),
-                DateCreated = record.DateCreated,
-                RecordDate = record.RecordDate,
-                Amount = record.Amount,
-            };
-        }
     }
 }

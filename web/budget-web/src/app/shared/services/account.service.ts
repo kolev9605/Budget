@@ -32,21 +32,21 @@ export class AccountService {
       .pipe(catchError(this.errorService.handleError));
   }
 
-  createAccount(createAccountModel: CreateAccountModel): Observable<number> {
+  createAccount(createAccountModel: CreateAccountModel): Observable<AccountModel> {
     return this.http
-      .post<number>(`${environment.apiUrl}${this.controller}/Create`, createAccountModel)
+      .post<AccountModel>(`${environment.apiUrl}${this.controller}/Create`, createAccountModel)
       .pipe(catchError(this.errorService.handleError));
   }
 
-  updateAccount(updateAccountModel: UpdateAccountModel): Observable<number> {
+  updateAccount(updateAccountModel: UpdateAccountModel): Observable<AccountModel> {
     return this.http
-      .post<number>(`${environment.apiUrl}${this.controller}/Update`, updateAccountModel)
+      .post<AccountModel>(`${environment.apiUrl}${this.controller}/Update`, updateAccountModel)
       .pipe(catchError(this.errorService.handleError));
   }
 
-  deleteAccount(accountId: number) {
+  deleteAccount(accountId: number): Observable<AccountModel> {
     return this.http
-      .get<number>(`${environment.apiUrl}${this.controller}/Delete`, {
+      .delete<AccountModel>(`${environment.apiUrl}${this.controller}/Delete`, {
         params: {
           accountId: accountId,
         },

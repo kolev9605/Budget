@@ -2,6 +2,7 @@
 using Budget.Core.Interfaces.Repositories;
 using Budget.Core.Interfaces.Services;
 using Budget.Core.Models.Currencies;
+using Budget.Infrastructure.Factories;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,17 +20,10 @@ namespace Budget.Infrastructure.Services
 
         public async Task<IEnumerable<CurrencyModel>> GetAllAsync()
         {
-            var currencies = await _repository.BaseAllAsync();
-
-            var currencyModels = currencies
-                .Select(c => new CurrencyModel()
-                {
-                    Id = c.Id,
-                    Name = c.Name,
-                    Abbreviation = c.Abbreviation,
-                });
-
-            return currencyModels;
+            var currencies = (await _repository.BaseAllAsync())
+                .ToCurrencyModels();
+                
+            return currencies;
         }
     }
 }

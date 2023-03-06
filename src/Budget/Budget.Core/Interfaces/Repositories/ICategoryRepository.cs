@@ -17,5 +17,9 @@ namespace Budget.Core.Interfaces.Repositories
         Task<IEnumerable<Category>> GetInitialCategoriesAsync();
 
         Task<Category> GetByNameAsync(string name);
+
+        Task<Category> GetForDeletion(int categoryId, string userId);
+
+        Task<Category> GetByNameWithUsersAsync(string name);
     }
 }

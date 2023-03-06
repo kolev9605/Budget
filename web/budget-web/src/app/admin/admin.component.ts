@@ -25,16 +25,15 @@ export class AdminComponent implements OnInit {
       concatMap(() => this.adminService.getUsers()),
     );
 
-    this.usersObservable.subscribe(
-      (response) => {
+    this.usersObservable.subscribe({
+      next: (response) => {
         this.users = response;
-        this.isLoading = false;
       },
-      (error) => {
-        this.isLoading = false;
+      error: (error) => {
         this.toastr.error(error);
       },
-    );
+      complete: () => (this.isLoading = false),
+    });
 
     this.usersSubject.next(true);
   }
@@ -44,14 +43,14 @@ export class AdminComponent implements OnInit {
   }
 
   onDeleteButtonPressed(userId: string): void {
-    this.adminService.deleteUser(userId).subscribe(
-      (response) => {
+    this.adminService.deleteUser(userId).subscribe({
+      next: (response) => {
         this.usersSubject.next(true);
       },
-      (error) => {
+      error: (error) => {
         this.toastr.error(error);
       },
-    );
+    });
   }
 
   makeAdmin(userId: string): void {
@@ -59,27 +58,27 @@ export class AdminComponent implements OnInit {
     this.adminService
       .changeUserRole(requestModel)
       .pipe(first())
-      .subscribe(
-        (response) => {
+      .subscribe({
+        next: (response) => {
           this.usersSubject.next(true);
         },
-        (error) => {
+        error: (error) => {
           this.toastr.error(error);
         },
-      );
+      });
   }
   makeUser(userId: string): void {
     const requestModel = new ChangeUserRoleRequestModel(userId, Roles.User);
     this.adminService
       .changeUserRole(requestModel)
       .pipe(first())
-      .subscribe(
-        (response) => {
+      .subscribe({
+        next: (response) => {
           this.usersSubject.next(true);
         },
-        (error) => {
+        error: (error) => {
           this.toastr.error(error);
         },
-      );
+      });
   }
 }

@@ -17,17 +17,5 @@ namespace Budget.Core.Models.Accounts
         public decimal Balance { get; set; }
 
         public CurrencyModel Currency { get; set; }
-
-        public static AccountModel FromAccount(Account account)
-        {
-            return new AccountModel()
-            {
-                Id = account.Id,
-                Name = account.Name,
-                InitialBalance = account.InitialBalance,
-                Currency = CurrencyModel.FromCurrency(account.Currency),
-                Balance = account.Records.Select(r => r.Amount).Sum() + account.InitialBalance
-            };
-        }
     }
 }

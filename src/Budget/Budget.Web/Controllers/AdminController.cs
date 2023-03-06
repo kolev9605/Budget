@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 namespace Budget.Web.Controllers
 {
     [Authorize(Roles = Roles.Administrator)]
-    [Route("Admin")]
     public class AdminController : BaseController
     {
         private readonly IUserService _userService;

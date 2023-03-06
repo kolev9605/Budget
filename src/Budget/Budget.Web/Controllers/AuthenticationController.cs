@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 namespace Budget.Web.Controllers
 {
     [AllowAnonymous]
-    [Route("Authentication")]
     public class AuthenticationController : BaseController
     {
         private readonly IUserService _userService;

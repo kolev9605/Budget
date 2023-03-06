@@ -10,7 +10,6 @@ using Budget.Core.Models.Pagination;
 
 namespace Budget.Web.Controllers
 {
-    [Route("Records")]
     public class RecordsController : BaseController
     {
         private readonly IRecordService _recordService;
@@ -45,7 +44,7 @@ namespace Budget.Web.Controllers
         public async Task<IActionResult> Update(UpdateRecordModel updateRecordModel)
             => Ok(await _recordService.UpdateAsync(updateRecordModel, LoggedInUserId));
 
-        [HttpGet]
+        [HttpDelete]
         [Route(nameof(Delete))]
         public async Task<IActionResult> Delete(int recordId)
             => Ok(await _recordService.DeleteAsync(recordId, LoggedInUserId));

@@ -8,6 +8,7 @@ using System.Linq;
 using Budget.Core.Guards;
 using Budget.Core.Exceptions;
 using Budget.Core.Constants;
+using Budget.Infrastructure.Factories;
 
 namespace Budget.Infrastructure.Services
 {
@@ -17,7 +18,7 @@ namespace Budget.Infrastructure.Services
         private readonly IRepository<Currency> _currencyRepository;
 
         public AccountService(
-            IAccountRepository accountRepository, 
+            IAccountRepository accountRepository,
             IRepository<Currency> currencyRepository)
         {
             _accountRepository = accountRepository;
@@ -35,23 +36,21 @@ namespace Budget.Infrastructure.Services
                     string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(account)));
             }
 
-            var accountModel = AccountModel.FromAccount(account);
+            var accountModel = account.ToAccountModel();
 
             return accountModel;
         }
 
         public async Task<IEnumerable<AccountModel>> GetAllAccountsAsync(string userId)
         {
-            var accounts = await _accountRepository
-                .GetAllByUserIdAsync(userId);
+            var accounts = (await _accountRepository
+                .GetAllByUserIdAsync(userId))
+                .ToAccountModels();
 
-            var accountModels = accounts
-                .Select(a => AccountModel.FromAccount(a));
-
-            return accountModels;
+            return accounts;
         }
 
-        public async Task<int> CreateAccountAsync(CreateAccountModel createAccountModel, string userId)
+        public async Task<AccountModel> CreateAccountAsync(CreateAccountModel createAccountModel, string userId)
         {
             Guard.IsNotNullOrEmpty(createAccountModel.Name, nameof(createAccountModel.Name));
             Guard.ValidateMaxtLength(createAccountModel.Name, nameof(createAccountModel.Name), Validations.Accounts.NameMaxLength);
@@ -63,20 +62,14 @@ namespace Budget.Infrastructure.Services
                     string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(currency)));
             }
 
-            var account = new Account()
-            {
-                Name = createAccountModel.Name,
-                InitialBalance = createAccountModel.InitialBalance,
-                CurrencyId = currency.Id,
-                UserId = userId,
-            };
+            var account = createAccountModel.ToAccount(userId);
 
-            var createdAccount = await _accountRepository.CreateAsync(account);
+            var createdAccount = (await _accountRepository.CreateAsync(account)).ToAccountModel();
 
-            return createdAccount.Id;
+            return createdAccount;
         }
 
-        public async Task<int> UpdateAsync(UpdateAccountModel accountModel, string userId)
+        public async Task<AccountModel> UpdateAsync(UpdateAccountModel accountModel, string userId)
         {
             Guard.IsNotNullOrEmpty(accountModel.Name, nameof(accountModel.Name));
             Guard.ValidateMaxtLength(accountModel.Name, nameof(accountModel.Name), Validations.Accounts.NameMaxLength);
@@ -106,12 +99,12 @@ namespace Budget.Infrastructure.Services
             account.Name = accountModel.Name;
             account.InitialBalance = accountModel.InitialBalance;
 
-            await _accountRepository.UpdateAsync(account);
+            var updatedAccount = (await _accountRepository.UpdateAsync(account)).ToAccountModel();
 
-            return account.Id;
+            return updatedAccount;
         }
 
-        public async Task<int> DeleteAccountAsync(int accountId, string userId)
+        public async Task<AccountModel> DeleteAccountAsync(int accountId, string userId)
         {
             var account = await _accountRepository.GetByIdWithCurrencyAsync(accountId, userId);
             if (account == null)
@@ -120,9 +113,9 @@ namespace Budget.Infrastructure.Services
                     string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(account)));
             }
 
-            var deletedAccount = await _accountRepository.DeleteAsync(accountId);
+            var deletedAccount = (await _accountRepository.DeleteAsync(accountId)).ToAccountModel();
 
-            return deletedAccount.Id;
+            return deletedAccount;
         }
     }
 }

@@ -63,10 +63,8 @@ export class EditRecordComponent implements OnInit {
       accounts: this.accountService.getAll(),
       paymentTypes: this.paymentTypeService.getAll(),
       recordTypes: this.recordService.getRecordTypes(),
-    }).subscribe(
-      ({ editRecord, categories, accounts, paymentTypes, recordTypes }) => {
-        this.isLoading = false;
-
+    }).subscribe({
+      next: ({ editRecord, categories, accounts, paymentTypes, recordTypes }) => {
         this.categories = categories;
         this.accounts = accounts;
         this.paymentTypes = paymentTypes;
@@ -85,11 +83,11 @@ export class EditRecordComponent implements OnInit {
           recordDate: format(new Date(this.record.recordDate), Formats.DateTimeFormt),
         });
       },
-      (error) => {
-        this.isLoading = false;
+      error: (error) => {
         this.toastr.error(error);
       },
-    );
+      complete: () => (this.isLoading = false),
+    });
   }
 
   onSubmit(): void {
@@ -115,34 +113,28 @@ export class EditRecordComponent implements OnInit {
     );
 
     this.isLoading = true;
-    this.recordService.updateRecord(updateRecordModel).subscribe(
-      (response) => {
-        this.isLoading = false;
-
-        this.toastr.success('Record updated!');
+    this.recordService.updateRecord(updateRecordModel).subscribe({
+      next: (record) => {
+        this.toastr.success(`Record updated from ${record.category.name}!`);
         this.router.navigate(['records']);
       },
-      (error) => {
-        this.isLoading = false;
-
+      error: (error) => {
         this.toastr.error(error);
       },
-    );
+      complete: () => (this.isLoading = false),
+    });
   }
 
   deleteRecord(): void {
-    this.recordService.deleteRecord(this.record.id).subscribe(
-      (res) => {
-        this.isLoading = false;
-
-        this.toastr.success('Record deleted!');
+    this.recordService.deleteRecord(this.record.id).subscribe({
+      next: (record) => {
+        this.toastr.success(`Record deleted from ${record.category.name}!`);
         this.router.navigate(['records']);
       },
-      (err) => {
-        this.isLoading = false;
-
+      error: (err) => {
         this.toastr.error(err);
       },
-    );
+      complete: () => (this.isLoading = false),
+    });
   }
 }

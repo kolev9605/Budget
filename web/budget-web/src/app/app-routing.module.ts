@@ -9,6 +9,7 @@ import { CategoriesComponent } from './categories/categories.component';
 import { CreateCategoryComponent } from './categories/create-category/create-category.component';
 import { EditCategoryComponent } from './categories/edit-category/edit-category.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { ImportComponent } from './import/import.component';
 import { CreateRecordComponent } from './records/create-record/create-record.component';
 import { EditRecordComponent } from './records/edit-record/edit-record.component';
 import { RecordsComponent } from './records/records.component';
@@ -46,6 +47,7 @@ const routes: Routes = [
       { path: 'edit/:categoryId', component: EditCategoryComponent, pathMatch: 'full' },
     ],
   },
+  { path: 'import', component: ImportComponent, canActivate: [AuthGuard] },
   { path: 'admin', component: AdminComponent, canActivate: [AdminGuard] },
 ];
 

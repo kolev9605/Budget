@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 namespace Budget.Web.Controllers
 {
-    [Route("Chart")]
     public class ChartController : BaseController
     {
         private readonly IChartService _chartService;
