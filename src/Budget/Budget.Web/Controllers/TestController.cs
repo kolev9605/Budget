@@ -9,6 +9,6 @@ namespace Budget.Web.Controllers
         [HttpGet]
         [Route(nameof(Hello))]
         public IActionResult Hello()
-            => Ok("Hello v1!");
+            => Ok("Hello v2!");
     }
 }
