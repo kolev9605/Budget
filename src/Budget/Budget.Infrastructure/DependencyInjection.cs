@@ -15,6 +15,8 @@ namespace Budget.Infrastructure
     {
         public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
+            services.Configure<JwtOptions>(configuration.GetSection(JwtOptions.JWT));
+
             var preciseConfig = configuration.GetSection(JwtOptions.JWT).Get<JwtOptions>();
 
             // Adding Authentication

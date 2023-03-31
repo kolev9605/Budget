@@ -29,8 +29,6 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<BudgetDbContext>()
     .AddDefaultTokenProviders();
 
-builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(JwtOptions.JWT));
-
 // Adding JWT Authentication
 builder.Services.AddJwtAuthentication(builder.Configuration);
 
