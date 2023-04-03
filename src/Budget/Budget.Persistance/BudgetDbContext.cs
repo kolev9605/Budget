@@ -1,10 +1,11 @@
 ﻿using Budget.Core.Entities;
+using Budget.Core.Interfaces;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Budget.Persistance
 {
-    public class BudgetDbContext : IdentityDbContext<ApplicationUser>
+    public class BudgetDbContext : IdentityDbContext<ApplicationUser>, IBudgetDbContext
     {
         public BudgetDbContext(DbContextOptions<BudgetDbContext> options)
             : base(options)
