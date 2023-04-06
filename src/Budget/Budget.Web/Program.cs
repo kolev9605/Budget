@@ -5,11 +5,8 @@ using Budget.Persistance.Seeders;
 using Budget.Web;
 using Budget.Web.Helpers;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http.Features;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
-using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
