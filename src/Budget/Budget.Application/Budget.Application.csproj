@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Budget.Core\Budget.Domain.csproj" />
+    <ProjectReference Include="..\Budget.Domain\Budget.Domain.csproj" />
   </ItemGroup>
 
 </Project>

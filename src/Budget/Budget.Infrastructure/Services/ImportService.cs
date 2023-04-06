@@ -3,7 +3,7 @@ using Budget.Application.Interfaces.Services;
 using Budget.Application.Models.Records;
 using Budget.Domain.Entities;
 using Budget.Domain.Exceptions;
-using Budget.CsvParser.CsvModels;
+using Budget.Infrastructure.CsvModels;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;

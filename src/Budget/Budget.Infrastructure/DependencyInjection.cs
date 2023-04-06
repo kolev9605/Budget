@@ -13,6 +13,14 @@ namespace Budget.Infrastructure
 {
     public static class DependencyInjection
     {
+        public static IServiceCollection AddInfrastrucutreServices(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddJwtAuthentication(configuration);
+            services.AddServices();
+
+            return services;
+        }
+
         public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<JwtOptions>(configuration.GetSection(JwtOptions.JWT));
@@ -57,6 +65,7 @@ namespace Budget.Infrastructure
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IExportService, ExportService>();
             services.AddScoped<IImportService, ImportService>();
+            services.AddScoped<ICsvParser, CsvParser>();
 
             return services;
         }

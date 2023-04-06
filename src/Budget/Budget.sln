@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budget.Web", "Budget.Web\Bu
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{CDE3EC69-539B-4216-888E-76A470732AB6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budget.Domain", "Budget.Core\Budget.Domain.csproj", "{BD38A62D-7A6C-4685-B0F1-0BC06932FA07}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budget.Domain", "Budget.Domain\Budget.Domain.csproj", "{BD38A62D-7A6C-4685-B0F1-0BC06932FA07}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budget.Infrastructure", "Budget.Infrastructure\Budget.Infrastructure.csproj", "{0CC194F3-A14A-4EF6-ACCA-D545E33C4703}"
 EndProject
@@ -33,8 +33,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budget.Infrastructure.Tests", "Budget.Infrastructure.Tests\Budget.Infrastructure.Tests.csproj", "{2B9E46C8-0679-4C67-A128-82D56142106B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budget.Tests.Core", "Budget.Tests.Core\Budget.Tests.Core.csproj", "{F18EF13E-2E20-4ECC-83A8-8C9270A43CAD}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budget.CsvParser", "Budget.CsvParser\Budget.CsvParser.csproj", "{9697B208-C522-4E65-B741-8BE962520B8E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budget.Application", "Budget.Application\Budget.Application.csproj", "{038C05FE-1B91-4D62-A94B-3FD1B75B3CC2}"
 EndProject
@@ -72,10 +70,6 @@ Global
 		{F18EF13E-2E20-4ECC-83A8-8C9270A43CAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F18EF13E-2E20-4ECC-83A8-8C9270A43CAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F18EF13E-2E20-4ECC-83A8-8C9270A43CAD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9697B208-C522-4E65-B741-8BE962520B8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9697B208-C522-4E65-B741-8BE962520B8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9697B208-C522-4E65-B741-8BE962520B8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9697B208-C522-4E65-B741-8BE962520B8E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{038C05FE-1B91-4D62-A94B-3FD1B75B3CC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{038C05FE-1B91-4D62-A94B-3FD1B75B3CC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{038C05FE-1B91-4D62-A94B-3FD1B75B3CC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -95,7 +89,6 @@ Global
 		{D7D322EE-4478-4761-AC0F-5650E394043D} = {47FF34F4-8A28-4308-8BA4-683BDA9EC76A}
 		{2B9E46C8-0679-4C67-A128-82D56142106B} = {55A1A856-A257-49FD-A0FA-5CD7CEF69D74}
 		{F18EF13E-2E20-4ECC-83A8-8C9270A43CAD} = {55A1A856-A257-49FD-A0FA-5CD7CEF69D74}
-		{9697B208-C522-4E65-B741-8BE962520B8E} = {65EF2355-FC26-4DFA-89B6-2620C8854BD5}
 		{038C05FE-1B91-4D62-A94B-3FD1B75B3CC2} = {47FF34F4-8A28-4308-8BA4-683BDA9EC76A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution

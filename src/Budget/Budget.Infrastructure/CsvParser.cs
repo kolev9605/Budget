@@ -9,7 +9,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 
-namespace Budget.CsvParser
+namespace Budget.Infrastructure
 {
     public class CsvParser : ICsvParser
     {

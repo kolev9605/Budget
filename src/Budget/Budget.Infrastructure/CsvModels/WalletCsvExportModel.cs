@@ -1,7 +1,7 @@
 ﻿using CsvHelper.Configuration.Attributes;
 using System;
 
-namespace Budget.CsvParser.CsvModels
+namespace Budget.Infrastructure.CsvModels
 {
     public class WalletCsvExportModel
     {

@@ -1,4 +1,5 @@
 ﻿using Budget.Application.Interfaces.Services;
+using Budget.Application.Mapping;
 using Budget.Application.Services;
 using Budget.Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,7 +10,14 @@ namespace Budget.Application
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
+            services.AddServices();
+            services.AddMappings();
 
+            return services;
+        }
+
+        public static IServiceCollection AddServices(this IServiceCollection services)
+        {
             services.AddScoped<ICacheManager, CacheManager>();
             services.AddScoped<IPaginationManager, PaginationManager>();
             services.AddScoped<IRecordService, RecordService>();
