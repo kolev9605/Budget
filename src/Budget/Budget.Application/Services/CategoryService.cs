@@ -1,9 +1,9 @@
 ﻿using Budget.Application.Interfaces;
 using Budget.Application.Interfaces.Services;
 using Budget.Application.Models.Categories;
-using Budget.Core.Constants;
-using Budget.Core.Entities;
-using Budget.Core.Exceptions;
+using Budget.Domain.Constants;
+using Budget.Domain.Entities;
+using Budget.Domain.Exceptions;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;

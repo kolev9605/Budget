@@ -1,5 +1,5 @@
 ﻿using Budget.Application.Models.Currencies;
-using Budget.Core.Entities;
+using Budget.Domain.Entities;
 using Mapster;
 
 namespace Budget.Application.Models.Accounts

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 
-namespace Budget.Core.Entities
+namespace Budget.Domain.Entities
 {
     public class ApplicationUser : IdentityUser
     {

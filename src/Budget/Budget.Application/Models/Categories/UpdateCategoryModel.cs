@@ -1,4 +1,4 @@
-using Budget.Core.Entities;
+using Budget.Domain.Entities;
 
 namespace Budget.Application.Models.Categories
 {

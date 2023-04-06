@@ -1,4 +1,4 @@
-﻿namespace Budget.Core.Entities
+﻿namespace Budget.Domain.Entities
 {
     public enum CategoryType
     {

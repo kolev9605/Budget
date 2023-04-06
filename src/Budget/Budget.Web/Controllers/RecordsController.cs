@@ -2,7 +2,7 @@
 using Budget.Application.Models.Pagination;
 using Budget.Application.Models.Records;
 using Budget.Common;
-using Budget.Core.Entities;
+using Budget.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;

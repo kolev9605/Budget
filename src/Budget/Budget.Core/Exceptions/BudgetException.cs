@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace Budget.Core.Exceptions
+namespace Budget.Domain.Exceptions
 {
     public abstract class BudgetException : Exception
     {

@@ -1,4 +1,4 @@
-﻿namespace Budget.Core.Constants
+﻿namespace Budget.Domain.Constants
 {
     public class CacheConstants
     {

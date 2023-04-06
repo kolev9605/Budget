@@ -1,7 +1,7 @@
 ﻿using Budget.Application.Models.Accounts;
 using Budget.Application.Models.Categories;
 using Budget.Application.Models.Records;
-using Budget.Core.Entities;
+using Budget.Domain.Entities;
 using Mapster;
 using System;
 using System.Linq;

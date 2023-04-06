@@ -1,7 +1,7 @@
-﻿using Budget.Core.Entities.Base;
+﻿using Budget.Domain.Entities.Base;
 using System.Collections.Generic;
 
-namespace Budget.Core.Entities
+namespace Budget.Domain.Entities
 {
     public class Currency : BaseEntity
     {

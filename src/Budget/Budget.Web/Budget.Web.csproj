@@ -23,7 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Budget.Application\Budget.Application.csproj" />
     <ProjectReference Include="..\Budget.Common\Budget.Common.csproj" />
-    <ProjectReference Include="..\Budget.Core\Budget.Core.csproj" />
+    <ProjectReference Include="..\Budget.Core\Budget.Domain.csproj" />
     <ProjectReference Include="..\Budget.CsvParser\Budget.CsvParser.csproj" />
     <ProjectReference Include="..\Budget.Infrastructure\Budget.Infrastructure.csproj" />
     <ProjectReference Include="..\Budget.Persistance\Budget.Persistance.csproj" />

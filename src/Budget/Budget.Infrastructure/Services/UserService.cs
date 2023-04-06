@@ -3,9 +3,9 @@ using Budget.Application.Interfaces.Services;
 using Budget.Application.Models.Admin;
 using Budget.Application.Models.Authentication;
 using Budget.Application.Models.Users;
-using Budget.Core.Entities;
-using Budget.Core.Exceptions;
-using Budget.Core.Guards;
+using Budget.Domain.Entities;
+using Budget.Domain.Exceptions;
+using Budget.Domain.Guards;
 using Budget.Infrastructure.Options;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +18,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using static Budget.Core.Constants.ValidationMessages;
+using static Budget.Domain.Constants.ValidationMessages;
 
 namespace Budget.Infrastructure.Services
 {

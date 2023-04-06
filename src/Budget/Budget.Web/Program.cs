@@ -1,6 +1,6 @@
 using Budget.Application.Interfaces;
 using Budget.Application.Mapping;
-using Budget.Core.Entities;
+using Budget.Domain.Entities;
 using Budget.CsvParser;
 using Budget.Infrastructure;
 using Budget.Persistance;

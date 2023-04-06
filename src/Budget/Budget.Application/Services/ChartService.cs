@@ -1,7 +1,7 @@
 ﻿using Budget.Application.Interfaces;
 using Budget.Application.Interfaces.Services;
 using Budget.Application.Models.Charts.CashFlow;
-using Budget.Core.Entities;
+using Budget.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

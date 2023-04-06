@@ -1,4 +1,4 @@
-﻿using Budget.Core.Entities.Base;
+﻿using Budget.Domain.Entities.Base;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 

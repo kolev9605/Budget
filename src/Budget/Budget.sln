@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budget.Web", "Budget.Web\Bu
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{CDE3EC69-539B-4216-888E-76A470732AB6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budget.Core", "Budget.Core\Budget.Core.csproj", "{BD38A62D-7A6C-4685-B0F1-0BC06932FA07}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budget.Domain", "Budget.Core\Budget.Domain.csproj", "{BD38A62D-7A6C-4685-B0F1-0BC06932FA07}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budget.Infrastructure", "Budget.Infrastructure\Budget.Infrastructure.csproj", "{0CC194F3-A14A-4EF6-ACCA-D545E33C4703}"
 EndProject

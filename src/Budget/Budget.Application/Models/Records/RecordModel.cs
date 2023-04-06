@@ -1,4 +1,4 @@
-﻿using Budget.Core.Entities;
+﻿using Budget.Domain.Entities;
 using Budget.Application.Models.Accounts;
 using Budget.Application.Models.Categories;
 using Budget.Application.Models.PaymentTypes;

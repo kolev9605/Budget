@@ -1,4 +1,4 @@
-﻿using Budget.Core.Entities;
+﻿using Budget.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;

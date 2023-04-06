@@ -1,5 +1,5 @@
 ﻿using Budget.Application.Interfaces.Services;
-using Budget.Core.Constants;
+using Budget.Domain.Constants;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 

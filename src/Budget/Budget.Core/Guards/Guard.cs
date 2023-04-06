@@ -1,7 +1,7 @@
-﻿using Budget.Core.Constants;
-using Budget.Core.Exceptions;
+﻿using Budget.Domain.Constants;
+using Budget.Domain.Exceptions;
 
-namespace Budget.Core.Guards
+namespace Budget.Domain.Guards
 {
     public static class Guard
     {

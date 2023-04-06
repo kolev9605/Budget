@@ -1,4 +1,4 @@
-﻿namespace Budget.Core.Exceptions
+﻿namespace Budget.Domain.Exceptions
 {
     public class BudgetAuthenticationException : BudgetException
     {

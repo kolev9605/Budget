@@ -1,4 +1,4 @@
-﻿using Budget.Core.Entities;
+﻿using Budget.Domain.Entities;
 using System.Collections.Generic;
 
 namespace Budget.Application.Models.Users

@@ -1,8 +1,8 @@
 ﻿using Budget.Application.Interfaces;
 using Budget.Application.Interfaces.Services;
 using Budget.Application.Models.Records;
-using Budget.Core.Entities;
-using Budget.Core.Exceptions;
+using Budget.Domain.Entities;
+using Budget.Domain.Exceptions;
 using Budget.CsvParser.CsvModels;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
