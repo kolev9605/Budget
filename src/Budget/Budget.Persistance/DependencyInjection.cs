@@ -1,4 +1,4 @@
-﻿using Budget.Core.Interfaces;
+﻿using Budget.Application.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

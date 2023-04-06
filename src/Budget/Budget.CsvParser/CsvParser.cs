@@ -1,6 +1,6 @@
 ﻿using Budget.Core.Constants;
 using Budget.Core.Exceptions;
-using Budget.Core.Interfaces;
+using Budget.Application.Interfaces;
 using CsvHelper;
 using CsvHelper.Configuration;
 using System;

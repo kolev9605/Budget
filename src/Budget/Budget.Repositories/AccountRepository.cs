@@ -1,5 +1,5 @@
 ﻿using Budget.Core.Entities;
-using Budget.Core.Interfaces.Repositories;
+using Budget.Application.Interfaces.Repositories;
 using Budget.Persistance;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;

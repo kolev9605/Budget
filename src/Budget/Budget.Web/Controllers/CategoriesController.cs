@@ -1,8 +1,7 @@
-﻿using Budget.Common;
+﻿using Budget.Application.Interfaces.Services;
+using Budget.Application.Models.Categories;
+using Budget.Common;
 using Budget.Core.Entities;
-using Budget.Core.Interfaces.Services;
-using Budget.Core.Models.Categories;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 

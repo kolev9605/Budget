@@ -1,5 +1,5 @@
+using Budget.Application.Models.Records;
 using Budget.Core.Exceptions;
-using Budget.Core.Models.Records;
 using Budget.Tests.Core;
 using System.Threading.Tasks;
 using Xunit;

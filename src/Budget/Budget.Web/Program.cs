@@ -1,11 +1,10 @@
+using Budget.Application.Interfaces;
+using Budget.Application.Mapping;
 using Budget.Core.Entities;
-using Budget.Core.Interfaces;
-using Budget.Core.Options;
 using Budget.CsvParser;
 using Budget.Infrastructure;
 using Budget.Persistance;
 using Budget.Persistance.Seeders;
-using Budget.Repositories;
 using Budget.Web.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http.Features;
@@ -22,6 +21,8 @@ builder.Host.UseSerilog((context, services, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration);
 });
 
+builder.Services.AddMappings();
+
 // Add services to the container.
 builder.Services.AddPersistence(builder.Configuration);
 
@@ -33,7 +34,6 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 builder.Services.AddJwtAuthentication(builder.Configuration);
 
 builder.Services.AddMemoryCache();
-builder.Services.AddRepositories();
 builder.Services.AddServices();
 builder.Services.AddScoped<ICsvParser, CsvParser>();
 

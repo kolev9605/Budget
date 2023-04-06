@@ -1,4 +1,4 @@
-﻿using Budget.Core.Interfaces.Repositories;
+﻿using Budget.Application.Interfaces.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Budget.Repositories

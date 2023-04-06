@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Budget.Core.Entities
 {
-    public class Account : IBaseEntity
+    public class Account : BaseEntity
     {
         public int Id { get; set; }
 

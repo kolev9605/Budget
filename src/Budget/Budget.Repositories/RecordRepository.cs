@@ -1,7 +1,7 @@
 ﻿using Budget.Core.Entities;
-using Budget.Core.Interfaces.Repositories;
-using Budget.Core.Interfaces.Services;
-using Budget.Core.Models.Pagination;
+using Budget.Application.Interfaces.Repositories;
+using Budget.Application.Interfaces.Services;
+using Budget.Application.Models.Pagination;
 using Budget.Persistance;
 using Microsoft.EntityFrameworkCore;
 using System;

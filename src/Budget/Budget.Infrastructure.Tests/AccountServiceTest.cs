@@ -1,7 +1,6 @@
-﻿using Budget.Core.Exceptions;
-using Budget.Core.Models.Accounts;
+﻿using Budget.Application.Models.Accounts;
+using Budget.Core.Exceptions;
 using Budget.Tests.Core;
-using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 

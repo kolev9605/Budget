@@ -3,7 +3,7 @@ using System;
 
 namespace Budget.Core.Entities
 {
-    public class Record : IBaseEntity
+    public class Record : BaseEntity
     {
         public int Id { get; set; }
 
