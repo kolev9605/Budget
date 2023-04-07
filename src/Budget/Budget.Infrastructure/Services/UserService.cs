@@ -1,24 +1,24 @@
-﻿using Budget.Core.Entities;
-using Budget.Core.Exceptions;
-using Budget.Core.Guards;
-using Budget.Core.Interfaces.Repositories;
-using Budget.Core.Interfaces.Services;
-using Budget.Core.Models.Authentication;
-using Budget.Core.Options;
+﻿using Budget.Application.Interfaces;
+using Budget.Application.Interfaces.Services;
+using Budget.Application.Models.Admin;
+using Budget.Application.Models.Authentication;
+using Budget.Application.Models.Users;
+using Budget.Domain.Entities;
+using Budget.Domain.Exceptions;
+using Budget.Domain.Guards;
+using Budget.Infrastructure.Options;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using System.Linq;
-using static Budget.Core.Constants.ValidationMessages;
-using Budget.Core.Models.Users;
-using Microsoft.EntityFrameworkCore;
-using Budget.Core.Models.Admin;
+using static Budget.Domain.Constants.ValidationMessages;
 
 namespace Budget.Infrastructure.Services
 {
@@ -27,18 +27,18 @@ namespace Budget.Infrastructure.Services
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly JwtOptions _jwtOptions;
-        private readonly ICategoryRepository _categoryRepository;
+        private readonly IBudgetDbContext _budgetDbContext;
 
         public UserService(
             UserManager<ApplicationUser> userManager,
             IOptions<JwtOptions> jwtOptions,
-            ICategoryRepository categoryRepository,
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<IdentityRole> roleManager,
+            IBudgetDbContext budgetDbContext)
         {
             _userManager = userManager;
             _jwtOptions = jwtOptions.Value;
-            _categoryRepository = categoryRepository;
             _roleManager = roleManager;
+            _budgetDbContext = budgetDbContext;
         }
 
         public async Task<TokenModel> LoginAsync(LoginModel loginModel)
@@ -95,7 +95,10 @@ namespace Budget.Infrastructure.Services
                 throw new BudgetAuthenticationException(Authentication.UserExists, registerModel.Username);
             }
 
-            var initialCategories = await _categoryRepository.GetInitialCategoriesAsync();
+            var initialCategories = await _budgetDbContext.Categories
+                .Where(c => c.IsInitial)
+                .ToListAsync();
+
             var userCategories = initialCategories
                 .Select(c => new UserCategory()
                 {

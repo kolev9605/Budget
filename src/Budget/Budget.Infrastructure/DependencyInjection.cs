@@ -1,6 +1,6 @@
-﻿using Budget.Core.Interfaces;
-using Budget.Core.Interfaces.Services;
-using Budget.Core.Options;
+﻿using Budget.Application.Interfaces;
+using Budget.Application.Interfaces.Services;
+using Budget.Infrastructure.Options;
 using Budget.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -13,6 +13,14 @@ namespace Budget.Infrastructure
 {
     public static class DependencyInjection
     {
+        public static IServiceCollection AddInfrastrucutreServices(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddJwtAuthentication(configuration);
+            services.AddServices();
+
+            return services;
+        }
+
         public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<JwtOptions>(configuration.GetSection(JwtOptions.JWT));
@@ -54,19 +62,10 @@ namespace Budget.Infrastructure
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddScoped<IDateTimeProvider, DateTimeProvider>();
-
-            services.AddScoped<ICacheManager, CacheManager>();
-            services.AddScoped<IPaginationManager, PaginationManager>();
             services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IRecordService, RecordService>();
-            services.AddScoped<IAccountService, AccountService>();
-            services.AddScoped<ICurrencyService, CurrencyService>();
-            services.AddScoped<IPaymentTypeService, PaymentTypeService>();
-            services.AddScoped<ICategoryService, CategoryService>();
-            services.AddScoped<IChartService, ChartService>();
-            services.AddScoped<IStatisticsService, StatisticsService>();
             services.AddScoped<IExportService, ExportService>();
             services.AddScoped<IImportService, ImportService>();
+            services.AddScoped<ICsvParser, CsvParser>();
 
             return services;
         }

@@ -1,6 +1,4 @@
-﻿using Budget.Core.Interfaces.Services;
-using Budget.Core.Models.Records;
-using Microsoft.AspNetCore.Authorization;
+﻿using Budget.Application.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Threading.Tasks;

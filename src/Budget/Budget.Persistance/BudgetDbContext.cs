@@ -1,5 +1,5 @@
-﻿using Budget.Core.Entities;
-using Budget.Core.Interfaces;
+﻿using Budget.Domain.Entities;
+using Budget.Application.Interfaces;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

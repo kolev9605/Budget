@@ -1,5 +1,5 @@
-﻿using Budget.Core.Constants;
-using Budget.Core.Entities;
+﻿using Budget.Domain.Constants;
+using Budget.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

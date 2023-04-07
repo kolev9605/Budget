@@ -1,12 +1,11 @@
-﻿using Budget.Core.Entities;
-using Budget.Core.Interfaces;
-using Budget.Infrastructure.Services;
+﻿using Budget.Application.Interfaces;
+using Budget.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Moq;
 
 namespace Budget.Tests.Core
 {
-    public static class ServiceMockHelper
+    public class ServiceMockHelper
     {
         public static IDateTimeProvider SetupDateTimeProvider(DateTime? now = null)
         {
@@ -44,90 +43,6 @@ namespace Budget.Tests.Core
             userManagerMock.Setup(x => x.UpdateAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(IdentityResult.Success);
 
             return userManagerMock.Object;
-        }
-
-        public static RecordService SetupRecordService(
-            PaymentType paymentType,
-            Category category,
-            Account account,
-            Record record,
-            ApplicationUser user)
-        {
-            var recordService = new RecordService(
-                RepositoryMockHelper.SetupRecordRepository(record),
-                RepositoryMockHelper.SetupAccountRepository(account),
-                SetupDateTimeProvider(),
-                RepositoryMockHelper.SetupCategoryRepository(category),
-                RepositoryMockHelper.SetupPaymentTypeRepository(paymentType),
-                SetupUserService(user)
-                );
-
-            return recordService;
-        }
-
-        public static RecordService SetupRecordService()
-        {
-            var currency = EntityMockHelper.SetupCurrency();
-            var paymentType = EntityMockHelper.SetupPaymentType();
-            var category = EntityMockHelper.SetupCategory();
-            var account = EntityMockHelper.SetupAccount(currency);
-            var record = EntityMockHelper.SetupRecord(account, paymentType, category);
-            var user = EntityMockHelper.SetupUser();
-
-            var recordService = SetupRecordService(paymentType, category, account, record, user);
-
-            return recordService;
-        }
-
-        public static AccountService SetupAccountService(Account account, Currency currency)
-        {
-            var accountService = new AccountService(
-                RepositoryMockHelper.SetupAccountRepository(account),
-                RepositoryMockHelper.SetupCurrencyRepository(currency)
-                );
-
-            return accountService;
-        }
-
-        public static AccountService SetupAccountService()
-        {
-            var currency = EntityMockHelper.SetupCurrency();
-
-            var account = EntityMockHelper.SetupAccount(currency);
-
-            var accountService = SetupAccountService(account, currency);
-
-            return accountService;
-        }
-
-        public static CategoryService SetupCategoryService()
-        {
-            var category = EntityMockHelper.SetupCategory();
-
-            var categoryService = new CategoryService(
-                RepositoryMockHelper.SetupCategoryRepository(category));
-
-            return categoryService;
-        }
-
-        public static CurrencyService SetupCurrencyService()
-        {
-            var currency = EntityMockHelper.SetupCurrency();
-
-            var categoryService = new CurrencyService(
-                RepositoryMockHelper.SetupCurrencyRepository(currency));
-
-            return categoryService;
-        }
-
-        public static PaymentTypeService SetupPaymentTypeService()
-        {
-            var paymentType = EntityMockHelper.SetupPaymentType();
-
-            var paymentTypeService = new PaymentTypeService(
-                RepositoryMockHelper.SetupPaymentTypeRepository(paymentType));
-
-            return paymentTypeService;
         }
     }
 }

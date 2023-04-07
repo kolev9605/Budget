@@ -1,12 +1,11 @@
-﻿using Budget.Core.Interfaces.Services;
-using Budget.Core.Models.Records;
-using Microsoft.AspNetCore.Authorization;
+﻿using Budget.Application.Interfaces.Services;
+using Budget.Application.Models.Pagination;
+using Budget.Application.Models.Records;
+using Budget.Common;
+using Budget.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Budget.Core.Entities;
-using Budget.Common;
-using Budget.Core.Models.Pagination;
 
 namespace Budget.Web.Controllers
 {

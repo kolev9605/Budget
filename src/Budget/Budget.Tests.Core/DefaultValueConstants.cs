@@ -1,4 +1,4 @@
-﻿using Budget.Core.Entities;
+﻿using Budget.Domain.Entities;
 
 namespace Budget.Tests.Core
 {
@@ -33,6 +33,7 @@ namespace Budget.Tests.Core
             public const int NumberOfAccounts = 1;
             public const decimal DefaultInitialBalance = 20m;
             public const string DefaultName = "account";
+            public const int AccountIdWithRecords = 50;
         }
     }
 }

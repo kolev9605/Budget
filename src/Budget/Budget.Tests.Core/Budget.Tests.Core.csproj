@@ -11,7 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Budget.Core\Budget.Core.csproj" />
+    <ProjectReference Include="..\Budget.Application\Budget.Application.csproj" />
+    <ProjectReference Include="..\Budget.Domain\Budget.Domain.csproj" />
     <ProjectReference Include="..\Budget.Infrastructure\Budget.Infrastructure.csproj" />
   </ItemGroup>
 

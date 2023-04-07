@@ -7,14 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CsvHelper" Version="30.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.4" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Budget.Core\Budget.Core.csproj" />
-    <ProjectReference Include="..\Budget.CsvParser\Budget.CsvParser.csproj" />
-    <ProjectReference Include="..\Budget.Repositories\Budget.Repositories.csproj" />
+    <ProjectReference Include="..\Budget.Application\Budget.Application.csproj" />
+    <ProjectReference Include="..\Budget.Domain\Budget.Domain.csproj" />
   </ItemGroup>
 
 </Project>
