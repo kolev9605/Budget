@@ -24,8 +24,9 @@ namespace Budget.Application.Services
         public async Task<CategoryModel> GetByIdAsync(int categoryId, string userId)
         {
             var category = await _budgetDbContext.Categories
-                .Include(c => c.Users.Where(u => u.UserId == userId))
+                .Include(c => c.Users)
                 .Include(c => c.SubCategories)
+                .Where(c => c.Users.Any(u => u.UserId == userId))
                 .AsNoTracking()
                 .ProjectToType<CategoryModel>()
                 .FirstOrDefaultAsync(c => c.Id == categoryId);
@@ -42,8 +43,9 @@ namespace Budget.Application.Services
         public async Task<IEnumerable<CategoryModel>> GetAllAsync(string userId)
         {
             var categories = await _budgetDbContext.Categories
-                .Include(c => c.Users.Where(u => u.UserId == userId))
+                .Include(c => c.Users)
                 .Include(c => c.SubCategories)
+                .Where(c => c.Users.Any(u => u.UserId == userId))
                 .OrderBy(c => c.ParentCategoryId ?? c.Id)
                 .ThenBy(c => c.Id)
                 .AsNoTracking()
@@ -56,9 +58,10 @@ namespace Budget.Application.Services
         public async Task<IEnumerable<CategoryModel>> GetAllPrimaryAsync(string userId)
         {
             var categories = await _budgetDbContext.Categories
-                .Include(c => c.Users.Where(u => u.UserId == userId))
+                .Include(c => c.Users)
                 .Include(c => c.SubCategories)
                 .Where(c => !c.ParentCategoryId.HasValue)
+                .Where(c => c.Users.Any(u => u.UserId == userId))
                 .OrderBy(c => c.ParentCategoryId ?? c.Id)
                 .ThenBy(c => c.Id)
                 .AsNoTracking()
@@ -71,9 +74,10 @@ namespace Budget.Application.Services
         public async Task<IEnumerable<CategoryModel>> GetAllSubcategoriesByParentCategoryIdAsync(int parentCategoryId, string userId)
         {
             var categories = await _budgetDbContext.Categories
-                .Include(c => c.Users.Where(u => u.UserId == userId))
+                .Include(c => c.Users)
                 .Include(c => c.ParentCategory)
                 .Where(c => c.ParentCategoryId.HasValue && c.ParentCategoryId == parentCategoryId)
+                .Where(c => c.Users.Any(u => u.UserId == userId))
                 .AsNoTracking()
                 .ProjectToType<CategoryModel>()
                 .ToListAsync();
@@ -131,11 +135,12 @@ namespace Budget.Application.Services
         public async Task<CategoryModel> DeleteAsync(int categoryId, string userId)
         {
             var existingCategory = await _budgetDbContext.Categories
-                .Include(c => c.Users.Where(u => u.UserId == userId))
+                .Include(c => c.Users)
                 .Include(c => c.SubCategories)
                     .ThenInclude(sc => sc.Records)
                 .Include(c => c.Records)
                 .Include(c => c.Users)
+                .Where(c => c.Users.Any(u => u.UserId == userId))
                 .FirstOrDefaultAsync(c => c.Id == categoryId);
 
             if (existingCategory == null)
@@ -175,8 +180,9 @@ namespace Budget.Application.Services
         public async Task<CategoryModel> UpdateAsync(UpdateCategoryModel updateCategoryModel, string userId)
         {
             var existingCategory = await _budgetDbContext.Categories
-                .Include(c => c.Users.Where(u => u.UserId == userId))
+                .Include(c => c.Users)
                 .Include(c => c.SubCategories)
+                .Where(c => c.Users.Any(u => u.UserId == userId))
                 .FirstOrDefaultAsync(c => c.Id == updateCategoryModel.Id);
 
             if (existingCategory == null)

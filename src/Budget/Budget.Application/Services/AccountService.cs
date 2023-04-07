@@ -130,6 +130,11 @@ namespace Budget.Application.Services
                     string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(account)));
             }
 
+            if (account.Records.Any())
+            {
+                throw new BudgetValidationException(ValidationMessages.Accounts.ThereAreRecordsInTheAccount);
+            }
+
             var deletedAccount = _budgetDbContext.Accounts.Remove(account);
             await _budgetDbContext.SaveChangesAsync();
 

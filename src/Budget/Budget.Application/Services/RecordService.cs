@@ -155,6 +155,7 @@ namespace Budget.Application.Services
             var record = createRecordModel.Adapt<Record>();
             // TODO: Pass to mapster somehow
             record.DateCreated = now;
+            record.Amount = amount;
 
             if (createRecordModel.RecordType == RecordType.Transfer)
             {
@@ -190,7 +191,6 @@ namespace Budget.Application.Services
             }
 
             await ValidateCrudRecordModel(updateRecordModel, userId);
-
             var existingTransferRecord = await _budgetDbContext.Records
                 .Include(r => r.Account)
                 .Where(r => r.Account.UserId == r.Account.UserId)

@@ -12,9 +12,7 @@ namespace Budget.Application.Mapping
     {
         public void Register(TypeAdapterConfig config)
         {
-            config.NewConfig<Account, AccountModel>()
-                .Map(dest => dest.Balance, src => src.Records.Select(r => r.Amount).Sum() + src.InitialBalance);
-
+            config.NewConfig<Account, AccountModel>().MaxDepth(2);
             config.NewConfig<Category, CategoryModel>().MaxDepth(2);
 
             config.NewConfig<Record, RecordsExportModel>()

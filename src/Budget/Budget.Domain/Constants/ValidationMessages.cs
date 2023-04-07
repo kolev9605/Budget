@@ -23,6 +23,7 @@
         {
             public const string InvalidAccount = "The account {0} is not valid";
             public const string SameAccountsInTransfer = "Transfers must be between two different accounts";
+            public const string ThereAreRecordsInTheAccount = "There are records in the account";
         }
 
         public static class Admin
