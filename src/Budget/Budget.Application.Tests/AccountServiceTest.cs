@@ -68,20 +68,11 @@ namespace Budget.Application.Tests
             var accountService = new AccountService(context);
 
             // Act
-            try
-            {
-                var account = await accountService.GetByIdAsync(DefaultValueConstants.Common.Id, DefaultValueConstants.User.UserId);
-                // Assert
-                Assert.NotNull(account);
-                Assert.Equal(DefaultValueConstants.Common.Id, account.Id);
-            }
-            catch (Exception ex)
-            {
+            var account = await accountService.GetByIdAsync(DefaultValueConstants.Common.Id, DefaultValueConstants.User.UserId);
 
-                throw;
-            }
-
-
+            // Assert
+            Assert.NotNull(account);
+            Assert.Equal(DefaultValueConstants.Common.Id, account.Id);
         }
 
         [Fact]
@@ -296,7 +287,7 @@ namespace Budget.Application.Tests
             var accountService = new AccountService(context);
 
             // Act
-            var account =  await accountService.DeleteAccountAsync(DefaultValueConstants.Common.Id, DefaultValueConstants.User.UserId);
+            var account = await accountService.DeleteAccountAsync(DefaultValueConstants.Common.Id, DefaultValueConstants.User.UserId);
 
             // Assert
             Assert.Equal(DefaultValueConstants.Common.Id, account.Id);
