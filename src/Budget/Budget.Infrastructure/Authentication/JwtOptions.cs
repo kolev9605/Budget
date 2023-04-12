@@ -1,4 +1,4 @@
-﻿namespace Budget.Infrastructure.Options
+﻿namespace Budget.Infrastructure.Authentication
 {
     public class JwtOptions
     {
