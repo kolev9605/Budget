@@ -5,8 +5,6 @@ namespace Budget.Domain.Entities
 {
     public class Record : BaseEntity
     {
-        public int Id { get; set; }
-
         public string Note { get; set; }
 
         public DateTime DateCreated { get; set; }
