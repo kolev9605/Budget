@@ -1,5 +1,6 @@
 ﻿using Budget.Application.Interfaces;
 using Budget.Application.Interfaces.Services;
+using Budget.Infrastructure.Authentication;
 using Budget.Infrastructure.Options;
 using Budget.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -62,10 +63,10 @@ namespace Budget.Infrastructure
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddScoped<IDateTimeProvider, DateTimeProvider>();
-            services.AddScoped<IUserService, UserService>();
             services.AddScoped<IExportService, ExportService>();
             services.AddScoped<IImportService, ImportService>();
             services.AddScoped<ICsvParser, CsvParser>();
+            services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 
             return services;
         }

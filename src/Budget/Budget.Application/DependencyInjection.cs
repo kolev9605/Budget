@@ -27,6 +27,8 @@ namespace Budget.Application
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IChartService, ChartService>();
             services.AddScoped<IStatisticsService, StatisticsService>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IUserService, UserService>();
 
             return services;
         }
