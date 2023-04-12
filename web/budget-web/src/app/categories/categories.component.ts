@@ -23,11 +23,12 @@ export class CategoriesComponent implements OnInit {
     this.categoryService.getAllPrimary().subscribe({
       next: (response) => {
         this.categories = response;
+        this.isLoading = false;
       },
       error: (error) => {
         this.toastr.error(error);
+        this.isLoading = false;
       },
-      complete: () => (this.isLoading = false),
     });
   }
 

@@ -82,11 +82,13 @@ export class EditRecordComponent implements OnInit {
           paymentType: this.record.paymentType.id,
           recordDate: format(new Date(this.record.recordDate), Formats.DateTimeFormt),
         });
+
+        this.isLoading = false;
       },
       error: (error) => {
         this.toastr.error(error);
+        this.isLoading = false;
       },
-      complete: () => (this.isLoading = false),
     });
   }
 
@@ -117,11 +119,12 @@ export class EditRecordComponent implements OnInit {
       next: (record) => {
         this.toastr.success(`Record updated from ${record.category.name}!`);
         this.router.navigate(['records']);
+        this.isLoading = false;
       },
       error: (error) => {
         this.toastr.error(error);
+        this.isLoading = false;
       },
-      complete: () => (this.isLoading = false),
     });
   }
 
@@ -130,11 +133,12 @@ export class EditRecordComponent implements OnInit {
       next: (record) => {
         this.toastr.success(`Record deleted from ${record.category.name}!`);
         this.router.navigate(['records']);
+        this.isLoading = false;
       },
       error: (err) => {
         this.toastr.error(err);
+        this.isLoading = false;
       },
-      complete: () => (this.isLoading = false),
     });
   }
 }

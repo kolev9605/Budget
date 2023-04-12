@@ -41,11 +41,12 @@ export class CreateCategoryComponent implements OnInit {
       next: ({ categoryTypes: categoryTypes, primaryCategories: primaryCategories }) => {
         this.categoryTypes = categoryTypes;
         this.primaryCategories = primaryCategories;
+        this.isLoading = false;
       },
       error: (error) => {
         this.toastr.error(error);
+        this.isLoading = false;
       },
-      complete: () => (this.isLoading = false),
     });
   }
 
@@ -61,11 +62,12 @@ export class CreateCategoryComponent implements OnInit {
       next: (category) => {
         this.toastr.success(`Category ${category.name} created!`);
         this.router.navigate(['categories']);
+        this.isLoading = false;
       },
       error: (error) => {
         this.toastr.error(error);
+        this.isLoading = false;
       },
-      complete: () => (this.isLoading = false),
     });
   }
 }

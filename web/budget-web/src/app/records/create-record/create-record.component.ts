@@ -79,11 +79,13 @@ export class CreateRecordComponent implements OnInit {
           account: this.accounts[0].id,
           paymentType: this.paymentTypes.find((x) => x.name == 'Debit Card')?.id,
         });
+
+        this.isLoading = false;
       },
       error: (error) => {
         this.toastr.error(error);
+        this.isLoading = false;
       },
-      complete: () => (this.isLoading = false),
     });
   }
 
@@ -113,11 +115,12 @@ export class CreateRecordComponent implements OnInit {
       next: (record) => {
         this.toastr.success(`Record created in ${record.category.name}!`);
         this.router.navigate(['records']);
+        this.isLoading = false;
       },
       error: (error) => {
         this.toastr.error(error);
+        this.isLoading = false;
       },
-      complete: () => (this.isLoading = false),
     });
   }
 }

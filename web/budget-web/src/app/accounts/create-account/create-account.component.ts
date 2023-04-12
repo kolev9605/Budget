@@ -36,11 +36,12 @@ export class CreateAccountComponent implements OnInit {
     this.currencyService.getAll().subscribe({
       next: (currencies) => {
         this.currencies = currencies;
+        this.isLoading = false;
       },
       error: (error) => {
         this.toastr.error(error);
+        this.isLoading = false;
       },
-      complete: () => (this.isLoading = false),
     });
   }
 
@@ -70,11 +71,12 @@ export class CreateAccountComponent implements OnInit {
       next: (account) => {
         this.toastr.success(`Account ${account.name} created!`);
         this.router.navigate(['dashboard']);
+        this.isLoading = false;
       },
       error: (err) => {
         this.toastr.error(err);
+        this.isLoading = false;
       },
-      complete: () => (this.isLoading = false),
     });
   }
 }

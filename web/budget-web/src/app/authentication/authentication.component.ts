@@ -65,11 +65,12 @@ export class AuthenticationComponent implements OnInit {
       next: (res) => {
         this.toastr.success('Login successful!');
         this.router.navigate(['dashboard']);
+        this.isLoading = false;
       },
       error: (err) => {
         this.toastr.error(err);
+        this.isLoading = false;
       },
-      complete: () => (this.isLoading = false),
     });
 
     this.form.reset();
@@ -87,11 +88,12 @@ export class AuthenticationComponent implements OnInit {
       next: (res) => {
         this.toastr.success('Registration successful!');
         this.isLogin = !this.isLogin;
+        this.isLoading = false;
       },
       error: (err) => {
         this.toastr.error(err);
+        this.isLoading = false;
       },
-      complete: () => (this.isLoading = false),
     });
 
     this.form.reset();

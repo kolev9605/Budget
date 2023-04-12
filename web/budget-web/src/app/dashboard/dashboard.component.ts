@@ -57,11 +57,12 @@ export class DashboardComponent implements OnInit {
     this.cashFlowDateObservable.subscribe({
       next: (response) => {
         this.cashFlowData = response;
+        this.isLoading = false;
       },
       error: (error) => {
         this.toastr.error(error);
+        this.isLoading = false;
       },
-      complete: () => (this.isLoading = false),
     });
 
     this.statisticsObservable = this.cashFlowRequestSubject.pipe(
@@ -76,11 +77,12 @@ export class DashboardComponent implements OnInit {
     this.statisticsObservable.subscribe({
       next: (response) => {
         this.statistics = response;
+        this.isLoading = false;
       },
       error: (error) => {
         this.toastr.error(error);
+        this.isLoading = false;
       },
-      complete: () => (this.isLoading = false),
     });
 
     forkJoin({
@@ -100,11 +102,13 @@ export class DashboardComponent implements OnInit {
             this.calculateHasPreviousMonth();
             this.loadData();
           }
+
+          this.isLoading = false;
         },
         error: (error) => {
           this.toastr.error(error);
+          this.isLoading = false;
         },
-        complete: () => (this.isLoading = false),
       });
   }
 

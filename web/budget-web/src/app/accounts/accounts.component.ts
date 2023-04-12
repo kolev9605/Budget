@@ -25,11 +25,12 @@ export class AccountsComponent implements OnInit {
     this.accountService.getAll().subscribe({
       next: (response) => {
         this.accounts = response;
+        this.isLoading = false;
       },
       error: (error) => {
         this.toastr.error(error);
+        this.isLoading = false;
       },
-      complete: () => (this.isLoading = false),
     });
   }
 

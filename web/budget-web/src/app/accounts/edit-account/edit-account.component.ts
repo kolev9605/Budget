@@ -53,11 +53,13 @@ export class EditAccountComponent implements OnInit {
           currency: editAccount.currency.id,
           initialBalance: editAccount.initialBalance,
         });
+
+        this.isLoading = false;
       },
       error: (error) => {
         this.toastr.error(error);
+        this.isLoading = false;
       },
-      complete: () => (this.isLoading = false),
     });
   }
 
@@ -79,11 +81,12 @@ export class EditAccountComponent implements OnInit {
       next: (account) => {
         this.toastr.success(`Account ${account.name} deleted!`);
         this.router.navigate(['dashboard']);
+        this.isLoading = false;
       },
       error: (err) => {
         this.toastr.error(err);
+        this.isLoading = false;
       },
-      complete: () => (this.isLoading = false),
     });
   }
 
@@ -100,11 +103,12 @@ export class EditAccountComponent implements OnInit {
       next: (account) => {
         this.toastr.success(`Account ${account.name} updated!`);
         this.router.navigate(['dashboard']);
+        this.isLoading = false;
       },
       error: (err) => {
         this.toastr.error(err);
+        this.isLoading = false;
       },
-      complete: () => (this.isLoading = false),
     });
   }
 }

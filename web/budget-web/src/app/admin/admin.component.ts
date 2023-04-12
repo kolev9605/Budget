@@ -28,11 +28,12 @@ export class AdminComponent implements OnInit {
     this.usersObservable.subscribe({
       next: (response) => {
         this.users = response;
+        this.isLoading = false;
       },
       error: (error) => {
         this.toastr.error(error);
+        this.isLoading = false;
       },
-      complete: () => (this.isLoading = false),
     });
 
     this.usersSubject.next(true);

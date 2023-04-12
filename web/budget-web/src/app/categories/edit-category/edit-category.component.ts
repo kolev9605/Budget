@@ -57,11 +57,13 @@ export class EditCategoryComponent implements OnInit {
           parentCategoryId: editCategory.parentCategoryId,
           isPrimary: editCategory.parentCategoryId === null,
         });
+
+        this.isLoading = false;
       },
       error: (error) => {
         this.toastr.error(error);
+        this.isLoading = false;
       },
-      complete: () => (this.isLoading = false),
     });
   }
 
@@ -87,11 +89,12 @@ export class EditCategoryComponent implements OnInit {
       next: (category) => {
         this.toastr.success(`Category ${category.name} updated!`);
         this.router.navigate(['categories']);
+        this.isLoading = false;
       },
       error: (error) => {
         this.toastr.error(error);
+        this.isLoading = false;
       },
-      complete: () => (this.isLoading = false),
     });
   }
 
@@ -100,11 +103,12 @@ export class EditCategoryComponent implements OnInit {
       next: (category) => {
         this.toastr.success(`Category ${category.name} deleted!`);
         this.router.navigate(['categories']);
+        this.isLoading = false;
       },
       error: (err) => {
         this.toastr.error(err);
+        this.isLoading = false;
       },
-      complete: () => (this.isLoading = false),
     });
   }
 }
