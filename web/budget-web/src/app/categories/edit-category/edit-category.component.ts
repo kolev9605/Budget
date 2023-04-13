@@ -41,30 +41,29 @@ export class EditCategoryComponent implements OnInit {
         .pipe(first()),
       categoryTypes: this.categoryService.getCategoryTypes(),
       primaryCategories: this.categoryService.getAllPrimary(),
-    }).subscribe({
-      next: ({
-        editCategory: editCategory,
-        categoryTypes: categoryTypes,
-        primaryCategories: primaryCategories,
-      }) => {
-        this.category = editCategory;
-        this.categoryTypes = categoryTypes;
-        this.primaryCategories = primaryCategories;
+    })
+      .subscribe({
+        next: ({
+          editCategory: editCategory,
+          categoryTypes: categoryTypes,
+          primaryCategories: primaryCategories,
+        }) => {
+          this.category = editCategory;
+          this.categoryTypes = categoryTypes;
+          this.primaryCategories = primaryCategories;
 
-        this.editCategoryForm.patchValue({
-          name: editCategory.name,
-          categoryType: editCategory.categoryType,
-          parentCategoryId: editCategory.parentCategoryId,
-          isPrimary: editCategory.parentCategoryId === null,
-        });
-
-        this.isLoading = false;
-      },
-      error: (error) => {
-        this.toastr.error(error);
-        this.isLoading = false;
-      },
-    });
+          this.editCategoryForm.patchValue({
+            name: editCategory.name,
+            categoryType: editCategory.categoryType,
+            parentCategoryId: editCategory.parentCategoryId,
+            isPrimary: editCategory.parentCategoryId === null,
+          });
+        },
+        error: (error) => {
+          this.toastr.error(error);
+        },
+      })
+      .add(() => (this.isLoading = false));
   }
 
   onSubmit(): void {
@@ -85,30 +84,32 @@ export class EditCategoryComponent implements OnInit {
     );
 
     this.isLoading = true;
-    this.categoryService.updateCategory(updateCategoryModel).subscribe({
-      next: (category) => {
-        this.toastr.success(`Category ${category.name} updated!`);
-        this.router.navigate(['categories']);
-        this.isLoading = false;
-      },
-      error: (error) => {
-        this.toastr.error(error);
-        this.isLoading = false;
-      },
-    });
+    this.categoryService
+      .updateCategory(updateCategoryModel)
+      .subscribe({
+        next: (category) => {
+          this.toastr.success(`Category ${category.name} updated!`);
+          this.router.navigate(['categories']);
+        },
+        error: (error) => {
+          this.toastr.error(error);
+        },
+      })
+      .add(() => (this.isLoading = false));
   }
 
   deleteCategory(): void {
-    this.categoryService.deleteCategory(this.category.id).subscribe({
-      next: (category) => {
-        this.toastr.success(`Category ${category.name} deleted!`);
-        this.router.navigate(['categories']);
-        this.isLoading = false;
-      },
-      error: (err) => {
-        this.toastr.error(err);
-        this.isLoading = false;
-      },
-    });
+    this.categoryService
+      .deleteCategory(this.category.id)
+      .subscribe({
+        next: (category) => {
+          this.toastr.success(`Category ${category.name} deleted!`);
+          this.router.navigate(['categories']);
+        },
+        error: (err) => {
+          this.toastr.error(err);
+        },
+      })
+      .add(() => (this.isLoading = false));
   }
 }

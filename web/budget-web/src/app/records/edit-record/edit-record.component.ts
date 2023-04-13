@@ -63,33 +63,32 @@ export class EditRecordComponent implements OnInit {
       accounts: this.accountService.getAll(),
       paymentTypes: this.paymentTypeService.getAll(),
       recordTypes: this.recordService.getRecordTypes(),
-    }).subscribe({
-      next: ({ editRecord, categories, accounts, paymentTypes, recordTypes }) => {
-        this.categories = categories;
-        this.accounts = accounts;
-        this.paymentTypes = paymentTypes;
-        this.recordTypes = recordTypes;
-        this.record = editRecord;
+    })
+      .subscribe({
+        next: ({ editRecord, categories, accounts, paymentTypes, recordTypes }) => {
+          this.categories = categories;
+          this.accounts = accounts;
+          this.paymentTypes = paymentTypes;
+          this.recordTypes = recordTypes;
+          this.record = editRecord;
 
-        this.selectedRecordType = this.record.recordType;
+          this.selectedRecordType = this.record.recordType;
 
-        this.editRecordForm.patchValue({
-          note: this.record.note,
-          amount: this.record.amount,
-          account: this.record.account.id,
-          fromAccount: this.record.fromAccount?.id,
-          category: this.record.category.id,
-          paymentType: this.record.paymentType.id,
-          recordDate: format(new Date(this.record.recordDate), Formats.DateTimeFormt),
-        });
-
-        this.isLoading = false;
-      },
-      error: (error) => {
-        this.toastr.error(error);
-        this.isLoading = false;
-      },
-    });
+          this.editRecordForm.patchValue({
+            note: this.record.note,
+            amount: this.record.amount,
+            account: this.record.account.id,
+            fromAccount: this.record.fromAccount?.id,
+            category: this.record.category.id,
+            paymentType: this.record.paymentType.id,
+            recordDate: format(new Date(this.record.recordDate), Formats.DateTimeFormt),
+          });
+        },
+        error: (error) => {
+          this.toastr.error(error);
+        },
+      })
+      .add(() => (this.isLoading = false));
   }
 
   onSubmit(): void {
@@ -115,30 +114,32 @@ export class EditRecordComponent implements OnInit {
     );
 
     this.isLoading = true;
-    this.recordService.updateRecord(updateRecordModel).subscribe({
-      next: (record) => {
-        this.toastr.success(`Record updated from ${record.category.name}!`);
-        this.router.navigate(['records']);
-        this.isLoading = false;
-      },
-      error: (error) => {
-        this.toastr.error(error);
-        this.isLoading = false;
-      },
-    });
+    this.recordService
+      .updateRecord(updateRecordModel)
+      .subscribe({
+        next: (record) => {
+          this.toastr.success(`Record updated from ${record.category.name}!`);
+          this.router.navigate(['records']);
+        },
+        error: (error) => {
+          this.toastr.error(error);
+        },
+      })
+      .add(() => (this.isLoading = false));
   }
 
   deleteRecord(): void {
-    this.recordService.deleteRecord(this.record.id).subscribe({
-      next: (record) => {
-        this.toastr.success(`Record deleted from ${record.category.name}!`);
-        this.router.navigate(['records']);
-        this.isLoading = false;
-      },
-      error: (err) => {
-        this.toastr.error(err);
-        this.isLoading = false;
-      },
-    });
+    this.recordService
+      .deleteRecord(this.record.id)
+      .subscribe({
+        next: (record) => {
+          this.toastr.success(`Record deleted from ${record.category.name}!`);
+          this.router.navigate(['records']);
+        },
+        error: (err) => {
+          this.toastr.error(err);
+        },
+      })
+      .add(() => (this.isLoading = false));
   }
 }

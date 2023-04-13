@@ -25,16 +25,16 @@ export class AdminComponent implements OnInit {
       concatMap(() => this.adminService.getUsers()),
     );
 
-    this.usersObservable.subscribe({
-      next: (response) => {
-        this.users = response;
-        this.isLoading = false;
-      },
-      error: (error) => {
-        this.toastr.error(error);
-        this.isLoading = false;
-      },
-    });
+    this.usersObservable
+      .subscribe({
+        next: (response) => {
+          this.users = response;
+        },
+        error: (error) => {
+          this.toastr.error(error);
+        },
+      })
+      .add(() => (this.isLoading = false));
 
     this.usersSubject.next(true);
   }

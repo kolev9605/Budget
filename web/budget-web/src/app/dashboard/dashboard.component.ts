@@ -48,20 +48,20 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.selectedDate = startOfMonth(new Date());
+    this.isLoading = true;
 
     this.cashFlowDateObservable = this.cashFlowRequestSubject.pipe(
       tap(() => (this.isLoading = true)),
       concatMap((request) => this.chartService.getCashFlowData(request)),
+      tap(() => (this.isLoading = false)),
     );
 
     this.cashFlowDateObservable.subscribe({
       next: (response) => {
         this.cashFlowData = response;
-        this.isLoading = false;
       },
       error: (error) => {
         this.toastr.error(error);
-        this.isLoading = false;
       },
     });
 
@@ -72,16 +72,15 @@ export class DashboardComponent implements OnInit {
           new StatisticsRequestModel(request.startDate, request.endDate, request.accountIds),
         ),
       ),
+      tap(() => (this.isLoading = false)),
     );
 
     this.statisticsObservable.subscribe({
       next: (response) => {
         this.statistics = response;
-        this.isLoading = false;
       },
       error: (error) => {
         this.toastr.error(error);
-        this.isLoading = false;
       },
     });
 
@@ -102,14 +101,12 @@ export class DashboardComponent implements OnInit {
             this.calculateHasPreviousMonth();
             this.loadData();
           }
-
-          this.isLoading = false;
         },
         error: (error) => {
           this.toastr.error(error);
-          this.isLoading = false;
         },
-      });
+      })
+      .add(() => (this.isLoading = false));
   }
 
   onAccountSelected(accountId: number) {
