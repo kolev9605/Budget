@@ -21,7 +21,7 @@ namespace Budget.Application.Tests
         protected Mapper GetMapper()
         {
             var config = TypeAdapterConfig.GlobalSettings;
-            config.Scan(typeof(Configuration).Assembly);
+            config.Scan(typeof(RecordMappingConfiguration).Assembly);
             return new Mapper(config);
         }
 

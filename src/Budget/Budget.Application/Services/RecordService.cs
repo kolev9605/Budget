@@ -152,10 +152,7 @@ namespace Budget.Application.Services
             var now = _dateTimeProvider.Now;
             var amount = GetAmountByRecordType(createRecordModel.Amount, createRecordModel.RecordType);
 
-            var record = createRecordModel.Adapt<Record>();
-            // TODO: Pass to mapster somehow
-            record.DateCreated = now;
-            record.Amount = amount;
+            var record = (createRecordModel, now, amount).Adapt<Record>();
 
             if (createRecordModel.RecordType == RecordType.Transfer)
             {
@@ -234,7 +231,7 @@ namespace Budget.Application.Services
                 record.FromAccountId = null;
             }
 
-            var updatedRecord = _budgetDbContext.Records.Update(record); 
+            var updatedRecord = _budgetDbContext.Records.Update(record);
             await _budgetDbContext.SaveChangesAsync();
 
             return updatedRecord.Entity.Adapt<RecordModel>();
@@ -272,7 +269,7 @@ namespace Budget.Application.Services
 
             if (existingTransferRecord != null)
             {
-                _budgetDbContext.Records.Remove(existingTransferRecord); 
+                _budgetDbContext.Records.Remove(existingTransferRecord);
             }
 
             var deletedRecord = _budgetDbContext.Records.Remove(record);

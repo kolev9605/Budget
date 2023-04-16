@@ -118,12 +118,7 @@ namespace Budget.Application.Services
                     throw new BudgetValidationException(string.Format(ValidationMessages.Categories.AlreadyExist, existingCategory.Name));
                 }
 
-                var category = createCategoryModel.Adapt<Category>();
-                // TODO: Move this to the Mapster config
-                category.Users.Add(new UserCategory()
-                {
-                    UserId = userId
-                });
+                var category = (createCategoryModel, userId).Adapt<Category>();
 
                 var createdCategory = await _budgetDbContext.Categories.AddAsync(category);
                 await _budgetDbContext.SaveChangesAsync();

@@ -64,9 +64,7 @@ namespace Budget.Application.Services
                     string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(currency)));
             }
 
-            var account = createAccountModel.Adapt<Account>();
-            // TODO: Can this be integrated in the Mapster config?
-            account.UserId = userId;
+            var account = (createAccountModel, userId).Adapt<Account>();
 
             var createdAccount = await _budgetDbContext.Accounts.AddAsync(account);
 

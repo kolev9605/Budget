@@ -1,21 +1,21 @@
 {
   "version": "0.2.0",
   "configurations": [
-  {
-    "name": "Docker .NET Core Attach (Preview)",
-    "type": "docker",
-    "request": "attach",
-    "platform": "netCore",
-    "sourceFileMap": {
-      "/src": "${workspaceFolder}"
-    }
-  },
+    {
+      "name": "Docker .NET Core Attach (Preview)",
+      "type": "docker",
+      "request": "attach",
+      "platform": "netCore",
+      "sourceFileMap": {
+        "/src": "${workspaceFolder}"
+      }
+    },
     {
       "name": ".NET Core Launch (web)",
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
-      "program": "${workspaceFolder}/Budget.Web/bin/Debug/net6.0/Budget.Web.dll",
+      "program": "${workspaceFolder}/Budget.Web/bin/Debug/net7.0/Budget.Web.dll",
       "args": [],
       "cwd": "${workspaceFolder}/Budget.Web",
       "stopAtEntry": false,
