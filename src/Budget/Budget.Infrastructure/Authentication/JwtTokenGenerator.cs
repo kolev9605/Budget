@@ -11,11 +11,11 @@ namespace Budget.Infrastructure.Authentication
 {
     public class JwtTokenGenerator : IJwtTokenGenerator
     {
-        private readonly JwtOptions _jwtOptions;
+        private readonly JwtSettings _jwtSettings;
 
-        public JwtTokenGenerator(IOptions<JwtOptions> jwtOptions)
+        public JwtTokenGenerator(IOptions<JwtSettings> jwtOptions)
         {
-            _jwtOptions = jwtOptions.Value;
+            _jwtSettings = jwtOptions.Value;
         }
 
         public (string token, DateTime validTo) GenerateToken(IEnumerable<string> userRoles, string userId)
@@ -31,7 +31,7 @@ namespace Budget.Infrastructure.Authentication
                 authClaims.Add(new Claim(ClaimTypes.Role, userRole));
             }
 
-            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Secret));
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret));
 
             var token = new JwtSecurityToken(
                 expires: DateTime.Now.AddHours(1),
