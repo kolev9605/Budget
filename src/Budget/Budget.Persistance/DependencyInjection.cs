@@ -9,7 +9,7 @@ namespace Budget.Persistance
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddPersistenceServices(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<BudgetDbContext>(options =>
                 options.UseNpgsql(configuration.GetConnectionString("BudgetPosgres")));

@@ -1,4 +1,3 @@
-using Budget.Application.Models.Accounts;
 using Budget.Application.Models.Records;
 using Budget.Domain.Entities;
 using Mapster;

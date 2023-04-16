@@ -15,10 +15,11 @@ builder.Host.UseSerilog((context, services, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration);
 });
 
-builder.Services.AddPersistenceServices(builder.Configuration);
-builder.Services.AddInfrastrucutreServices(builder.Configuration);
-builder.Services.AddApplicationServices();
-builder.Services.AddPresentationServices();
+builder.Services
+    .AddPersistence(builder.Configuration)
+    .AddInfrastrucutre(builder.Configuration)
+    .AddApplication()
+    .AddPresentation();
 
 var app = builder.Build();
 

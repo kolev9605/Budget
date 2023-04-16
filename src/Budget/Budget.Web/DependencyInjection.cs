@@ -6,7 +6,7 @@ namespace Budget.Web
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddPresentationServices(this IServiceCollection services)
+        public static IServiceCollection AddPresentation(this IServiceCollection services)
         {
             services.AddMemoryCache();
 

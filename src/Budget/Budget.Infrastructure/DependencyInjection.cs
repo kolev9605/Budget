@@ -13,7 +13,7 @@ namespace Budget.Infrastructure
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddInfrastrucutreServices(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddInfrastrucutre(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddJwtAuthentication(configuration);
             services.AddServices();
