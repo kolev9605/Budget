@@ -15,10 +15,8 @@ namespace Budget.Application.Models.Accounts
 
         public decimal InitialBalance { get; set; }
 
-        public decimal Balance => InitialBalance + Records.Select(r => r.Amount).Sum();
+        public decimal Balance { get; set; }
 
         public CurrencyModel Currency { get; set; }
-
-        public IEnumerable<RecordModel> Records { get; set; } = new List<RecordModel>();
     }
 }

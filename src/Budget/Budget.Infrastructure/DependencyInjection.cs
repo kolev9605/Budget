@@ -57,7 +57,7 @@ namespace Budget.Infrastructure
 
         private static IServiceCollection AddServices(this IServiceCollection services)
         {
-            services.AddScoped<IDateTimeProvider, DateTimeProvider>();
+            services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
             services.AddScoped<IExportService, ExportService>();
             services.AddScoped<IImportService, ImportService>();
             services.AddScoped<ICsvParser, CsvParser>();

@@ -65,8 +65,8 @@ namespace Budget.Infrastructure.Services
                 { "Vehicle", "Car" },
                 { "Fuel", "Fuel" },
                 { "Parking", "Parking" },
-                { "Vehicle insurance", "Car insurance" },
-                { "Vehicle maintenance", "Car maintenance" },
+                { "Vehicle insurance", "Car Insurance" },
+                { "Vehicle maintenance", "Car Maintenance" },
 
                 { "Life & Entertainment", "Life" },
                 { "Active sport, fitness", "Sports" },
@@ -92,6 +92,8 @@ namespace Budget.Infrastructure.Services
                 { "Charges, Fees", "Charges & Fees" },
                 { "Fines", "Fines" },
                 { "Taxes", "Taxes" },
+
+                {"Financial investments", "Investments"},
 
                 { "Income", "Income" },
                 { "Interests, dividends", "Interests, dividends" },
@@ -299,8 +301,8 @@ namespace Budget.Infrastructure.Services
         }
 
         private async Task<Account> GetOrCreateAccountAsync(
-            WalletCsvExportModel record, 
-            string userId, 
+            WalletCsvExportModel record,
+            string userId,
             IEnumerable<Currency> currencies)
         {
             var account = await _budgetDbContext.Accounts

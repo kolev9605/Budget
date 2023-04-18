@@ -1,6 +1,7 @@
 ﻿using Budget.Application.Interfaces;
 using Budget.Application.Interfaces.Services;
 using Budget.Application.Models.Statistics;
+using Budget.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,12 +30,12 @@ namespace Budget.Infrastructure.Services
 
             var income = recordsInRange
                 .Where(r => r.Amount > 0)
-                //.Where(r => r.RecordType == RecordType.Income)
+                .Where(r => r.RecordType == RecordType.Income)
                 .Sum(r => r.Amount);
 
             var expense = recordsInRange
                 .Where(r => r.Amount < 0)
-                //.Where(r => r.RecordType == RecordType.Expense)
+                .Where(r => r.RecordType == RecordType.Expense)
                 .Sum(r => r.Amount);
 
             var resultModel = new StatisticsResultModel(income, expense);

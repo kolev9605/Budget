@@ -12,10 +12,14 @@ namespace Budget.Infrastructure.Authentication
     public class JwtTokenGenerator : IJwtTokenGenerator
     {
         private readonly JwtSettings _jwtSettings;
+        private readonly IDateTimeProvider _dateTimeProvider;
 
-        public JwtTokenGenerator(IOptions<JwtSettings> jwtOptions)
+        public JwtTokenGenerator(
+            IOptions<JwtSettings> jwtOptions,
+            IDateTimeProvider dateTimeProvider)
         {
             _jwtSettings = jwtOptions.Value;
+            _dateTimeProvider = dateTimeProvider;
         }
 
         public (string token, DateTime validTo) GenerateToken(IEnumerable<string> userRoles, string userId)
@@ -32,7 +36,7 @@ namespace Budget.Infrastructure.Authentication
             }
 
             var token = new JwtSecurityToken(
-                expires: DateTime.Now.AddMinutes(_jwtSettings.ExpiryMinutes),
+                expires: _dateTimeProvider.Now.AddMinutes(_jwtSettings.ExpiryMinutes),
                 issuer: _jwtSettings.Issuer,
                 audience: _jwtSettings.Audience,
                 claims: authClaims,
