@@ -16,7 +16,7 @@ namespace Budget.Tests.Core
 
             var dateTimeProviderMock = new Mock<IDateTimeProvider>();
             dateTimeProviderMock
-                .Setup(x => x.Now)
+                .Setup(x => x.UtcNow)
                 .Returns(now.Value);
 
             return dateTimeProviderMock.Object;

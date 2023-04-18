@@ -5,8 +5,8 @@ namespace Budget.Infrastructure
 {
     public class DateTimeProvider : IDateTimeProvider
     {
-        public DateTime Now => DateTime.UtcNow;
+        public DateTime UtcNow => DateTime.UtcNow;
 
-        public DateTime Today => DateTime.UtcNow.Date;
+        public DateTime UtcToday => DateTime.UtcNow.Date;
     }
 }

@@ -4,8 +4,8 @@ namespace Budget.Application.Interfaces
 {
     public interface IDateTimeProvider
     {
-        DateTime Now { get; }
+        DateTime UtcNow { get; }
 
-        DateTime Today { get; }
+        DateTime UtcToday { get; }
     }
 }

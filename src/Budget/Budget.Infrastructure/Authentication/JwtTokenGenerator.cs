@@ -36,7 +36,7 @@ namespace Budget.Infrastructure.Authentication
             }
 
             var token = new JwtSecurityToken(
-                expires: _dateTimeProvider.Now.AddMinutes(_jwtSettings.ExpiryMinutes),
+                expires: _dateTimeProvider.UtcNow.AddMinutes(_jwtSettings.ExpiryMinutes),
                 issuer: _jwtSettings.Issuer,
                 audience: _jwtSettings.Audience,
                 claims: authClaims,

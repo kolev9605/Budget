@@ -210,7 +210,7 @@ namespace Budget.Infrastructure.Services
                     RecordType = recordType,
                     PaymentType = paymentType,
                     RecordDate = date,
-                    DateCreated = _dateTimeProvider.Now,
+                    DateCreated = _dateTimeProvider.UtcNow,
                 };
 
                 var createdRecord = await _budgetDbContext.Records.AddAsync(recordToAdd);

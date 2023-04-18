@@ -149,7 +149,7 @@ namespace Budget.Application.Services
         {
             await ValidateCrudRecordModel(createRecordModel, userId);
 
-            var now = _dateTimeProvider.Now;
+            var now = _dateTimeProvider.UtcNow;
             var amount = GetAmountByRecordType(createRecordModel.Amount, createRecordModel.RecordType);
 
             var record = (createRecordModel, now, amount).Adapt<Record>();
