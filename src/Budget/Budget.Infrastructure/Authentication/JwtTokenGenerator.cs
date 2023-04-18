@@ -31,12 +31,14 @@ namespace Budget.Infrastructure.Authentication
                 authClaims.Add(new Claim(ClaimTypes.Role, userRole));
             }
 
-            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret));
-
             var token = new JwtSecurityToken(
-                expires: DateTime.Now.AddHours(1),
+                expires: DateTime.Now.AddMinutes(_jwtSettings.ExpiryMinutes),
+                issuer: _jwtSettings.Issuer,
+                audience: _jwtSettings.Audience,
                 claims: authClaims,
-                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
+                signingCredentials: new SigningCredentials(
+                    new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret)),
+                    SecurityAlgorithms.HmacSha256)
             );
 
             return (new JwtSecurityTokenHandler().WriteToken(token), token.ValidTo);

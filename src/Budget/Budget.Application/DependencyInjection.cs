@@ -1,8 +1,11 @@
 ﻿using Budget.Application.Interfaces.Services;
-using Budget.Application.Mapping;
+using Budget.Application.Mappings;
 using Budget.Application.Services;
 using Budget.Infrastructure.Services;
+using Mapster;
+using MapsterMapper;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace Budget.Application
 {
@@ -29,6 +32,17 @@ namespace Budget.Application
             services.AddScoped<IStatisticsService, StatisticsService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IUserService, UserService>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddMappings(this IServiceCollection services)
+        {
+            var config = TypeAdapterConfig.GlobalSettings;
+            config.Scan(Assembly.GetExecutingAssembly());
+
+            services.AddSingleton(config);
+            services.AddScoped<IMapper, ServiceMapper>();
 
             return services;
         }

@@ -3,7 +3,7 @@ using Budget.Application.Models.Categories;
 using Budget.Domain.Entities;
 using Mapster;
 
-namespace Budget.Application.Mapping;
+namespace Budget.Application.Mappings;
 
 public class CategoryMappingConfiguration : IRegister
 {

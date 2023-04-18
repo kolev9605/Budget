@@ -17,7 +17,7 @@ builder.Host.UseSerilog((context, services, configuration) =>
 
 builder.Services
     .AddPersistence(builder.Configuration)
-    .AddInfrastrucutre(builder.Configuration)
+    .AddInfrastructure(builder.Configuration)
     .AddApplication()
     .AddPresentation();
 

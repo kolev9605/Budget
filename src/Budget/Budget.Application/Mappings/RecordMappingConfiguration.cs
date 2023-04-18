@@ -3,7 +3,7 @@ using Budget.Domain.Entities;
 using Mapster;
 using System;
 
-namespace Budget.Application.Mapping;
+namespace Budget.Application.Mappings;
 
 public class RecordMappingConfiguration : IRegister
 {

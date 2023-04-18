@@ -1,4 +1,4 @@
-﻿using Budget.Application.Mapping;
+﻿using Budget.Application.Mappings;
 using Budget.Persistance;
 using Mapster;
 using MapsterMapper;

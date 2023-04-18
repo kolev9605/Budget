@@ -2,7 +2,7 @@ using Budget.Application.Models.Accounts;
 using Budget.Domain.Entities;
 using Mapster;
 
-namespace Budget.Application.Mapping;
+namespace Budget.Application.Mappings;
 
 public class AccountMappingConfiguration : IRegister
 {
