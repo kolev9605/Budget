@@ -20,7 +20,7 @@ namespace Budget.Persistance
         private static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<BudgetDbContext>(options =>
-                options.UseNpgsql(configuration.GetConnectionString("BudgetPosgres")));
+                options.UseNpgsql(configuration.GetConnectionString("BudgetPostgres")));
 
             services.AddScoped<IBudgetDbContext>(provider => provider.GetService<BudgetDbContext>());
 
