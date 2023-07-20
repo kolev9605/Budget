@@ -1,6 +1,5 @@
 ﻿using Budget.Domain.Constants;
 using Budget.Domain.Exceptions;
-using Budget.Application.Interfaces;
 using CsvHelper;
 using CsvHelper.Configuration;
 using System;
@@ -8,6 +7,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using Budget.Domain.Interfaces;
 
 namespace Budget.Infrastructure
 {

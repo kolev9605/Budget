@@ -1,8 +1,8 @@
-﻿using Budget.Application.Interfaces.Services;
-using Budget.Application.Models.Pagination;
-using Budget.Application.Models.Records;
-using Budget.Common;
+﻿using Budget.Common;
 using Budget.Domain.Entities;
+using Budget.Domain.Interfaces.Services;
+using Budget.Domain.Models.Pagination;
+using Budget.Domain.Models.Records;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;

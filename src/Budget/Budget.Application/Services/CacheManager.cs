@@ -1,4 +1,4 @@
-﻿using Budget.Application.Interfaces.Services;
+﻿using Budget.Domain.Interfaces.Services;
 using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Threading.Tasks;

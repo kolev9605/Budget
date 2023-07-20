@@ -1,4 +1,4 @@
-﻿using Budget.Application.Interfaces.Services;
+﻿using Budget.Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Threading.Tasks;

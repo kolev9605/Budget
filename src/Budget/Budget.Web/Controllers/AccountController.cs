@@ -1,5 +1,5 @@
-﻿using Budget.Application.Interfaces.Services;
-using Budget.Application.Models.Accounts;
+﻿using Budget.Domain.Interfaces.Services;
+using Budget.Domain.Models.Accounts;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 

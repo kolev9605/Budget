@@ -1,10 +1,12 @@
 ﻿using Budget.Application.Mappings;
+using Budget.Domain.Entities;
 using Budget.Persistance;
 using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Data.Common;
+using System.Reflection;
 
 namespace Budget.Application.Tests
 {
@@ -22,6 +24,7 @@ namespace Budget.Application.Tests
         {
             var config = TypeAdapterConfig.GlobalSettings;
             config.Scan(typeof(RecordMappingConfiguration).Assembly);
+            config.Scan(typeof(Account).Assembly);
             return new Mapper(config);
         }
 

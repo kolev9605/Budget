@@ -1,5 +1,7 @@
 ﻿using Budget.Application.Services;
+using Budget.Domain.Entities;
 using Budget.Persistance;
+using Budget.Persistance.Repositories;
 using Budget.Tests.Core;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -41,7 +43,7 @@ namespace Budget.Application.Tests
         {
             // Arrange
             var context = CreateContext();
-            var paymentTypeService = new PaymentTypeService(context);
+            var paymentTypeService = ServiceMockHelper.SetupPaymentTypeService(context);
 
             // Act
             var paymentTypes = await paymentTypeService.GetAllAsync();

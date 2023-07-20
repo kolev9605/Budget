@@ -1,4 +1,4 @@
-﻿using Budget.Application.Interfaces.Services;
+﻿using Budget.Domain.Interfaces.Services;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Text;

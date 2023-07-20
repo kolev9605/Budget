@@ -1,5 +1,5 @@
-﻿using Budget.Application.Interfaces.Services;
-using Budget.Application.Models.Charts.CashFlow;
+﻿using Budget.Domain.Interfaces.Services;
+using Budget.Domain.Models.Charts.CashFlow;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 

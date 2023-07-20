@@ -1,5 +1,5 @@
-﻿using Budget.Application.Interfaces;
-using Budget.Application.Interfaces.Services;
+﻿using Budget.Domain.Interfaces;
+using Budget.Domain.Interfaces.Services;
 using Budget.Infrastructure.Authentication;
 using Budget.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

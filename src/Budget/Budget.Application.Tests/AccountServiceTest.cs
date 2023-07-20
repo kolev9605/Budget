@@ -1,13 +1,10 @@
-using Budget.Application.Models.Accounts;
-using Budget.Application.Services;
 using Budget.Domain.Entities;
 using Budget.Domain.Exceptions;
+using Budget.Domain.Models.Accounts;
 using Budget.Persistance;
 using Budget.Tests.Core;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
@@ -65,7 +62,7 @@ namespace Budget.Application.Tests
         {
             // Arrange
             var context = CreateContext();
-            var accountService = new AccountService(context);
+            var accountService = ServiceMockHelper.SetupAccountService(context);
 
             // Act
             var account = await accountService.GetByIdAsync(DefaultValueConstants.Common.Id, DefaultValueConstants.User.UserId);
@@ -80,7 +77,7 @@ namespace Budget.Application.Tests
         {
             // Arrange
             var context = CreateContext();
-            var accountService = new AccountService(context);
+            var accountService = ServiceMockHelper.SetupAccountService(context);
 
             // Act
             var act = async () => await accountService.GetByIdAsync(DefaultValueConstants.Common.InvalidId, DefaultValueConstants.User.UserId);
@@ -94,7 +91,7 @@ namespace Budget.Application.Tests
         {
             // Arrange
             var context = CreateContext();
-            var accountService = new AccountService(context);
+            var accountService = ServiceMockHelper.SetupAccountService(context);
 
             // Act
             var act = async () => await accountService.GetByIdAsync(DefaultValueConstants.Common.InvalidId, DefaultValueConstants.User.InvalidId);
@@ -108,7 +105,7 @@ namespace Budget.Application.Tests
         {
             // Arrange
             var context = CreateContext();
-            var accountService = new AccountService(context);
+            var accountService = ServiceMockHelper.SetupAccountService(context);
 
             // Act
             var accounts = await accountService.GetAllAccountsAsync(DefaultValueConstants.User.UserId);
@@ -123,7 +120,7 @@ namespace Budget.Application.Tests
         {
             // Arrange
             var context = CreateContext();
-            var accountService = new AccountService(context);
+            var accountService = ServiceMockHelper.SetupAccountService(context);
 
             // Act
             var accounts = await accountService.GetAllAccountsAsync(DefaultValueConstants.User.InvalidId);
@@ -138,7 +135,7 @@ namespace Budget.Application.Tests
         {
             // Arrange
             var context = CreateContext();
-            var accountService = new AccountService(context);
+            var accountService = ServiceMockHelper.SetupAccountService(context);
 
             var createAccountRequest = new CreateAccountModel()
             {
@@ -161,7 +158,7 @@ namespace Budget.Application.Tests
         {
             // Arrange
             var context = CreateContext();
-            var accountService = new AccountService(context);
+            var accountService = ServiceMockHelper.SetupAccountService(context);
             var createAccountRequest = new CreateAccountModel()
             {
                 CurrencyId = DefaultValueConstants.Common.Id,
@@ -181,7 +178,7 @@ namespace Budget.Application.Tests
         {
             // Arrange
             var context = CreateContext();
-            var accountService = new AccountService(context);
+            var accountService = ServiceMockHelper.SetupAccountService(context);
             var updatedInitialBalance = 999;
             var updatedName = "updated name";
 
@@ -207,7 +204,7 @@ namespace Budget.Application.Tests
         {
             // Arrange
             var context = CreateContext();
-            var accountService = new AccountService(context);
+            var accountService = ServiceMockHelper.SetupAccountService(context);
             var updateAccountRequest = new UpdateAccountModel()
             {
                 Id = DefaultValueConstants.Common.InvalidId,
@@ -228,7 +225,7 @@ namespace Budget.Application.Tests
         {
             // Arrange
             var context = CreateContext();
-            var accountService = new AccountService(context);
+            var accountService = ServiceMockHelper.SetupAccountService(context);
             var updateAccountRequest = new UpdateAccountModel()
             {
                 Id = DefaultValueConstants.Common.Id,
@@ -249,7 +246,7 @@ namespace Budget.Application.Tests
         {
             // Arrange
             var context = CreateContext();
-            var accountService = new AccountService(context);
+            var accountService = ServiceMockHelper.SetupAccountService(context);
             var updateAccountRequest = new UpdateAccountModel()
             {
                 Id = DefaultValueConstants.Common.Id,
@@ -270,7 +267,7 @@ namespace Budget.Application.Tests
         {
             // Arrange
             var context = CreateContext();
-            var accountService = new AccountService(context);
+            var accountService = ServiceMockHelper.SetupAccountService(context);
 
             // Act
             var act = async () => await accountService.DeleteAccountAsync(DefaultValueConstants.Account.AccountIdWithRecords, DefaultValueConstants.User.UserId);
@@ -284,7 +281,7 @@ namespace Budget.Application.Tests
         {
             // Arrange
             var context = CreateContext();
-            var accountService = new AccountService(context);
+            var accountService = ServiceMockHelper.SetupAccountService(context);
 
             // Act
             var account = await accountService.DeleteAccountAsync(DefaultValueConstants.Common.Id, DefaultValueConstants.User.UserId);
@@ -298,7 +295,7 @@ namespace Budget.Application.Tests
         {
             // Arrange
             var context = CreateContext();
-            var accountService = new AccountService(context);
+            var accountService = ServiceMockHelper.SetupAccountService(context);
 
             // Act
             var act = async () => await accountService.DeleteAccountAsync(DefaultValueConstants.Common.InvalidId, DefaultValueConstants.User.UserId);

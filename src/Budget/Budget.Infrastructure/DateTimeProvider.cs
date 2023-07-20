@@ -1,4 +1,4 @@
-﻿using Budget.Application.Interfaces;
+﻿using Budget.Domain.Interfaces;
 using System;
 
 namespace Budget.Infrastructure

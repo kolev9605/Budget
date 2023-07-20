@@ -1,5 +1,5 @@
-using Budget.Application.Models.Records;
 using Budget.Domain.Entities;
+using Budget.Domain.Models.Records;
 using Mapster;
 using System;
 

@@ -1,7 +1,7 @@
-﻿using Budget.Application.Interfaces.Services;
-using Budget.Application.Models.Categories;
-using Budget.Common;
+﻿using Budget.Common;
 using Budget.Domain.Entities;
+using Budget.Domain.Interfaces.Services;
+using Budget.Domain.Models.Categories;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 

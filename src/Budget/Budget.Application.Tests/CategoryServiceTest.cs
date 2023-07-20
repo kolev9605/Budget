@@ -52,7 +52,7 @@ namespace Budget.Application.Tests
         public async Task GetByIdAsync_ValidInput_ShouldReturnDefaultEntity()
         {
             var context = CreateContext();
-            var categoryService = new CategoryService(context);
+            var categoryService = ServiceMockHelper.SetupCategoryService(context);
 
             // Act
             var category = await categoryService.GetByIdAsync(DefaultValueConstants.Common.Id, DefaultValueConstants.User.UserId);
@@ -67,7 +67,7 @@ namespace Budget.Application.Tests
         {
             // Arrange
             var context = CreateContext();
-            var categoryService = new CategoryService(context);
+            var categoryService = ServiceMockHelper.SetupCategoryService(context);
 
             // Act
             var act = async () => await categoryService.GetByIdAsync(DefaultValueConstants.Common.InvalidId, DefaultValueConstants.User.UserId);
@@ -81,7 +81,7 @@ namespace Budget.Application.Tests
         {
             // Arrange
             var context = CreateContext();
-            var categoryService = new CategoryService(context);
+            var categoryService = ServiceMockHelper.SetupCategoryService(context);
 
             // Act
             var categories = await categoryService.GetAllAsync(DefaultValueConstants.User.UserId);
@@ -96,7 +96,7 @@ namespace Budget.Application.Tests
         {
             // Arrange
             var context = CreateContext();
-            var categoryService = new CategoryService(context);
+            var categoryService = ServiceMockHelper.SetupCategoryService(context);
 
             // Act
             var categories = await categoryService.GetAllAsync(DefaultValueConstants.User.InvalidId);
@@ -111,7 +111,7 @@ namespace Budget.Application.Tests
         {
             // Arrange
             var context = CreateContext();
-            var categoryService = new CategoryService(context);
+            var categoryService = ServiceMockHelper.SetupCategoryService(context);
 
             // Act
             var categories = await categoryService.GetAllPrimaryAsync(DefaultValueConstants.User.UserId);
@@ -126,7 +126,7 @@ namespace Budget.Application.Tests
         {
             // Arrange
             var context = CreateContext();
-            var categoryService = new CategoryService(context);
+            var categoryService = ServiceMockHelper.SetupCategoryService(context);
 
             // Act
             var categories = await categoryService.GetAllPrimaryAsync(DefaultValueConstants.User.InvalidId);
@@ -141,7 +141,7 @@ namespace Budget.Application.Tests
         {
             // Arrange
             var context = CreateContext();
-            var categoryService = new CategoryService(context);
+            var categoryService = ServiceMockHelper.SetupCategoryService(context);
 
             // Act
             var categories = await categoryService.GetAllSubcategoriesByParentCategoryIdAsync(10, DefaultValueConstants.User.UserId);
@@ -156,7 +156,7 @@ namespace Budget.Application.Tests
         {
             // Arrange
             var context = CreateContext();
-            var categoryService = new CategoryService(context);
+            var categoryService = ServiceMockHelper.SetupCategoryService(context);
 
             // Act
             var categories = await categoryService.GetAllSubcategoriesByParentCategoryIdAsync(DefaultValueConstants.Common.InvalidId, DefaultValueConstants.User.UserId);
@@ -171,7 +171,7 @@ namespace Budget.Application.Tests
         {
             // Arrange
             var context = CreateContext();
-            var categoryService = new CategoryService(context);
+            var categoryService = ServiceMockHelper.SetupCategoryService(context);
 
             // Act
             var categories = await categoryService.GetAllSubcategoriesByParentCategoryIdAsync(DefaultValueConstants.Common.Id, DefaultValueConstants.User.InvalidId);

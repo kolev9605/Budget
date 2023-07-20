@@ -1,4 +1,4 @@
-﻿using Budget.Application.Models.Authentication;
+﻿using Budget.Domain.Models.Authentication;
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 

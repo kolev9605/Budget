@@ -1,6 +1,5 @@
-using Budget.Application.Models.Accounts;
-using Budget.Application.Models.Categories;
 using Budget.Domain.Entities;
+using Budget.Domain.Models.Categories;
 using Mapster;
 
 namespace Budget.Application.Mappings;

@@ -1,5 +1,7 @@
-﻿using Budget.Application.Interfaces;
-using Budget.Domain.Entities;
+﻿using Budget.Domain.Entities;
+using Budget.Domain.Interfaces;
+using Budget.Domain.Interfaces.Repositories;
+using Budget.Persistance.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -13,6 +15,7 @@ namespace Budget.Persistance
         {
             services.AddDatabase(configuration);
             services.AddIdentity(configuration);
+            services.AddRepositories();
 
             return services;
         }
@@ -42,6 +45,16 @@ namespace Budget.Persistance
                 options.Password.RequiredLength = 6;
                 options.Password.RequiredUniqueChars = 1;
             });
+
+            return services;
+        }
+
+        public static IServiceCollection AddRepositories(this IServiceCollection services)
+        {
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped<IRecordRepository, RecordRepository>();
+            services.AddScoped<IAccountRepository, AccountRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
 
             return services;
         }

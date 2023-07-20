@@ -1,5 +1,5 @@
-﻿using Budget.Application.Interfaces.Services;
-using Budget.Application.Models.Authentication;
+﻿using Budget.Domain.Interfaces.Services;
+using Budget.Domain.Models.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;

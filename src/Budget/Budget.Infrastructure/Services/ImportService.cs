@@ -1,8 +1,9 @@
-﻿using Budget.Application.Interfaces;
-using Budget.Application.Interfaces.Services;
-using Budget.Application.Models.Records;
-using Budget.Domain.Entities;
+﻿using Budget.Domain.Entities;
 using Budget.Domain.Exceptions;
+using Budget.Domain.Interfaces;
+using Budget.Domain.Interfaces.Repositories;
+using Budget.Domain.Interfaces.Services;
+using Budget.Domain.Models.Records;
 using Budget.Infrastructure.CsvModels;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -21,15 +22,18 @@ namespace Budget.Infrastructure.Services
         private readonly IBudgetDbContext _budgetDbContext;
         private readonly Dictionary<string, string> _walletCategoryMapping;
         private readonly Dictionary<string, RecordType> _walletRecordTypeMapping;
+        private readonly IAccountRepository _accountRepository;
 
         public ImportService(
             ICsvParser csvParser,
             IDateTimeProvider dateTimeProvider,
-            IBudgetDbContext budgetDbContext)
+            IBudgetDbContext budgetDbContext,
+            IAccountRepository accountRepository)
         {
             _csvParser = csvParser;
             _dateTimeProvider = dateTimeProvider;
             _budgetDbContext = budgetDbContext;
+            _accountRepository = accountRepository;
 
             _walletCategoryMapping = new(StringComparer.InvariantCultureIgnoreCase)
             {
@@ -122,12 +126,7 @@ namespace Budget.Infrastructure.Services
                 throw new BudgetValidationException();
             }
 
-            var accounts = await _budgetDbContext.Accounts
-                .Include(a => a.Currency)
-                .Include(a => a.Records)
-                .Where(a => a.UserId == userId)
-                .ToListAsync();
-
+            var accounts = await _accountRepository.GetAllByUserIdAsync<Account>(userId);
             var paymentTypes = await _budgetDbContext.PaymentTypes.ToListAsync();
             var categories = await _budgetDbContext.Categories.ToListAsync();
 
@@ -305,11 +304,7 @@ namespace Budget.Infrastructure.Services
             string userId,
             IEnumerable<Currency> currencies)
         {
-            var account = await _budgetDbContext.Accounts
-                .Where(a => a.UserId == userId)
-                .Where(a => a.Name == record.Account)
-                .FirstOrDefaultAsync();
-
+            var account = await _accountRepository.GetByNameAsync<Account>(userId, record.Account);
             if (account != null)
             {
                 return account;

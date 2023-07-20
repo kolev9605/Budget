@@ -1,11 +1,11 @@
-﻿using Budget.Application.Extensions;
-using Budget.Application.Interfaces;
-using Budget.Application.Interfaces.Services;
-using Budget.Application.Models.Pagination;
-using Budget.Application.Models.Records;
-using Budget.Domain.Constants;
+﻿using Budget.Domain.Constants;
 using Budget.Domain.Entities;
 using Budget.Domain.Exceptions;
+using Budget.Domain.Interfaces;
+using Budget.Domain.Interfaces.Repositories;
+using Budget.Domain.Interfaces.Services;
+using Budget.Domain.Models.Pagination;
+using Budget.Domain.Models.Records;
 using Mapster;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -19,34 +19,31 @@ namespace Budget.Application.Services
     public class RecordService : IRecordService
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IBudgetDbContext _budgetDbContext;
-        private readonly IPaginationManager _paginationManager;
         private readonly IDateTimeProvider _dateTimeProvider;
+        private readonly IRecordRepository _recordRepository;
+        private readonly ICategoryRepository _categoriesRepository;
+        private readonly IRepository<PaymentType> _paymentTypesRepository;
+        private readonly IAccountRepository _accountRepository;
 
         public RecordService(
             UserManager<ApplicationUser> userManager,
-            IBudgetDbContext budgetDbContext,
-            IPaginationManager paginationManager,
-            IDateTimeProvider dateTimeProvider)
+            IDateTimeProvider dateTimeProvider,
+            IRecordRepository recordRepository,
+            ICategoryRepository categoriesRepository,
+            IRepository<PaymentType> paymentTypesRepository,
+            IAccountRepository accountRepository)
         {
             _userManager = userManager;
-            _budgetDbContext = budgetDbContext;
-            _paginationManager = paginationManager;
             _dateTimeProvider = dateTimeProvider;
+            _recordRepository = recordRepository;
+            _categoriesRepository = categoriesRepository;
+            _paymentTypesRepository = paymentTypesRepository;
+            _accountRepository = accountRepository;
         }
 
         public async Task<RecordModel> GetByIdAsync(int id, string userId)
         {
-            var record = await _budgetDbContext.Records
-                .Include(r => r.Account)
-                    .ThenInclude(a => a.Currency)
-                .Include(r => r.FromAccount)
-                    .ThenInclude(a => a.Currency)
-                .Include(r => r.PaymentType)
-                .Include(r => r.Category)
-                .Where(r => r.Account.UserId == userId)
-                .ProjectToType<RecordModel>()
-                .FirstOrDefaultAsync(r => r.Id == id);
+            var record = await _recordRepository.GetRecordByIdAsync<RecordModel>(id, userId);
 
             return record;
         }
@@ -59,36 +56,12 @@ namespace Budget.Application.Services
         /// <returns></returns>
         public async Task<RecordModel> GetByIdForUpdateAsync(int id, string userId)
         {
-            var record = await _budgetDbContext.Records
-                .Include(r => r.Account)
-                    .ThenInclude(a => a.Currency)
-                .Include(r => r.FromAccount)
-                    .ThenInclude(a => a.Currency)
-                .Include(r => r.PaymentType)
-                .Include(r => r.Category)
-                .Where(r => r.Account.UserId == userId)
-                .ProjectToType<RecordModel>()
-                .AsNoTracking()
-                .FirstOrDefaultAsync(r => r.Id == id);
+            var record = await _recordRepository.GetRecordByIdAsync<RecordModel>(id, userId);
 
             // Only the positive transfer record should be edited to simplify the update process
             if (record.RecordType == RecordType.Transfer)
             {
-                var positiveTransferRecord = await _budgetDbContext.Records
-                    .Include(r => r.Account)
-                        .ThenInclude(a => a.Currency)
-                    .Include(r => r.FromAccount)
-                        .ThenInclude(a => a.Currency)
-                    .Include(r => r.PaymentType)
-                    .Include(r => r.Category)
-                    .Where(r => Math.Abs(r.Amount) == Math.Abs(record.Amount))
-                    .Where(r => r.Amount > 0)
-                    .Where(r => r.RecordType == RecordType.Transfer)
-                    .Where(r => r.RecordDate == record.RecordDate)
-                    .Where(r => r.CategoryId == record.Category.Id)
-                    .ProjectToType<RecordModel>()
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync();
+                var positiveTransferRecord = await _recordRepository.GetPositiveTransferRecordAsync<RecordModel>(record.RecordDate, record.Category.Id, record.Amount);
 
                 return positiveTransferRecord;
             }
@@ -98,38 +71,21 @@ namespace Budget.Application.Services
 
         public async Task<IEnumerable<RecordsExportModel>> GetAllForExportAsync(string userId)
         {
-            var records = await _budgetDbContext.Records
-                .Include(r => r.Account)
-                    .ThenInclude(a => a.Currency)
-                .Include(r => r.FromAccount)
-                .Include(r => r.PaymentType)
-                .Include(r => r.Category)
-                .Where(r => r.Account.UserId == userId)
-                .OrderByDescending(r => r.RecordDate)
-                .ProjectToType<RecordsExportModel>()
-                .AsNoTracking()
-                .ToListAsync();
+            var records = await _recordRepository.GetAllAsync<RecordsExportModel>(userId);
 
             return records;
         }
 
-        public async Task<PaginationModel<RecordsGroupModel>> GetAllPaginatedAsync(PaginatedRequestModel requestModel, string userId)
+        public async Task<IPagedListContainer<RecordsGroupModel>> GetAllPaginatedAsync(PaginatedRequestModel requestModel, string userId)
         {
-            var recordsQuery = _budgetDbContext.Records
-                .Include(r => r.Account)
-                    .ThenInclude(a => a.Currency)
-                .Include(r => r.FromAccount)
-                .Include(r => r.PaymentType)
-                .Include(r => r.Category)
-                .Where(r => r.Account.UserId == userId)
-                .OrderByDescending(r => r.RecordDate);
+            var paginated = await _recordRepository.GetAllPaginatedAsync<RecordModel>(userId, requestModel);
 
-            var paginatedRecords = await _paginationManager.CreateAsync(recordsQuery, requestModel.PageNumber, requestModel.PageSize);
+            //var paginatedRecords = await _recordRepository.GetAllPaginatedAsync<RecordModel>(userId, requestModel);
 
-            // The RecordDate is converted to local time before the grouping to produce groups based on Local time
-            paginatedRecords.Items.ForEach(r => r.RecordDate = r.RecordDate.ToLocalTime());
+            //// The RecordDate is converted to local time before the grouping to produce groups based on Local time
+            //paginatedRecords.Items.ForEach(r => r.RecordDate = r.RecordDate.ToLocalTime());
 
-            var recordsGroupedByDate = paginatedRecords.Items
+            var recordsGroupedByDate = paginated.Items
                 .GroupBy(r => r.RecordDate.Date)
                 .ToDictionary(r => r.Key, r => r.ToList())
                 .OrderByDescending(r => r.Key)
@@ -137,12 +93,12 @@ namespace Budget.Application.Services
                 {
                     Date = r.Key,
                     Sum = r.Value.Sum(r => r.Amount),
-                    Records = r.Value.Select(rm => rm.Adapt<RecordModel>())
+                    Records = r.Value
                 });
 
-            var paginatedRecordModels = paginatedRecords.Convert(recordsGroupedByDate.ToList());
+            return null;
 
-            return paginatedRecordModels;
+            //return paginatedRecordModels;
         }
 
         public async Task<RecordModel> CreateAsync(CreateRecordModel createRecordModel, string userId)
@@ -163,23 +119,14 @@ namespace Budget.Application.Services
                 record.FromAccountId = negativeTransferRecord.AccountId;
             }
 
-            var createdRecord = await _budgetDbContext.Records.AddAsync(record);
-            await _budgetDbContext.SaveChangesAsync();
+            var createdRecord = await _recordRepository.CreateAsync<RecordModel>(record);
 
-            return createdRecord.Entity.Adapt<RecordModel>();
+            return createdRecord;
         }
 
         public async Task<RecordModel> UpdateAsync(UpdateRecordModel updateRecordModel, string userId)
         {
-            var record = await _budgetDbContext.Records
-                .Include(r => r.Account)
-                    .ThenInclude(a => a.Currency)
-                .Include(r => r.FromAccount)
-                    .ThenInclude(a => a.Currency)
-                .Include(r => r.PaymentType)
-                .Include(r => r.Category)
-                .Where(r => r.Account.UserId == userId)
-                .FirstOrDefaultAsync(r => r.Id == updateRecordModel.Id);
+            var record = await _recordRepository.GetRecordByIdAsync<Record>(updateRecordModel.Id, userId);
 
             if (record == null)
             {
@@ -188,17 +135,7 @@ namespace Budget.Application.Services
             }
 
             await ValidateCrudRecordModel(updateRecordModel, userId);
-            var existingTransferRecord = await _budgetDbContext.Records
-                .Include(r => r.Account)
-                .Where(r => r.Account.UserId == r.Account.UserId)
-                .Where(r => r.AccountId == record.FromAccountId.GetValueOrDefault())
-                .Where(r => r.FromAccountId.GetValueOrDefault() == record.AccountId)
-                .Where(r => Math.Abs(r.Amount) == Math.Abs(record.Amount))
-                .Where(r => r.RecordType == RecordType.Transfer)
-                .Where(r => r.DateCreated == record.DateCreated)
-                .Where(r => r.CategoryId == record.CategoryId)
-                .Where(r => r.Id != record.Id)
-                .FirstOrDefaultAsync();
+            var existingTransferRecord = await _recordRepository.GetNegativeTransferRecordAsync<Record>(record);
 
             record.AccountId = updateRecordModel.AccountId;
             record.Amount = GetAmountByRecordType(updateRecordModel.Amount, updateRecordModel.RecordType);
@@ -221,33 +158,23 @@ namespace Budget.Application.Services
                 existingTransferRecord.RecordDate = updateRecordModel.RecordDate;
                 existingTransferRecord.FromAccountId = record.AccountId;
 
-                _budgetDbContext.Records.Update(existingTransferRecord);
-                await _budgetDbContext.SaveChangesAsync();
+                var updatedExistingRecord = await _recordRepository.UpdateAsync<Record>(existingTransferRecord);
 
-                record.FromAccountId = existingTransferRecord.AccountId;
+                record.FromAccountId = updatedExistingRecord.AccountId;
             }
             else
             {
                 record.FromAccountId = null;
             }
 
-            var updatedRecord = _budgetDbContext.Records.Update(record);
-            await _budgetDbContext.SaveChangesAsync();
+            var updatedRecord = await _recordRepository.UpdateAsync<RecordModel>(record);
 
-            return updatedRecord.Entity.Adapt<RecordModel>();
+            return updatedRecord;
         }
 
         public async Task<RecordModel> DeleteAsync(int recordId, string userId)
         {
-            var record = await _budgetDbContext.Records
-                .Include(r => r.Account)
-                    .ThenInclude(a => a.Currency)
-                .Include(r => r.FromAccount)
-                    .ThenInclude(a => a.Currency)
-                .Include(r => r.PaymentType)
-                .Include(r => r.Category)
-                .Where(r => r.Account.UserId == userId)
-                .FirstOrDefaultAsync(r => r.Id == recordId);
+            var record = await _recordRepository.GetRecordByIdAsync<Record>(recordId, userId);
 
             if (record == null)
             {
@@ -255,46 +182,28 @@ namespace Budget.Application.Services
                     string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(record)));
             }
 
-            var existingTransferRecord = await _budgetDbContext.Records
-                .Include(r => r.Account)
-                .Where(r => r.Account.UserId == r.Account.UserId)
-                .Where(r => r.AccountId == record.FromAccountId.GetValueOrDefault())
-                .Where(r => r.FromAccountId.GetValueOrDefault() == record.AccountId)
-                .Where(r => Math.Abs(r.Amount) == Math.Abs(record.Amount))
-                .Where(r => r.RecordType == RecordType.Transfer)
-                .Where(r => r.DateCreated == record.DateCreated)
-                .Where(r => r.CategoryId == record.CategoryId)
-                .Where(r => r.Id != record.Id)
-                .FirstOrDefaultAsync();
+            var existingTransferRecord = await _recordRepository.GetNegativeTransferRecordAsync<Record>(record);
 
             if (existingTransferRecord != null)
             {
-                _budgetDbContext.Records.Remove(existingTransferRecord);
+                await _recordRepository.DeleteAsync<Record>(existingTransferRecord);
             }
 
-            var deletedRecord = _budgetDbContext.Records.Remove(record);
-            await _budgetDbContext.SaveChangesAsync();
+            var deletedRecord = await _recordRepository.DeleteAsync<RecordModel>(record);
 
-            return deletedRecord.Entity.Adapt<RecordModel>();
+            return deletedRecord;
         }
 
         public async Task<RecordsDateRangeModel> GetRecordsDateRangeAsync(string userId)
         {
-            var allRecords = await _budgetDbContext.Records
-                .Include(r => r.Account)
-                    .ThenInclude(a => a.Currency)
-                .Include(r => r.FromAccount)
-                .Include(r => r.PaymentType)
-                .Include(r => r.Category)
-                .Where(r => r.Account.UserId == userId)
-                .OrderByDescending(r => r.RecordDate)
-                .ToListAsync();
+            var allRecords = await _recordRepository.GetAllAsync<Record>(userId);
 
             if (!allRecords.Any())
             {
                 return null;
             }
 
+            //TODO: Mapster
             var minRecordDate = allRecords.Min(r => r.RecordDate);
             var maxRecordDate = allRecords.Max(r => r.RecordDate);
 
@@ -326,10 +235,9 @@ namespace Budget.Application.Services
                 FromAccountId = createRecordModel.AccountId,
             };
 
-            var negativeTransferRecordCreated = await _budgetDbContext.Records.AddAsync(negativeTransferRecord);
-            await _budgetDbContext.SaveChangesAsync();
+            var negativeTransferRecordCreated = await _recordRepository.CreateAsync<Record>(negativeTransferRecord);
 
-            return negativeTransferRecordCreated.Entity;
+            return negativeTransferRecordCreated;
         }
 
         private async Task ValidateCrudRecordModel(BaseCrudRecordModel model, string userId)
@@ -349,14 +257,14 @@ namespace Budget.Application.Services
                     string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(user)));
             }
 
-            var category = await _budgetDbContext.Categories.FirstOrDefaultAsync(c => c.Id == model.CategoryId);
+            var category = await _categoriesRepository.BaseGetByIdAsync<Category>(model.CategoryId);
             if (category == null)
             {
                 throw new BudgetValidationException(
                     string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(category)));
             }
 
-            var paymentType = await _budgetDbContext.PaymentTypes.FirstOrDefaultAsync(pt => pt.Id == model.PaymentTypeId);
+            var paymentType = await _paymentTypesRepository.BaseGetByIdAsync<PaymentType>(model.PaymentTypeId);
             if (paymentType == null)
             {
                 throw new BudgetValidationException(
@@ -366,7 +274,7 @@ namespace Budget.Application.Services
 
         private async Task ValidateAccount(int accountId, string userId)
         {
-            var account = await _budgetDbContext.Accounts.FirstOrDefaultAsync(a => a.Id == accountId);
+            var account = await _accountRepository.BaseGetByIdAsync<Account>(accountId);
             if (account == null)
             {
                 throw new BudgetValidationException(
@@ -388,14 +296,14 @@ namespace Budget.Application.Services
                     string.Format(ValidationMessages.Common.IsNotNull, nameof(fromAccountId)));
             }
 
-            var account = await _budgetDbContext.Accounts.FirstOrDefaultAsync(a => a.Id == accountId);
+            var account = await _accountRepository.BaseGetByIdAsync<Account>(accountId);
             if (account == null)
             {
                 throw new BudgetValidationException(
                     string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(account)));
             }
 
-            var fromAccount = await _budgetDbContext.Accounts.FirstOrDefaultAsync(a => a.Id == fromAccountId.Value);
+            var fromAccount = await _accountRepository.BaseGetByIdAsync<Account>(fromAccountId.Value);
             if (fromAccount == null)
             {
                 throw new BudgetValidationException(

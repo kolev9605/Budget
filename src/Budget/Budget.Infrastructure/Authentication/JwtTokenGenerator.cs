@@ -1,4 +1,4 @@
-﻿using Budget.Application.Interfaces;
+﻿using Budget.Domain.Interfaces;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;

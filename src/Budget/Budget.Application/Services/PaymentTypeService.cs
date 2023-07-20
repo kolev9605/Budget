@@ -1,8 +1,7 @@
-﻿using Budget.Application.Interfaces;
-using Budget.Application.Interfaces.Services;
-using Budget.Application.Models.PaymentTypes;
-using Mapster;
-using Microsoft.EntityFrameworkCore;
+﻿using Budget.Domain.Entities;
+using Budget.Domain.Interfaces.Repositories;
+using Budget.Domain.Interfaces.Services;
+using Budget.Domain.Models.PaymentTypes;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -10,18 +9,16 @@ namespace Budget.Application.Services
 {
     public class PaymentTypeService : IPaymentTypeService
     {
-        private readonly IBudgetDbContext _budgetDbContext;
+        private readonly IRepository<PaymentType> _paymentTypeRepository;
 
-        public PaymentTypeService(IBudgetDbContext budgetDbContext)
+        public PaymentTypeService(IRepository<PaymentType> paymentTypeRepository)
         {
-            _budgetDbContext = budgetDbContext;
+            _paymentTypeRepository = paymentTypeRepository;
         }
 
         public async Task<IEnumerable<PaymentTypeModel>> GetAllAsync()
         {
-            var paymentTypes = await _budgetDbContext.PaymentTypes
-                .ProjectToType<PaymentTypeModel>()
-                .ToListAsync();
+            var paymentTypes = await _paymentTypeRepository.BaseGetAllAsync<PaymentTypeModel>();
 
             return paymentTypes;
         }

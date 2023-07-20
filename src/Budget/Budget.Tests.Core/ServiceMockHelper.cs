@@ -1,5 +1,9 @@
-﻿using Budget.Application.Interfaces;
+﻿using Budget.Application.Services;
 using Budget.Domain.Entities;
+using Budget.Domain.Interfaces;
+using Budget.Domain.Interfaces.Repositories;
+using Budget.Persistance;
+using Budget.Persistance.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Moq;
 
@@ -43,6 +47,55 @@ namespace Budget.Tests.Core
             userManagerMock.Setup(x => x.UpdateAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(IdentityResult.Success);
 
             return userManagerMock.Object;
+        }
+
+        public static RecordService SetupRecordService(BudgetDbContext context)
+        {
+            var recordRepository = new RecordRepository(context);
+            var categoryRepository = new CategoryRepository(context);
+            var paymentTypesRepository = new Repository<PaymentType>(context);
+            var accountRepository = new AccountRepository(context);
+
+            var recordService = new RecordService(SetupUserService(), SetupDateTimeProvider(), recordRepository, categoryRepository, paymentTypesRepository, accountRepository);
+
+            return recordService;
+        }
+
+        public static AccountService SetupAccountService(BudgetDbContext context)
+        {
+            var accountRepository = new AccountRepository(context);
+            var currencyRepository = new Repository<Currency>(context);
+
+            var accountService = new AccountService(accountRepository, currencyRepository);
+
+            return accountService;
+        }
+
+        public static CategoryService SetupCategoryService(BudgetDbContext context)
+        {
+            var categoryRepository = new CategoryRepository(context);
+
+            var categoryService = new CategoryService(categoryRepository);
+
+            return categoryService;
+        }
+
+        public static CurrencyService SetupCurrencyService(BudgetDbContext context)
+        {
+            var currencyRepository = new Repository<Currency>(context);
+
+            var currencyService = new CurrencyService(currencyRepository);
+
+            return currencyService;
+        }
+
+        public static PaymentTypeService SetupPaymentTypeService(BudgetDbContext context)
+        {
+            var paymentTypeRepository = new Repository<PaymentType>(context);
+
+            var paymentTypeService = new PaymentTypeService(paymentTypeRepository);
+
+            return paymentTypeService;
         }
     }
 }

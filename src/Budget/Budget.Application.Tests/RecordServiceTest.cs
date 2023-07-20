@@ -1,7 +1,6 @@
-using Budget.Application.Models.Records;
-using Budget.Application.Services;
 using Budget.Domain.Entities;
 using Budget.Domain.Exceptions;
+using Budget.Domain.Models.Records;
 using Budget.Persistance;
 using Budget.Tests.Core;
 using Microsoft.Data.Sqlite;
@@ -57,18 +56,12 @@ namespace Budget.Application.Tests
             }
         }
 
-        private RecordService SetupRecordService(BudgetDbContext context)
-        {
-            var recordService = new RecordService(ServiceMockHelper.SetupUserService(), context, new PaginationManager(), ServiceMockHelper.SetupDateTimeProvider());
-            return recordService;
-        }
-
         [Fact]
         public async Task CreateRecord_WithValidInputModel_ShouldSucceed()
         {
             // Arrange
             var context = CreateContext();
-            var recordService = SetupRecordService(context);
+            var recordService = ServiceMockHelper.SetupRecordService(context);
 
             var model = new CreateRecordModel()
             {
@@ -96,7 +89,7 @@ namespace Budget.Application.Tests
         {
             // Arrange
             var context = CreateContext();
-            var recordService = SetupRecordService(context);
+            var recordService = ServiceMockHelper.SetupRecordService(context);
 
             var model = new CreateRecordModel()
             {
@@ -120,7 +113,7 @@ namespace Budget.Application.Tests
         {
             // Arrange
             var context = CreateContext();
-            var recordService = SetupRecordService(context);
+            var recordService = ServiceMockHelper.SetupRecordService(context);
 
             var model = new CreateRecordModel()
             {
@@ -144,7 +137,7 @@ namespace Budget.Application.Tests
         {
             // Arrange
             var context = CreateContext();
-            var recordService = SetupRecordService(context);
+            var recordService = ServiceMockHelper.SetupRecordService(context);
 
             var model = new CreateRecordModel()
             {
@@ -168,7 +161,7 @@ namespace Budget.Application.Tests
         {
             // Arrange
             var context = CreateContext();
-            var recordService = SetupRecordService(context);
+            var recordService = ServiceMockHelper.SetupRecordService(context);
 
             var model = new CreateRecordModel()
             {
@@ -192,7 +185,7 @@ namespace Budget.Application.Tests
         {
             // Arrange
             var context = CreateContext();
-            var recordService = SetupRecordService(context);
+            var recordService = ServiceMockHelper.SetupRecordService(context);
 
             CreateRecordModel model = null;
 
@@ -208,7 +201,7 @@ namespace Budget.Application.Tests
         {
             // Arrange
             var context = CreateContext();
-            var recordService = SetupRecordService(context);
+            var recordService = ServiceMockHelper.SetupRecordService(context);
 
             var model = new UpdateRecordModel()
             {
@@ -233,7 +226,7 @@ namespace Budget.Application.Tests
         {
             // Arrange
             var context = CreateContext();
-            var recordService = SetupRecordService(context);
+            var recordService = ServiceMockHelper.SetupRecordService(context);
 
             var model = new UpdateRecordModel()
             {
@@ -258,7 +251,7 @@ namespace Budget.Application.Tests
         {
             // Arrange
             var context = CreateContext();
-            var recordService = SetupRecordService(context);
+            var recordService = ServiceMockHelper.SetupRecordService(context);
 
             // Act
             var result = await recordService.DeleteAsync(DefaultValueConstants.Common.Id, DefaultValueConstants.User.UserId);
@@ -272,7 +265,7 @@ namespace Budget.Application.Tests
         {
             // Arrange
             var context = CreateContext();
-            var recordService = SetupRecordService(context);
+            var recordService = ServiceMockHelper.SetupRecordService(context);
 
             // Act
             var act = async () => await recordService.DeleteAsync(DefaultValueConstants.Common.InvalidId, DefaultValueConstants.User.UserId);
