@@ -115,5 +115,23 @@ namespace Budget.Application.Services
 
             return account.Adapt<AccountModel>();
         }
+
+        public async Task<AccountModel> TestGetByIdAsync(int accountId, string userId)
+        {
+            var account = await _accountRepository.GetByIdWithCurrencyAsync<AccountModel>(accountId, userId);
+
+            if (account == null)
+            {
+                throw new BudgetValidationException(
+                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(account)));
+            }
+
+            if (account.Balance <= 0)
+            {
+                throw new BudgetValidationException("Balance is less than 0");
+            }
+
+            return account;
+        } 
     }
 }

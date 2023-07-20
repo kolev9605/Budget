@@ -15,5 +15,7 @@ namespace Budget.Domain.Interfaces.Services
         Task<AccountModel> UpdateAsync(UpdateAccountModel accountModel, string userId);
 
         Task<AccountModel> DeleteAccountAsync(int accountId, string userId);
+
+        Task<AccountModel> TestGetByIdAsync(int accountId, string userId);
     }
 }

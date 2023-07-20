@@ -2,6 +2,7 @@
 using Budget.Domain.Entities;
 using Budget.Domain.Interfaces;
 using Budget.Domain.Interfaces.Repositories;
+using Budget.Domain.Models.Currencies;
 using Budget.Persistance;
 using Budget.Persistance.Repositories;
 using Microsoft.AspNetCore.Identity;
@@ -49,53 +50,88 @@ namespace Budget.Tests.Core
             return userManagerMock.Object;
         }
 
-        public static RecordService SetupRecordService(BudgetDbContext context)
+        // public static RecordService SetupRecordService(
+        //             PaymentType paymentType,
+        //             Category category,
+        //             Account account,
+        //             Record record,
+        //             ApplicationUser user)
+        // {
+        //     var recordService = new RecordService(
+        //         RepositoryMockHelper.SetupRecordRepository(record),
+        //         RepositoryMockHelper.SetupAccountRepository(account),
+        //         SetupDateTimeProvider(),
+        //         RepositoryMockHelper.SetupCategoryRepository(category),
+        //         RepositoryMockHelper.SetupPaymentTypeRepository(paymentType),
+        //         SetupUserService(user)
+        //         );
+
+        //     return recordService;
+        // }
+
+        // public static RecordService SetupRecordService()
+        // {
+        //     var currency = EntityMockHelper.SetupCurrency();
+        //     var paymentType = EntityMockHelper.SetupPaymentType();
+        //     var category = EntityMockHelper.SetupCategory();
+        //     var account = EntityMockHelper.SetupAccount(currency);
+        //     var record = EntityMockHelper.SetupRecord(account, paymentType, category);
+        //     var user = EntityMockHelper.SetupUser();
+
+        //     var recordService = SetupRecordService(paymentType, category, account, record, user);
+
+        //     return recordService;
+        // }
+
+        public static AccountService SetupAccountService(Account account, Currency currency)
         {
-            var recordRepository = new RecordRepository(context);
-            var categoryRepository = new CategoryRepository(context);
-            var paymentTypesRepository = new Repository<PaymentType>(context);
-            var accountRepository = new AccountRepository(context);
-
-            var recordService = new RecordService(SetupUserService(), SetupDateTimeProvider(), recordRepository, categoryRepository, paymentTypesRepository, accountRepository);
-
-            return recordService;
-        }
-
-        public static AccountService SetupAccountService(BudgetDbContext context)
-        {
-            var accountRepository = new AccountRepository(context);
-            var currencyRepository = new Repository<Currency>(context);
-
-            var accountService = new AccountService(accountRepository, currencyRepository);
+            var accountService = new AccountService(
+                RepositoryMockHelper.SetupAccountRepository(account),
+                RepositoryMockHelper.SetupCurrencyRepository(currency)
+                );
 
             return accountService;
         }
 
-        public static CategoryService SetupCategoryService(BudgetDbContext context)
+        public static AccountService SetupAccountService()
         {
-            var categoryRepository = new CategoryRepository(context);
+            var currency = EntityMockHelper.SetupCurrency();
 
-            var categoryService = new CategoryService(categoryRepository);
+            var account = EntityMockHelper.SetupAccount(currency);
+
+            var accountService = SetupAccountService(account, currency);
+
+            return accountService;
+        }
+
+        // public static CategoryService SetupCategoryService()
+        // {
+        //     var category = EntityMockHelper.SetupCategory();
+
+        //     var categoryService = new CategoryService(
+        //         RepositoryMockHelper.SetupCategoryRepository(category));
+
+        //     return categoryService;
+        // }
+
+        public static CurrencyService SetupCurrencyService()
+        {
+            var currency = EntityMockHelper.SetupCurrency();
+
+            var categoryService = new CurrencyService(
+                RepositoryMockHelper.SetupCurrencyRepository(currency));
 
             return categoryService;
         }
 
-        public static CurrencyService SetupCurrencyService(BudgetDbContext context)
-        {
-            var currencyRepository = new Repository<Currency>(context);
+        // public static PaymentTypeService SetupPaymentTypeService()
+        // {
+        //     var paymentType = EntityMockHelper.SetupPaymentType();
 
-            var currencyService = new CurrencyService(currencyRepository);
+        //     var paymentTypeService = new PaymentTypeService(
+        //         RepositoryMockHelper.SetupPaymentTypeRepository(paymentType));
 
-            return currencyService;
-        }
-
-        public static PaymentTypeService SetupPaymentTypeService(BudgetDbContext context)
-        {
-            var paymentTypeRepository = new Repository<PaymentType>(context);
-
-            var paymentTypeService = new PaymentTypeService(paymentTypeRepository);
-
-            return paymentTypeService;
-        }
+        //     return paymentTypeService;
+        // }
     }
 }

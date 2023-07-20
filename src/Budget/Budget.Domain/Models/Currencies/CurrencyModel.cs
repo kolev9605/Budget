@@ -9,5 +9,7 @@ namespace Budget.Domain.Models.Currencies
         public string Name { get; set; }
 
         public string Abbreviation { get; set; }
+
+        public string SpecialName { get; set; }
     }
 }
