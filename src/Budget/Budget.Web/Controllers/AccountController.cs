@@ -1,6 +1,5 @@
-﻿using Budget.Core.Interfaces.Services;
-using Budget.Core.Models.Accounts;
-using Microsoft.AspNetCore.Authorization;
+﻿using Budget.Application.Interfaces.Services;
+using Budget.Application.Models.Accounts;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 

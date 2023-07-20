@@ -22,15 +22,17 @@ export class AccountsComponent implements OnInit {
 
   ngOnInit(): void {
     this.isLoading = true;
-    this.accountService.getAll().subscribe({
-      next: (response) => {
-        this.accounts = response;
-      },
-      error: (error) => {
-        this.toastr.error(error);
-      },
-      complete: () => (this.isLoading = false),
-    });
+    this.accountService
+      .getAll()
+      .subscribe({
+        next: (response) => {
+          this.accounts = response;
+        },
+        error: (error) => {
+          this.toastr.error(error);
+        },
+      })
+      .add(() => (this.isLoading = false));
   }
 
   onAddAccountPressed(): void {

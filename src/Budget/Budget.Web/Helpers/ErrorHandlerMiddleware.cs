@@ -1,4 +1,4 @@
-﻿using Budget.Core.Exceptions;
+﻿using Budget.Domain.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System;

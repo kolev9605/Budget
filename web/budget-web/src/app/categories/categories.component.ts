@@ -20,15 +20,17 @@ export class CategoriesComponent implements OnInit {
 
   ngOnInit(): void {
     this.isLoading = true;
-    this.categoryService.getAllPrimary().subscribe({
-      next: (response) => {
-        this.categories = response;
-      },
-      error: (error) => {
-        this.toastr.error(error);
-      },
-      complete: () => (this.isLoading = false),
-    });
+    this.categoryService
+      .getAllPrimary()
+      .subscribe({
+        next: (response) => {
+          this.categories = response;
+        },
+        error: (error) => {
+          this.toastr.error(error);
+        },
+      })
+      .add(() => (this.isLoading = false));
   }
 
   onAddCategoryPressed(): void {

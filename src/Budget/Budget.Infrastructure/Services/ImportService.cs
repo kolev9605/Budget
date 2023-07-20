@@ -1,47 +1,35 @@
-﻿using Budget.Common;
-using Budget.Core.Entities;
-using Budget.Core.Exceptions;
-using Budget.Core.Interfaces;
-using Budget.Core.Interfaces.Repositories;
-using Budget.Core.Interfaces.Services;
-using Budget.Core.Models.Records;
-using Budget.CsvParser.CsvModels;
+﻿using Budget.Application.Interfaces;
+using Budget.Application.Interfaces.Services;
+using Budget.Application.Models.Records;
+using Budget.Domain.Entities;
+using Budget.Domain.Exceptions;
+using Budget.Infrastructure.CsvModels;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace Budget.Infrastructure.Services
 {
     public class ImportService : IImportService
     {
         private readonly ICsvParser _csvParser;
-        private readonly IRecordRepository _recordRepository;
-        private readonly ICategoryRepository _categoryRepository;
-        private readonly IAccountRepository _accountRepository;
-        private readonly IRepository<PaymentType> _paymentTypesRepository;
         private readonly IDateTimeProvider _dateTimeProvider;
-        private readonly IRepository<Currency> _currencyRepository;
+        private readonly IBudgetDbContext _budgetDbContext;
         private readonly Dictionary<string, string> _walletCategoryMapping;
         private readonly Dictionary<string, RecordType> _walletRecordTypeMapping;
 
         public ImportService(
             ICsvParser csvParser,
-            IRecordRepository recordRepository,
-            ICategoryRepository categoryRepository,
-            IAccountRepository accountRepository,
-            IRepository<PaymentType> paymentTypesRepository,
             IDateTimeProvider dateTimeProvider,
-            IRepository<Currency> currencyRepository)
+            IBudgetDbContext budgetDbContext)
         {
             _csvParser = csvParser;
-            _recordRepository = recordRepository;
-            _categoryRepository = categoryRepository;
-            _accountRepository = accountRepository;
-            _paymentTypesRepository = paymentTypesRepository;
             _dateTimeProvider = dateTimeProvider;
-            _currencyRepository = currencyRepository;
+            _budgetDbContext = budgetDbContext;
 
             _walletCategoryMapping = new(StringComparer.InvariantCultureIgnoreCase)
             {
@@ -77,8 +65,8 @@ namespace Budget.Infrastructure.Services
                 { "Vehicle", "Car" },
                 { "Fuel", "Fuel" },
                 { "Parking", "Parking" },
-                { "Vehicle insurance", "Car insurance" },
-                { "Vehicle maintenance", "Car maintenance" },
+                { "Vehicle insurance", "Car Insurance" },
+                { "Vehicle maintenance", "Car Maintenance" },
 
                 { "Life & Entertainment", "Life" },
                 { "Active sport, fitness", "Sports" },
@@ -104,6 +92,8 @@ namespace Budget.Infrastructure.Services
                 { "Charges, Fees", "Charges & Fees" },
                 { "Fines", "Fines" },
                 { "Taxes", "Taxes" },
+
+                {"Financial investments", "Investments"},
 
                 { "Income", "Income" },
                 { "Interests, dividends", "Interests, dividends" },
@@ -132,9 +122,14 @@ namespace Budget.Infrastructure.Services
                 throw new BudgetValidationException();
             }
 
-            var accounts = await _accountRepository.GetAllByUserIdAsync(userId);
-            var paymentTypes = await _paymentTypesRepository.BaseAllAsync();
-            var categories = await _categoryRepository.BaseAllAsync();
+            var accounts = await _budgetDbContext.Accounts
+                .Include(a => a.Currency)
+                .Include(a => a.Records)
+                .Where(a => a.UserId == userId)
+                .ToListAsync();
+
+            var paymentTypes = await _budgetDbContext.PaymentTypes.ToListAsync();
+            var categories = await _budgetDbContext.Categories.ToListAsync();
 
             var counter = 0;
             foreach (var recordModel in records)
@@ -174,23 +169,23 @@ namespace Budget.Infrastructure.Services
                 record.PaymentType = paymentType;
                 record.Category = category;
 
-                await _recordRepository.CreateAsync(record, saveChanges: false);
+                await _budgetDbContext.Records.AddAsync(record);
 
                 counter++;
                 if (counter % 500 == 0)
                 {
-                    await _recordRepository.SaveChangesAsync();
+                    await _budgetDbContext.SaveChangesAsync();
                 }
             }
 
-            await _recordRepository.SaveChangesAsync();
+            await _budgetDbContext.SaveChangesAsync();
         }
 
         public async Task<int> ImportWalletRecordsAsync(string walletFileContent, string userId)
         {
             var records = _csvParser.ParseCsvString<WalletCsvExportModel>(walletFileContent);
-            var paymentTypes = await _paymentTypesRepository.BaseAllAsync();
-            var currencies = await _currencyRepository.BaseAllAsync();
+            var paymentTypes = await _budgetDbContext.PaymentTypes.ToListAsync();
+            var currencies = await _budgetDbContext.Currencies.ToListAsync();
             var debitCardPaymentType = paymentTypes.FirstOrDefault(pt => pt.Name == "Debit Card");
             var cashPaymentType = paymentTypes.FirstOrDefault(pt => pt.Name == "Cash");
 
@@ -215,11 +210,13 @@ namespace Budget.Infrastructure.Services
                     RecordType = recordType,
                     PaymentType = paymentType,
                     RecordDate = date,
-                    DateCreated = _dateTimeProvider.Now,
+                    DateCreated = _dateTimeProvider.UtcNow,
                 };
 
-                var createdRecord = await _recordRepository.CreateAsync(recordToAdd);
-                insertedRecords.Add(createdRecord);
+                var createdRecord = await _budgetDbContext.Records.AddAsync(recordToAdd);
+                await _budgetDbContext.SaveChangesAsync();
+
+                insertedRecords.Add(createdRecord.Entity);
             }
 
             await LinkTransfersAsync(userId);
@@ -229,7 +226,15 @@ namespace Budget.Infrastructure.Services
 
         private async Task LinkTransfersAsync(string userId)
         {
-            var allRecords = await _recordRepository.GetAllAsync(userId);
+            var allRecords = await _budgetDbContext.Records
+                .Include(r => r.Account)
+                    .ThenInclude(a => a.Currency)
+                .Include(r => r.FromAccount)
+                .Include(r => r.PaymentType)
+                .Include(r => r.Category)
+                .Where(r => r.Account.UserId == userId)
+                .OrderByDescending(r => r.RecordDate)
+                .ToListAsync();
 
             var transfers = allRecords
                 .Where(r => r.RecordType == RecordType.Transfer)
@@ -249,13 +254,15 @@ namespace Budget.Infrastructure.Services
                     foreach (var transferFrom in transferFromRecords)
                     {
                         transferFrom.FromAccountId = transferToRecords.FirstOrDefault().AccountId;
-                        await _recordRepository.UpdateAsync(transferFrom);
+                        _budgetDbContext.Records.Update(transferFrom);
+                        await _budgetDbContext.SaveChangesAsync();
                     }
 
                     foreach (var transferTo in transferToRecords)
                     {
                         transferTo.FromAccountId = transferFromRecords.FirstOrDefault().AccountId;
-                        await _recordRepository.UpdateAsync(transferTo);
+                        _budgetDbContext.Records.Update(transferTo);
+                        await _budgetDbContext.SaveChangesAsync();
                     }
                 }
             }
@@ -294,11 +301,15 @@ namespace Budget.Infrastructure.Services
         }
 
         private async Task<Account> GetOrCreateAccountAsync(
-            WalletCsvExportModel record, 
-            string userId, 
+            WalletCsvExportModel record,
+            string userId,
             IEnumerable<Currency> currencies)
         {
-            var account = await _accountRepository.GetByNameAsync(userId, record.Account);
+            var account = await _budgetDbContext.Accounts
+                .Where(a => a.UserId == userId)
+                .Where(a => a.Name == record.Account)
+                .FirstOrDefaultAsync();
+
             if (account != null)
             {
                 return account;
@@ -320,9 +331,10 @@ namespace Budget.Infrastructure.Services
                     UserId = userId
                 };
 
-                var createdAccount = await _accountRepository.CreateAsync(accountToCreate);
+                var createdAccount = await _budgetDbContext.Accounts.AddAsync(accountToCreate);
+                await _budgetDbContext.SaveChangesAsync();
 
-                return createdAccount;
+                return createdAccount.Entity;
             }
         }
 
@@ -335,7 +347,8 @@ namespace Budget.Infrastructure.Services
                 throw new ArgumentNullException(nameof(category));
             }
 
-            var categoryFromDatabase = await _categoryRepository.GetByNameAsync(category);
+            var categoryFromDatabase = await _budgetDbContext.Categories
+                .FirstOrDefaultAsync(c => c.Name == category);
 
             if (categoryFromDatabase == null)
             {

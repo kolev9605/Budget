@@ -33,15 +33,17 @@ export class CreateAccountComponent implements OnInit {
       initialBalance: [0, [Validators.required]],
     });
 
-    this.currencyService.getAll().subscribe({
-      next: (currencies) => {
-        this.currencies = currencies;
-      },
-      error: (error) => {
-        this.toastr.error(error);
-      },
-      complete: () => (this.isLoading = false),
-    });
+    this.currencyService
+      .getAll()
+      .subscribe({
+        next: (currencies) => {
+          this.currencies = currencies;
+        },
+        error: (error) => {
+          this.toastr.error(error);
+        },
+      })
+      .add(() => (this.isLoading = false));
   }
 
   onSubmit(): void {
@@ -66,15 +68,17 @@ export class CreateAccountComponent implements OnInit {
       this.createAccountForm.value.initialBalance,
     );
 
-    this.accountService.createAccount(createAccountModel).subscribe({
-      next: (account) => {
-        this.toastr.success(`Account ${account.name} created!`);
-        this.router.navigate(['dashboard']);
-      },
-      error: (err) => {
-        this.toastr.error(err);
-      },
-      complete: () => (this.isLoading = false),
-    });
+    this.accountService
+      .createAccount(createAccountModel)
+      .subscribe({
+        next: (account) => {
+          this.toastr.success(`Account ${account.name} created!`);
+          this.router.navigate(['dashboard']);
+        },
+        error: (err) => {
+          this.toastr.error(err);
+        },
+      })
+      .add(() => (this.isLoading = false));
   }
 }

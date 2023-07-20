@@ -61,16 +61,18 @@ export class AuthenticationComponent implements OnInit {
       this.form.value.password,
     );
 
-    this.authService.login(loginModel).subscribe({
-      next: (res) => {
-        this.toastr.success('Login successful!');
-        this.router.navigate(['dashboard']);
-      },
-      error: (err) => {
-        this.toastr.error(err);
-      },
-      complete: () => (this.isLoading = false),
-    });
+    this.authService
+      .login(loginModel)
+      .subscribe({
+        next: (res) => {
+          this.toastr.success('Login successful!');
+          this.router.navigate(['dashboard']);
+        },
+        error: (err) => {
+          this.toastr.error(err);
+        },
+      })
+      .add(() => (this.isLoading = false));
 
     this.form.reset();
   }
@@ -83,16 +85,18 @@ export class AuthenticationComponent implements OnInit {
       this.form.value.email,
     );
 
-    this.authService.register(registerModel).subscribe({
-      next: (res) => {
-        this.toastr.success('Registration successful!');
-        this.isLogin = !this.isLogin;
-      },
-      error: (err) => {
-        this.toastr.error(err);
-      },
-      complete: () => (this.isLoading = false),
-    });
+    this.authService
+      .register(registerModel)
+      .subscribe({
+        next: (res) => {
+          this.toastr.success('Registration successful!');
+          this.isLogin = !this.isLogin;
+        },
+        error: (err) => {
+          this.toastr.error(err);
+        },
+      })
+      .add(() => (this.isLoading = false));
 
     this.form.reset();
   }

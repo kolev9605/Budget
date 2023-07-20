@@ -1,4 +1,4 @@
-﻿using Budget.Core.Entities;
+﻿using Budget.Domain.Entities;
 
 namespace Budget.Tests.Core
 {
@@ -46,6 +46,7 @@ namespace Budget.Tests.Core
         }
 
         public static Category SetupCategory(
+            ApplicationUser user,
             int id = DefaultValueConstants.Common.Id, 
             CategoryType categoryType = DefaultValueConstants.Category.Type)
         {
@@ -53,8 +54,14 @@ namespace Budget.Tests.Core
             {
                 Id = id,
                 Name = $"Category{id}",
-                CategoryType = categoryType
+                CategoryType = categoryType,
             };
+
+            category.Users.Add(new UserCategory()
+            {
+                User = user,
+                UserId = user.Id,
+            });
 
             return category;
         }

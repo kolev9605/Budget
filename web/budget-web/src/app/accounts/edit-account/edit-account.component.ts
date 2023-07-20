@@ -43,22 +43,23 @@ export class EditAccountComponent implements OnInit {
         .getById(this.route.snapshot.params['accountId'])
         .pipe(first()),
       currencies: this.currencyService.getAll(),
-    }).subscribe({
-      next: ({ editAccount, currencies }) => {
-        this.currencies = currencies;
-        this.account = editAccount;
+    })
+      .subscribe({
+        next: ({ editAccount, currencies }) => {
+          this.currencies = currencies;
+          this.account = editAccount;
 
-        this.editAccountForm.patchValue({
-          accountName: editAccount.name,
-          currency: editAccount.currency.id,
-          initialBalance: editAccount.initialBalance,
-        });
-      },
-      error: (error) => {
-        this.toastr.error(error);
-      },
-      complete: () => (this.isLoading = false),
-    });
+          this.editAccountForm.patchValue({
+            accountName: editAccount.name,
+            currency: editAccount.currency.id,
+            initialBalance: editAccount.initialBalance,
+          });
+        },
+        error: (error) => {
+          this.toastr.error(error);
+        },
+      })
+      .add(() => (this.isLoading = false));
   }
 
   onSubmit(): void {
@@ -75,16 +76,18 @@ export class EditAccountComponent implements OnInit {
   }
 
   deleteAccount(): void {
-    this.accountService.deleteAccount(this.account.id).subscribe({
-      next: (account) => {
-        this.toastr.success(`Account ${account.name} deleted!`);
-        this.router.navigate(['dashboard']);
-      },
-      error: (err) => {
-        this.toastr.error(err);
-      },
-      complete: () => (this.isLoading = false),
-    });
+    this.accountService
+      .deleteAccount(this.account.id)
+      .subscribe({
+        next: (account) => {
+          this.toastr.success(`Account ${account.name} deleted!`);
+          this.router.navigate(['dashboard']);
+        },
+        error: (err) => {
+          this.toastr.error(err);
+        },
+      })
+      .add(() => (this.isLoading = false));
   }
 
   updateAccount() {
@@ -96,15 +99,17 @@ export class EditAccountComponent implements OnInit {
       this.editAccountForm.value.currency,
     );
 
-    this.accountService.updateAccount(updateAccountModel).subscribe({
-      next: (account) => {
-        this.toastr.success(`Account ${account.name} updated!`);
-        this.router.navigate(['dashboard']);
-      },
-      error: (err) => {
-        this.toastr.error(err);
-      },
-      complete: () => (this.isLoading = false),
-    });
+    this.accountService
+      .updateAccount(updateAccountModel)
+      .subscribe({
+        next: (account) => {
+          this.toastr.success(`Account ${account.name} updated!`);
+          this.router.navigate(['dashboard']);
+        },
+        error: (err) => {
+          this.toastr.error(err);
+        },
+      })
+      .add(() => (this.isLoading = false));
   }
 }

@@ -57,34 +57,35 @@ export class CreateRecordComponent implements OnInit {
       accounts: this.accountService.getAll(),
       paymentTypes: this.paymentTypeService.getAll(),
       recordTypes: this.recordService.getRecordTypes(),
-    }).subscribe({
-      next: ({ categories, accounts, paymentTypes, recordTypes }) => {
-        this.categories = categories;
-        this.accounts = accounts;
-        this.paymentTypes = paymentTypes;
-        this.recordTypes = recordTypes;
+    })
+      .subscribe({
+        next: ({ categories, accounts, paymentTypes, recordTypes }) => {
+          this.categories = categories;
+          this.accounts = accounts;
+          this.paymentTypes = paymentTypes;
+          this.recordTypes = recordTypes;
 
-        if (!accounts || accounts.length === 0) {
-          this.toastr.warning('You have to create an account first');
-          this.router.navigate(['accounts/create']);
-          return;
-        }
+          if (!accounts || accounts.length === 0) {
+            this.toastr.warning('You have to create an account first');
+            this.router.navigate(['accounts/create']);
+            return;
+          }
 
-        var expenseRecordType = recordTypes.find((rt) => rt === RecordTypes.Expense);
-        if (expenseRecordType) {
-          this.selectedRecordType = expenseRecordType;
-        }
+          var expenseRecordType = recordTypes.find((rt) => rt === RecordTypes.Expense);
+          if (expenseRecordType) {
+            this.selectedRecordType = expenseRecordType;
+          }
 
-        this.createRecordForm.patchValue({
-          account: this.accounts[0].id,
-          paymentType: this.paymentTypes.find((x) => x.name == 'Debit Card')?.id,
-        });
-      },
-      error: (error) => {
-        this.toastr.error(error);
-      },
-      complete: () => (this.isLoading = false),
-    });
+          this.createRecordForm.patchValue({
+            account: this.accounts[0].id,
+            paymentType: this.paymentTypes.find((x) => x.name == 'Debit Card')?.id,
+          });
+        },
+        error: (error) => {
+          this.toastr.error(error);
+        },
+      })
+      .add(() => (this.isLoading = false));
   }
 
   onSubmit(): void {
@@ -109,15 +110,17 @@ export class CreateRecordComponent implements OnInit {
     );
 
     this.isLoading = true;
-    this.recordService.createRecord(createRecordModel).subscribe({
-      next: (record) => {
-        this.toastr.success(`Record created in ${record.category.name}!`);
-        this.router.navigate(['records']);
-      },
-      error: (error) => {
-        this.toastr.error(error);
-      },
-      complete: () => (this.isLoading = false),
-    });
+    this.recordService
+      .createRecord(createRecordModel)
+      .subscribe({
+        next: (record) => {
+          this.toastr.success(`Record created in ${record.category.name}!`);
+          this.router.navigate(['records']);
+        },
+        error: (error) => {
+          this.toastr.error(error);
+        },
+      })
+      .add(() => (this.isLoading = false));
   }
 }

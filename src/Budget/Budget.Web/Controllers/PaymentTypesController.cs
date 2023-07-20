@@ -1,4 +1,4 @@
-﻿using Budget.Core.Interfaces.Services;
+﻿using Budget.Application.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
