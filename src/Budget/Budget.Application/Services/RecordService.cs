@@ -41,9 +41,9 @@ namespace Budget.Application.Services
             _accountRepository = accountRepository;
         }
 
-        public async Task<RecordModel> GetByIdAsync(int id, string userId)
+        public async Task<RecordModel> GetByIdAsync(int recordId, string userId)
         {
-            var record = await _recordRepository.GetRecordByIdAsync<RecordModel>(id, userId);
+            var record = await _recordRepository.GetRecordByIdMappedAsync(recordId, userId);
 
             return record;
         }
@@ -51,17 +51,17 @@ namespace Budget.Application.Services
         /// <summary>
         /// Gets the record for update. In case of updating a transfer record, returning the positive among the two records.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="recordId"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public async Task<RecordModel> GetByIdForUpdateAsync(int id, string userId)
+        public async Task<RecordModel> GetByIdForUpdateAsync(int recordId, string userId)
         {
-            var record = await _recordRepository.GetRecordByIdAsync<RecordModel>(id, userId);
+            var record = await _recordRepository.GetRecordByIdMappedAsync(recordId, userId);
 
             // Only the positive transfer record should be edited to simplify the update process
             if (record.RecordType == RecordType.Transfer)
             {
-                var positiveTransferRecord = await _recordRepository.GetPositiveTransferRecordAsync<RecordModel>(record.RecordDate, record.Category.Id, record.Amount);
+                var positiveTransferRecord = await _recordRepository.GetPositiveTransferRecordMappedAsync(record.RecordDate, record.Category.Id, record.Amount);
 
                 return positiveTransferRecord;
             }
@@ -71,14 +71,14 @@ namespace Budget.Application.Services
 
         public async Task<IEnumerable<RecordsExportModel>> GetAllForExportAsync(string userId)
         {
-            var records = await _recordRepository.GetAllAsync<RecordsExportModel>(userId);
+            var records = await _recordRepository.GetAllForExportAsync(userId);
 
             return records;
         }
 
         public async Task<IPagedListContainer<RecordsGroupModel>> GetAllPaginatedAsync(PaginatedRequestModel requestModel, string userId)
         {
-            var paginated = await _recordRepository.GetAllPaginatedAsync<RecordModel>(userId, requestModel);
+            var paginated = await _recordRepository.GetAllPaginatedAsync(userId, requestModel);
 
             //var paginatedRecords = await _recordRepository.GetAllPaginatedAsync<RecordModel>(userId, requestModel);
 
@@ -126,7 +126,7 @@ namespace Budget.Application.Services
 
         public async Task<RecordModel> UpdateAsync(UpdateRecordModel updateRecordModel, string userId)
         {
-            var record = await _recordRepository.GetRecordByIdAsync<Record>(updateRecordModel.Id, userId);
+            var record = await _recordRepository.GetRecordByIdAsync(updateRecordModel.Id, userId);
 
             if (record == null)
             {
@@ -135,7 +135,7 @@ namespace Budget.Application.Services
             }
 
             await ValidateCrudRecordModel(updateRecordModel, userId);
-            var existingTransferRecord = await _recordRepository.GetNegativeTransferRecordAsync<Record>(record);
+            var existingTransferRecord = await _recordRepository.GetNegativeTransferRecordAsync(record);
 
             record.AccountId = updateRecordModel.AccountId;
             record.Amount = GetAmountByRecordType(updateRecordModel.Amount, updateRecordModel.RecordType);
@@ -174,7 +174,7 @@ namespace Budget.Application.Services
 
         public async Task<RecordModel> DeleteAsync(int recordId, string userId)
         {
-            var record = await _recordRepository.GetRecordByIdAsync<Record>(recordId, userId);
+            var record = await _recordRepository.GetRecordByIdAsync(recordId, userId);
 
             if (record == null)
             {
@@ -182,7 +182,7 @@ namespace Budget.Application.Services
                     string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(record)));
             }
 
-            var existingTransferRecord = await _recordRepository.GetNegativeTransferRecordAsync<Record>(record);
+            var existingTransferRecord = await _recordRepository.GetNegativeTransferRecordAsync(record);
 
             if (existingTransferRecord != null)
             {
@@ -196,7 +196,7 @@ namespace Budget.Application.Services
 
         public async Task<RecordsDateRangeModel> GetRecordsDateRangeAsync(string userId)
         {
-            var allRecords = await _recordRepository.GetAllAsync<Record>(userId);
+            var allRecords = await _recordRepository.GetAllAsync(userId);
 
             if (!allRecords.Any())
             {

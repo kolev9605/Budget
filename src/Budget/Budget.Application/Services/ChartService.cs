@@ -21,7 +21,7 @@ namespace Budget.Application.Services
 
         public async Task<CashFlowChartModel> GetCashFlowChartDataAsync(CashFlowChartRequestModel cashFlowChartRequestModel, string userId)
         {
-            var records = await _recordRepository.GetAllInRangeAndAccountsAsync<Record>(userId, cashFlowChartRequestModel.StartDate, cashFlowChartRequestModel.EndDate, cashFlowChartRequestModel.AccountIds);
+            var records = await _recordRepository.GetAllInRangeAndAccountsAsync(userId, cashFlowChartRequestModel.StartDate, cashFlowChartRequestModel.EndDate, cashFlowChartRequestModel.AccountIds);
 
             if (!records.Any())
             {

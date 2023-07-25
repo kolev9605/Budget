@@ -18,7 +18,7 @@ namespace Budget.Application.Services
 
         public async Task<StatisticsResultModel> GetStatisticsByDateAsync(StatisticsRequestModel statisticsRequestModel, string userId)
         {
-            var recordsInRange = await _recordRepository.GetAllInRangeAndAccountsAsync<Record>(userId, statisticsRequestModel.StartDate, statisticsRequestModel.EndDate, statisticsRequestModel.AccountIds);
+            var recordsInRange = await _recordRepository.GetAllInRangeAndAccountsAsync(userId, statisticsRequestModel.StartDate, statisticsRequestModel.EndDate, statisticsRequestModel.AccountIds);
 
             var income = recordsInRange
                 .Where(r => r.Amount > 0)
