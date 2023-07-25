@@ -1,6 +1,6 @@
 ﻿using Budget.Domain.Entities;
 
-namespace Budget.Tests.Core
+namespace Budget.Tests.Utils
 {
     public static class EntityMockHelper
     {

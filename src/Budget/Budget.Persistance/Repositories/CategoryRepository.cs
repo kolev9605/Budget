@@ -1,7 +1,6 @@
 using Budget.Domain.Entities;
 using Budget.Domain.Interfaces.Repositories;
-using Budget.Persistance;
-using Budget.Persistance.Repositories;
+using Budget.Domain.Models.Categories;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -17,64 +16,59 @@ namespace Budget.Persistance.Repositories
         {
         }
 
-        public async Task<IEnumerable<TResult>> GetAllPrimaryAsync<TResult>(string userId)
+        public async Task<IEnumerable<CategoryModel>> GetAllPrimaryCategoryModelsAsync(string userId)
         {
             var categories = await GetUserCategories(userId)
                 .Include(c => c.SubCategories)
                 .Where(c => !c.ParentCategoryId.HasValue)
                 .OrderBy(c => c.ParentCategoryId ?? c.Id)
                 .ThenBy(c => c.Id)
-                .ProjectToType<TResult>()
+                .ProjectToType<CategoryModel>()
                 .ToListAsync();
 
             return categories;
         }
 
-        public async Task<IEnumerable<TResult>> GetAllWithSubcategoriesAsync<TResult>(string userId)
+        public async Task<IEnumerable<CategoryModel>> GetAllWithSubcategoriesCategoryModelsAsync(string userId)
         {
             var categories = await GetUserCategories(userId)
                 .Include(c => c.SubCategories)
                 .OrderBy(c => c.ParentCategoryId ?? c.Id)
                 .ThenBy(c => c.Id)
-                .ProjectToType<TResult>()
+                .ProjectToType<CategoryModel>()
                 .ToListAsync();
 
             return categories;
         }
 
-        public async Task<TResult> GetByIdWithSubcategoriesAsync<TResult>(int categoryId, string userId)
+        public async Task<Category> GetByIdWithSubcategoriesAsync(int categoryId, string userId)
         {
-            var categories = await GetUserCategories(userId)
-                .Include(c => c.SubCategories)
-                .Where(c => c.Id == categoryId)
-                .ProjectToType<TResult>()
-                .FirstOrDefaultAsync();
-
-            return categories;
-        }
-
-        public async Task<TResult> GetByNameAsync<TResult>(string name)
-        {
-            var category = await _budgetDbContext.Categories
-                .Where(c => c.Name == name)
-                .ProjectToType<TResult>()
+            var category = await GetByIdWithSubcategoriesBaseQuery(userId, categoryId)
                 .FirstOrDefaultAsync();
 
             return category;
         }
 
-        public async Task<TResult> GetByNameWithUsersAsync<TResult>(string name)
+        public async Task<CategoryModel> GetByIdWithSubcategoriesMappedAsync(int categoryId, string userId)
+        {
+            var category = await GetByIdWithSubcategoriesBaseQuery(userId, categoryId)
+                .ProjectToType<CategoryModel>()
+                .FirstOrDefaultAsync();
+
+            return category;
+        }
+
+        public async Task<Category> GetByNameWithUsersAsync(string name)
         {
             var category = await _budgetDbContext.Categories
                 .Include(c => c.Users)
                 .Where(c => c.Name == name)
-                .ProjectToType<TResult>()
                 .FirstOrDefaultAsync();
 
             return category;
         }
 
-        public async Task<TResult> GetForDeletionAsync<TResult>(int categoryId, string userId)
+        public async Task<Category> GetForDeletionAsync(int categoryId, string userId)
         {
             var categories = await GetUserCategories(userId)
                 .Include(c => c.SubCategories)
@@ -82,28 +76,26 @@ namespace Budget.Persistance.Repositories
                 .Include(c => c.Records)
                 .Include(c => c.Users)
                 .Where(c => c.Id == categoryId)
-                .ProjectToType<TResult>()
                 .FirstOrDefaultAsync();
 
             return categories;
         }
 
-        public async Task<IEnumerable<TResult>> GetInitialCategoriesAsync<TResult>()
+        public async Task<IEnumerable<Category>> GetInitialCategoriesAsync()
         {
             var categories = await _budgetDbContext.Categories
                 .Where(c => c.IsInitial)
-                .ProjectToType<TResult>()
                 .ToListAsync();
 
             return categories;
         }
 
-        public async Task<IEnumerable<TResult>> GetSubcategoriesByParentCategoryIdAsync<TResult>(int parentCategoryId, string userId)
+        public async Task<IEnumerable<CategoryModel>> GetSubcategoriesByParentCategoryIdMappedAsync(int parentCategoryId, string userId)
         {
             var subcategories = await GetUserCategories(userId)
                 .Include(c => c.ParentCategory)
                 .Where(c => c.ParentCategoryId.HasValue && c.ParentCategoryId == parentCategoryId)
-                .ProjectToType<TResult>()
+                .ProjectToType<CategoryModel>()
                 .ToListAsync();
 
             return subcategories;
@@ -116,6 +108,13 @@ namespace Budget.Persistance.Repositories
                 .Where(c => c.Users.Where(u => u.UserId == userId).Any());
 
             return categories;
+        }
+
+        private IQueryable<Category> GetByIdWithSubcategoriesBaseQuery(string userId, int categoryId)
+        {
+            return GetUserCategories(userId)
+                .Include(c => c.SubCategories)
+                .Where(c => c.Id == categoryId);
         }
     }
 }

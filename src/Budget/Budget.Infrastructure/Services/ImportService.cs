@@ -126,7 +126,7 @@ namespace Budget.Infrastructure.Services
                 throw new BudgetValidationException();
             }
 
-            var accounts = await _accountRepository.GetAllByUserIdAsync<Account>(userId);
+            var accounts = await _accountRepository.GetAllByUserIdAsync(userId);
             var paymentTypes = await _budgetDbContext.PaymentTypes.ToListAsync();
             var categories = await _budgetDbContext.Categories.ToListAsync();
 
@@ -304,7 +304,7 @@ namespace Budget.Infrastructure.Services
             string userId,
             IEnumerable<Currency> currencies)
         {
-            var account = await _accountRepository.GetByNameAsync<Account>(userId, record.Account);
+            var account = await _accountRepository.GetByNameAsync(userId, record.Account);
             if (account != null)
             {
                 return account;

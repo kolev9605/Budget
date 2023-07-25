@@ -2,7 +2,7 @@ using Budget.Domain.Entities;
 using Budget.Domain.Exceptions;
 using Budget.Domain.Models.Accounts;
 using Budget.Persistance;
-using Budget.Tests.Core;
+using Budget.Tests.Utils;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -304,17 +304,17 @@ namespace Budget.Application.Tests
         //    var exception = await Assert.ThrowsAsync<BudgetValidationException>(act);
         //}
 
-        [Fact]
-        public async Task Example()
-        {
-            // Arrange
-            var accountService = ServiceMockHelper.SetupAccountService();
+        // [Fact]
+        // public async Task Example()
+        // {
+        //     // Arrange
+        //     var accountService = ServiceMockHelper.SetupAccountService();
 
-            // Act
-            var account = await accountService.TestGetByIdAsync(DefaultValueConstants.Common.Id, DefaultValueConstants.User.UserId);
+        //     // Act
+        //     var account = await accountService.TestGetByIdAsync(DefaultValueConstants.Common.Id, DefaultValueConstants.User.UserId);
 
-            // Assert
-            Assert.NotNull(account);
-        }
+        //     // Assert
+        //     Assert.NotNull(account);
+        // }
     }
 }

@@ -1,4 +1,5 @@
 using Budget.Domain.Entities;
+using Budget.Domain.Models.Categories;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -6,20 +7,20 @@ namespace Budget.Domain.Interfaces.Repositories
 {
     public interface ICategoryRepository : IRepository<Category>
     {
-        Task<TResult> GetByIdWithSubcategoriesAsync<TResult>(int categoryId, string userId);
+        Task<IEnumerable<CategoryModel>> GetAllPrimaryCategoryModelsAsync(string userId);
 
-        Task<IEnumerable<TResult>> GetAllWithSubcategoriesAsync<TResult>(string userId);
+        Task<IEnumerable<CategoryModel>> GetAllWithSubcategoriesCategoryModelsAsync(string userId);
 
-        Task<IEnumerable<TResult>> GetAllPrimaryAsync<TResult>(string userId);
+        Task<Category> GetByIdWithSubcategoriesAsync(int categoryId, string userId);
 
-        Task<IEnumerable<TResult>> GetSubcategoriesByParentCategoryIdAsync<TResult>(int parentCategoryId, string userId);
+        Task<CategoryModel> GetByIdWithSubcategoriesMappedAsync(int categoryId, string userId);
 
-        Task<IEnumerable<TResult>> GetInitialCategoriesAsync<TResult>();
+        Task<Category> GetByNameWithUsersAsync(string name);
 
-        Task<TResult> GetByNameAsync<TResult>(string name);
+        Task<Category> GetForDeletionAsync(int categoryId, string userId);
 
-        Task<TResult> GetForDeletionAsync<TResult>(int categoryId, string userId);
+        Task<IEnumerable<Category>> GetInitialCategoriesAsync();
 
-        Task<TResult> GetByNameWithUsersAsync<TResult>(string name);
+        Task<IEnumerable<CategoryModel>> GetSubcategoriesByParentCategoryIdMappedAsync(int parentCategoryId, string userId);
     }
 }

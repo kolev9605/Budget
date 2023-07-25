@@ -2,6 +2,7 @@
 using Budget.Domain.Interfaces.Repositories;
 using Budget.Domain.Interfaces.Services;
 using Budget.Domain.Models.PaymentTypes;
+using Mapster;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -18,9 +19,9 @@ namespace Budget.Application.Services
 
         public async Task<IEnumerable<PaymentTypeModel>> GetAllAsync()
         {
-            var paymentTypes = await _paymentTypeRepository.BaseGetAllAsync<PaymentTypeModel>();
+            var paymentTypes = await _paymentTypeRepository.BaseGetAllAsync();
 
-            return paymentTypes;
+            return paymentTypes.Adapt<IEnumerable<PaymentTypeModel>>();
         }
     }
 }

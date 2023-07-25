@@ -6,17 +6,17 @@ namespace Budget.Domain.Interfaces.Repositories
 {
     public interface IRepository<T>
     {
-        Task<IEnumerable<TResult>> BaseGetAllAsync<TResult>();
+        Task<IEnumerable<T>> BaseGetAllAsync();
 
-        Task<TResult> BaseGetByIdAsync<TResult>(int id);
+        Task<T> BaseGetByIdAsync(int id);
 
-        Task<TResult> CreateAsync<TResult>(T entity, bool saveChanges = true);
+        Task<T> CreateAsync(T entity, bool saveChanges = true);
 
-        Task<TResult> UpdateAsync<TResult>(T entity, bool saveChanges = true);
+        Task<T> UpdateAsync(T entity, bool saveChanges = true);
 
-        Task<TResult> DeleteByIdAsync<TResult>(int id, bool saveChanges = true);
+        Task<T> DeleteByIdAsync(int id, bool saveChanges = true);
 
-        Task<TResult> DeleteAsync<TResult>(T entity, bool saveChanges = true);
+        Task<T> DeleteAsync(T entity, bool saveChanges = true);
 
         Task<int> SaveChangesAsync();
     }

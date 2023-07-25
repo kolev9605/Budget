@@ -2,7 +2,9 @@
 using Budget.Domain.Interfaces.Repositories;
 using Budget.Domain.Interfaces.Services;
 using Budget.Domain.Models.Currencies;
+using Mapster;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Budget.Application.Services
@@ -18,9 +20,10 @@ namespace Budget.Application.Services
 
         public async Task<IEnumerable<CurrencyModel>> GetAllAsync()
         {
-            var currencies = await _currencyRepository.BaseGetAllAsync<CurrencyModel>();
+            var currencies = await _currencyRepository.BaseGetAllAsync();
 
-            return currencies;
+            return currencies.Adapt<IEnumerable<CurrencyModel>>();
+
         }
     }
 }

@@ -119,9 +119,9 @@ namespace Budget.Application.Services
                 record.FromAccountId = negativeTransferRecord.AccountId;
             }
 
-            var createdRecord = await _recordRepository.CreateAsync<RecordModel>(record);
+            var createdRecord = await _recordRepository.CreateAsync(record);
 
-            return createdRecord;
+            return createdRecord.Adapt<RecordModel>();
         }
 
         public async Task<RecordModel> UpdateAsync(UpdateRecordModel updateRecordModel, string userId)
@@ -158,7 +158,7 @@ namespace Budget.Application.Services
                 existingTransferRecord.RecordDate = updateRecordModel.RecordDate;
                 existingTransferRecord.FromAccountId = record.AccountId;
 
-                var updatedExistingRecord = await _recordRepository.UpdateAsync<Record>(existingTransferRecord);
+                var updatedExistingRecord = await _recordRepository.UpdateAsync(existingTransferRecord);
 
                 record.FromAccountId = updatedExistingRecord.AccountId;
             }
@@ -167,9 +167,9 @@ namespace Budget.Application.Services
                 record.FromAccountId = null;
             }
 
-            var updatedRecord = await _recordRepository.UpdateAsync<RecordModel>(record);
+            var updatedRecord = await _recordRepository.UpdateAsync(record);
 
-            return updatedRecord;
+            return updatedRecord.Adapt<RecordModel>();
         }
 
         public async Task<RecordModel> DeleteAsync(int recordId, string userId)
@@ -186,12 +186,12 @@ namespace Budget.Application.Services
 
             if (existingTransferRecord != null)
             {
-                await _recordRepository.DeleteAsync<Record>(existingTransferRecord);
+                await _recordRepository.DeleteAsync(existingTransferRecord);
             }
 
-            var deletedRecord = await _recordRepository.DeleteAsync<RecordModel>(record);
+            var deletedRecord = await _recordRepository.DeleteAsync(record);
 
-            return deletedRecord;
+            return deletedRecord.Adapt<RecordModel>();
         }
 
         public async Task<RecordsDateRangeModel> GetRecordsDateRangeAsync(string userId)
@@ -235,7 +235,7 @@ namespace Budget.Application.Services
                 FromAccountId = createRecordModel.AccountId,
             };
 
-            var negativeTransferRecordCreated = await _recordRepository.CreateAsync<Record>(negativeTransferRecord);
+            var negativeTransferRecordCreated = await _recordRepository.CreateAsync(negativeTransferRecord);
 
             return negativeTransferRecordCreated;
         }
@@ -257,14 +257,14 @@ namespace Budget.Application.Services
                     string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(user)));
             }
 
-            var category = await _categoriesRepository.BaseGetByIdAsync<Category>(model.CategoryId);
+            var category = await _categoriesRepository.BaseGetByIdAsync(model.CategoryId);
             if (category == null)
             {
                 throw new BudgetValidationException(
                     string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(category)));
             }
 
-            var paymentType = await _paymentTypesRepository.BaseGetByIdAsync<PaymentType>(model.PaymentTypeId);
+            var paymentType = await _paymentTypesRepository.BaseGetByIdAsync(model.PaymentTypeId);
             if (paymentType == null)
             {
                 throw new BudgetValidationException(
@@ -274,7 +274,7 @@ namespace Budget.Application.Services
 
         private async Task ValidateAccount(int accountId, string userId)
         {
-            var account = await _accountRepository.BaseGetByIdAsync<Account>(accountId);
+            var account = await _accountRepository.BaseGetByIdAsync(accountId);
             if (account == null)
             {
                 throw new BudgetValidationException(
@@ -296,14 +296,14 @@ namespace Budget.Application.Services
                     string.Format(ValidationMessages.Common.IsNotNull, nameof(fromAccountId)));
             }
 
-            var account = await _accountRepository.BaseGetByIdAsync<Account>(accountId);
+            var account = await _accountRepository.BaseGetByIdAsync(accountId);
             if (account == null)
             {
                 throw new BudgetValidationException(
                     string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(account)));
             }
 
-            var fromAccount = await _accountRepository.BaseGetByIdAsync<Account>(fromAccountId.Value);
+            var fromAccount = await _accountRepository.BaseGetByIdAsync(fromAccountId.Value);
             if (fromAccount == null)
             {
                 throw new BudgetValidationException(

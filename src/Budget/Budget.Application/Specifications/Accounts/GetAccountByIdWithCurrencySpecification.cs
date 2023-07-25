@@ -1,4 +1,5 @@
 ﻿using Budget.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Budget.Application.Specifications.Accounts
 {
@@ -6,10 +7,13 @@ namespace Budget.Application.Specifications.Accounts
     {
         public GetAccountByIdWithCurrencySpecification(int accountId, string userId)
         {
-            AddInclude(a => a.Currency);
-            AddInclude(a => a.Records);
+            AddInclude(q => q
+                .Include(a => a.Currency)
+                .Include(a => a.Records)
+                    .ThenInclude(r => r.PaymentType));
 
-            SetCriteria(a => a.Id == accountId && a.UserId == userId);
+            AddCriteria(a => a.Id == accountId);
+            AddCriteria(a => a.UserId == userId);
         }
     }
 }

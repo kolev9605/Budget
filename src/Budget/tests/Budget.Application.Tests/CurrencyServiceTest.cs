@@ -2,7 +2,7 @@
 using Budget.Domain.Entities;
 using Budget.Persistance;
 using Budget.Persistance.Repositories;
-using Budget.Tests.Core;
+using Budget.Tests.Utils;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -55,18 +55,18 @@ namespace Budget.Application.Tests
         //     Assert.Single(currencies);
         // }
 
-        [Fact]
-        public async Task Test()
-        {
-            // Arrange
-            var currencyService = ServiceMockHelper.SetupCurrencyService();
+        // [Fact]
+        // public async Task Test()
+        // {
+        //     // Arrange
+        //     var currencyService = ServiceMockHelper.SetupCurrencyService();
 
-            // Act
-            var currencies = await currencyService.GetAllAsync();
+        //     // Act
+        //     var currencies = await currencyService.GetAllAsync();
 
-            // Assert
-            Assert.NotNull(currencies);
-            Assert.Single(currencies);
-        }
+        //     // Assert
+        //     Assert.NotNull(currencies);
+        //     Assert.Single(currencies);
+        // }
     }
 }

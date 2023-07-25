@@ -1,4 +1,5 @@
-﻿using Budget.Domain.Entities.Base;
+﻿using Budget.Domain.Entities;
+using Budget.Domain.Entities.Base;
 using Budget.Domain.Interfaces.Repositories;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
@@ -21,10 +22,10 @@ namespace Budget.Persistance.Repositories
         protected IQueryable<T> GetAll()
             => _budgetDbContext.Set<T>();
 
-        public async Task<IEnumerable<TResult>> BaseGetAllAsync<TResult>()
-            => await GetAll().ProjectToType<TResult>().ToListAsync();
+        public async Task<IEnumerable<T>> BaseGetAllAsync()
+            => await GetAll().ToListAsync();
 
-        public async Task<TResult> CreateAsync<TResult>(T entity, bool saveChanges = true)
+        public async Task<T> CreateAsync(T entity, bool saveChanges = true)
         {
             var createdEntity = await _budgetDbContext.AddAsync(entity);
 
@@ -33,16 +34,16 @@ namespace Budget.Persistance.Repositories
                 await _budgetDbContext.SaveChangesAsync();
             }
 
-            return createdEntity.Entity.Adapt<TResult>();
+            return createdEntity.Entity;
         }
 
-        public async Task<TResult> DeleteByIdAsync<TResult>(int id, bool saveChanges = true)
+        public async Task<T> DeleteByIdAsync(int id, bool saveChanges = true)
         {
             var entity = await _budgetDbContext.Set<T>().FindAsync(id);
-            return await DeleteAsync<TResult>(entity, saveChanges);
+            return await DeleteAsync(entity, saveChanges);
         }
 
-        public async Task<TResult> DeleteAsync<TResult>(T entity, bool saveChanges = true)
+        public async Task<T> DeleteAsync(T entity, bool saveChanges = true)
         {
             var removedEntity = _budgetDbContext.Set<T>().Remove(entity);
 
@@ -51,13 +52,13 @@ namespace Budget.Persistance.Repositories
                 await _budgetDbContext.SaveChangesAsync();
             }
 
-            return removedEntity.Adapt<TResult>();
+            return removedEntity.Entity;
         }
 
-        public async Task<TResult> BaseGetByIdAsync<TResult>(int id)
-            => (await _budgetDbContext.Set<T>().FirstOrDefaultAsync(e => e.Id == id)).Adapt<TResult>();
+        public async Task<T> BaseGetByIdAsync(int id)
+            => (await _budgetDbContext.Set<T>().FirstOrDefaultAsync(e => e.Id == id));
 
-        public async Task<TResult> UpdateAsync<TResult>(T entity, bool saveChanges = true)
+        public async Task<T> UpdateAsync(T entity, bool saveChanges = true)
         {
             var updatedEntity = _budgetDbContext.Set<T>().Update(entity);
 
@@ -66,7 +67,7 @@ namespace Budget.Persistance.Repositories
                 await _budgetDbContext.SaveChangesAsync();
             }
 
-            return updatedEntity.Entity.Adapt<TResult>();
+            return updatedEntity.Entity;
         }
 
         public async Task<int> SaveChangesAsync()

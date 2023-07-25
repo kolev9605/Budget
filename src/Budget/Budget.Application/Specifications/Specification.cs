@@ -1,35 +1,35 @@
 ﻿using Budget.Domain.Entities.Base;
+using Budget.Domain.Interfaces;
+using Budget.Domain.Models.Specifications;
+using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace Budget.Application.Specifications
 {
-    public abstract class Specification<TEntity>
+    public abstract class Specification<TEntity> : ISpecification<TEntity>
         where TEntity : BaseEntity
     {
-        public Expression<Func<TEntity, bool>> CriteriaExpression { get; private set; }
+        public ICollection<Expression<Func<TEntity, bool>>> CriteriaExpressions { get; private set; }
+            = new List<Expression<Func<TEntity, bool>>>();
 
-        public ICollection<Expression<Func<TEntity, object>>> IncludeExpressions { get; private set; }
-            = new List<Expression<Func<TEntity, object>>>();
+        public List<Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>> Includes { get; }
+            = new List<Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>>();
 
-        public Expression<Func<TEntity, object>> OrderByExpression { get; private set; }
-
-        public Expression<Func<TEntity, object>> OrderByDescendingExpression { get; private set; }
+        public ICollection<SortDescriptor> SortDescriptors { get; private set; }
 
         public Expression<Func<TEntity, TEntity>> MappingExpression { get; private set; }
 
-        protected void SetCriteria(Expression<Func<TEntity, bool>> criteria)
-            => CriteriaExpression = criteria;
+        protected void AddCriteria(Expression<Func<TEntity, bool>> criteria)
+            => CriteriaExpressions.Add(criteria);
 
-        protected void AddInclude(Expression<Func<TEntity, object>> includeExpression)
-            => IncludeExpressions.Add(includeExpression);
+        protected void AddInclude(Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeExpression)
+            => Includes.Add(includeExpression);
 
-        protected void SetOrderBy(Expression<Func<TEntity, object>> orderByExpression)
-            => OrderByDescendingExpression = orderByExpression;
-
-        protected void SetOrderByDescending(Expression<Func<TEntity, object>> orderByDescendingExpression)
-            => OrderByDescendingExpression = orderByDescendingExpression;
+        protected void AddSortDescriptor(SortDescriptor sortDescriptor)
+            => SortDescriptors.Add(sortDescriptor);
 
         protected void SetMappingExpression(Expression<Func<TEntity, TEntity>> mappingExpression)
             => MappingExpression = mappingExpression;

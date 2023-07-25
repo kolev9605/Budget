@@ -23,7 +23,7 @@ namespace Budget.Application.Services
         public async Task<CategoryModel> GetByIdAsync(int categoryId, string userId)
         {
             var category = await _categoryRepository
-                .GetByIdWithSubcategoriesAsync<CategoryModel>(categoryId, userId);
+                .GetByIdWithSubcategoriesMappedAsync(categoryId, userId);
 
             if (category == null)
             {
@@ -36,30 +36,31 @@ namespace Budget.Application.Services
 
         public async Task<IEnumerable<CategoryModel>> GetAllAsync(string userId)
         {
-            var categories = await _categoryRepository.GetAllWithSubcategoriesAsync<CategoryModel>(userId);
+            var categories = await _categoryRepository.GetAllWithSubcategoriesCategoryModelsAsync(userId);
 
             return categories;
         }
 
         public async Task<IEnumerable<CategoryModel>> GetAllPrimaryAsync(string userId)
         {
-            var categories = await _categoryRepository.GetAllPrimaryAsync<CategoryModel>(userId);
+            var categories = await _categoryRepository.GetAllPrimaryCategoryModelsAsync(userId);
 
             return categories;
         }
 
         public async Task<IEnumerable<CategoryModel>> GetAllSubcategoriesByParentCategoryIdAsync(int parentCategoryId, string userId)
         {
-            var categories = await _categoryRepository.GetSubcategoriesByParentCategoryIdAsync<CategoryModel>(parentCategoryId, userId);
+            var categories = await _categoryRepository.GetSubcategoriesByParentCategoryIdMappedAsync(parentCategoryId, userId);
 
             return categories;
         }
 
         public async Task<CategoryModel> CreateAsync(CreateCategoryModel createCategoryModel, string userId)
         {
-            var existingCategory = await _categoryRepository.GetByNameWithUsersAsync<Category>(createCategoryModel.Name);
+            var existingCategory = await _categoryRepository.GetByNameWithUsersAsync(createCategoryModel.Name);
 
             // If the existing category matches with the one passed in the createCategoryModel, instead of creating a new category, we should add the user to the UserCategories
+            // TODO: Extension method 'ExistsGlobally()'
             if (existingCategory != null &&
                 existingCategory.CategoryType == createCategoryModel.CategoryType &&
                 existingCategory.ParentCategoryId == createCategoryModel.ParentCategoryId)
@@ -74,9 +75,9 @@ namespace Budget.Application.Services
                     UserId = userId
                 });
 
-                var updatedCategory = await _categoryRepository.UpdateAsync<CategoryModel>(existingCategory);
+                var updatedCategory = await _categoryRepository.UpdateAsync(existingCategory);
 
-                return updatedCategory;
+                return updatedCategory.Adapt<CategoryModel>();
             }
             else
             {
@@ -87,15 +88,15 @@ namespace Budget.Application.Services
 
                 var category = (createCategoryModel, userId).Adapt<Category>();
 
-                var createdCategory = await _categoryRepository.CreateAsync<CategoryModel>(category);
+                var createdCategory = await _categoryRepository.CreateAsync(category);
 
-                return createdCategory;
+                return createdCategory.Adapt<CategoryModel>();
             }
         }
 
         public async Task<CategoryModel> DeleteAsync(int categoryId, string userId)
         {
-            var existingCategory = await _categoryRepository.GetForDeletionAsync<Category>(categoryId, userId);
+            var existingCategory = await _categoryRepository.GetForDeletionAsync(categoryId, userId);
 
             if (existingCategory == null)
             {
@@ -114,24 +115,24 @@ namespace Budget.Application.Services
 
             if (existingCategory.Users.Count == 1 && existingCategory.Users.First().UserId == userId)
             {
-                var deletedCategory = await _categoryRepository.DeleteAsync<CategoryModel>(existingCategory);
+                var deletedCategory = await _categoryRepository.DeleteAsync(existingCategory);
 
-                return deletedCategory;
+                return deletedCategory.Adapt<CategoryModel>();
             }
             else
             {
                 var userItem = existingCategory.Users.First(uc => uc.UserId == userId);
                 existingCategory.Users.Remove(userItem);
 
-                var updatedCategory = await _categoryRepository.UpdateAsync<CategoryModel>(existingCategory);
+                var updatedCategory = await _categoryRepository.UpdateAsync(existingCategory);
 
-                return updatedCategory;
+                return updatedCategory.Adapt<CategoryModel>();
             }
         }
 
         public async Task<CategoryModel> UpdateAsync(UpdateCategoryModel updateCategoryModel, string userId)
         {
-            var existingCategory = await _categoryRepository.GetByIdWithSubcategoriesAsync<Category>(updateCategoryModel.Id, userId);
+            var existingCategory = await _categoryRepository.GetByIdWithSubcategoriesAsync(updateCategoryModel.Id, userId);
             if (existingCategory == null)
             {
                 throw new BudgetValidationException(ValidationMessages.Categories.AlreadyDoesNotExist);
@@ -151,9 +152,9 @@ namespace Budget.Application.Services
             existingCategory.CategoryType = updateCategoryModel.CategoryType;
             existingCategory.Name = updateCategoryModel.Name;
 
-            var updatedCategory = await _categoryRepository.UpdateAsync<CategoryModel>(existingCategory);
+            var updatedCategory = await _categoryRepository.UpdateAsync(existingCategory);
 
-            return updatedCategory;
+            return updatedCategory.Adapt<CategoryModel>();
         }
     }
 }

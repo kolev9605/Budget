@@ -26,10 +26,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Budget.Application\Budget.Application.csproj" />
-    <ProjectReference Include="..\Budget.Domain\Budget.Domain.csproj" />
-    <ProjectReference Include="..\Budget.Persistance\Budget.Persistance.csproj" />
-    <ProjectReference Include="..\Budget.Tests.Core\Budget.Tests.Core.csproj" />
+    <ProjectReference Include="..\..\Budget.Application\Budget.Application.csproj" />
+    <ProjectReference Include="..\..\Budget.Domain\Budget.Domain.csproj" />
+    <ProjectReference Include="..\Budget.Tests.Utils\Budget.Tests.Utils.csproj" />
   </ItemGroup>
 
 </Project>
