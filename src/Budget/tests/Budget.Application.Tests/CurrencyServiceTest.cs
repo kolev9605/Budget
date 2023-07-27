@@ -11,62 +11,40 @@ using Xunit;
 
 namespace Budget.Application.Tests
 {
-    public class CurrencyServiceTest : BaseTest
+    public class CurrencyServiceTest
     {
 
-        // public CurrencyServiceTest()
-        //     : base()
-        // {
-        //     // Create and open a connection. This creates the SQLite in-memory database, which will persist until the connection is closed
-        //     // at the end of the test (see Dispose below).
-        //     _connection = new SqliteConnection("Filename=:memory:");
-        //     _connection.Open();
+        public CurrencyServiceTest()
+            : base()
+        {
+        }
 
-        //     // These options will be used by the context instances in this test suite, including the connection opened above.
-        //     _contextOptions = new DbContextOptionsBuilder<BudgetDbContext>()
-        //         .UseSqlite(_connection)
-        //         .Options;
+        [Fact]
+        public async Task GetAllAsync_ValidInput_ShouldReturnOneCurrency()
+        {
+            // Arrange
+            var currencyService = ServiceMockHelper.SetupCurrencyService();
 
-        //     // Create the schema and seed some data
-        //     using var context = new BudgetDbContext(_contextOptions);
+            // Act
+            var currencies = await currencyService.GetAllAsync();
 
-        //     if (context.Database.EnsureCreated())
-        //     {
-        //         var currency = EntityMockHelper.SetupCurrency();
+            // Assert
+            Assert.NotNull(currencies);
+            Assert.Single(currencies);
+        }
 
-        //         context.Currencies.Add(currency);
+        [Fact]
+        public async Task Test()
+        {
+            // Arrange
+            var currencyService = ServiceMockHelper.SetupCurrencyService();
 
-        //         context.SaveChanges();
-        //     }
-        // }
+            // Act
+            var currencies = await currencyService.GetAllAsync();
 
-        // [Fact]
-        // public async Task GetAllAsync_ValidInput_ShouldReturnOneCurrency()
-        // {
-        //     // Arrange
-        //     var context = CreateContext();
-        //     var currencyService = ServiceMockHelper.SetupCurrencyService(context);
-
-        //     // Act
-        //     var currencies = await currencyService.GetAllAsync();
-
-        //     // Assert
-        //     Assert.NotNull(currencies);
-        //     Assert.Single(currencies);
-        // }
-
-        // [Fact]
-        // public async Task Test()
-        // {
-        //     // Arrange
-        //     var currencyService = ServiceMockHelper.SetupCurrencyService();
-
-        //     // Act
-        //     var currencies = await currencyService.GetAllAsync();
-
-        //     // Assert
-        //     Assert.NotNull(currencies);
-        //     Assert.Single(currencies);
-        // }
+            // Assert
+            Assert.NotNull(currencies);
+            Assert.Single(currencies);
+        }
     }
 }

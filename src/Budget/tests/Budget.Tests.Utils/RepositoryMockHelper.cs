@@ -3,8 +3,6 @@ using Budget.Domain.Entities;
 using Budget.Domain.Interfaces.Repositories;
 using Budget.Domain.Models.Accounts;
 using Budget.Domain.Models.Categories;
-using Budget.Domain.Models.Currencies;
-using Budget.Domain.Models.PaymentTypes;
 using Budget.Domain.Models.Records;
 using Mapster;
 using Moq;
@@ -13,127 +11,143 @@ namespace Budget.Tests.Utils
 {
     public static class RepositoryMockHelper
     {
-        // public static IRecordRepository SetupRecordRepository(Record record)
-        // {
-        //     var recordRepositoryMock = new Mock<IRecordRepository>() { DefaultValue = DefaultValue.Mock };
+        public static IRecordRepository SetupRecordRepository(Record record)
+        {
+            var recordRepositoryMock = new Mock<IRecordRepository>();
 
-        //     recordRepositoryMock
-        //         .Setup(x => x.CreateAsync(It.IsAny<Record>(), It.IsAny<bool>()))
-        //         .Returns(Task.FromResult(record));
+            recordRepositoryMock
+                .Setup(x => x.CreateAsync(It.IsAny<Record>(), It.IsAny<bool>()))
+                .Returns(Task.FromResult(record));
 
-        //     recordRepositoryMock
-        //         .Setup(x => x.GetRecordByIdAsync<RecordModel>(DefaultValueConstants.Common.Id, It.IsAny<string>()))
-        //         .Returns(Task.FromResult(record.Adapt<RecordModel>()));
+            recordRepositoryMock
+                .Setup(x => x.GetRecordByIdAsync(DefaultValueConstants.Common.Id, It.IsAny<string>()))
+                .Returns(Task.FromResult(record));
 
-        //     recordRepositoryMock
-        //         .Setup(x => x.BaseGetByIdAsync(DefaultValueConstants.Common.Id))
-        //         .Returns(Task.FromResult(record));
+            recordRepositoryMock
+                .Setup(x => x.GetRecordByIdMappedAsync(DefaultValueConstants.Common.Id, It.IsAny<string>()))
+                .Returns(Task.FromResult(record.Adapt<RecordModel>()));
 
-        //     recordRepositoryMock
-        //         .Setup(x => x.UpdateAsync(It.IsAny<Record>(), It.IsAny<bool>()))
-        //         .Returns(Task.FromResult(record));
+            recordRepositoryMock
+                .Setup(x => x.BaseGetByIdAsync(DefaultValueConstants.Common.Id))
+                .Returns(Task.FromResult(record));
 
-        //     recordRepositoryMock
-        //         .Setup(x => x.DeleteAsync(It.IsAny<Record>(), It.IsAny<bool>()))
-        //         .Returns(Task.FromResult(record));
+            recordRepositoryMock
+                .Setup(x => x.UpdateAsync(It.IsAny<Record>(), It.IsAny<bool>()))
+                .Returns(Task.FromResult(record));
 
-        //     return recordRepositoryMock.Object;
-        // }
+            recordRepositoryMock
+                .Setup(x => x.DeleteAsync(It.IsAny<Record>(), It.IsAny<bool>()))
+                .Returns(Task.FromResult(record));
 
-        // public static IAccountRepository SetupAccountRepository(Account account)
-        // {
-        //     var accountRepositoryMock = new Mock<IAccountRepository>();
+            return recordRepositoryMock.Object;
+        }
 
-        //     accountRepositoryMock
-        //         .Setup(x => x.BaseGetByIdAsync(DefaultValueConstants.Common.Id))
-        //         .Returns(Task.FromResult(account));
+        public static IAccountRepository SetupAccountRepository(Account account)
+        {
+            var accountRepositoryMock = new Mock<IAccountRepository>();
 
-        //     accountRepositoryMock
-        //         .Setup(x => x.GetByIdWithCurrencyAsync<TResult>(DefaultValueConstants.Common.Id, DefaultValueConstants.User.UserId))
-        //         .Returns(Task.FromResult(account));
+            accountRepositoryMock
+                .Setup(x => x.BaseGetByIdAsync(DefaultValueConstants.Common.Id))
+                .Returns(Task.FromResult(account));
 
-        //     var accounts = new List<TResult> { account };
+            accountRepositoryMock
+                .Setup(x => x.GetByIdWithCurrencyAsync(DefaultValueConstants.Common.Id, DefaultValueConstants.User.UserId))
+                .Returns(Task.FromResult(account));
 
-        //     accountRepositoryMock
-        //         .Setup(x => x.GetAllByUserIdAsync<TResult>(DefaultValueConstants.User.UserId))
-        //         .Returns(Task.FromResult(accounts.AsEnumerable()));
+            accountRepositoryMock
+                .Setup(x => x.GetAccountModelByIdWithCurrencyAsync(DefaultValueConstants.Common.Id, DefaultValueConstants.User.UserId))
+                .Returns(Task.FromResult(account.Adapt<AccountModel>()));
 
-        //     accountRepositoryMock
-        //         .Setup(x => x.CreateAsync<TResult>(It.IsAny<Account>(), It.IsAny<bool>()))
-        //         .Returns(Task.FromResult(account));
+            var accounts = new List<Account> { account };
 
-        //     accountRepositoryMock
-        //         .Setup(x => x.UpdateAsync<TResult>(It.IsAny<Account>(), It.IsAny<bool>()))
-        //         .Returns(Task.FromResult(account));
+            accountRepositoryMock
+                .Setup(x => x.GetAllByUserIdAsync(DefaultValueConstants.User.UserId))
+                .Returns(Task.FromResult(accounts.AsEnumerable()));
 
-        //     accountRepositoryMock
-        //         .Setup(x => x.DeleteAsync<TResult>(It.IsAny<Account>(), It.IsAny<bool>()))
-        //         .Returns(Task.FromResult(account));
+            accountRepositoryMock
+                .Setup(x => x.GetAllAccountModelsByUserIdAsync(DefaultValueConstants.User.UserId))
+                .Returns(Task.FromResult(accounts.Adapt<IEnumerable<AccountModel>>()));
 
-        //     return accountRepositoryMock.Object;
-        // }
+            accountRepositoryMock
+                .Setup(x => x.CreateAsync(It.IsAny<Account>(), It.IsAny<bool>()))
+                .Returns(Task.FromResult(account));
 
-        // public static ICategoryRepository SetupCategoryRepository(CategoryModel category)
-        // {
-        //     var categoryRepositoryMock = new Mock<ICategoryRepository>();
+            accountRepositoryMock
+                .Setup(x => x.UpdateAsync(It.IsAny<Account>(), It.IsAny<bool>()))
+                .Returns(Task.FromResult(account));
 
-        //     categoryRepositoryMock
-        //         .Setup(x => x.BaseGetByIdAsync<CategoryModel>(DefaultValueConstants.Common.Id))
-        //         .Returns(Task.FromResult(category));
+            accountRepositoryMock
+                .Setup(x => x.DeleteAsync(It.IsAny<Account>(), It.IsAny<bool>()))
+                .Returns(Task.FromResult(account));
 
-        //     categoryRepositoryMock
-        //         .Setup(x => x.GetByIdWithSubcategoriesAsync<CategoryModel>(DefaultValueConstants.Common.Id, DefaultValueConstants.User.UserId))
-        //         .Returns(Task.FromResult(category));
+            return accountRepositoryMock.Object;
+        }
 
-        //     var categories = new List<CategoryModel> { category };
+        public static ICategoryRepository SetupCategoryRepository(Category category)
+        {
+            var categoryRepositoryMock = new Mock<ICategoryRepository>();
 
-        //     categoryRepositoryMock
-        //         .Setup(x => x.GetAllWithSubcategoriesAsync<CategoryModel>(DefaultValueConstants.User.UserId))
-        //         .Returns(Task.FromResult(categories.AsEnumerable()));
+            categoryRepositoryMock
+                .Setup(x => x.BaseGetByIdAsync(DefaultValueConstants.Common.Id))
+                .Returns(Task.FromResult(category));
 
-        //     categoryRepositoryMock
-        //         .Setup(x => x.GetAllPrimaryAsync<CategoryModel>(DefaultValueConstants.User.UserId))
-        //         .Returns(Task.FromResult(categories.AsEnumerable()));
+            categoryRepositoryMock
+                .Setup(x => x.GetByIdWithSubcategoriesAsync(DefaultValueConstants.Common.Id, DefaultValueConstants.User.UserId))
+                .Returns(Task.FromResult(category));
 
-        //     categoryRepositoryMock
-        //         .Setup(x => x.GetSubcategoriesByParentCategoryIdAsync<CategoryModel>(DefaultValueConstants.Common.Id, DefaultValueConstants.User.UserId))
-        //         .Returns(Task.FromResult(categories.AsEnumerable()));
+            var categories = new List<Category> { category };
 
-        //     return categoryRepositoryMock.Object;
-        // }
+            categoryRepositoryMock
+                .Setup(x => x.GetAllWithSubcategoriesCategoryModelsAsync(DefaultValueConstants.User.UserId))
+                .Returns(Task.FromResult(categories.Adapt<IEnumerable<CategoryModel>>()));
 
-        // public static IRepository<PaymentType> SetupPaymentTypeRepository(PaymentTypeModel paymentType)
-        // {
-        //     var paymentTypeRepositoryMock = new Mock<IRepository<PaymentType>>();
+            categoryRepositoryMock
+                .Setup(x => x.GetAllPrimaryCategoryModelsAsync(DefaultValueConstants.User.UserId))
+                .Returns(Task.FromResult(categories.Adapt<IEnumerable<CategoryModel>>()));
 
-        //     paymentTypeRepositoryMock
-        //         .Setup(x => x.BaseGetByIdAsync<PaymentTypeModel>(DefaultValueConstants.Common.Id))
-        //         .Returns(Task.FromResult(paymentType));
+            categoryRepositoryMock
+                .Setup(x => x.GetSubcategoriesByParentCategoryIdMappedAsync(DefaultValueConstants.Common.Id, DefaultValueConstants.User.UserId))
+                .Returns(Task.FromResult(categories.Adapt<IEnumerable<CategoryModel>>()));
 
-        //     var paymentTypes = new List<PaymentTypeModel> { paymentType };
+            categoryRepositoryMock
+                .Setup(x => x.GetByIdWithSubcategoriesMappedAsync(DefaultValueConstants.Common.Id, DefaultValueConstants.User.UserId))
+                .Returns(Task.FromResult(category.Adapt<CategoryModel>()));
 
-        //     paymentTypeRepositoryMock
-        //         .Setup(x => x.BaseGetAllAsync<PaymentTypeModel>())
-        //         .Returns(Task.FromResult(paymentTypes.AsEnumerable()));
+            return categoryRepositoryMock.Object;
+        }
 
-        //     return paymentTypeRepositoryMock.Object;
-        // }
+        public static IRepository<PaymentType> SetupPaymentTypeRepository(PaymentType paymentType)
+        {
+            var paymentTypeRepositoryMock = new Mock<IRepository<PaymentType>>();
 
-        // public static IRepository<Currency> SetupCurrencyRepository<TResult>(TResult currency)
-        // {
-        //     var currencyRepositoryMock = new Mock<IRepository<Currency>>();
+            paymentTypeRepositoryMock
+                .Setup(x => x.BaseGetByIdAsync(DefaultValueConstants.Common.Id))
+                .Returns(Task.FromResult(paymentType));
 
-        //     currencyRepositoryMock
-        //         .Setup(x => x.BaseGetByIdAsync<TResult>(DefaultValueConstants.Common.Id))
-        //         .Returns(Task.FromResult(currency));
+            var paymentTypes = new List<PaymentType> { paymentType };
 
-        //     var currencies = new List<TResult> { currency };
+            paymentTypeRepositoryMock
+                .Setup(x => x.BaseGetAllAsync())
+                .Returns(Task.FromResult(paymentTypes.AsEnumerable()));
 
-        //     currencyRepositoryMock
-        //         .Setup(x => x.BaseGetAllAsync<TResult>())
-        //         .Returns(Task.FromResult(currencies.AsEnumerable()));
+            return paymentTypeRepositoryMock.Object;
+        }
 
-        //     return currencyRepositoryMock.Object;
-        // }
+        public static IRepository<Currency> SetupCurrencyRepository(Currency currency)
+        {
+            var currencyRepositoryMock = new Mock<IRepository<Currency>>();
+
+            currencyRepositoryMock
+                .Setup(x => x.BaseGetByIdAsync(DefaultValueConstants.Common.Id))
+                .Returns(Task.FromResult(currency));
+
+            var currencies = new List<Currency> { currency };
+
+            currencyRepositoryMock
+                .Setup(x => x.BaseGetAllAsync())
+                .Returns(Task.FromResult(currencies.AsEnumerable()));
+
+            return currencyRepositoryMock.Object;
+        }
     }
 }

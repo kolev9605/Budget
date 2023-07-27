@@ -13,308 +13,242 @@ namespace Budget.Application.Tests
 {
     public class AccountServiceTest
     {
-        //public AccountServiceTest()
-        //    : base()
-        //{
-        //    // Create and open a connection. This creates the SQLite in-memory database, which will persist until the connection is closed
-        //    // at the end of the test (see Dispose below).
-        //    _connection = new SqliteConnection("Filename=:memory:");
-        //    _connection.Open();
+        public AccountServiceTest()
+           : base()
+        {
+        }
 
-        //    // These options will be used by the context instances in this test suite, including the connection opened above.
-        //    _contextOptions = new DbContextOptionsBuilder<BudgetDbContext>()
-        //        .UseSqlite(_connection)
-        //        .Options;
+        [Fact]
+        public async Task GetByIdAsync_ValidInput_ShouldReturnDefaultEntity()
+        {
+           // Arrange
+           var accountService = ServiceMockHelper.SetupAccountService();
 
-        //    // Create the schema and seed some data
-        //    using var context = new BudgetDbContext(_contextOptions);
+           // Act
+           var account = await accountService.GetByIdAsync(DefaultValueConstants.Common.Id, DefaultValueConstants.User.UserId);
 
-        //    if (context.Database.EnsureCreated())
-        //    {
-        //        var currency = EntityMockHelper.SetupCurrency();
-        //        var user = EntityMockHelper.SetupUser();
-        //        var paymentType = EntityMockHelper.SetupPaymentType();
-        //        var category = EntityMockHelper.SetupCategory(user);
-        //        var account = EntityMockHelper.SetupAccount(currency, id: DefaultValueConstants.Account.AccountIdWithRecords);
+           // Assert
+           Assert.NotNull(account);
+           Assert.Equal(DefaultValueConstants.Common.Id, account.Id);
+        }
 
-        //        for (var i = 1; i <= 2; i++)
-        //        {
-        //            context.Accounts.Add(EntityMockHelper.SetupAccount(currency, id: i));
-        //        }
+        [Fact]
+        public async Task GetByIdAsync_InvalidAccountId_ShouldThrowBudgetValidationException()
+        {
+           // Arrange
+           var accountService = ServiceMockHelper.SetupAccountService();
 
-        //        for (var i = 1; i <= 3; i++)
-        //        {
-        //            context.Records.Add(EntityMockHelper.SetupRecord(account, paymentType, category, i, RecordType.Expense, i * 10));
-        //        }
+           // Act
+           var act = async () => await accountService.GetByIdAsync(DefaultValueConstants.Common.InvalidId, DefaultValueConstants.User.UserId);
 
-        //        context.Currencies.Add(currency);
-        //        context.Users.Add(user);
-        //        context.PaymentTypes.Add(paymentType);
-        //        context.Categories.Add(category);
-        //        context.Accounts.Add(account);
+           // Assert
+           var exception = await Assert.ThrowsAsync<BudgetValidationException>(act);
+        }
 
-        //        context.SaveChanges();
-        //    }
-        //}
+        [Fact]
+        public async Task GetAllAccountsAsync_InvalidUserId_ShouldThrowBudgetValidationException()
+        {
+           // Arrange
+           var accountService = ServiceMockHelper.SetupAccountService();
 
-        //[Fact(Skip = "SQLite Limitations")]
-        //public async Task GetByIdAsync_ValidInput_ShouldReturnDefaultEntity()
-        //{
-        //    // Arrange
-        //    var context = CreateContext();
-        //    var accountService = ServiceMockHelper.SetupAccountService(context);
+           // Act
+           var act = async () => await accountService.GetByIdAsync(DefaultValueConstants.Common.InvalidId, DefaultValueConstants.User.InvalidId);
 
-        //    // Act
-        //    var account = await accountService.GetByIdAsync(DefaultValueConstants.Common.Id, DefaultValueConstants.User.UserId);
+           // Assert
+           var exception = await Assert.ThrowsAsync<BudgetValidationException>(act);
+        }
 
-        //    // Assert
-        //    Assert.NotNull(account);
-        //    Assert.Equal(DefaultValueConstants.Common.Id, account.Id);
-        //}
+        [Fact]
+        public async Task GetAllAccountsAsync_ValidUserId_ShouldReturnCorrectNumberOfAccounts()
+        {
+           // Arrange
+           var accountService = ServiceMockHelper.SetupAccountService();
 
-        //[Fact(Skip = "SQLite Limitations")]
-        //public async Task GetByIdAsync_InvalidAccountId_ShouldThrowBudgetValidationException()
-        //{
-        //    // Arrange
-        //    var context = CreateContext();
-        //    var accountService = ServiceMockHelper.SetupAccountService(context);
+           // Act
+           var accounts = await accountService.GetAllAccountsAsync(DefaultValueConstants.User.UserId);
 
-        //    // Act
-        //    var act = async () => await accountService.GetByIdAsync(DefaultValueConstants.Common.InvalidId, DefaultValueConstants.User.UserId);
+           // Assert
+           Assert.NotNull(accounts);
+           Assert.True(accounts.Any());
+        }
 
-        //    // Assert
-        //    var exception = await Assert.ThrowsAsync<BudgetValidationException>(act);
-        //}
+        [Fact]
+        public async Task GetAllAccountsAsync_InvalidUserId_ShouldReturnZeroAccounts()
+        {
+           // Arrange
+           var accountService = ServiceMockHelper.SetupAccountService();
 
-        //[Fact(Skip = "SQLite Limitations")]
-        //public async Task GetAllAccountsAsync_InvalidUserId_ShouldThrowBudgetValidationException()
-        //{
-        //    // Arrange
-        //    var context = CreateContext();
-        //    var accountService = ServiceMockHelper.SetupAccountService(context);
+           // Act
+           var accounts = await accountService.GetAllAccountsAsync(DefaultValueConstants.User.InvalidId);
 
-        //    // Act
-        //    var act = async () => await accountService.GetByIdAsync(DefaultValueConstants.Common.InvalidId, DefaultValueConstants.User.InvalidId);
+           // Assert
+           Assert.NotNull(accounts);
+           Assert.Empty(accounts);
+        }
 
-        //    // Assert
-        //    var exception = await Assert.ThrowsAsync<BudgetValidationException>(act);
-        //}
+        [Fact]
+        public async Task CreateAccountAsync_ValidRequest_ShouldSucceed()
+        {
+           // Arrange
+           var accountService = ServiceMockHelper.SetupAccountService();
 
-        //[Fact(Skip = "SQLite Limitations")]
-        //public async Task GetAllAccountsAsync_ValidUserId_ShouldReturnCorrectNumberOfAccounts()
-        //{
-        //    // Arrange
-        //    var context = CreateContext();
-        //    var accountService = ServiceMockHelper.SetupAccountService(context);
+           var createAccountRequest = new CreateAccountModel()
+           {
+               CurrencyId = DefaultValueConstants.Common.Id,
+               InitialBalance = DefaultValueConstants.Account.DefaultInitialBalance,
+               Name = DefaultValueConstants.Account.DefaultName
+           };
 
-        //    // Act
-        //    var accounts = await accountService.GetAllAccountsAsync(DefaultValueConstants.User.UserId);
+           // Act
+           var account = await accountService.CreateAccountAsync(createAccountRequest, DefaultValueConstants.User.UserId); ;
 
-        //    // Assert
-        //    Assert.NotNull(accounts);
-        //    Assert.True(accounts.Any());
-        //}
+           // Assert
+           Assert.Equal(createAccountRequest.CurrencyId, account.Currency.Id);
+           Assert.Equal(createAccountRequest.InitialBalance, account.InitialBalance);
+           Assert.Equal(createAccountRequest.Name, account.Name);
+        }
 
-        //[Fact(Skip = "SQLite Limitations")]
-        //public async Task GetAllAccountsAsync_InvalidUserId_ShouldReturnZeroAccounts()
-        //{
-        //    // Arrange
-        //    var context = CreateContext();
-        //    var accountService = ServiceMockHelper.SetupAccountService(context);
+        [Fact]
+        public async Task CreateAccountAsync_NullName_ShouldThrowBudgetValidationException()
+        {
+           // Arrange
+           var accountService = ServiceMockHelper.SetupAccountService();
+           var createAccountRequest = new CreateAccountModel()
+           {
+               CurrencyId = DefaultValueConstants.Common.Id,
+               InitialBalance = DefaultValueConstants.Account.DefaultInitialBalance,
+               Name = null
+           };
 
-        //    // Act
-        //    var accounts = await accountService.GetAllAccountsAsync(DefaultValueConstants.User.InvalidId);
+           // Act
+           var act = async () => await accountService.CreateAccountAsync(createAccountRequest, DefaultValueConstants.User.UserId);
 
-        //    // Assert
-        //    Assert.NotNull(accounts);
-        //    Assert.Empty(accounts);
-        //}
+           // Assert
+           var exception = await Assert.ThrowsAsync<BudgetValidationException>(act);
+        }
 
-        //[Fact]
-        //public async Task CreateAccountAsync_ValidRequest_ShouldSucceed()
-        //{
-        //    // Arrange
-        //    var context = CreateContext();
-        //    var accountService = ServiceMockHelper.SetupAccountService(context);
+        [Fact]
+        public async Task UpdateAsync_ValidRequest_ShouldSucceed()
+        {
+           // Arrange
+           var accountService = ServiceMockHelper.SetupAccountService();
+           var updatedInitialBalance = 999;
+           var updatedName = "updated name";
 
-        //    var createAccountRequest = new CreateAccountModel()
-        //    {
-        //        CurrencyId = DefaultValueConstants.Common.Id,
-        //        InitialBalance = DefaultValueConstants.Account.DefaultInitialBalance,
-        //        Name = DefaultValueConstants.Account.DefaultName
-        //    };
+           var updateAccountRequest = new UpdateAccountModel()
+           {
+               Id = DefaultValueConstants.Common.Id,
+               CurrencyId = DefaultValueConstants.Common.Id,
+               InitialBalance = updatedInitialBalance,
+               Name = updatedName
+           };
 
-        //    // Act
-        //    var account = await accountService.CreateAccountAsync(createAccountRequest, DefaultValueConstants.User.UserId); ;
+           // Act
+           var account = await accountService.UpdateAsync(updateAccountRequest, DefaultValueConstants.User.UserId);
 
-        //    // Assert
-        //    Assert.Equal(createAccountRequest.CurrencyId, account.Currency.Id);
-        //    Assert.Equal(createAccountRequest.InitialBalance, account.InitialBalance);
-        //    Assert.Equal(createAccountRequest.Name, account.Name);
-        //}
+           // Assert
+           Assert.Equal(updateAccountRequest.Id, account.Id);
+           Assert.Equal(updateAccountRequest.InitialBalance, account.InitialBalance);
+           Assert.Equal(updateAccountRequest.Name, account.Name);
+        }
 
-        //[Fact]
-        //public async Task CreateAccountAsync_NullName_ShouldThrowBudgetValidationException()
-        //{
-        //    // Arrange
-        //    var context = CreateContext();
-        //    var accountService = ServiceMockHelper.SetupAccountService(context);
-        //    var createAccountRequest = new CreateAccountModel()
-        //    {
-        //        CurrencyId = DefaultValueConstants.Common.Id,
-        //        InitialBalance = DefaultValueConstants.Account.DefaultInitialBalance,
-        //        Name = null
-        //    };
+        [Fact]
+        public async Task UpdateAsync_InvalidAccountId_ShouldThrowBudgetValidationException()
+        {
+           // Arrange
+           var accountService = ServiceMockHelper.SetupAccountService();
+           var updateAccountRequest = new UpdateAccountModel()
+           {
+               Id = DefaultValueConstants.Common.InvalidId,
+               CurrencyId = DefaultValueConstants.Common.Id,
+               InitialBalance = DefaultValueConstants.Account.DefaultInitialBalance,
+               Name = DefaultValueConstants.Account.DefaultName
+           };
 
-        //    // Act
-        //    var act = async () => await accountService.CreateAccountAsync(createAccountRequest, DefaultValueConstants.User.UserId);
+           // Act
+           var act = async () => await accountService.UpdateAsync(updateAccountRequest, DefaultValueConstants.User.UserId);
 
-        //    // Assert
-        //    var exception = await Assert.ThrowsAsync<BudgetValidationException>(act);
-        //}
+           // Assert
+           var exception = await Assert.ThrowsAsync<BudgetValidationException>(act);
+        }
 
-        //[Fact]
-        //public async Task UpdateAsync_ValidRequest_ShouldSucceed()
-        //{
-        //    // Arrange
-        //    var context = CreateContext();
-        //    var accountService = ServiceMockHelper.SetupAccountService(context);
-        //    var updatedInitialBalance = 999;
-        //    var updatedName = "updated name";
+        [Fact]
+        public async Task UpdateAsync_InvalidCurrencyId_ShouldThrowBudgetValidationException()
+        {
+           // Arrange
+           var accountService = ServiceMockHelper.SetupAccountService();
+           var updateAccountRequest = new UpdateAccountModel()
+           {
+               Id = DefaultValueConstants.Common.Id,
+               CurrencyId = DefaultValueConstants.Common.InvalidId,
+               InitialBalance = DefaultValueConstants.Account.DefaultInitialBalance,
+               Name = DefaultValueConstants.Account.DefaultName
+           };
 
-        //    var updateAccountRequest = new UpdateAccountModel()
-        //    {
-        //        Id = DefaultValueConstants.Common.Id,
-        //        CurrencyId = DefaultValueConstants.Common.Id,
-        //        InitialBalance = updatedInitialBalance,
-        //        Name = updatedName
-        //    };
+           // Act
+           var act = async () => await accountService.UpdateAsync(updateAccountRequest, DefaultValueConstants.User.UserId);
 
-        //    // Act
-        //    var account = await accountService.UpdateAsync(updateAccountRequest, DefaultValueConstants.User.UserId);
+           // Assert
+           var exception = await Assert.ThrowsAsync<BudgetValidationException>(act);
+        }
 
-        //    // Assert
-        //    Assert.Equal(updateAccountRequest.Id, account.Id);
-        //    Assert.Equal(updateAccountRequest.InitialBalance, account.InitialBalance);
-        //    Assert.Equal(updateAccountRequest.Name, account.Name);
-        //}
+        [Fact]
+        public async Task UpdateAsync_InvalidUserId_ShouldThrowBudgetValidationException()
+        {
+           // Arrange
+           var accountService = ServiceMockHelper.SetupAccountService();
+           var updateAccountRequest = new UpdateAccountModel()
+           {
+               Id = DefaultValueConstants.Common.Id,
+               CurrencyId = DefaultValueConstants.Common.Id,
+               InitialBalance = DefaultValueConstants.Account.DefaultInitialBalance,
+               Name = DefaultValueConstants.Account.DefaultName
+           };
 
-        //[Fact]
-        //public async Task UpdateAsync_InvalidAccountId_ShouldThrowBudgetValidationException()
-        //{
-        //    // Arrange
-        //    var context = CreateContext();
-        //    var accountService = ServiceMockHelper.SetupAccountService(context);
-        //    var updateAccountRequest = new UpdateAccountModel()
-        //    {
-        //        Id = DefaultValueConstants.Common.InvalidId,
-        //        CurrencyId = DefaultValueConstants.Common.Id,
-        //        InitialBalance = DefaultValueConstants.Account.DefaultInitialBalance,
-        //        Name = DefaultValueConstants.Account.DefaultName
-        //    };
+           // Act
+           var act = async () => await accountService.UpdateAsync(updateAccountRequest, DefaultValueConstants.User.InvalidId);
 
-        //    // Act
-        //    var act = async () => await accountService.UpdateAsync(updateAccountRequest, DefaultValueConstants.User.UserId);
+           // Assert
+           var exception = await Assert.ThrowsAsync<BudgetValidationException>(act);
+        }
 
-        //    // Assert
-        //    var exception = await Assert.ThrowsAsync<BudgetValidationException>(act);
-        //}
+        [Fact]
+        public async Task DeleteAsync_AttemptToDeleteAccountWithRecords_ShouldThrowBudgetValidationException()
+        {
+           // Arrange
+           var accountService = ServiceMockHelper.SetupAccountService();
 
-        //[Fact]
-        //public async Task UpdateAsync_InvalidCurrencyId_ShouldThrowBudgetValidationException()
-        //{
-        //    // Arrange
-        //    var context = CreateContext();
-        //    var accountService = ServiceMockHelper.SetupAccountService(context);
-        //    var updateAccountRequest = new UpdateAccountModel()
-        //    {
-        //        Id = DefaultValueConstants.Common.Id,
-        //        CurrencyId = DefaultValueConstants.Common.InvalidId,
-        //        InitialBalance = DefaultValueConstants.Account.DefaultInitialBalance,
-        //        Name = DefaultValueConstants.Account.DefaultName
-        //    };
+           // Act
+           var act = async () => await accountService.DeleteAccountAsync(DefaultValueConstants.Account.AccountIdWithRecords, DefaultValueConstants.User.UserId);
 
-        //    // Act
-        //    var act = async () => await accountService.UpdateAsync(updateAccountRequest, DefaultValueConstants.User.UserId);
+           // Assert
+           var exception = await Assert.ThrowsAsync<BudgetValidationException>(act);
+        }
 
-        //    // Assert
-        //    var exception = await Assert.ThrowsAsync<BudgetValidationException>(act);
-        //}
+        [Fact]
+        public async Task DeleteAsync_ValidRequest_ShouldSucceed()
+        {
+           // Arrange
+           var accountService = ServiceMockHelper.SetupAccountService();
 
-        //[Fact]
-        //public async Task UpdateAsync_InvalidUserId_ShouldThrowBudgetValidationException()
-        //{
-        //    // Arrange
-        //    var context = CreateContext();
-        //    var accountService = ServiceMockHelper.SetupAccountService(context);
-        //    var updateAccountRequest = new UpdateAccountModel()
-        //    {
-        //        Id = DefaultValueConstants.Common.Id,
-        //        CurrencyId = DefaultValueConstants.Common.Id,
-        //        InitialBalance = DefaultValueConstants.Account.DefaultInitialBalance,
-        //        Name = DefaultValueConstants.Account.DefaultName
-        //    };
+           // Act
+           var account = await accountService.DeleteAccountAsync(DefaultValueConstants.Common.Id, DefaultValueConstants.User.UserId);
 
-        //    // Act
-        //    var act = async () => await accountService.UpdateAsync(updateAccountRequest, DefaultValueConstants.User.InvalidId);
+           // Assert
+           Assert.Equal(DefaultValueConstants.Common.Id, account.Id);
+        }
 
-        //    // Assert
-        //    var exception = await Assert.ThrowsAsync<BudgetValidationException>(act);
-        //}
+        [Fact]
+        public async Task DeleteAsync_InvalidAccountId_ShouldThrowBudgetValidationException()
+        {
+           // Arrange
+           var accountService = ServiceMockHelper.SetupAccountService();
 
-        //[Fact]
-        //public async Task DeleteAsync_AttemptToDeleteAccountWithRecords_ShouldThrowBudgetValidationException()
-        //{
-        //    // Arrange
-        //    var context = CreateContext();
-        //    var accountService = ServiceMockHelper.SetupAccountService(context);
+           // Act
+           var act = async () => await accountService.DeleteAccountAsync(DefaultValueConstants.Common.InvalidId, DefaultValueConstants.User.UserId);
 
-        //    // Act
-        //    var act = async () => await accountService.DeleteAccountAsync(DefaultValueConstants.Account.AccountIdWithRecords, DefaultValueConstants.User.UserId);
-
-        //    // Assert
-        //    var exception = await Assert.ThrowsAsync<BudgetValidationException>(act);
-        //}
-
-        //[Fact]
-        //public async Task DeleteAsync_ValidRequest_ShouldSucceed()
-        //{
-        //    // Arrange
-        //    var context = CreateContext();
-        //    var accountService = ServiceMockHelper.SetupAccountService(context);
-
-        //    // Act
-        //    var account = await accountService.DeleteAccountAsync(DefaultValueConstants.Common.Id, DefaultValueConstants.User.UserId);
-
-        //    // Assert
-        //    Assert.Equal(DefaultValueConstants.Common.Id, account.Id);
-        //}
-
-        //[Fact]
-        //public async Task DeleteAsync_InvalidAccountId_ShouldThrowBudgetValidationException()
-        //{
-        //    // Arrange
-        //    var context = CreateContext();
-        //    var accountService = ServiceMockHelper.SetupAccountService(context);
-
-        //    // Act
-        //    var act = async () => await accountService.DeleteAccountAsync(DefaultValueConstants.Common.InvalidId, DefaultValueConstants.User.UserId);
-
-        //    // Assert
-        //    var exception = await Assert.ThrowsAsync<BudgetValidationException>(act);
-        //}
-
-        // [Fact]
-        // public async Task Example()
-        // {
-        //     // Arrange
-        //     var accountService = ServiceMockHelper.SetupAccountService();
-
-        //     // Act
-        //     var account = await accountService.TestGetByIdAsync(DefaultValueConstants.Common.Id, DefaultValueConstants.User.UserId);
-
-        //     // Assert
-        //     Assert.NotNull(account);
-        // }
+           // Assert
+           var exception = await Assert.ThrowsAsync<BudgetValidationException>(act);
+        }
     }
 }

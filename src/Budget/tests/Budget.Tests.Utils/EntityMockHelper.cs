@@ -20,16 +20,18 @@ namespace Budget.Tests.Utils
                 Amount = recordType == RecordType.Expense ? -Math.Abs(amount) : Math.Abs(amount),
                 Category = category,
                 DateCreated = DateTime.UtcNow,
-                Note = $"Note{id}",
+                Note = id.GenerateRecordNote(),
                 RecordType = recordType
             };
 
             return record;
         }
 
+        public static string GenerateRecordNote(this int recordId) => $"Note{recordId}";
+
         public static Account SetupAccount(
-            Currency currency, 
-            int id = DefaultValueConstants.Common.Id, 
+            Currency currency,
+            int id = DefaultValueConstants.Common.Id,
             string userId = DefaultValueConstants.User.UserId)
         {
             var account = new Account()
@@ -47,7 +49,7 @@ namespace Budget.Tests.Utils
 
         public static Category SetupCategory(
             ApplicationUser user,
-            int id = DefaultValueConstants.Common.Id, 
+            int id = DefaultValueConstants.Common.Id,
             CategoryType categoryType = DefaultValueConstants.Category.Type)
         {
             var category = new Category()
@@ -90,7 +92,7 @@ namespace Budget.Tests.Utils
         }
 
         public static ApplicationUser SetupUser(
-            string id = DefaultValueConstants.User.UserId, 
+            string id = DefaultValueConstants.User.UserId,
             string username = DefaultValueConstants.User.Username)
         {
             var user = new ApplicationUser()
