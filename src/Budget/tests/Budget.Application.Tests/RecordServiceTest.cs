@@ -9,10 +9,6 @@ namespace Budget.Application.Tests
 {
     public class RecordServiceTest
     {
-        public RecordServiceTest()
-        {
-        }
-
         [Fact]
         public async Task CreateRecord_WithValidInputModel_ShouldSucceed()
         {

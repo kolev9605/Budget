@@ -1,10 +1,6 @@
-using Budget.Domain.Entities;
 using Budget.Domain.Exceptions;
 using Budget.Domain.Models.Accounts;
-using Budget.Persistance;
 using Budget.Tests.Utils;
-using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
@@ -13,11 +9,6 @@ namespace Budget.Application.Tests
 {
     public class AccountServiceTest
     {
-        public AccountServiceTest()
-           : base()
-        {
-        }
-
         [Fact]
         public async Task GetByIdAsync_ValidInput_ShouldReturnDefaultEntity()
         {

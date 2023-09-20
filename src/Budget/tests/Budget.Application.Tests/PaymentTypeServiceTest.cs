@@ -6,10 +6,6 @@ namespace Budget.Application.Tests
 {
     public class PaymentTypeServiceTest
     {
-        public PaymentTypeServiceTest()
-        {
-        }
-
         [Fact]
         public async Task GetAllAsync_ValidInput_ShouldReturnOnePaymentType()
         {
