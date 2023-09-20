@@ -16,9 +16,9 @@ namespace Budget.Persistance
         public DbSet<Account> Accounts { get; set; }
 
         public DbSet<Currency> Currencies { get; set; }
-        
+
         public DbSet<PaymentType> PaymentTypes { get; set; }
-        
+
         public DbSet<Record> Records { get; set; }
 
         public DbSet<Category> Categories { get; set; }

@@ -1,3 +1,4 @@
+using Budget.Domain.Models.Accounts;
 using Budget.Domain.Models.Records;
 
 namespace Budget.Tests.Utils;
@@ -17,5 +18,17 @@ public static class ModelMockHelper
         };
 
         return model;
+    }
+
+    public static CreateAccountModel CreateAccountModel(string? name = DefaultValueConstants.Account.DefaultName)
+    {
+        var createAccountRequest = new CreateAccountModel()
+        {
+            CurrencyId = DefaultValueConstants.Common.Id,
+            InitialBalance = DefaultValueConstants.Account.DefaultInitialBalance,
+            Name = name
+        };
+
+        return createAccountRequest;
     }
 }
