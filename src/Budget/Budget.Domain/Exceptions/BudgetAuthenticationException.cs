@@ -1,19 +1,18 @@
-﻿namespace Budget.Domain.Exceptions
+﻿namespace Budget.Domain.Exceptions;
+
+public class BudgetAuthenticationException : BudgetException
 {
-    public class BudgetAuthenticationException : BudgetException
+    public BudgetAuthenticationException()
     {
-        public BudgetAuthenticationException()
-        {
-        }
+    }
 
-        public BudgetAuthenticationException(string message) 
-            : base(message)
-        {
-        }
+    public BudgetAuthenticationException(string message)
+        : base(message)
+    {
+    }
 
-        public BudgetAuthenticationException(string message, params object[] args) 
-            : base(message, args)
-        {
-        }
+    public BudgetAuthenticationException(string message, params object[] args)
+        : base(message, args)
+    {
     }
 }

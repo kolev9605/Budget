@@ -2,36 +2,35 @@
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Budget.Application.Tests
+namespace Budget.Application.Tests;
+
+public class CurrencyServiceTest
 {
-    public class CurrencyServiceTest
+    [Fact]
+    public async Task GetAllAsync_ValidInput_ShouldReturnOneCurrency()
     {
-        [Fact]
-        public async Task GetAllAsync_ValidInput_ShouldReturnOneCurrency()
-        {
-            // Arrange
-            var currencyService = ServiceMockHelper.SetupCurrencyService();
+        // Arrange
+        var currencyService = ServiceMockHelper.SetupCurrencyService();
 
-            // Act
-            var currencies = await currencyService.GetAllAsync();
+        // Act
+        var currencies = await currencyService.GetAllAsync();
 
-            // Assert
-            Assert.NotNull(currencies);
-            Assert.Single(currencies);
-        }
+        // Assert
+        Assert.NotNull(currencies);
+        Assert.Single(currencies);
+    }
 
-        [Fact]
-        public async Task Test()
-        {
-            // Arrange
-            var currencyService = ServiceMockHelper.SetupCurrencyService();
+    [Fact]
+    public async Task Test()
+    {
+        // Arrange
+        var currencyService = ServiceMockHelper.SetupCurrencyService();
 
-            // Act
-            var currencies = await currencyService.GetAllAsync();
+        // Act
+        var currencies = await currencyService.GetAllAsync();
 
-            // Assert
-            Assert.NotNull(currencies);
-            Assert.Single(currencies);
-        }
+        // Assert
+        Assert.NotNull(currencies);
+        Assert.Single(currencies);
     }
 }

@@ -2,22 +2,21 @@
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Budget.Application.Tests
+namespace Budget.Application.Tests;
+
+public class PaymentTypeServiceTest
 {
-    public class PaymentTypeServiceTest
+    [Fact]
+    public async Task GetAllAsync_ValidInput_ShouldReturnOnePaymentType()
     {
-        [Fact]
-        public async Task GetAllAsync_ValidInput_ShouldReturnOnePaymentType()
-        {
-            // Arrange
-            var paymentTypeService = ServiceMockHelper.SetupPaymentTypeService();
+        // Arrange
+        var paymentTypeService = ServiceMockHelper.SetupPaymentTypeService();
 
-            // Act
-            var paymentTypes = await paymentTypeService.GetAllAsync();
+        // Act
+        var paymentTypes = await paymentTypeService.GetAllAsync();
 
-            // Assert
-            Assert.NotNull(paymentTypes);
-            Assert.Single(paymentTypes);
-        }
+        // Assert
+        Assert.NotNull(paymentTypes);
+        Assert.Single(paymentTypes);
     }
 }

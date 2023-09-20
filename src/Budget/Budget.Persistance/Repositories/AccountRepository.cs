@@ -8,71 +8,70 @@ using Mapster;
 using Budget.Domain.Interfaces.Repositories;
 using Budget.Domain.Models.Accounts;
 
-namespace Budget.Persistance.Repositories
+namespace Budget.Persistance.Repositories;
+
+public class AccountRepository : Repository<Account>, IAccountRepository
 {
-    public class AccountRepository : Repository<Account>, IAccountRepository
+    public AccountRepository(BudgetDbContext dbContext)
+      : base(dbContext)
     {
-        public AccountRepository(BudgetDbContext dbContext)
-          : base(dbContext)
-        {
 
-        }
+    }
 
-        public async Task<IEnumerable<Account>> GetAllByUserIdAsync(string userId)
-        {
-            return await GetAllByUserIdBaseQuery(userId)
-                .ToListAsync();
-        }
+    public async Task<IEnumerable<Account>> GetAllByUserIdAsync(string userId)
+    {
+        return await GetAllByUserIdBaseQuery(userId)
+            .ToListAsync();
+    }
 
-        public async Task<IEnumerable<AccountModel>> GetAllAccountModelsByUserIdAsync(string userId)
-        {
-            return await GetAllByUserIdBaseQuery(userId)
-                .ProjectToType<AccountModel>()
-                .ToListAsync();
-        }
+    public async Task<IEnumerable<AccountModel>> GetAllAccountModelsByUserIdAsync(string userId)
+    {
+        return await GetAllByUserIdBaseQuery(userId)
+            .ProjectToType<AccountModel>()
+            .ToListAsync();
+    }
 
-        public async Task<Account> GetByIdWithCurrencyAsync(int accountId, string userId)
-        {
-            var account = await GetByIdWithCurrencyBaseQuery(userId, accountId)
-                .FirstOrDefaultAsync();
+    public async Task<Account> GetByIdWithCurrencyAsync(int accountId, string userId)
+    {
+        var account = await GetByIdWithCurrencyBaseQuery(userId, accountId)
+            .FirstOrDefaultAsync();
 
-            return account;
-        }
+        return account;
+    }
 
-        public async Task<AccountModel> GetAccountModelByIdWithCurrencyAsync(int accountId, string userId)
-        {
-            var account = await GetByIdWithCurrencyBaseQuery(userId, accountId)
-                .ProjectToType<AccountModel>()
-                .FirstOrDefaultAsync();
+    public async Task<AccountModel> GetAccountModelByIdWithCurrencyAsync(int accountId, string userId)
+    {
+        var account = await GetByIdWithCurrencyBaseQuery(userId, accountId)
+            .ProjectToType<AccountModel>()
+            .FirstOrDefaultAsync();
 
-            return account;
-        }
+        return account;
+    }
 
-        public async Task<Account> GetByNameAsync(string userId, string accountName)
-        {
-            var account = await _budgetDbContext.Accounts
-                .Where(a => a.UserId == userId)
-                .Where(a => a.Name == accountName)
-                .FirstOrDefaultAsync();
+    public async Task<Account> GetByNameAsync(string userId, string accountName)
+    {
+        var account = await _budgetDbContext.Accounts
+            .Where(a => a.UserId == userId)
+            .Where(a => a.Name == accountName)
+            .FirstOrDefaultAsync();
 
-            return account;
-        }
+        return account;
+    }
 
-        private IQueryable<Account> GetAllByUserIdBaseQuery(string userId)
-        {
-            return _budgetDbContext.Accounts
-                .Include(a => a.Currency)
-                .Include(a => a.Records)
-                .Where(a => a.UserId == userId);
-        }
+    private IQueryable<Account> GetAllByUserIdBaseQuery(string userId)
+    {
+        return _budgetDbContext.Accounts
+            .Include(a => a.Currency)
+            .Include(a => a.Records)
+            .Where(a => a.UserId == userId);
+    }
 
-        private IQueryable<Account> GetByIdWithCurrencyBaseQuery(string userId, int accountId)
-        {
-            return _budgetDbContext.Accounts
-                .Include(a => a.Currency)
-                .Include(a => a.Records)
-                .Where(a => a.UserId == userId)
-                .Where(a => a.Id == accountId);
-        }
+    private IQueryable<Account> GetByIdWithCurrencyBaseQuery(string userId, int accountId)
+    {
+        return _budgetDbContext.Accounts
+            .Include(a => a.Currency)
+            .Include(a => a.Records)
+            .Where(a => a.UserId == userId)
+            .Where(a => a.Id == accountId);
     }
 }

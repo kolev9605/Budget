@@ -20,7 +20,7 @@ public static class ModelMockHelper
         return model;
     }
 
-    public static CreateAccountModel CreateAccountModel(string? name = DefaultValueConstants.Account.DefaultName)
+    public static CreateAccountModel CreateAccountModel(string name = DefaultValueConstants.Account.DefaultName)
     {
         var createAccountRequest = new CreateAccountModel()
         {

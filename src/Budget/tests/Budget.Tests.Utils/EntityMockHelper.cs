@@ -1,107 +1,106 @@
 ﻿using Budget.Domain.Entities;
 
-namespace Budget.Tests.Utils
+namespace Budget.Tests.Utils;
+
+public static class EntityMockHelper
 {
-    public static class EntityMockHelper
+    public static Record SetupRecord(
+        Account account,
+        PaymentType paymentType,
+        Category category,
+        int id = DefaultValueConstants.Common.Id,
+        RecordType recordType = DefaultValueConstants.Record.Type,
+        decimal amount = DefaultValueConstants.Record.Amount)
     {
-        public static Record SetupRecord(
-            Account account,
-            PaymentType paymentType,
-            Category category,
-            int id = DefaultValueConstants.Common.Id,
-            RecordType recordType = DefaultValueConstants.Record.Type,
-            decimal amount = DefaultValueConstants.Record.Amount)
+        var record = new Record()
         {
-            var record = new Record()
-            {
-                Id = id,
-                Account = account,
-                PaymentType = paymentType,
-                Amount = recordType == RecordType.Expense ? -Math.Abs(amount) : Math.Abs(amount),
-                Category = category,
-                DateCreated = DateTime.UtcNow,
-                Note = id.GenerateRecordNote(),
-                RecordType = recordType
-            };
+            Id = id,
+            Account = account,
+            PaymentType = paymentType,
+            Amount = recordType == RecordType.Expense ? -Math.Abs(amount) : Math.Abs(amount),
+            Category = category,
+            DateCreated = DateTime.UtcNow,
+            Note = id.GenerateRecordNote(),
+            RecordType = recordType
+        };
 
-            return record;
-        }
+        return record;
+    }
 
-        public static string GenerateRecordNote(this int recordId) => $"Note{recordId}";
+    public static string GenerateRecordNote(this int recordId) => $"Note{recordId}";
 
-        public static Account SetupAccount(
-            Currency currency,
-            int id = DefaultValueConstants.Common.Id,
-            string userId = DefaultValueConstants.User.UserId)
+    public static Account SetupAccount(
+        Currency currency,
+        int id = DefaultValueConstants.Common.Id,
+        string userId = DefaultValueConstants.User.UserId)
+    {
+        var account = new Account()
         {
-            var account = new Account()
-            {
-                Id = id,
-                Currency = currency,
-                Name = DefaultValueConstants.Account.DefaultName,
-                CurrencyId = currency.Id,
-                UserId = userId,
-                InitialBalance = DefaultValueConstants.Account.DefaultInitialBalance
-            };
+            Id = id,
+            Currency = currency,
+            Name = DefaultValueConstants.Account.DefaultName,
+            CurrencyId = currency.Id,
+            UserId = userId,
+            InitialBalance = DefaultValueConstants.Account.DefaultInitialBalance
+        };
 
-            return account;
-        }
+        return account;
+    }
 
-        public static Category SetupCategory(
-            ApplicationUser user,
-            int id = DefaultValueConstants.Common.Id,
-            CategoryType categoryType = DefaultValueConstants.Category.Type)
+    public static Category SetupCategory(
+        ApplicationUser user,
+        int id = DefaultValueConstants.Common.Id,
+        CategoryType categoryType = DefaultValueConstants.Category.Type)
+    {
+        var category = new Category()
         {
-            var category = new Category()
-            {
-                Id = id,
-                Name = $"Category{id}",
-                CategoryType = categoryType,
-            };
+            Id = id,
+            Name = $"Category{id}",
+            CategoryType = categoryType,
+        };
 
-            category.Users.Add(new UserCategory()
-            {
-                User = user,
-                UserId = user.Id,
-            });
-
-            return category;
-        }
-
-        public static PaymentType SetupPaymentType(int id = DefaultValueConstants.Common.Id)
+        category.Users.Add(new UserCategory()
         {
-            var paymentType = new PaymentType()
-            {
-                Id = id,
-                Name = $"PaymentType{id}"
-            };
+            User = user,
+            UserId = user.Id,
+        });
 
-            return paymentType;
-        }
+        return category;
+    }
 
-        public static Currency SetupCurrency(int id = DefaultValueConstants.Common.Id)
+    public static PaymentType SetupPaymentType(int id = DefaultValueConstants.Common.Id)
+    {
+        var paymentType = new PaymentType()
         {
-            var currency = new Currency()
-            {
-                Id = id,
-                Name = $"Currency{id}",
-                Abbreviation = $"Abbreviation{id}"
-            };
+            Id = id,
+            Name = $"PaymentType{id}"
+        };
 
-            return currency;
-        }
+        return paymentType;
+    }
 
-        public static ApplicationUser SetupUser(
-            string id = DefaultValueConstants.User.UserId,
-            string username = DefaultValueConstants.User.Username)
+    public static Currency SetupCurrency(int id = DefaultValueConstants.Common.Id)
+    {
+        var currency = new Currency()
         {
-            var user = new ApplicationUser()
-            {
-                Id = id,
-                UserName = username
-            };
+            Id = id,
+            Name = $"Currency{id}",
+            Abbreviation = $"Abbreviation{id}"
+        };
 
-            return user;
-        }
+        return currency;
+    }
+
+    public static ApplicationUser SetupUser(
+        string id = DefaultValueConstants.User.UserId,
+        string username = DefaultValueConstants.User.Username)
+    {
+        var user = new ApplicationUser()
+        {
+            Id = id,
+            UserName = username
+        };
+
+        return user;
     }
 }

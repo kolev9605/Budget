@@ -1,13 +1,12 @@
 using Budget.Domain.Entities;
 
-namespace Budget.Domain.Models.Categories
+namespace Budget.Domain.Models.Categories;
+
+public class BaseCrudCategoryModel
 {
-    public class BaseCrudCategoryModel
-    {
-        public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
-        public CategoryType CategoryType { get; set; }
+    public CategoryType CategoryType { get; set; }
 
-        public int? ParentCategoryId { get; set; }
-    }
+    public int? ParentCategoryId { get; set; }
 }

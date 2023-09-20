@@ -1,15 +1,12 @@
-﻿using Budget.Domain.Entities;
+﻿namespace Budget.Domain.Models.Currencies;
 
-namespace Budget.Domain.Models.Currencies
+public class CurrencyModel
 {
-    public class CurrencyModel
-    {
-        public int Id { get; set; }
+    public int Id { get; set; }
 
-        public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
-        public string Abbreviation { get; set; }
+    public string Abbreviation { get; set; } = null!;
 
-        public string SpecialName { get; set; }
-    }
+    public string SpecialName { get; set; } = null!;
 }

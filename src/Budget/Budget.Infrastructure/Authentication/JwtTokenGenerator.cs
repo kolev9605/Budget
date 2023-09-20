@@ -7,45 +7,44 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace Budget.Infrastructure.Authentication
+namespace Budget.Infrastructure.Authentication;
+
+public class JwtTokenGenerator : IJwtTokenGenerator
 {
-    public class JwtTokenGenerator : IJwtTokenGenerator
+    private readonly JwtSettings _jwtSettings;
+    private readonly IDateTimeProvider _dateTimeProvider;
+
+    public JwtTokenGenerator(
+        IOptions<JwtSettings> jwtOptions,
+        IDateTimeProvider dateTimeProvider)
     {
-        private readonly JwtSettings _jwtSettings;
-        private readonly IDateTimeProvider _dateTimeProvider;
+        _jwtSettings = jwtOptions.Value;
+        _dateTimeProvider = dateTimeProvider;
+    }
 
-        public JwtTokenGenerator(
-            IOptions<JwtSettings> jwtOptions,
-            IDateTimeProvider dateTimeProvider)
+    public (string token, DateTime validTo) GenerateToken(IEnumerable<string> userRoles, string userId)
+    {
+        var authClaims = new List<Claim>
         {
-            _jwtSettings = jwtOptions.Value;
-            _dateTimeProvider = dateTimeProvider;
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new Claim(JwtRegisteredClaimNames.Sub, userId)
+        };
+
+        foreach (var userRole in userRoles)
+        {
+            authClaims.Add(new Claim(ClaimTypes.Role, userRole));
         }
 
-        public (string token, DateTime validTo) GenerateToken(IEnumerable<string> userRoles, string userId)
-        {
-            var authClaims = new List<Claim>
-            {
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Sub, userId)
-            };
+        var token = new JwtSecurityToken(
+            expires: _dateTimeProvider.UtcNow.AddMinutes(_jwtSettings.ExpiryMinutes),
+            issuer: _jwtSettings.Issuer,
+            audience: _jwtSettings.Audience,
+            claims: authClaims,
+            signingCredentials: new SigningCredentials(
+                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret)),
+                SecurityAlgorithms.HmacSha256)
+        );
 
-            foreach (var userRole in userRoles)
-            {
-                authClaims.Add(new Claim(ClaimTypes.Role, userRole));
-            }
-
-            var token = new JwtSecurityToken(
-                expires: _dateTimeProvider.UtcNow.AddMinutes(_jwtSettings.ExpiryMinutes),
-                issuer: _jwtSettings.Issuer,
-                audience: _jwtSettings.Audience,
-                claims: authClaims,
-                signingCredentials: new SigningCredentials(
-                    new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret)),
-                    SecurityAlgorithms.HmacSha256)
-            );
-
-            return (new JwtSecurityTokenHandler().WriteToken(token), token.ValidTo);
-        }
+        return (new JwtSecurityTokenHandler().WriteToken(token), token.ValidTo);
     }
 }

@@ -1,18 +1,14 @@
-﻿using System.Linq.Expressions;
-using System;
+﻿namespace Budget.Domain.Models.Specifications;
 
-namespace Budget.Domain.Models.Specifications
+public class SortDescriptor
 {
-    public class SortDescriptor
+    public SortDescriptor(string property, SortDirection direction)
     {
-        public SortDescriptor(string property, SortDirection direction)
-        {
-            Property = property;
-            Direction = direction;
-        }
-
-        public string Property { get; set; }
-
-        public SortDirection Direction { get; set; }
+        Property = property;
+        Direction = direction;
     }
+
+    public string Property { get; set; }
+
+    public SortDirection Direction { get; set; }
 }

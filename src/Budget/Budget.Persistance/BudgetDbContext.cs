@@ -1,35 +1,33 @@
 ﻿using Budget.Domain.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Budget.Domain.Interfaces;
 
-namespace Budget.Persistance
+namespace Budget.Persistance;
+
+public class BudgetDbContext : IdentityDbContext<ApplicationUser>
 {
-    public class BudgetDbContext : IdentityDbContext<ApplicationUser>, IBudgetDbContext
+    public BudgetDbContext(DbContextOptions<BudgetDbContext> options)
+        : base(options)
     {
-        public BudgetDbContext(DbContextOptions<BudgetDbContext> options)
-            : base(options)
-        {
 
-        }
+    }
 
-        public DbSet<Account> Accounts { get; set; }
+    public DbSet<Account> Accounts { get; set; }
 
-        public DbSet<Currency> Currencies { get; set; }
+    public DbSet<Currency> Currencies { get; set; }
 
-        public DbSet<PaymentType> PaymentTypes { get; set; }
+    public DbSet<PaymentType> PaymentTypes { get; set; }
 
-        public DbSet<Record> Records { get; set; }
+    public DbSet<Record> Records { get; set; }
 
-        public DbSet<Category> Categories { get; set; }
+    public DbSet<Category> Categories { get; set; }
 
-        public DbSet<UserCategory> UserCategories { get; set; }
+    public DbSet<UserCategory> UserCategories { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(BudgetDbContext).Assembly);
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(BudgetDbContext).Assembly);
 
-            base.OnModelCreating(modelBuilder);
-        }
+        base.OnModelCreating(modelBuilder);
     }
 }

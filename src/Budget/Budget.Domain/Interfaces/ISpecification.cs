@@ -6,17 +6,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Budget.Domain.Interfaces
+namespace Budget.Domain.Interfaces;
+
+public interface ISpecification<TEntity>
+    where TEntity : BaseEntity
 {
-    public interface ISpecification<TEntity>
-        where TEntity : BaseEntity
-    {
-        public ICollection<Expression<Func<TEntity, bool>>> CriteriaExpressions { get; }
+    public ICollection<Expression<Func<TEntity, bool>>> CriteriaExpressions { get; }
 
-        public List<Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>> Includes { get; }
+    public List<Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>> Includes { get; }
 
-        public ICollection<SortDescriptor> SortDescriptors { get; }
+    public ICollection<SortDescriptor> SortDescriptors { get; }
 
-        public Expression<Func<TEntity, TEntity>> MappingExpression { get; }
-    }
+    public Expression<Func<TEntity, TEntity>> MappingExpression { get; }
 }

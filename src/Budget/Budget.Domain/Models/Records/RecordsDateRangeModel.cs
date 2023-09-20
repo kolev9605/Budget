@@ -1,17 +1,16 @@
 ﻿using System;
 
-namespace Budget.Domain.Models.Records
+namespace Budget.Domain.Models.Records;
+
+public class RecordsDateRangeModel
 {
-    public class RecordsDateRangeModel
+    public RecordsDateRangeModel(DateTime minDate, DateTime maxDate)
     {
-        public RecordsDateRangeModel(DateTime minDate, DateTime maxDate)
-        {
-            MinDate = minDate;
-            MaxDate = maxDate;
-        }
-
-        public DateTime MinDate { get; set; }
-
-        public DateTime MaxDate { get; set; }
+        MinDate = minDate;
+        MaxDate = maxDate;
     }
+
+    public DateTime MinDate { get; set; }
+
+    public DateTime MaxDate { get; set; }
 }

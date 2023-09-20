@@ -7,114 +7,113 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Budget.Persistance.Repositories
+namespace Budget.Persistance.Repositories;
+
+public class CategoryRepository : Repository<Category>, ICategoryRepository
 {
-    public class CategoryRepository : Repository<Category>, ICategoryRepository
+    public CategoryRepository(BudgetDbContext dbContext)
+        : base(dbContext)
     {
-        public CategoryRepository(BudgetDbContext dbContext)
-            : base(dbContext)
-        {
-        }
+    }
 
-        public async Task<IEnumerable<CategoryModel>> GetAllPrimaryCategoryModelsAsync(string userId)
-        {
-            var categories = await GetUserCategories(userId)
-                .Include(c => c.SubCategories)
-                .Where(c => !c.ParentCategoryId.HasValue)
-                .OrderBy(c => c.ParentCategoryId ?? c.Id)
-                .ThenBy(c => c.Id)
-                .ProjectToType<CategoryModel>()
-                .ToListAsync();
+    public async Task<IEnumerable<CategoryModel>> GetAllPrimaryCategoryModelsAsync(string userId)
+    {
+        var categories = await GetUserCategories(userId)
+            .Include(c => c.SubCategories)
+            .Where(c => !c.ParentCategoryId.HasValue)
+            .OrderBy(c => c.ParentCategoryId ?? c.Id)
+            .ThenBy(c => c.Id)
+            .ProjectToType<CategoryModel>()
+            .ToListAsync();
 
-            return categories;
-        }
+        return categories;
+    }
 
-        public async Task<IEnumerable<CategoryModel>> GetAllWithSubcategoriesCategoryModelsAsync(string userId)
-        {
-            var categories = await GetUserCategories(userId)
-                .Include(c => c.SubCategories)
-                .OrderBy(c => c.ParentCategoryId ?? c.Id)
-                .ThenBy(c => c.Id)
-                .ProjectToType<CategoryModel>()
-                .ToListAsync();
+    public async Task<IEnumerable<CategoryModel>> GetAllWithSubcategoriesCategoryModelsAsync(string userId)
+    {
+        var categories = await GetUserCategories(userId)
+            .Include(c => c.SubCategories)
+            .OrderBy(c => c.ParentCategoryId ?? c.Id)
+            .ThenBy(c => c.Id)
+            .ProjectToType<CategoryModel>()
+            .ToListAsync();
 
-            return categories;
-        }
+        return categories;
+    }
 
-        public async Task<Category> GetByIdWithSubcategoriesAsync(int categoryId, string userId)
-        {
-            var category = await GetByIdWithSubcategoriesBaseQuery(userId, categoryId)
-                .FirstOrDefaultAsync();
+    public async Task<Category> GetByIdWithSubcategoriesAsync(int categoryId, string userId)
+    {
+        var category = await GetByIdWithSubcategoriesBaseQuery(userId, categoryId)
+            .FirstOrDefaultAsync();
 
-            return category;
-        }
+        return category;
+    }
 
-        public async Task<CategoryModel> GetByIdWithSubcategoriesMappedAsync(int categoryId, string userId)
-        {
-            var category = await GetByIdWithSubcategoriesBaseQuery(userId, categoryId)
-                .ProjectToType<CategoryModel>()
-                .FirstOrDefaultAsync();
+    public async Task<CategoryModel> GetByIdWithSubcategoriesMappedAsync(int categoryId, string userId)
+    {
+        var category = await GetByIdWithSubcategoriesBaseQuery(userId, categoryId)
+            .ProjectToType<CategoryModel>()
+            .FirstOrDefaultAsync();
 
-            return category;
-        }
+        return category;
+    }
 
-        public async Task<Category> GetByNameWithUsersAsync(string name)
-        {
-            var category = await _budgetDbContext.Categories
-                .Include(c => c.Users)
-                .Where(c => c.Name == name)
-                .FirstOrDefaultAsync();
+    public async Task<Category> GetByNameWithUsersAsync(string name)
+    {
+        var category = await _budgetDbContext.Categories
+            .Include(c => c.Users)
+            .Where(c => c.Name == name)
+            .FirstOrDefaultAsync();
 
-            return category;
-        }
+        return category;
+    }
 
-        public async Task<Category> GetForDeletionAsync(int categoryId, string userId)
-        {
-            var categories = await GetUserCategories(userId)
-                .Include(c => c.SubCategories)
-                    .ThenInclude(sc => sc.Records)
-                .Include(c => c.Records)
-                .Include(c => c.Users)
-                .Where(c => c.Id == categoryId)
-                .FirstOrDefaultAsync();
+    public async Task<Category> GetForDeletionAsync(int categoryId, string userId)
+    {
+        var categories = await GetUserCategories(userId)
+            .Include(c => c.SubCategories)
+                .ThenInclude(sc => sc.Records)
+            .Include(c => c.Records)
+            .Include(c => c.Users)
+            .Where(c => c.Id == categoryId)
+            .FirstOrDefaultAsync();
 
-            return categories;
-        }
+        return categories;
+    }
 
-        public async Task<IEnumerable<Category>> GetInitialCategoriesAsync()
-        {
-            var categories = await _budgetDbContext.Categories
-                .Where(c => c.IsInitial)
-                .ToListAsync();
+    public async Task<IEnumerable<Category>> GetInitialCategoriesAsync()
+    {
+        var categories = await _budgetDbContext.Categories
+            .Where(c => c.IsInitial)
+            .ToListAsync();
 
-            return categories;
-        }
+        return categories;
+    }
 
-        public async Task<IEnumerable<CategoryModel>> GetSubcategoriesByParentCategoryIdMappedAsync(int parentCategoryId, string userId)
-        {
-            var subcategories = await GetUserCategories(userId)
-                .Include(c => c.ParentCategory)
-                .Where(c => c.ParentCategoryId.HasValue && c.ParentCategoryId == parentCategoryId)
-                .ProjectToType<CategoryModel>()
-                .ToListAsync();
+    public async Task<IEnumerable<CategoryModel>> GetSubcategoriesByParentCategoryIdMappedAsync(int parentCategoryId, string userId)
+    {
+        var subcategories = await GetUserCategories(userId)
+            .Include(c => c.ParentCategory)
+            .Where(c => c.ParentCategoryId.HasValue && c.ParentCategoryId == parentCategoryId)
+            .ProjectToType<CategoryModel>()
+            .ToListAsync();
 
-            return subcategories;
-        }
+        return subcategories;
+    }
 
-        private IQueryable<Category> GetUserCategories(string userId)
-        {
-            var categories = _budgetDbContext.Categories
-                .Include(c => c.Users)
-                .Where(c => c.Users.Where(u => u.UserId == userId).Any());
+    private IQueryable<Category> GetUserCategories(string userId)
+    {
+        var categories = _budgetDbContext.Categories
+            .Include(c => c.Users)
+            .Where(c => c.Users.Where(u => u.UserId == userId).Any());
 
-            return categories;
-        }
+        return categories;
+    }
 
-        private IQueryable<Category> GetByIdWithSubcategoriesBaseQuery(string userId, int categoryId)
-        {
-            return GetUserCategories(userId)
-                .Include(c => c.SubCategories)
-                .Where(c => c.Id == categoryId);
-        }
+    private IQueryable<Category> GetByIdWithSubcategoriesBaseQuery(string userId, int categoryId)
+    {
+        return GetUserCategories(userId)
+            .Include(c => c.SubCategories)
+            .Where(c => c.Id == categoryId);
     }
 }

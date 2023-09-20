@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Budget.Domain.Models.Charts.CashFlow
+namespace Budget.Domain.Models.Charts.CashFlow;
+
+public class CashFlowChartRequestModel
 {
-    public class CashFlowChartRequestModel
-    {
-        public IEnumerable<int> AccountIds { get; set; } = new List<int>();
+    public List<int> AccountIds { get; set; } = new();
 
-        public DateTime StartDate { get; set; }
+    public DateTime StartDate { get; set; }
 
-        public DateTime EndDate { get; set; }
-    }
+    public DateTime EndDate { get; set; }
 }
