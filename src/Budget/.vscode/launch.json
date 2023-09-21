@@ -15,9 +15,9 @@
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
-      "program": "${workspaceFolder}/Budget.Web/bin/Debug/net7.0/Budget.Web.dll",
+      "program": "${workspaceFolder}/Budget.Api/bin/Debug/net7.0/Budget.Api.dll",
       "args": [],
-      "cwd": "${workspaceFolder}/Budget.Web",
+      "cwd": "${workspaceFolder}/Budget.Api",
       "stopAtEntry": false,
       "serverReadyAction": {
         "action": "openExternally",
@@ -41,7 +41,7 @@
       "request": "launch",
       "preLaunchTask": "docker-run: debug",
       "netCore": {
-        "appProject": "${workspaceFolder}/Budget.Web/Budget.Web.csproj"
+        "appProject": "${workspaceFolder}/Budget.Api/Budget.Api.csproj"
       }
     }
   ]

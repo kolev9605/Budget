@@ -7,7 +7,7 @@
       "type": "process",
       "args": [
         "build",
-        "${workspaceFolder}/Budget.Web/Budget.Web.csproj",
+        "${workspaceFolder}/Budget.Api/Budget.Api.csproj",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
@@ -19,7 +19,7 @@
       "type": "process",
       "args": [
         "publish",
-        "${workspaceFolder}/Budget.Web/Budget.Web.csproj",
+        "${workspaceFolder}/Budget.Api/Budget.Api.csproj",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
@@ -33,7 +33,7 @@
         "watch",
         "run",
         "--project",
-        "${workspaceFolder}/Budget.Web/Budget.Web.csproj"
+        "${workspaceFolder}/Budget.Api/Budget.Api.csproj"
       ],
       "problemMatcher": "$msCompile"
     },
@@ -46,12 +46,12 @@
       "dockerBuild": {
         "tag": "budget:dev",
         "target": "base",
-        "dockerfile": "${workspaceFolder}/Budget.Web/Dockerfile",
+        "dockerfile": "${workspaceFolder}/Budget.Api/Dockerfile",
         "context": "${workspaceFolder}",
         "pull": true
       },
       "netCore": {
-        "appProject": "${workspaceFolder}/Budget.Web/Budget.Web.csproj"
+        "appProject": "${workspaceFolder}/Budget.Api/Budget.Api.csproj"
       }
     },
     {
@@ -62,12 +62,12 @@
       ],
       "dockerBuild": {
         "tag": "budget:latest",
-        "dockerfile": "${workspaceFolder}/Budget.Web/Dockerfile",
+        "dockerfile": "${workspaceFolder}/Budget.Api/Dockerfile",
         "context": "${workspaceFolder}",
         "pull": true
       },
       "netCore": {
-        "appProject": "${workspaceFolder}/Budget.Web/Budget.Web.csproj"
+        "appProject": "${workspaceFolder}/Budget.Api/Budget.Api.csproj"
       }
     },
     {
@@ -78,7 +78,7 @@
       ],
       "dockerRun": {},
       "netCore": {
-        "appProject": "${workspaceFolder}/Budget.Web/Budget.Web.csproj",
+        "appProject": "${workspaceFolder}/Budget.Api/Budget.Api.csproj",
         "enableDebugging": true
       }
     },
@@ -90,7 +90,7 @@
       ],
       "dockerRun": {},
       "netCore": {
-        "appProject": "${workspaceFolder}/Budget.Web/Budget.Web.csproj"
+        "appProject": "${workspaceFolder}/Budget.Api/Budget.Api.csproj"
       }
     }
   ]
