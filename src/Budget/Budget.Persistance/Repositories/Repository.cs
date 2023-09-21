@@ -53,8 +53,8 @@ public class Repository<T> : IRepository<T>
         return removedEntity.Entity;
     }
 
-    public async Task<T> BaseGetByIdAsync(int id)
-        => (await _budgetDbContext.Set<T>().FirstOrDefaultAsync(e => e.Id == id));
+    public async Task<T?> BaseGetByIdAsync(int id)
+        => await _budgetDbContext.Set<T>().FirstOrDefaultAsync(e => e.Id == id);
 
     public async Task<T> UpdateAsync(T entity, bool saveChanges = true)
     {

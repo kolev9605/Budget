@@ -13,9 +13,13 @@ public class PagedListContainer<T> : IPagedListContainer<T>
         Items = new List<T>(items);
     }
 
-    public IEnumerable<T> Items { get; private set; } = new List<T>();
+    public IEnumerable<T> Items { get; init; } = new List<T>();
 
-    public int PageNumber { get; private set; }
+    public int PageNumber { get; init; }
 
-    public int TotalPages { get; private set; }
+    public int TotalPages { get; init; }
+
+    public bool HasPreviousPage => PageNumber > 1;
+
+    public bool HasNextPage => PageNumber < TotalPages;
 }

@@ -75,29 +75,11 @@ public class RecordService : IRecordService
         return records;
     }
 
-    public async Task<IPagedListContainer<RecordsGroupModel>> GetAllPaginatedAsync(PaginatedRequestModel requestModel, string userId)
+    public async Task<IPagedListContainer<RecordModel>> GetAllPaginatedAsync(PaginatedRequestModel requestModel, string userId)
     {
         var paginated = await _recordRepository.GetAllPaginatedAsync(userId, requestModel);
 
-        //var paginatedRecords = await _recordRepository.GetAllPaginatedAsync<RecordModel>(userId, requestModel);
-
-        //// The RecordDate is converted to local time before the grouping to produce groups based on Local time
-        //paginatedRecords.Items.ForEach(r => r.RecordDate = r.RecordDate.ToLocalTime());
-
-        var recordsGroupedByDate = paginated.Items
-            .GroupBy(r => r.RecordDate.Date)
-            .ToDictionary(r => r.Key, r => r.ToList())
-            .OrderByDescending(r => r.Key)
-            .Select(r => new RecordsGroupModel()
-            {
-                Date = r.Key,
-                Sum = r.Value.Sum(r => r.Amount),
-                Records = r.Value
-            });
-
-        return null;
-
-        //return paginatedRecordModels;
+        return paginated;
     }
 
     public async Task<RecordModel> CreateAsync(CreateRecordModel createRecordModel, string userId)

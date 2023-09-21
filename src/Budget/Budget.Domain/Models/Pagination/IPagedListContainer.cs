@@ -10,7 +10,7 @@ public interface IPagedListContainer<T>
 
     int TotalPages { get; }
 
-    bool HasPreviousPage => PageNumber > 1;
+    bool HasPreviousPage { get; }
 
-    public bool HasNextPage => PageNumber < TotalPages;
+    public bool HasNextPage { get; }
 }

@@ -8,7 +8,7 @@ public interface IRepository<T>
 {
     Task<IEnumerable<T>> BaseGetAllAsync();
 
-    Task<T> BaseGetByIdAsync(int id);
+    Task<T?> BaseGetByIdAsync(int id);
 
     Task<T> CreateAsync(T entity, bool saveChanges = true);
 

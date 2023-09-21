@@ -20,7 +20,7 @@ namespace Budget.Domain.Interfaces.Services
 
         Task<IEnumerable<RecordsExportModel>> GetAllForExportAsync(string userId);
 
-        Task<IPagedListContainer<RecordsGroupModel>> GetAllPaginatedAsync(PaginatedRequestModel requestModel, string userId);
+        Task<IPagedListContainer<RecordModel>> GetAllPaginatedAsync(PaginatedRequestModel requestModel, string userId);
 
         Task<RecordModel> CreateAsync(CreateRecordModel createRecordModel, string userId);
 

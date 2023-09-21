@@ -6,6 +6,7 @@ import { PaginatedRequestModel } from '../shared/models/pagination/paginated-req
 import { PaginationModel } from '../shared/models/pagination/pagination.model';
 import { RecordsGroupModel } from '../shared/models/records/records-group.model';
 import { RecordService } from '../shared/services/record.service';
+import { RecordModel } from '../shared/models/records/record.model';
 
 @Component({
   selector: 'app-records',
@@ -16,7 +17,7 @@ export class RecordsComponent implements OnInit {
   isLoading: boolean = false;
   recordGroups: RecordsGroupModel[] = [];
   recordsRequestSubject: Subject<PaginatedRequestModel> = new Subject();
-  recordsObservable: Observable<PaginationModel<RecordsGroupModel>> = new Observable();
+  recordsObservable: Observable<PaginationModel<RecordModel>> = new Observable();
   pageNumber: number = 1;
   hasNextPage: boolean;
 
@@ -34,13 +35,30 @@ export class RecordsComponent implements OnInit {
     );
 
     this.recordsObservable.subscribe({
-      next: (response: PaginationModel<RecordsGroupModel>) => {
-        let existingGroup = this.recordGroups.find((g) => g.date === response.items[0].date);
-        if (existingGroup) {
-          existingGroup.records = [...existingGroup.records, ...response.items[0].records];
-        } else {
-          this.recordGroups = [...this.recordGroups, ...response.items];
-        }
+      next: (response: PaginationModel<RecordModel>) => {
+        const groupedData = response.items.reduce((groups, item) => {
+          const date = new Date(item.recordDate).toDateString();
+
+          if (!groups.has(date)) {
+            groups.set(date, []);
+          }
+
+          groups.get(date)?.push(item);
+
+          return groups;
+        }, new Map<string, RecordModel[]>());
+
+        // Convert the Map to an array of grouped objects
+        const result = Array.from(groupedData, ([date, items]) => (new RecordsGroupModel(new Date(date), items.reduce((sum, current) => sum + current.amount, 0), items)));
+
+        result.forEach(group => {
+          let existingGroup = this.recordGroups.find((g) => g.date.getTime() === group.date.getTime());
+          if (existingGroup) {
+            existingGroup.records = [...existingGroup.records, ...group.records];
+          } else {
+            this.recordGroups = [...this.recordGroups, group];
+          }
+        });
 
         this.pageNumber = response.pageNumber;
         this.hasNextPage = response.hasNextPage;
