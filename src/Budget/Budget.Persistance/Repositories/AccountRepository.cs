@@ -31,7 +31,7 @@ public class AccountRepository : Repository<Account>, IAccountRepository
             .ToListAsync();
     }
 
-    public async Task<Account> GetByIdWithCurrencyAsync(int accountId, string userId)
+    public async Task<Account?> GetByIdWithCurrencyAsync(int accountId, string userId)
     {
         var account = await GetByIdWithCurrencyBaseQuery(userId, accountId)
             .FirstOrDefaultAsync();
@@ -39,7 +39,7 @@ public class AccountRepository : Repository<Account>, IAccountRepository
         return account;
     }
 
-    public async Task<AccountModel> GetAccountModelByIdWithCurrencyAsync(int accountId, string userId)
+    public async Task<AccountModel?> GetAccountModelByIdWithCurrencyAsync(int accountId, string userId)
     {
         var account = await GetByIdWithCurrencyBaseQuery(userId, accountId)
             .ProjectToType<AccountModel>()
@@ -48,7 +48,7 @@ public class AccountRepository : Repository<Account>, IAccountRepository
         return account;
     }
 
-    public async Task<Account> GetByNameAsync(string userId, string accountName)
+    public async Task<Account?> GetByNameAsync(string userId, string accountName)
     {
         var account = await _budgetDbContext.Accounts
             .Where(a => a.UserId == userId)

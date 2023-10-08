@@ -41,7 +41,7 @@ public class CategoryRepository : Repository<Category>, ICategoryRepository
         return categories;
     }
 
-    public async Task<Category> GetByIdWithSubcategoriesAsync(int categoryId, string userId)
+    public async Task<Category?> GetByIdWithSubcategoriesAsync(int categoryId, string userId)
     {
         var category = await GetByIdWithSubcategoriesBaseQuery(userId, categoryId)
             .FirstOrDefaultAsync();
@@ -49,7 +49,7 @@ public class CategoryRepository : Repository<Category>, ICategoryRepository
         return category;
     }
 
-    public async Task<CategoryModel> GetByIdWithSubcategoriesMappedAsync(int categoryId, string userId)
+    public async Task<CategoryModel?> GetByIdWithSubcategoriesMappedAsync(int categoryId, string userId)
     {
         var category = await GetByIdWithSubcategoriesBaseQuery(userId, categoryId)
             .ProjectToType<CategoryModel>()
@@ -58,7 +58,7 @@ public class CategoryRepository : Repository<Category>, ICategoryRepository
         return category;
     }
 
-    public async Task<Category> GetByNameWithUsersAsync(string name)
+    public async Task<Category?> GetByNameWithUsersAsync(string name)
     {
         var category = await _budgetDbContext.Categories
             .Include(c => c.Users)
@@ -68,7 +68,7 @@ public class CategoryRepository : Repository<Category>, ICategoryRepository
         return category;
     }
 
-    public async Task<Category> GetForDeletionAsync(int categoryId, string userId)
+    public async Task<Category?> GetForDeletionAsync(int categoryId, string userId)
     {
         var categories = await GetUserCategories(userId)
             .Include(c => c.SubCategories)

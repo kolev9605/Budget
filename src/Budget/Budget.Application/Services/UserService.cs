@@ -79,13 +79,13 @@ namespace Budget.Application.Services
             {
                 foreach (var role in allRoles)
                 {
-                    if (await _userManager.IsInRoleAsync(user, role.Name))
+                    if (await _userManager.IsInRoleAsync(user, role.Name!))
                     {
-                        await _userManager.RemoveFromRoleAsync(user, role.Name);
+                        await _userManager.RemoveFromRoleAsync(user, role.Name!);
                     }
                 }
 
-                var result = await _userManager.AddToRoleAsync(user, newRole.Name);
+                var result = await _userManager.AddToRoleAsync(user, newRole.Name!);
                 return result.Succeeded;
             }
 

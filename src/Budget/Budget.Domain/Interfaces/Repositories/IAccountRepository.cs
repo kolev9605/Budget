@@ -11,9 +11,9 @@ public interface IAccountRepository : IRepository<Account>
 
     Task<IEnumerable<AccountModel>> GetAllAccountModelsByUserIdAsync(string userId);
 
-    Task<Account> GetByIdWithCurrencyAsync(int accountId, string userId);
+    Task<Account?> GetByIdWithCurrencyAsync(int accountId, string userId);
 
-    Task<AccountModel> GetAccountModelByIdWithCurrencyAsync(int accountId, string userId);
+    Task<AccountModel?> GetAccountModelByIdWithCurrencyAsync(int accountId, string userId);
 
-    Task<Account> GetByNameAsync(string userId, string accountName);
+    Task<Account?> GetByNameAsync(string userId, string accountName);
 }
