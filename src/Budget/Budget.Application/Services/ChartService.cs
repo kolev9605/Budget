@@ -1,8 +1,7 @@
-﻿using Budget.Application.Interfaces;
-using Budget.Application.Interfaces.Services;
-using Budget.Application.Models.Charts.CashFlow;
-using Budget.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Budget.Domain.Entities;
+using Budget.Domain.Interfaces.Repositories;
+using Budget.Domain.Interfaces.Services;
+using Budget.Domain.Models.Charts.CashFlow;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,23 +11,17 @@ namespace Budget.Application.Services
 {
     public class ChartService : IChartService
     {
-        private readonly IBudgetDbContext _budgetDbContext;
+        private readonly IRecordRepository _recordRepository;
 
         public ChartService(
-            IBudgetDbContext budgetDbContext)
+            IRecordRepository recordRepository)
         {
-            _budgetDbContext = budgetDbContext;
+            _recordRepository = recordRepository;
         }
 
         public async Task<CashFlowChartModel> GetCashFlowChartDataAsync(CashFlowChartRequestModel cashFlowChartRequestModel, string userId)
         {
-            var records = await _budgetDbContext.Records
-                .Include(r => r.Account)
-                .Where(r => r.Account.UserId == userId)
-                .Where(r => r.RecordDate >= cashFlowChartRequestModel.StartDate && r.RecordDate <= cashFlowChartRequestModel.EndDate)
-                .Where(r => cashFlowChartRequestModel.AccountIds.Contains(r.AccountId))
-                .OrderBy(r => r.RecordDate)
-                .ToListAsync();
+            var records = await _recordRepository.GetAllInRangeAndAccountsAsync(userId, cashFlowChartRequestModel.StartDate, cashFlowChartRequestModel.EndDate, cashFlowChartRequestModel.AccountIds);
 
             if (!records.Any())
             {

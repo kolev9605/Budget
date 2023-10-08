@@ -1,32 +1,24 @@
-﻿using Budget.Application.Interfaces;
-using Budget.Application.Interfaces.Services;
-using Budget.Application.Models.Statistics;
-using Budget.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Budget.Domain.Entities;
+using Budget.Domain.Interfaces.Repositories;
+using Budget.Domain.Interfaces.Services;
+using Budget.Domain.Models.Statistics;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Budget.Infrastructure.Services
+namespace Budget.Application.Services
 {
     public class StatisticsService : IStatisticsService
     {
-        private readonly IBudgetDbContext _budgetDbContext;
+        private readonly IRecordRepository _recordRepository;
 
-        public StatisticsService(IBudgetDbContext budgetDbContext)
+        public StatisticsService(IRecordRepository recordRepository)
         {
-            _budgetDbContext = budgetDbContext;
+            _recordRepository = recordRepository;
         }
 
         public async Task<StatisticsResultModel> GetStatisticsByDateAsync(StatisticsRequestModel statisticsRequestModel, string userId)
         {
-            var recordsInRange = await _budgetDbContext.Records
-                .Include(r => r.Account)
-                .Where(r => r.Account.UserId == userId)
-                .Where(r => r.RecordDate >= statisticsRequestModel.StartDate && r.RecordDate <= statisticsRequestModel.EndDate)
-                .Where(r => statisticsRequestModel.AccountIds.Contains(r.AccountId))
-                .OrderBy(r => r.RecordDate)
-                .AsNoTracking()
-                .ToListAsync();
+            var recordsInRange = await _recordRepository.GetAllInRangeAndAccountsAsync(userId, statisticsRequestModel.StartDate, statisticsRequestModel.EndDate, statisticsRequestModel.AccountIds);
 
             var income = recordsInRange
                 .Where(r => r.Amount > 0)

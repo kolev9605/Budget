@@ -1,7 +1,6 @@
-﻿using Budget.Application.Interfaces.Services;
-using Budget.Application.Mappings;
+﻿using Budget.Application.Mappings;
 using Budget.Application.Services;
-using Budget.Infrastructure.Services;
+using Budget.Domain.Interfaces.Services;
 using Mapster;
 using MapsterMapper;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,7 +21,6 @@ namespace Budget.Application
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddScoped<ICacheManager, CacheManager>();
-            services.AddScoped<IPaginationManager, PaginationManager>();
             services.AddScoped<IRecordService, RecordService>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ICurrencyService, CurrencyService>();

@@ -42,9 +42,9 @@ export class RecordService {
 
   getAllPaginated(
     paginatedRequestModel: PaginatedRequestModel,
-  ): Observable<PaginationModel<RecordsGroupModel>> {
+  ): Observable<PaginationModel<RecordModel>> {
     return this.http
-      .get<PaginationModel<RecordsGroupModel>>(
+      .get<PaginationModel<RecordModel>>(
         `${environment.apiUrl}${this.controller}/GetAllPaginated`,
         {
           params: {

@@ -1,7 +1,6 @@
-﻿namespace Budget.Domain.Entities.Base
+﻿namespace Budget.Domain.Entities.Base;
+
+public interface IBaseEntity
 {
-    public interface IBaseEntity
-    {
-        public int Id { get; set; }
-    }
+    public int Id { get; set; }
 }

@@ -1,14 +1,11 @@
-﻿using Budget.Application.Interfaces;
-using Budget.Application.Interfaces.Services;
-using Budget.Application.Models.Accounts;
-using Budget.Application.Specifications;
-using Budget.Application.Specifications.Accounts;
-using Budget.Domain.Constants;
+﻿using Budget.Domain.Constants;
 using Budget.Domain.Entities;
 using Budget.Domain.Exceptions;
 using Budget.Domain.Guards;
+using Budget.Domain.Interfaces.Repositories;
+using Budget.Domain.Interfaces.Services;
+using Budget.Domain.Models.Accounts;
 using Mapster;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,19 +14,18 @@ namespace Budget.Application.Services
 {
     public class AccountService : IAccountService
     {
-        private readonly IBudgetDbContext _budgetDbContext;
+        private readonly IAccountRepository _accountRepository;
+        private readonly IRepository<Currency> _currencyRepository;
 
-        public AccountService(IBudgetDbContext budgetDbContext)
+        public AccountService(IAccountRepository accountRepository, IRepository<Currency> currencyRepository)
         {
-            _budgetDbContext = budgetDbContext;
+            _accountRepository = accountRepository;
+            _currencyRepository = currencyRepository;
         }
 
         public async Task<AccountModel> GetByIdAsync(int accountId, string userId)
         {
-            var account = await _budgetDbContext.Accounts
-                .ApplySpecification(new GetAccountByIdWithCurrencySpecification(accountId, userId))
-                .ProjectToType<AccountModel>()
-                .FirstOrDefaultAsync(a => a.Id == accountId);
+            var account = await _accountRepository.GetAccountModelByIdWithCurrencyAsync(accountId, userId);
 
             if (account == null)
             {
@@ -42,12 +38,7 @@ namespace Budget.Application.Services
 
         public async Task<IEnumerable<AccountModel>> GetAllAccountsAsync(string userId)
         {
-            var accounts = await _budgetDbContext.Accounts
-                .Include(a => a.Currency)
-                .Include(a => a.Records)
-                .Where(a => a.UserId == userId)
-                .ProjectToType<AccountModel>()
-                .ToListAsync();
+            var accounts = await _accountRepository.GetAllAccountModelsByUserIdAsync(userId);
 
             return accounts;
         }
@@ -57,7 +48,7 @@ namespace Budget.Application.Services
             Guard.IsNotNullOrEmpty(createAccountModel.Name, nameof(createAccountModel.Name));
             Guard.ValidateMaxtLength(createAccountModel.Name, nameof(createAccountModel.Name), Validations.Accounts.NameMaxLength);
 
-            var currency = await _budgetDbContext.Currencies.FirstOrDefaultAsync(c => c.Id == createAccountModel.CurrencyId);
+            var currency = await _currencyRepository.BaseGetByIdAsync(createAccountModel.CurrencyId);
             if (currency == null)
             {
                 throw new BudgetValidationException(
@@ -66,11 +57,9 @@ namespace Budget.Application.Services
 
             var account = (createAccountModel, userId).Adapt<Account>();
 
-            var createdAccount = await _budgetDbContext.Accounts.AddAsync(account);
+            var createdAccount = await _accountRepository.CreateAsync(account);
 
-            await _budgetDbContext.SaveChangesAsync();
-
-            return createdAccount.Entity.Adapt<AccountModel>();
+            return createdAccount.Adapt<AccountModel>();
         }
 
         public async Task<AccountModel> UpdateAsync(UpdateAccountModel accountModel, string userId)
@@ -78,12 +67,7 @@ namespace Budget.Application.Services
             Guard.IsNotNullOrEmpty(accountModel.Name, nameof(accountModel.Name));
             Guard.ValidateMaxtLength(accountModel.Name, nameof(accountModel.Name), Validations.Accounts.NameMaxLength);
 
-            var account = await _budgetDbContext.Accounts
-                .Include(a => a.Currency)
-                .Include(a => a.Records)
-                .Where(a => a.UserId == userId)
-                .FirstOrDefaultAsync(a => a.Id == accountModel.Id);
-
+            var account = await _accountRepository.GetByIdWithCurrencyAsync(accountModel.Id, userId);
             if (account == null)
             {
                 throw new BudgetValidationException(
@@ -96,32 +80,26 @@ namespace Budget.Application.Services
                     string.Format(ValidationMessages.Accounts.InvalidAccount, account.Name));
             }
 
-            var currency = await _budgetDbContext.Currencies.FirstOrDefaultAsync(c => c.Id == accountModel.CurrencyId);
+            var currency = await _currencyRepository.BaseGetByIdAsync(accountModel.CurrencyId);
             if (currency == null)
             {
                 throw new BudgetValidationException(
                     string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(currency)));
             }
 
+            // TODO: Mapster
             account.CurrencyId = currency.Id;
             account.Name = accountModel.Name;
             account.InitialBalance = accountModel.InitialBalance;
 
-            var updatedAccount = _budgetDbContext.Accounts.Update(account);
+            var updatedAccount = await _accountRepository.UpdateAsync(account);
 
-            await _budgetDbContext.SaveChangesAsync();
-
-            return updatedAccount.Entity.Adapt<AccountModel>();
+            return updatedAccount.Adapt<AccountModel>();
         }
 
         public async Task<AccountModel> DeleteAccountAsync(int accountId, string userId)
         {
-            var account = await _budgetDbContext.Accounts
-                .Include(a => a.Currency)
-                .Include(a => a.Records)
-                .Where(a => a.UserId == userId)
-                .FirstOrDefaultAsync(a => a.Id == accountId);
-
+            var account = await _accountRepository.GetByIdWithCurrencyAsync(accountId, userId);
             if (account == null)
             {
                 throw new BudgetValidationException(
@@ -133,10 +111,9 @@ namespace Budget.Application.Services
                 throw new BudgetValidationException(ValidationMessages.Accounts.ThereAreRecordsInTheAccount);
             }
 
-            var deletedAccount = _budgetDbContext.Accounts.Remove(account);
-            await _budgetDbContext.SaveChangesAsync();
+            await _accountRepository.DeleteAsync(account);
 
-            return deletedAccount.Entity.Adapt<AccountModel>();
+            return account.Adapt<AccountModel>();
         }
     }
 }

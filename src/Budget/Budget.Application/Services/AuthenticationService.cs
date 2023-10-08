@@ -1,9 +1,10 @@
-﻿using Budget.Application.Interfaces;
-using Budget.Application.Interfaces.Services;
-using Budget.Application.Models.Authentication;
-using Budget.Domain.Entities;
+﻿using Budget.Domain.Entities;
 using Budget.Domain.Exceptions;
 using Budget.Domain.Guards;
+using Budget.Domain.Interfaces;
+using Budget.Domain.Interfaces.Repositories;
+using Budget.Domain.Interfaces.Services;
+using Budget.Domain.Models.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -16,17 +17,17 @@ namespace Budget.Application.Services
     public class AuthenticationService : IAuthenticationService
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IBudgetDbContext _budgetDbContext;
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
+        private readonly ICategoryRepository _categoryRepository;
 
         public AuthenticationService(
             UserManager<ApplicationUser> userManager,
-            IBudgetDbContext budgetDbContext,
-            IJwtTokenGenerator jwtTokenGenerator)
+            IJwtTokenGenerator jwtTokenGenerator,
+            ICategoryRepository categoryRepository)
         {
             _userManager = userManager;
-            _budgetDbContext = budgetDbContext;
             _jwtTokenGenerator = jwtTokenGenerator;
+            _categoryRepository = categoryRepository;
         }
 
         public async Task<TokenModel> LoginAsync(LoginModel loginModel)
@@ -71,10 +72,7 @@ namespace Budget.Application.Services
                 throw new BudgetAuthenticationException(UserExists, registerModel.Username);
             }
 
-            var initialCategories = await _budgetDbContext.Categories
-                .Where(c => c.IsInitial)
-                .ToListAsync();
-
+            var initialCategories = await _categoryRepository.GetInitialCategoriesAsync();
             var userCategories = initialCategories
                 .Select(c => new UserCategory()
                 {

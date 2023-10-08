@@ -1,12 +1,11 @@
-﻿using Budget.Application.Interfaces;
+﻿using Budget.Domain.Interfaces;
 using System;
 
-namespace Budget.Infrastructure
-{
-    public class DateTimeProvider : IDateTimeProvider
-    {
-        public DateTime UtcNow => DateTime.UtcNow;
+namespace Budget.Infrastructure;
 
-        public DateTime UtcToday => DateTime.UtcNow.Date;
-    }
+public class DateTimeProvider : IDateTimeProvider
+{
+    public DateTime UtcNow => DateTime.UtcNow;
+
+    public DateTime UtcToday => DateTime.UtcNow.Date;
 }

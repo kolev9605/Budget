@@ -1,29 +1,29 @@
-﻿using Budget.Application.Interfaces;
-using Budget.Application.Interfaces.Services;
-using Budget.Application.Models.Currencies;
+﻿using Budget.Domain.Entities;
+using Budget.Domain.Interfaces.Repositories;
+using Budget.Domain.Interfaces.Services;
+using Budget.Domain.Models.Currencies;
 using Mapster;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Budget.Application.Services
 {
     public class CurrencyService : ICurrencyService
     {
-        private readonly IBudgetDbContext _budgetDbContext;
+        private readonly IRepository<Currency> _currencyRepository;
 
-        public CurrencyService(IBudgetDbContext dbContext)
+        public CurrencyService(IRepository<Currency> currencyRepository)
         {
-            _budgetDbContext = dbContext;
+            _currencyRepository = currencyRepository;
         }
 
         public async Task<IEnumerable<CurrencyModel>> GetAllAsync()
         {
-            var currencies = await _budgetDbContext.Currencies
-                .ProjectToType<CurrencyModel>()
-                .ToListAsync();
-                
-            return currencies;
+            var currencies = await _currencyRepository.BaseGetAllAsync();
+
+            return currencies.Adapt<IEnumerable<CurrencyModel>>();
+
         }
     }
 }

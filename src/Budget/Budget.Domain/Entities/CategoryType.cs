@@ -1,10 +1,9 @@
-﻿namespace Budget.Domain.Entities
+﻿namespace Budget.Domain.Entities;
+
+public enum CategoryType
 {
-    public enum CategoryType
-    {
-        Need = 0,
-        Want = 1,
-        Income = 2,
-        Transfer = 3,
-    }
+    Need = 0,
+    Want = 1,
+    Income = 2,
+    Transfer = 3,
 }

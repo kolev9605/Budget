@@ -2,24 +2,23 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Budget.Persistance.Configurations
+namespace Budget.Persistance.Configurations;
+
+public class CategoryConfiguration : IEntityTypeConfiguration<Category>
 {
-    public class CategoryConfiguration : IEntityTypeConfiguration<Category>
+    public void Configure(EntityTypeBuilder<Category> builder)
     {
-        public void Configure(EntityTypeBuilder<Category> builder)
-        {
-            builder.Property(c => c.Name)
-                .HasMaxLength(50)
-                .IsUnicode(true)
-                .IsRequired();
+        builder.Property(c => c.Name)
+            .HasMaxLength(50)
+            .IsUnicode(true)
+            .IsRequired();
 
-            builder.HasMany(c => c.Records)
-                .WithOne(r => r.Category)
-                .HasForeignKey(r => r.CategoryId);
+        builder.HasMany(c => c.Records)
+            .WithOne(r => r.Category)
+            .HasForeignKey(r => r.CategoryId);
 
-            builder.HasMany(pc => pc.SubCategories)
-                .WithOne(sc => sc.ParentCategory)
-                .HasForeignKey(sc => sc.ParentCategoryId);
-        }
+        builder.HasMany(pc => pc.SubCategories)
+            .WithOne(sc => sc.ParentCategory)
+            .HasForeignKey(sc => sc.ParentCategoryId);
     }
 }

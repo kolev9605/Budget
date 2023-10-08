@@ -1,9 +1,8 @@
-﻿namespace Budget.Domain.Entities
+﻿namespace Budget.Domain.Entities;
+
+public enum RecordType
 {
-    public enum RecordType
-    {
-        Income = 0,
-        Expense = 1,
-        Transfer = 2,
-    }
+    Income = 0,
+    Expense = 1,
+    Transfer = 2,
 }

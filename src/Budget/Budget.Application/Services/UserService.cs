@@ -1,8 +1,8 @@
-﻿using Budget.Application.Interfaces.Services;
-using Budget.Application.Models.Admin;
-using Budget.Application.Models.Users;
-using Budget.Domain.Entities;
+﻿using Budget.Domain.Entities;
 using Budget.Domain.Exceptions;
+using Budget.Domain.Interfaces.Services;
+using Budget.Domain.Models.Admin;
+using Budget.Domain.Models.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -79,13 +79,13 @@ namespace Budget.Application.Services
             {
                 foreach (var role in allRoles)
                 {
-                    if (await _userManager.IsInRoleAsync(user, role.Name))
+                    if (await _userManager.IsInRoleAsync(user, role.Name!))
                     {
-                        await _userManager.RemoveFromRoleAsync(user, role.Name);
+                        await _userManager.RemoveFromRoleAsync(user, role.Name!);
                     }
                 }
 
-                var result = await _userManager.AddToRoleAsync(user, newRole.Name);
+                var result = await _userManager.AddToRoleAsync(user, newRole.Name!);
                 return result.Succeeded;
             }
 

@@ -1,4 +1,4 @@
-﻿using Budget.Application.Interfaces.Services;
+﻿using Budget.Domain.Interfaces.Services;
 using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Threading.Tasks;
@@ -14,7 +14,7 @@ namespace Budget.Application.Services
             _memoryCache = memoryCache;
         }
 
-        public async Task<T> GetOrCreateAsync<T>(string key, int expirationInSeconds, Func<Task<T>> generatorAsync)
+        public async Task<T?> GetOrCreateAsync<T>(string key, int expirationInSeconds, Func<Task<T>> generatorAsync)
         {
             var cacheEntry = await _memoryCache.GetOrCreateAsync<T>(key, async entry =>
             {

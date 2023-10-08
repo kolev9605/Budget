@@ -1,13 +1,12 @@
-﻿namespace Budget.Domain.Entities
+﻿namespace Budget.Domain.Entities;
+
+public class UserCategory
 {
-    public class UserCategory
-    {
-        public int CategoryId { get; set; }
+    public int CategoryId { get; set; }
 
-        public Category Category { get; set; }
+    public Category Category { get; set; } = null!;
 
-        public string UserId { get; set; }
+    public string UserId { get; set; } = null!;
 
-        public ApplicationUser User { get; set; }
-    }
+    public ApplicationUser User { get; set; } = null!;
 }
