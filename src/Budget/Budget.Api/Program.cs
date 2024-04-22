@@ -1,11 +1,8 @@
 using Budget.Application;
 using Budget.Infrastructure;
 using Budget.Persistance;
-using Budget.Persistance.Seeders;
 using Budget.Api;
 using Budget.Api.Helpers;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Hosting;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,8 +28,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-await app.SeedAsync();
 
 // Disable HTTPS redirection so the HTTP port works
 // Temp solution
