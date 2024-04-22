@@ -1,18 +1,26 @@
 using Budget.Application;
 using Budget.Infrastructure;
 using Budget.Persistance;
-using Budget.Persistance.Seeders;
 using Budget.Api;
 using Budget.Api.Helpers;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Hosting;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseSerilog((context, services, configuration) =>
 {
-    configuration.ReadFrom.Configuration(context.Configuration);
+    configuration
+        .MinimumLevel.Information()
+        .MinimumLevel.Override("System", Serilog.Events.LogEventLevel.Warning)
+        .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Information)
+        .MinimumLevel.Override("Microsoft.AspNetCore", Serilog.Events.LogEventLevel.Warning)
+        .MinimumLevel.Override("Microsoft.EntityFrameworkCore.Database.Command",
+            builder.Environment.IsDevelopment() ?
+            Serilog.Events.LogEventLevel.Information :
+            Serilog.Events.LogEventLevel.Warning)
+
+        .WriteTo.Console()
+        .Enrich.FromLogContext();
 });
 
 builder.Services
@@ -31,8 +39,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-await app.SeedAsync();
 
 // Disable HTTPS redirection so the HTTP port works
 // Temp solution

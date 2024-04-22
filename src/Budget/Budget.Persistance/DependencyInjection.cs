@@ -1,5 +1,4 @@
 ﻿using Budget.Domain.Entities;
-using Budget.Domain.Interfaces;
 using Budget.Domain.Interfaces.Repositories;
 using Budget.Persistance.Repositories;
 using Microsoft.AspNetCore.Identity;
@@ -22,8 +21,9 @@ public static class DependencyInjection
 
     private static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)
     {
+
         services.AddDbContext<BudgetDbContext>(options =>
-            options.UseNpgsql(configuration.GetConnectionString("BudgetPostgres")));
+            options.UseNpgsql(configuration.GetConnectionString("Budget")));
 
         // services.AddScoped<IBudgetDbContext>(provider => provider.GetService<BudgetDbContext>());
 
@@ -32,19 +32,18 @@ public static class DependencyInjection
 
     private static IServiceCollection AddIdentity(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddIdentity<ApplicationUser, IdentityRole>()
+        services.AddIdentityCore<ApplicationUser>(options =>
+            {
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredLength = 6;
+                options.Password.RequiredUniqueChars = 1;
+            })
+            .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<BudgetDbContext>()
             .AddDefaultTokenProviders();
-
-        services.Configure<IdentityOptions>(options =>
-        {
-            options.Password.RequireDigit = false;
-            options.Password.RequireLowercase = false;
-            options.Password.RequireNonAlphanumeric = false;
-            options.Password.RequireUppercase = false;
-            options.Password.RequiredLength = 6;
-            options.Password.RequiredUniqueChars = 1;
-        });
 
         return services;
     }
