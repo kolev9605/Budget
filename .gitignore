@@ -351,3 +351,5 @@ MigrationBackup/
 
 
 **/.angular/cache
+
+src/Budget/Budget.Api/appsettings.Production.json
