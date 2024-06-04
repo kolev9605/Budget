@@ -26,7 +26,7 @@ public class ImportController : BaseController
             fileContents = await reader.ReadToEndAsync();
         }
 
-        await _importService.ImportRecordsAsync(fileContents, LoggedInUserId);
+        await _importService.ImportRecordsAsync(fileContents, CurrentUser.Id);
 
         return Ok();
     }
@@ -43,7 +43,7 @@ public class ImportController : BaseController
             fileContents = await reader.ReadToEndAsync();
         }
 
-        var recordsInserted = await _importService.ImportWalletRecordsAsync(fileContents, LoggedInUserId);
+        var recordsInserted = await _importService.ImportWalletRecordsAsync(fileContents, CurrentUser.Id);
 
         return Ok(recordsInserted);
     }

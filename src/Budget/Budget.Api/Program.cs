@@ -33,6 +33,9 @@ var app = builder.Build();
 
 app.MapHealthChecks("/");
 
+app.MapControllers();
+// app.MapDefaultControllerRoute();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -53,7 +56,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseMiddleware<ErrorHandlerMiddleware>();
-
-app.MapDefaultControllerRoute();
 
 app.Run();

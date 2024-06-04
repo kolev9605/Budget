@@ -27,8 +27,8 @@ namespace Budget.Application.Services
 
             if (category == null)
             {
-                throw new BudgetValidationException(
-                    string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(category)));
+                    throw new BudgetValidationException(
+                                string.Format(ValidationMessages.Common.EntityDoesNotExist, nameof(category)));
             }
 
             return category;

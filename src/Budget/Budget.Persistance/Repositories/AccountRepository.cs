@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Mapster;
 using Budget.Domain.Interfaces.Repositories;
 using Budget.Domain.Models.Accounts;
+using Budget.Application.Accounts;
 
 namespace Budget.Persistance.Repositories;
 

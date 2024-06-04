@@ -21,32 +21,32 @@ public class RecordsController : BaseController
     [HttpGet]
     [Route(nameof(GetById))]
     public async Task<IActionResult> GetById(int recordId)
-        => Ok(await _recordService.GetByIdAsync(recordId, LoggedInUserId));
+        => Ok(await _recordService.GetByIdAsync(recordId, CurrentUser.Id));
 
     [HttpGet]
     [Route(nameof(GetByIdForUpdate))]
     public async Task<IActionResult> GetByIdForUpdate(int recordId)
-        => Ok(await _recordService.GetByIdForUpdateAsync(recordId, LoggedInUserId));
+        => Ok(await _recordService.GetByIdForUpdateAsync(recordId, CurrentUser.Id));
 
     [HttpGet]
     [Route(nameof(GetAllPaginated))]
     public async Task<ActionResult<IEnumerable<RecordModel>>> GetAllPaginated([FromQuery] PaginatedRequestModel requestModel)
-         => Ok(await _recordService.GetAllPaginatedAsync(requestModel, LoggedInUserId));
+         => Ok(await _recordService.GetAllPaginatedAsync(requestModel, CurrentUser.Id));
 
     [HttpPost]
     [Route(nameof(Create))]
     public async Task<IActionResult> Create(CreateRecordModel createRecordModel)
-        => Ok(await _recordService.CreateAsync(createRecordModel, LoggedInUserId));
+        => Ok(await _recordService.CreateAsync(createRecordModel, CurrentUser.Id));
 
     [HttpPost]
     [Route(nameof(Update))]
     public async Task<IActionResult> Update(UpdateRecordModel updateRecordModel)
-        => Ok(await _recordService.UpdateAsync(updateRecordModel, LoggedInUserId));
+        => Ok(await _recordService.UpdateAsync(updateRecordModel, CurrentUser.Id));
 
     [HttpDelete]
     [Route(nameof(Delete))]
     public async Task<IActionResult> Delete(int recordId)
-        => Ok(await _recordService.DeleteAsync(recordId, LoggedInUserId));
+        => Ok(await _recordService.DeleteAsync(recordId, CurrentUser.Id));
 
     [HttpGet]
     [Route(nameof(GetRecordTypes))]
@@ -56,5 +56,5 @@ public class RecordsController : BaseController
     [HttpGet]
     [Route(nameof(GetRecordsDateRange))]
     public async Task<IActionResult> GetRecordsDateRange()
-        => Ok(await _recordService.GetRecordsDateRangeAsync(LoggedInUserId));
+        => Ok(await _recordService.GetRecordsDateRangeAsync(CurrentUser.Id));
 }

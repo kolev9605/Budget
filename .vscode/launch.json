@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/src/Budget/Budget.Api/bin/Debug/net7.0/Budget.Api.dll",
+            "program": "${workspaceFolder}/src/Budget/Budget.Api/bin/Debug/net8.0/Budget.Api.dll",
             "args": [],
             "cwd": "${workspaceFolder}/src/Budget/Budget.Api",
             "stopAtEntry": false,

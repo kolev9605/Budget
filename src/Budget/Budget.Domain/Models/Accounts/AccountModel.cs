@@ -1,16 +1,22 @@
-﻿using Budget.Domain.Models.Currencies;
+﻿using Budget.Domain.Entities;
+using Budget.Domain.Models.Currencies;
+using Mapster;
 
 namespace Budget.Domain.Models.Accounts;
 
-public class AccountModel
+public record AccountModel(
+    int Id,
+    string Name,
+    decimal InitialBalance,
+    decimal Balance,
+    CurrencyModel Currency);
+
+public class AccountMappingConfiguration : IRegister
 {
-    public int Id { get; set; }
-
-    public string Name { get; set; } = null!;
-
-    public decimal InitialBalance { get; set; }
-
-    public decimal Balance { get; set; }
-
-    public CurrencyModel Currency { get; set; } = null!;
+    public void Register(TypeAdapterConfig config)
+    {
+        config.NewConfig<Account, AccountModel>()
+            .MaxDepth(2)
+            .Map(dest => dest.Balance, src => src.InitialBalance + src.Records.Select(r => r.Amount).Sum());
+    }
 }

@@ -30,7 +30,7 @@ namespace Budget.Application.Services
             _categoryRepository = categoryRepository;
         }
 
-        public async Task<TokenModel> LoginAsync(LoginModel loginModel)
+        public async Task<AuthenticationResult> LoginAsync(LoginModel loginModel)
         {
             Guard.IsNotNullOrEmpty(loginModel.Username, nameof(loginModel.Username));
             Guard.IsNotNullOrEmpty(loginModel.Password, nameof(loginModel.Password));
@@ -48,19 +48,19 @@ namespace Budget.Application.Services
 
             var userRoles = await _userManager.GetRolesAsync(user);
 
-            (var token, var validTo) = _jwtTokenGenerator.GenerateToken(userRoles, user.Id);
+            (var token, var validTo) = _jwtTokenGenerator.GenerateToken(userRoles, user.Id, user.Email!);
 
-            var tokenModel = new TokenModel()
-            {
-                Token = token,
-                ValidTo = validTo,
-                Roles = userRoles,
-            };
+            // var tokenModel = new AuthenticationResult(default, default, default)
+            // {
+            //     Token = token,
+            //     ValidTo = validTo,
+            //     Roles = userRoles,
+            // };
 
-            return tokenModel;
+            return null;
         }
 
-        public async Task<RegistrationResultModel> RegisterAsync(RegisterModel registerModel)
+        public async Task<RegistrationResult> RegisterAsync(RegisterModel registerModel)
         {
             Guard.IsNotNullOrEmpty(registerModel.Username, nameof(registerModel.Username));
             Guard.IsNotNullOrEmpty(registerModel.Password, nameof(registerModel.Password));
@@ -94,7 +94,7 @@ namespace Budget.Application.Services
             }
 
             await _userManager.AddToRoleAsync(user, Roles.User);
-            return new RegistrationResultModel(user.Id);
+            return new RegistrationResult(user.Id);
         }
     }
 }

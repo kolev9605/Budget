@@ -1,30 +1,33 @@
-﻿using Budget.Domain.Interfaces.Services;
+﻿using Budget.Api.Models.Authentication;
+using Budget.Application.Authentication.Commands;
+using Budget.Application.Authentication.Queries;
 using Budget.Domain.Models.Authentication;
+using Mapster;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace Budget.Api.Controllers;
 
 [AllowAnonymous]
-public class AuthenticationController : BaseController
+public class AuthenticationController(
+    IMediator _mediator) : BaseController
 {
-    private readonly IAuthenticationService _authenticationService;
-    private readonly IImportService _importService;
-
-    public AuthenticationController(IAuthenticationService authenticationService, IImportService importService)
+    [HttpPost]
+    [Route(nameof(Login))]
+    public async Task<IActionResult> Login(LoginRequest loginRequest)
     {
-        _authenticationService = authenticationService;
-        _importService = importService;
+        var result = await _mediator.Send(loginRequest.Adapt<LoginQuery>());
+
+        return MatchResponse<AuthenticationResult, AuthenticationResponse>(result);
     }
 
     [HttpPost]
-    [Route(nameof(Login))]
-    public async Task<IActionResult> Login(LoginModel model)
-        => Ok(await _authenticationService.LoginAsync(model));
-
-    [HttpPost]
     [Route(nameof(Register))]
-    public async Task<IActionResult> Register(RegisterModel model)
-        => Ok(await _authenticationService.RegisterAsync(model));
+    public async Task<IActionResult> Register(RegistrationRequest registrationRequest)
+    {
+        var result = await _mediator.Send(registrationRequest.Adapt<RegistrationCommand>());
+
+        return MatchResponse<RegistrationResult, RegistrationResponse>(result);
+    }
 }

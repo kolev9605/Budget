@@ -1,8 +1,7 @@
 ﻿using Budget.Domain.Interfaces;
+using Budget.Domain.Models.Authentication;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -22,12 +21,13 @@ public class JwtTokenGenerator : IJwtTokenGenerator
         _dateTimeProvider = dateTimeProvider;
     }
 
-    public (string token, DateTime validTo) GenerateToken(IEnumerable<string> userRoles, string userId)
+    public JwtTokenResult GenerateToken(IEnumerable<string> userRoles, string userId, string email)
     {
         var authClaims = new List<Claim>
         {
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim(JwtRegisteredClaimNames.Sub, userId)
+            new Claim(JwtRegisteredClaimNames.Sub, userId),
+            new Claim(JwtRegisteredClaimNames.Email, email),
         };
 
         foreach (var userRole in userRoles)
@@ -45,6 +45,6 @@ public class JwtTokenGenerator : IJwtTokenGenerator
                 SecurityAlgorithms.HmacSha256)
         );
 
-        return (new JwtSecurityTokenHandler().WriteToken(token), token.ValidTo);
+        return new JwtTokenResult(new JwtSecurityTokenHandler().WriteToken(token), token.ValidTo);
     }
 }

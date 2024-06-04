@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Http.Features;
+﻿using Mapster;
+using MapsterMapper;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 using System.Text.Json.Serialization;
 
 namespace Budget.Api;
@@ -8,6 +11,8 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddPresentation(this IServiceCollection services)
     {
+        services.AddMappings();
+
         services.AddMemoryCache();
 
         services.AddControllers().AddJsonOptions(opt =>
@@ -27,6 +32,17 @@ public static class DependencyInjection
         services.AddSwaggerGen();
 
         services.AddHealthChecks();
+
+        return services;
+    }
+
+    public static IServiceCollection AddMappings(this IServiceCollection services)
+    {
+        var config = TypeAdapterConfig.GlobalSettings;
+        config.Scan(Assembly.GetExecutingAssembly());
+
+        services.AddSingleton(config);
+        services.AddScoped<IMapper, ServiceMapper>();
 
         return services;
     }

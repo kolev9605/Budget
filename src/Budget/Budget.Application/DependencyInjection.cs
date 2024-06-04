@@ -1,4 +1,4 @@
-﻿using Budget.Application.Mappings;
+﻿using Budget.Application.Accounts.Queries.GetById;
 using Budget.Application.Services;
 using Budget.Domain.Interfaces.Services;
 using Mapster;
@@ -15,6 +15,8 @@ namespace Budget.Application
             services.AddServices();
             services.AddMappings();
 
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<GetAccountByIdQueryHandler>());
+
             return services;
         }
 
@@ -29,7 +31,7 @@ namespace Budget.Application
             services.AddScoped<IChartService, ChartService>();
             services.AddScoped<IStatisticsService, StatisticsService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
-            services.AddScoped<IUserService, UserService>();
+            // services.AddScoped<IUserService, UserService>();
 
             return services;
         }

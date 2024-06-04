@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Budget.Domain.Models.Authentication;
 
 namespace Budget.Domain.Interfaces;
 
 public interface IJwtTokenGenerator
 {
-    public (string token, DateTime validTo) GenerateToken(IEnumerable<string> userRoles, string userId);
+    public JwtTokenResult GenerateToken(IEnumerable<string> userRoles, string userId, string email);
 }

@@ -20,7 +20,7 @@ public class ExportController : BaseController
     [Route(nameof(ExportRecords))]
     public async Task<IActionResult> ExportRecords()
     {
-        var records = await _recordService.GetAllForExportAsync(LoggedInUserId);
+        var records = await _recordService.GetAllForExportAsync(CurrentUser.Id);
 
         var recordsByteArray = _exportService.SerializeToByteArray(records, new JsonSerializerSettings());
 

@@ -18,5 +18,5 @@ public class ChartController : BaseController
     [HttpPost]
     [Route(nameof(GetCashFlowData))]
     public async Task<IActionResult> GetCashFlowData(CashFlowChartRequestModel cashFlowChartRequestModel)
-        => Ok(await _chartService.GetCashFlowChartDataAsync(cashFlowChartRequestModel, LoggedInUserId));
+        => Ok(await _chartService.GetCashFlowChartDataAsync(cashFlowChartRequestModel, CurrentUser.Id));
 }

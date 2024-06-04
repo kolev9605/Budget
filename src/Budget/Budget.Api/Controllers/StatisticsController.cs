@@ -17,5 +17,5 @@ public class StatisticsController : BaseController
     [HttpPost]
     [Route(nameof(GetStatistics))]
     public async Task<IActionResult> GetStatistics(StatisticsRequestModel statisticsRequestModel)
-        => Ok(await _statisticsService.GetStatisticsByDateAsync(statisticsRequestModel, LoggedInUserId));
+        => Ok(await _statisticsService.GetStatisticsByDateAsync(statisticsRequestModel, CurrentUser.Id));
 }

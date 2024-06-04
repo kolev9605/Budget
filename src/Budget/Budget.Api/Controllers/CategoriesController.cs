@@ -1,40 +1,52 @@
-﻿using Budget.Common;
+﻿using Budget.Api.Models.Accounts;
+using Budget.Api.Models.Categories;
+using Budget.Application.Categories.Queries.GetById;
+using Budget.Common;
 using Budget.Domain.Entities;
 using Budget.Domain.Interfaces.Services;
 using Budget.Domain.Models.Categories;
+using Mapster;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace Budget.Api.Controllers;
 
 public class CategoriesController : BaseController
 {
     private readonly ICategoryService _categoryService;
+    private readonly IMediator _mediator;
 
-    public CategoriesController(ICategoryService categoryService)
+    public CategoriesController(ICategoryService categoryService, IMediator mediator)
     {
         _categoryService = categoryService;
+        _mediator = mediator;
     }
 
     [HttpGet]
     [Route(nameof(GetById))]
-    public async Task<IActionResult> GetById(int categoryId)
-        => Ok(await _categoryService.GetByIdAsync(categoryId, LoggedInUserId));
+    public async Task<IActionResult> GetById([FromQuery] GetCategoryByIdRequest getCategoryByIdRequest)
+    {
+        var result = await _mediator.Send((getCategoryByIdRequest, CurrentUser).Adapt<GetCategoryByIdQuery>());
+
+        return MatchResponse<CategoryModel, CategoryResponse>(result);
+    }
 
     [HttpGet]
     [Route(nameof(GetAll))]
     public async Task<IActionResult> GetAll()
-        => Ok(await _categoryService.GetAllAsync(LoggedInUserId));
+    {
+        return Ok(await _categoryService.GetAllAsync(CurrentUser.Id));
+    }
 
     [HttpGet]
     [Route(nameof(GetAllPrimary))]
     public async Task<IActionResult> GetAllPrimary()
-        => Ok(await _categoryService.GetAllPrimaryAsync(LoggedInUserId));
+        => Ok(await _categoryService.GetAllPrimaryAsync(CurrentUser.Id));
 
     [HttpGet]
     [Route(nameof(GetAllSubcategories))]
     public async Task<IActionResult> GetAllSubcategories(int parentCategoryId)
-        => Ok(await _categoryService.GetAllSubcategoriesByParentCategoryIdAsync(parentCategoryId, LoggedInUserId));
+        => Ok(await _categoryService.GetAllSubcategoriesByParentCategoryIdAsync(parentCategoryId, CurrentUser.Id));
 
     [HttpGet]
     [Route(nameof(GetCategoryTypes))]
@@ -44,15 +56,15 @@ public class CategoriesController : BaseController
     [HttpPost]
     [Route(nameof(Create))]
     public async Task<IActionResult> Create(CreateCategoryModel model)
-        => Ok(await _categoryService.CreateAsync(model, LoggedInUserId));
+        => Ok(await _categoryService.CreateAsync(model, CurrentUser.Id));
 
     [HttpDelete]
     [Route(nameof(Delete))]
     public async Task<IActionResult> Delete(int categoryId)
-        => Ok(await _categoryService.DeleteAsync(categoryId, LoggedInUserId));
+        => Ok(await _categoryService.DeleteAsync(categoryId, CurrentUser.Id));
 
     [HttpPost]
     [Route(nameof(Update))]
     public async Task<IActionResult> Update(UpdateCategoryModel updateCategoryModel)
-        => Ok(await _categoryService.UpdateAsync(updateCategoryModel, LoggedInUserId));
+        => Ok(await _categoryService.UpdateAsync(updateCategoryModel, CurrentUser.Id));
 }
