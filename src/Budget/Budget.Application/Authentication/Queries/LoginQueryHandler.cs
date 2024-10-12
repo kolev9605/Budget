@@ -1,7 +1,6 @@
 using Budget.Domain.Common.Errors;
 using Budget.Domain.Entities;
 using Budget.Domain.Interfaces;
-using Budget.Domain.Interfaces.Repositories;
 using Budget.Domain.Models.Authentication;
 using ErrorOr;
 using MediatR;
@@ -38,6 +37,5 @@ public class LoginQueryHandler(
         var tokenModel = new AuthenticationResult(jwtTokenResult.Token, jwtTokenResult.ValidTo);
 
         return tokenModel;
-
     }
 }
