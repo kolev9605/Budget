@@ -21,11 +21,10 @@ public static class DependencyInjection
 
     private static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)
     {
-
         services.AddDbContext<BudgetDbContext>(options =>
-            options.UseNpgsql(configuration.GetConnectionString("Budget")));
-
-        // services.AddScoped<IBudgetDbContext>(provider => provider.GetService<BudgetDbContext>());
+            options
+                .UseNpgsql(configuration.GetConnectionString("Budget"))
+                .UseSnakeCaseNamingConvention());
 
         return services;
     }

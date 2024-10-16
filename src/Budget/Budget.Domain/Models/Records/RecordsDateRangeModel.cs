@@ -4,13 +4,13 @@ namespace Budget.Domain.Models.Records;
 
 public class RecordsDateRangeModel
 {
-    public RecordsDateRangeModel(DateTime minDate, DateTime maxDate)
+    public RecordsDateRangeModel(DateTimeOffset minDate, DateTimeOffset maxDate)
     {
         MinDate = minDate;
         MaxDate = maxDate;
     }
 
-    public DateTime MinDate { get; set; }
+    public DateTimeOffset MinDate { get; set; }
 
-    public DateTime MaxDate { get; set; }
+    public DateTimeOffset MaxDate { get; set; }
 }

@@ -7,9 +7,9 @@ public class Record : BaseEntity
 {
     public string? Note { get; set; }
 
-    public DateTime DateCreated { get; set; }
+    public DateTimeOffset DateCreated { get; set; }
 
-    public DateTime RecordDate { get; set; }
+    public DateTimeOffset RecordDate { get; set; }
 
     public decimal Amount { get; set; }
 

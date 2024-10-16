@@ -1,4 +1,5 @@
 ﻿using Budget.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,8 +27,17 @@ public class BudgetDbContext : IdentityDbContext<ApplicationUser>
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(BudgetDbContext).Assembly);
 
-        base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<ApplicationUser>().ToTable("asp_net_users");
+        modelBuilder.Entity<IdentityUserToken<string>>().ToTable("asp_net_user_tokens");
+        modelBuilder.Entity<IdentityUserLogin<string>>().ToTable("asp_net_user_logins");
+        modelBuilder.Entity<IdentityUserClaim<string>>().ToTable("asp_net_user_claims");
+        modelBuilder.Entity<IdentityRole>().ToTable("asp_net_roles");
+        modelBuilder.Entity<IdentityUserRole<string>>().ToTable("asp_net_user_roles");
+        modelBuilder.Entity<IdentityRoleClaim<string>>().ToTable("asp_net_role_claims");
+
     }
 }

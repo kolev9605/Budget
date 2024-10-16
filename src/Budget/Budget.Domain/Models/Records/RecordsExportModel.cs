@@ -18,9 +18,9 @@ public class RecordsExportModel
 
     public string Category { get; set; } = null!;
 
-    public DateTime DateCreated { get; set; }
+    public DateTimeOffset DateCreated { get; set; }
 
-    public DateTime RecordDate { get; set; }
+    public DateTimeOffset RecordDate { get; set; }
 
     public decimal Amount { get; set; }
 
@@ -46,8 +46,8 @@ public class RecordsExportModel
         {
             Note = record.Note,
             RecordType = record.RecordType,
-            DateCreated = record.DateCreated.SetKindUtc(),
-            RecordDate = record.RecordDate.SetKindUtc(),
+            DateCreated = record.DateCreated,
+            RecordDate = record.RecordDate,
             Amount = record.Amount,
         };
     }
