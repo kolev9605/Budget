@@ -6,9 +6,6 @@ using Budget.Domain.Interfaces.Repositories;
 using Budget.Domain.Interfaces.Services;
 using Budget.Domain.Models.Accounts;
 using Mapster;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Budget.Application.Services
 {
@@ -23,7 +20,7 @@ namespace Budget.Application.Services
             _currencyRepository = currencyRepository;
         }
 
-        public async Task<AccountModel> GetByIdAsync(int accountId, string userId)
+        public async Task<AccountModel> GetByIdAsync(Guid accountId, string userId)
         {
             var account = await _accountRepository.GetAccountModelByIdWithCurrencyAsync(accountId, userId);
 
@@ -97,7 +94,7 @@ namespace Budget.Application.Services
             return updatedAccount.Adapt<AccountModel>();
         }
 
-        public async Task<AccountModel> DeleteAccountAsync(int accountId, string userId)
+        public async Task<AccountModel> DeleteAccountAsync(Guid accountId, string userId)
         {
             var account = await _accountRepository.GetByIdWithCurrencyAsync(accountId, userId);
             if (account == null)

@@ -5,7 +5,7 @@ namespace Budget.Domain.Models.Charts.CashFlow;
 
 public class CashFlowChartRequestModel
 {
-    public List<int> AccountIds { get; set; } = new();
+    public List<Guid> AccountIds { get; set; } = new();
 
     public DateTime StartDate { get; set; }
 

@@ -7,7 +7,7 @@ using MediatR;
 namespace Budget.Application.Categories.Queries.GetById;
 
 public record GetCategoryByIdQuery(
-    int CategoryId,
+    Guid CategoryId,
     string UserId
 ) : IRequest<ErrorOr<CategoryModel>>;
 

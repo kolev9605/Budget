@@ -3,9 +3,9 @@
 namespace Budget.Domain.Models.Categories;
 
 public record CategoryModel(
-    int Id,
+    Guid Id,
     string Name,
     CategoryType CategoryType,
-    int? ParentCategoryId,
+    Guid? ParentCategoryId,
     bool IsInitial,
     IEnumerable<CategoryModel> SubCategories);

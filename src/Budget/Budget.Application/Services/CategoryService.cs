@@ -20,7 +20,7 @@ namespace Budget.Application.Services
             _categoryRepository = categoryRepository;
         }
 
-        public async Task<CategoryModel> GetByIdAsync(int categoryId, string userId)
+        public async Task<CategoryModel> GetByIdAsync(Guid categoryId, string userId)
         {
             var category = await _categoryRepository
                 .GetByIdWithSubcategoriesMappedAsync(categoryId, userId);
@@ -48,7 +48,7 @@ namespace Budget.Application.Services
             return categories;
         }
 
-        public async Task<IEnumerable<CategoryModel>> GetAllSubcategoriesByParentCategoryIdAsync(int parentCategoryId, string userId)
+        public async Task<IEnumerable<CategoryModel>> GetAllSubcategoriesByParentCategoryIdAsync(Guid parentCategoryId, string userId)
         {
             var categories = await _categoryRepository.GetSubcategoriesByParentCategoryIdMappedAsync(parentCategoryId, userId);
 
@@ -94,7 +94,7 @@ namespace Budget.Application.Services
             }
         }
 
-        public async Task<CategoryModel> DeleteAsync(int categoryId, string userId)
+        public async Task<CategoryModel> DeleteAsync(Guid categoryId, string userId)
         {
             var existingCategory = await _categoryRepository.GetForDeletionAsync(categoryId, userId);
 

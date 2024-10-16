@@ -55,12 +55,13 @@ namespace Budget.Persistance.Migrations
                 name: "categories",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
                     name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     category_type = table.Column<int>(type: "integer", nullable: false),
-                    parent_category_id = table.Column<int>(type: "integer", nullable: true),
-                    is_initial = table.Column<bool>(type: "boolean", nullable: false)
+                    parent_category_id = table.Column<Guid>(type: "uuid", nullable: true),
+                    is_initial = table.Column<bool>(type: "boolean", nullable: false),
+                    created_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    updated_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -76,8 +77,7 @@ namespace Budget.Persistance.Migrations
                 name: "currencies",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
                     name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     abbreviation = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false)
                 },
@@ -90,8 +90,7 @@ namespace Budget.Persistance.Migrations
                 name: "payment_types",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
                     name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
@@ -209,7 +208,7 @@ namespace Budget.Persistance.Migrations
                 name: "user_categories",
                 columns: table => new
                 {
-                    category_id = table.Column<int>(type: "integer", nullable: false),
+                    category_id = table.Column<Guid>(type: "uuid", nullable: false),
                     user_id = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
@@ -233,12 +232,13 @@ namespace Budget.Persistance.Migrations
                 name: "accounts",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
                     name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     user_id = table.Column<string>(type: "text", nullable: false),
-                    currency_id = table.Column<int>(type: "integer", nullable: false),
-                    initial_balance = table.Column<decimal>(type: "numeric", nullable: false)
+                    currency_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    initial_balance = table.Column<decimal>(type: "numeric", nullable: false),
+                    created_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    updated_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -261,17 +261,18 @@ namespace Budget.Persistance.Migrations
                 name: "records",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
                     note = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     date_created = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     record_date = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     amount = table.Column<decimal>(type: "numeric", nullable: false),
-                    account_id = table.Column<int>(type: "integer", nullable: false),
-                    from_account_id = table.Column<int>(type: "integer", nullable: true),
-                    payment_type_id = table.Column<int>(type: "integer", nullable: false),
-                    category_id = table.Column<int>(type: "integer", nullable: false),
-                    record_type = table.Column<int>(type: "integer", nullable: false)
+                    account_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    from_account_id = table.Column<Guid>(type: "uuid", nullable: true),
+                    payment_type_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    category_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    record_type = table.Column<int>(type: "integer", nullable: false),
+                    created_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    updated_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {

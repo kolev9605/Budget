@@ -41,7 +41,7 @@ public class CategoryRepository : Repository<Category>, ICategoryRepository
         return categories;
     }
 
-    public async Task<Category?> GetByIdWithSubcategoriesAsync(int categoryId, string userId)
+    public async Task<Category?> GetByIdWithSubcategoriesAsync(Guid categoryId, string userId)
     {
         var category = await GetByIdWithSubcategoriesBaseQuery(userId, categoryId)
             .FirstOrDefaultAsync();
@@ -49,7 +49,7 @@ public class CategoryRepository : Repository<Category>, ICategoryRepository
         return category;
     }
 
-    public async Task<CategoryModel?> GetByIdWithSubcategoriesMappedAsync(int categoryId, string userId)
+    public async Task<CategoryModel?> GetByIdWithSubcategoriesMappedAsync(Guid categoryId, string userId)
     {
         var category = await GetByIdWithSubcategoriesBaseQuery(userId, categoryId)
             .ProjectToType<CategoryModel>()
@@ -68,7 +68,7 @@ public class CategoryRepository : Repository<Category>, ICategoryRepository
         return category;
     }
 
-    public async Task<Category?> GetForDeletionAsync(int categoryId, string userId)
+    public async Task<Category?> GetForDeletionAsync(Guid categoryId, string userId)
     {
         var categories = await GetUserCategories(userId)
             .Include(c => c.SubCategories)
@@ -90,7 +90,7 @@ public class CategoryRepository : Repository<Category>, ICategoryRepository
         return categories;
     }
 
-    public async Task<IEnumerable<CategoryModel>> GetSubcategoriesByParentCategoryIdMappedAsync(int parentCategoryId, string userId)
+    public async Task<IEnumerable<CategoryModel>> GetSubcategoriesByParentCategoryIdMappedAsync(Guid parentCategoryId, string userId)
     {
         var subcategories = await GetUserCategories(userId)
             .Include(c => c.ParentCategory)
@@ -110,7 +110,7 @@ public class CategoryRepository : Repository<Category>, ICategoryRepository
         return categories;
     }
 
-    private IQueryable<Category> GetByIdWithSubcategoriesBaseQuery(string userId, int categoryId)
+    private IQueryable<Category> GetByIdWithSubcategoriesBaseQuery(string userId, Guid categoryId)
     {
         return GetUserCategories(userId)
             .Include(c => c.SubCategories)

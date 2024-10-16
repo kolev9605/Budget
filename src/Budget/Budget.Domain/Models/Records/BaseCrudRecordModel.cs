@@ -9,15 +9,15 @@ public abstract class BaseCrudRecordModel
 
     public decimal Amount { get; set; }
 
-    public int AccountId { get; set; }
+    public Guid AccountId { get; set; }
 
-    public int CategoryId { get; set; }
+    public Guid CategoryId { get; set; }
 
-    public int PaymentTypeId { get; set; }
+    public Guid PaymentTypeId { get; set; }
 
     public RecordType RecordType { get; set; }
 
     public DateTime RecordDate { get; set; }
 
-    public int? FromAccountId { get; set; }
+    public Guid? FromAccountId { get; set; }
 }

@@ -1,9 +1,8 @@
 ﻿using Budget.Domain.Entities.Base;
-using System.Collections.Generic;
 
 namespace Budget.Domain.Entities;
 
-public class Account : BaseEntity
+public class Account : BaseEntity, ICreatable, IUpdatable
 {
     public string Name { get; set; } = null!;
 
@@ -15,9 +14,13 @@ public class Account : BaseEntity
 
     public ICollection<Record> TransferRecords { get; set; } = new List<Record>();
 
-    public int CurrencyId { get; set; }
+    public Guid CurrencyId { get; set; }
 
     public Currency Currency { get; set; } = null!;
 
     public decimal InitialBalance { get; set; }
+
+    public DateTimeOffset CreatedAt { get; set; }
+
+    public DateTimeOffset UpdatedAt { get; set; }
 }

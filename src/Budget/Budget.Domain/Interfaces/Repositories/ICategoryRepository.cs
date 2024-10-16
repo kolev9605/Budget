@@ -11,15 +11,15 @@ public interface ICategoryRepository : IRepository<Category>
 
     Task<IEnumerable<CategoryModel>> GetAllWithSubcategoriesCategoryModelsAsync(string userId);
 
-    Task<Category?> GetByIdWithSubcategoriesAsync(int categoryId, string userId);
+    Task<Category?> GetByIdWithSubcategoriesAsync(Guid categoryId, string userId);
 
-    Task<CategoryModel?> GetByIdWithSubcategoriesMappedAsync(int categoryId, string userId);
+    Task<CategoryModel?> GetByIdWithSubcategoriesMappedAsync(Guid categoryId, string userId);
 
     Task<Category?> GetByNameWithUsersAsync(string name);
 
-    Task<Category?> GetForDeletionAsync(int categoryId, string userId);
+    Task<Category?> GetForDeletionAsync(Guid categoryId, string userId);
 
     Task<IEnumerable<Category>> GetInitialCategoriesAsync();
 
-    Task<IEnumerable<CategoryModel>> GetSubcategoriesByParentCategoryIdMappedAsync(int parentCategoryId, string userId);
+    Task<IEnumerable<CategoryModel>> GetSubcategoriesByParentCategoryIdMappedAsync(Guid parentCategoryId, string userId);
 }

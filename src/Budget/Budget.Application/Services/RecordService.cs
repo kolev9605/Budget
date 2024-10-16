@@ -8,10 +8,6 @@ using Budget.Domain.Models.Pagination;
 using Budget.Domain.Models.Records;
 using Mapster;
 using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Budget.Application.Services;
 
@@ -40,7 +36,7 @@ public class RecordService : IRecordService
         _accountRepository = accountRepository;
     }
 
-    public async Task<RecordModel> GetByIdAsync(int recordId, string userId)
+    public async Task<RecordModel> GetByIdAsync(Guid recordId, string userId)
     {
         var record = await _recordRepository.GetRecordByIdMappedAsync(recordId, userId);
 
@@ -53,7 +49,7 @@ public class RecordService : IRecordService
     /// <param name="recordId"></param>
     /// <param name="userId"></param>
     /// <returns></returns>
-    public async Task<RecordModel> GetByIdForUpdateAsync(int recordId, string userId)
+    public async Task<RecordModel> GetByIdForUpdateAsync(Guid recordId, string userId)
     {
         var record = await _recordRepository.GetRecordByIdMappedAsync(recordId, userId);
 
@@ -153,7 +149,7 @@ public class RecordService : IRecordService
         return updatedRecord.Adapt<RecordModel>();
     }
 
-    public async Task<RecordModel> DeleteAsync(int recordId, string userId)
+    public async Task<RecordModel> DeleteAsync(Guid recordId, string userId)
     {
         var record = await _recordRepository.GetRecordByIdAsync(recordId, userId);
 
@@ -253,7 +249,7 @@ public class RecordService : IRecordService
         }
     }
 
-    private async Task ValidateAccount(int accountId, string userId)
+    private async Task ValidateAccount(Guid accountId, string userId)
     {
         var account = await _accountRepository.BaseGetByIdAsync(accountId);
         if (account == null)
@@ -269,7 +265,7 @@ public class RecordService : IRecordService
         }
     }
 
-    private async Task ValidateTransferRecord(int accountId, int? fromAccountId)
+    private async Task ValidateTransferRecord(Guid accountId, Guid? fromAccountId)
     {
         if (!fromAccountId.HasValue)
         {

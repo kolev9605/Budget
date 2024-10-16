@@ -10,7 +10,7 @@ namespace Budget.Application.Accounts.Commands.Create;
 
 public record CreateAccountCommand(
     string Name,
-    int CurrencyId,
+    Guid CurrencyId,
     decimal InitialBalance,
     string UserId
 ) : IRequest<ErrorOr<AccountModel>>;

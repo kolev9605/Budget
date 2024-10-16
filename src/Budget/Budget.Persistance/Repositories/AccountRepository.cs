@@ -1,13 +1,9 @@
 
 using Budget.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Mapster;
 using Budget.Domain.Interfaces.Repositories;
 using Budget.Domain.Models.Accounts;
-using Budget.Application.Accounts;
 
 namespace Budget.Persistance.Repositories;
 
@@ -32,7 +28,7 @@ public class AccountRepository : Repository<Account>, IAccountRepository
             .ToListAsync();
     }
 
-    public async Task<Account?> GetByIdWithCurrencyAsync(int accountId, string userId)
+    public async Task<Account?> GetByIdWithCurrencyAsync(Guid accountId, string userId)
     {
         var account = await GetByIdWithCurrencyBaseQuery(userId, accountId)
             .FirstOrDefaultAsync();
@@ -40,7 +36,7 @@ public class AccountRepository : Repository<Account>, IAccountRepository
         return account;
     }
 
-    public async Task<AccountModel?> GetAccountModelByIdWithCurrencyAsync(int accountId, string userId)
+    public async Task<AccountModel?> GetAccountModelByIdWithCurrencyAsync(Guid accountId, string userId)
     {
         var account = await GetByIdWithCurrencyBaseQuery(userId, accountId)
             .ProjectToType<AccountModel>()
@@ -67,7 +63,7 @@ public class AccountRepository : Repository<Account>, IAccountRepository
             .Where(a => a.UserId == userId);
     }
 
-    private IQueryable<Account> GetByIdWithCurrencyBaseQuery(string userId, int accountId)
+    private IQueryable<Account> GetByIdWithCurrencyBaseQuery(string userId, Guid accountId)
     {
         return _budgetDbContext.Accounts
             .Include(a => a.Currency)

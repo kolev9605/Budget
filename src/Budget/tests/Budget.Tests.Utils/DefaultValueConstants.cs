@@ -19,8 +19,8 @@ public static class DefaultValueConstants
 
     public static class Common
     {
-        public const int Id = 1;
-        public const int InvalidId = 99;
+        public static readonly Guid Id = Guid.NewGuid();
+        public static readonly Guid InvalidId = Guid.NewGuid();
     }
 
     public static class Category
@@ -33,6 +33,6 @@ public static class DefaultValueConstants
         public const int NumberOfAccounts = 1;
         public const decimal DefaultInitialBalance = 20m;
         public const string DefaultName = "account";
-        public const int AccountIdWithRecords = 50;
+        public static readonly Guid AccountIdWithRecords = Guid.NewGuid();
     }
 }

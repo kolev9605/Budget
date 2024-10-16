@@ -1,5 +1,4 @@
 using Budget.Domain.Common.Errors;
-using Budget.Domain.Entities;
 using Budget.Domain.Interfaces.Repositories;
 using Budget.Domain.Models.Accounts;
 using ErrorOr;
@@ -9,7 +8,7 @@ using MediatR;
 namespace Budget.Application.Accounts.Commands.Create;
 
 public record DeleteAccountCommand(
-    int AccountId,
+    Guid AccountId,
     string UserId
 ) : IRequest<ErrorOr<AccountModel>>;
 

@@ -5,7 +5,7 @@ namespace Budget.Tests.Utils;
 
 public static class ModelMockHelper
 {
-    public static CreateRecordModel CreateRecordModel(int? accountId = null)
+    public static CreateRecordModel CreateRecordModel(Guid? accountId = null)
     {
         var model = new CreateRecordModel()
         {

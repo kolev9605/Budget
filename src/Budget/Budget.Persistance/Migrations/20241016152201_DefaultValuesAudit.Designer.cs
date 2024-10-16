@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Budget.Persistance.Migrations
 {
     [DbContext(typeof(BudgetDbContext))]
-    [Migration("20241015213343_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20241016152201_DefaultValuesAudit")]
+    partial class DefaultValuesAudit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,15 +27,19 @@ namespace Budget.Persistance.Migrations
 
             modelBuilder.Entity("Budget.Domain.Entities.Account", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("timezone('utc', now())");
 
-                    b.Property<int>("CurrencyId")
-                        .HasColumnType("integer")
+                    b.Property<Guid>("CurrencyId")
+                        .HasColumnType("uuid")
                         .HasColumnName("currency_id");
 
                     b.Property<decimal>("InitialBalance")
@@ -47,6 +51,12 @@ namespace Budget.Persistance.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)")
                         .HasColumnName("name");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at")
+                        .HasDefaultValueSql("timezone('utc', now())");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -147,16 +157,20 @@ namespace Budget.Persistance.Migrations
 
             modelBuilder.Entity("Budget.Domain.Entities.Category", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CategoryType")
                         .HasColumnType("integer")
                         .HasColumnName("category_type");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("timezone('utc', now())");
 
                     b.Property<bool>("IsInitial")
                         .HasColumnType("boolean")
@@ -169,9 +183,15 @@ namespace Budget.Persistance.Migrations
                         .HasColumnType("character varying(50)")
                         .HasColumnName("name");
 
-                    b.Property<int?>("ParentCategoryId")
-                        .HasColumnType("integer")
+                    b.Property<Guid?>("ParentCategoryId")
+                        .HasColumnType("uuid")
                         .HasColumnName("parent_category_id");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at")
+                        .HasDefaultValueSql("timezone('utc', now())");
 
                     b.HasKey("Id")
                         .HasName("pk_categories");
@@ -184,12 +204,10 @@ namespace Budget.Persistance.Migrations
 
             modelBuilder.Entity("Budget.Domain.Entities.Currency", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Abbreviation")
                         .IsRequired()
@@ -211,12 +229,10 @@ namespace Budget.Persistance.Migrations
 
             modelBuilder.Entity("Budget.Domain.Entities.PaymentType", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -232,31 +248,35 @@ namespace Budget.Persistance.Migrations
 
             modelBuilder.Entity("Budget.Domain.Entities.Record", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AccountId")
-                        .HasColumnType("integer")
+                    b.Property<Guid>("AccountId")
+                        .HasColumnType("uuid")
                         .HasColumnName("account_id");
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("numeric")
                         .HasColumnName("amount");
 
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("integer")
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uuid")
                         .HasColumnName("category_id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("timezone('utc', now())");
 
                     b.Property<DateTimeOffset>("DateCreated")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_created");
 
-                    b.Property<int?>("FromAccountId")
-                        .HasColumnType("integer")
+                    b.Property<Guid?>("FromAccountId")
+                        .HasColumnType("uuid")
                         .HasColumnName("from_account_id");
 
                     b.Property<string>("Note")
@@ -264,8 +284,8 @@ namespace Budget.Persistance.Migrations
                         .HasColumnType("character varying(100)")
                         .HasColumnName("note");
 
-                    b.Property<int>("PaymentTypeId")
-                        .HasColumnType("integer")
+                    b.Property<Guid>("PaymentTypeId")
+                        .HasColumnType("uuid")
                         .HasColumnName("payment_type_id");
 
                     b.Property<DateTimeOffset>("RecordDate")
@@ -275,6 +295,12 @@ namespace Budget.Persistance.Migrations
                     b.Property<int>("RecordType")
                         .HasColumnType("integer")
                         .HasColumnName("record_type");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at")
+                        .HasDefaultValueSql("timezone('utc', now())");
 
                     b.HasKey("Id")
                         .HasName("pk_records");
@@ -300,8 +326,8 @@ namespace Budget.Persistance.Migrations
                         .HasColumnType("text")
                         .HasColumnName("user_id");
 
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("integer")
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uuid")
                         .HasColumnName("category_id");
 
                     b.HasKey("UserId", "CategoryId")

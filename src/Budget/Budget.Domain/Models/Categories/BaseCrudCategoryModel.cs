@@ -8,5 +8,5 @@ public class BaseCrudCategoryModel
 
     public CategoryType CategoryType { get; set; }
 
-    public int? ParentCategoryId { get; set; }
+    public Guid? ParentCategoryId { get; set; }
 }

@@ -1,14 +1,11 @@
 ﻿using Budget.Domain.Models.Pagination;
 using Budget.Domain.Models.Records;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Budget.Domain.Interfaces.Services
 {
     public interface IRecordService
     {
-        Task<RecordModel> GetByIdAsync(int id, string userId);
+        Task<RecordModel> GetByIdAsync(Guid id, string userId);
 
         /// <summary>
         /// Gets the record for update. In case of updating a transfer record, returning the positive among the two records.
@@ -16,7 +13,7 @@ namespace Budget.Domain.Interfaces.Services
         /// <param name="id"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        Task<RecordModel> GetByIdForUpdateAsync(int id, string userId);
+        Task<RecordModel> GetByIdForUpdateAsync(Guid id, string userId);
 
         Task<IEnumerable<RecordsExportModel>> GetAllForExportAsync(string userId);
 
@@ -26,7 +23,7 @@ namespace Budget.Domain.Interfaces.Services
 
         Task<RecordModel> UpdateAsync(UpdateRecordModel updateRecordModel, string userId);
 
-        Task<RecordModel> DeleteAsync(int recordId, string userId);
+        Task<RecordModel> DeleteAsync(Guid recordId, string userId);
 
         Task<RecordsDateRangeModel> GetRecordsDateRangeAsync(string userId);
     }

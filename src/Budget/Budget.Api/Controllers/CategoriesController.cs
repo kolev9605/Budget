@@ -45,7 +45,7 @@ public class CategoriesController : BaseController
 
     [HttpGet]
     [Route(nameof(GetAllSubcategories))]
-    public async Task<IActionResult> GetAllSubcategories(int parentCategoryId)
+    public async Task<IActionResult> GetAllSubcategories(Guid parentCategoryId)
         => Ok(await _categoryService.GetAllSubcategoriesByParentCategoryIdAsync(parentCategoryId, CurrentUser.Id));
 
     [HttpGet]
@@ -60,7 +60,7 @@ public class CategoriesController : BaseController
 
     [HttpDelete]
     [Route(nameof(Delete))]
-    public async Task<IActionResult> Delete(int categoryId)
+    public async Task<IActionResult> Delete(Guid categoryId)
         => Ok(await _categoryService.DeleteAsync(categoryId, CurrentUser.Id));
 
     [HttpPost]

@@ -3,6 +3,7 @@ using System;
 using Budget.Persistance;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Budget.Persistance.Migrations
 {
     [DbContext(typeof(BudgetDbContext))]
-    partial class BudgetDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241016151134_InitialMigration")]
+    partial class InitialMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,10 +33,8 @@ namespace Budget.Persistance.Migrations
                         .HasColumnName("id");
 
                     b.Property<DateTimeOffset>("CreatedAt")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at")
-                        .HasDefaultValueSql("timezone('utc', now())");
+                        .HasColumnName("created_at");
 
                     b.Property<Guid>("CurrencyId")
                         .HasColumnType("uuid")
@@ -50,10 +51,8 @@ namespace Budget.Persistance.Migrations
                         .HasColumnName("name");
 
                     b.Property<DateTimeOffset>("UpdatedAt")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated_at")
-                        .HasDefaultValueSql("timezone('utc', now())");
+                        .HasColumnName("updated_at");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -164,10 +163,8 @@ namespace Budget.Persistance.Migrations
                         .HasColumnName("category_type");
 
                     b.Property<DateTimeOffset>("CreatedAt")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at")
-                        .HasDefaultValueSql("timezone('utc', now())");
+                        .HasColumnName("created_at");
 
                     b.Property<bool>("IsInitial")
                         .HasColumnType("boolean")
@@ -185,10 +182,8 @@ namespace Budget.Persistance.Migrations
                         .HasColumnName("parent_category_id");
 
                     b.Property<DateTimeOffset>("UpdatedAt")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated_at")
-                        .HasDefaultValueSql("timezone('utc', now())");
+                        .HasColumnName("updated_at");
 
                     b.HasKey("Id")
                         .HasName("pk_categories");
@@ -263,10 +258,8 @@ namespace Budget.Persistance.Migrations
                         .HasColumnName("category_id");
 
                     b.Property<DateTimeOffset>("CreatedAt")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at")
-                        .HasDefaultValueSql("timezone('utc', now())");
+                        .HasColumnName("created_at");
 
                     b.Property<DateTimeOffset>("DateCreated")
                         .HasColumnType("timestamp with time zone")
@@ -294,10 +287,8 @@ namespace Budget.Persistance.Migrations
                         .HasColumnName("record_type");
 
                     b.Property<DateTimeOffset>("UpdatedAt")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated_at")
-                        .HasDefaultValueSql("timezone('utc', now())");
+                        .HasColumnName("updated_at");
 
                     b.HasKey("Id")
                         .HasName("pk_records");

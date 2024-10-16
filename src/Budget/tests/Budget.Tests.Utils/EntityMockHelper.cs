@@ -8,35 +8,36 @@ public static class EntityMockHelper
         Account account,
         PaymentType paymentType,
         Category category,
-        int id = DefaultValueConstants.Common.Id,
+        Guid? id = null,
         RecordType recordType = DefaultValueConstants.Record.Type,
         decimal amount = DefaultValueConstants.Record.Amount)
     {
+        id = id ?? DefaultValueConstants.Common.Id;
         var record = new Record()
         {
-            Id = id,
+            Id = id ?? DefaultValueConstants.Common.Id,
             Account = account,
             PaymentType = paymentType,
             Amount = recordType == RecordType.Expense ? -Math.Abs(amount) : Math.Abs(amount),
             Category = category,
             DateCreated = DateTime.UtcNow,
-            Note = id.GenerateRecordNote(),
+            Note = id!.Value.GenerateRecordNote(),
             RecordType = recordType
         };
 
         return record;
     }
 
-    public static string GenerateRecordNote(this int recordId) => $"Note{recordId}";
+    public static string GenerateRecordNote(this Guid recordId) => $"Note{recordId}";
 
     public static Account SetupAccount(
         Currency currency,
-        int id = DefaultValueConstants.Common.Id,
+        Guid? id = null,
         string userId = DefaultValueConstants.User.UserId)
     {
         var account = new Account()
         {
-            Id = id,
+            Id = id ?? DefaultValueConstants.Common.Id,
             Currency = currency,
             Name = DefaultValueConstants.Account.DefaultName,
             CurrencyId = currency.Id,
@@ -49,12 +50,12 @@ public static class EntityMockHelper
 
     public static Category SetupCategory(
         ApplicationUser user,
-        int id = DefaultValueConstants.Common.Id,
+        Guid? id = null,
         CategoryType categoryType = DefaultValueConstants.Category.Type)
     {
         var category = new Category()
         {
-            Id = id,
+            Id = id ??  DefaultValueConstants.Common.Id,
             Name = $"Category{id}",
             CategoryType = categoryType,
         };
@@ -68,22 +69,24 @@ public static class EntityMockHelper
         return category;
     }
 
-    public static PaymentType SetupPaymentType(int id = DefaultValueConstants.Common.Id)
+    public static PaymentType SetupPaymentType(Guid? id = null)
     {
+        id = id ??  DefaultValueConstants.Common.Id;
         var paymentType = new PaymentType()
         {
-            Id = id,
+            Id = id.Value,
             Name = $"PaymentType{id}"
         };
 
         return paymentType;
     }
 
-    public static Currency SetupCurrency(int id = DefaultValueConstants.Common.Id)
+    public static Currency SetupCurrency(Guid? id = null)
     {
+        id = id ??  DefaultValueConstants.Common.Id;
         var currency = new Currency()
         {
-            Id = id,
+            Id = id.Value,
             Name = $"Currency{id}",
             Abbreviation = $"Abbreviation{id}"
         };

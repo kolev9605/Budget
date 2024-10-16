@@ -2,8 +2,6 @@
 using Budget.Domain.Interfaces.Repositories;
 using Budget.Domain.Interfaces.Services;
 using Budget.Domain.Models.Statistics;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Budget.Application.Services
 {

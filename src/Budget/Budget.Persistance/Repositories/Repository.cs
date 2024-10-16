@@ -1,9 +1,6 @@
 ﻿using Budget.Domain.Entities.Base;
 using Budget.Domain.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Budget.Persistance.Repositories;
 
@@ -35,7 +32,7 @@ public class Repository<T> : IRepository<T>
         return createdEntity.Entity;
     }
 
-    public async Task<T> DeleteByIdAsync(int id, bool saveChanges = true)
+    public async Task<T> DeleteByIdAsync(Guid id, bool saveChanges = true)
     {
         var entity = await _budgetDbContext.Set<T>().FindAsync(id);
         return await DeleteAsync(entity, saveChanges);
@@ -53,7 +50,7 @@ public class Repository<T> : IRepository<T>
         return removedEntity.Entity;
     }
 
-    public async Task<T?> BaseGetByIdAsync(int id)
+    public async Task<T?> BaseGetByIdAsync(Guid id)
         => await _budgetDbContext.Set<T>().FirstOrDefaultAsync(e => e.Id == id);
 
     public async Task<T> UpdateAsync(T entity, bool saveChanges = true)

@@ -5,7 +5,7 @@ using Mapster;
 namespace Budget.Domain.Models.Accounts;
 
 public record AccountModel(
-    int Id,
+    Guid Id,
     string Name,
     decimal InitialBalance,
     decimal Balance,

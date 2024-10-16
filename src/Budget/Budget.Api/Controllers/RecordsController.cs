@@ -20,12 +20,12 @@ public class RecordsController : BaseController
 
     [HttpGet]
     [Route(nameof(GetById))]
-    public async Task<IActionResult> GetById(int recordId)
+    public async Task<IActionResult> GetById(Guid recordId)
         => Ok(await _recordService.GetByIdAsync(recordId, CurrentUser.Id));
 
     [HttpGet]
     [Route(nameof(GetByIdForUpdate))]
-    public async Task<IActionResult> GetByIdForUpdate(int recordId)
+    public async Task<IActionResult> GetByIdForUpdate(Guid recordId)
         => Ok(await _recordService.GetByIdForUpdateAsync(recordId, CurrentUser.Id));
 
     [HttpGet]
@@ -45,7 +45,7 @@ public class RecordsController : BaseController
 
     [HttpDelete]
     [Route(nameof(Delete))]
-    public async Task<IActionResult> Delete(int recordId)
+    public async Task<IActionResult> Delete(Guid recordId)
         => Ok(await _recordService.DeleteAsync(recordId, CurrentUser.Id));
 
     [HttpGet]

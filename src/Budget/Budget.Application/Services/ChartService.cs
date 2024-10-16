@@ -2,10 +2,6 @@
 using Budget.Domain.Interfaces.Repositories;
 using Budget.Domain.Interfaces.Services;
 using Budget.Domain.Models.Charts.CashFlow;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Budget.Application.Services
 {

@@ -4,7 +4,7 @@ public class CreateAccountModel
 {
     public string Name { get; set; } = null!;
 
-    public int CurrencyId { get; set; }
+    public Guid CurrencyId { get; set; }
 
     public decimal InitialBalance { get; set; }
 }

@@ -5,10 +5,6 @@ using Budget.Domain.Models.Records;
 using Budget.Persistance.Extensions;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Budget.Persistance.Repositories;
 
@@ -19,7 +15,7 @@ public class RecordRepository : Repository<Record>, IRecordRepository
     {
     }
 
-    public async Task<Record> GetRecordByIdAsync(int recordId, string userId)
+    public async Task<Record> GetRecordByIdAsync(Guid recordId, string userId)
     {
         var record = await GetRecordByIdBaseQuery(userId, recordId)
             .FirstOrDefaultAsync();
@@ -27,7 +23,7 @@ public class RecordRepository : Repository<Record>, IRecordRepository
         return record;
     }
 
-    public async Task<RecordModel> GetRecordByIdMappedAsync(int recordId, string userId)
+    public async Task<RecordModel> GetRecordByIdMappedAsync(Guid recordId, string userId)
     {
         var record = await GetRecordByIdBaseQuery(userId, recordId)
             .ProjectToType<RecordModel>()
@@ -36,7 +32,7 @@ public class RecordRepository : Repository<Record>, IRecordRepository
         return record;
     }
 
-    public async Task<RecordModel> GetPositiveTransferRecordMappedAsync(DateTime recordDate, int categoryId, decimal recordAmount)
+    public async Task<RecordModel> GetPositiveTransferRecordMappedAsync(DateTime recordDate, Guid categoryId, decimal recordAmount)
     {
         var fromAccountRecord = await GetAll()
             .Include(r => r.Account)
@@ -121,7 +117,7 @@ public class RecordRepository : Repository<Record>, IRecordRepository
        return paginatedRecords;
     }
 
-    public async Task<IEnumerable<Record>> GetAllInRangeAndAccountsAsync(string userId, DateTime startDate, DateTime endDate, IEnumerable<int> accountIds)
+    public async Task<IEnumerable<Record>> GetAllInRangeAndAccountsAsync(string userId, DateTime startDate, DateTime endDate, IEnumerable<Guid> accountIds)
     {
         var records = await GetAll()
             .Include(r => r.Account)
@@ -134,7 +130,7 @@ public class RecordRepository : Repository<Record>, IRecordRepository
         return records;
     }
 
-    private IQueryable<Record> GetRecordByIdBaseQuery(string userId, int recordId)
+    private IQueryable<Record> GetRecordByIdBaseQuery(string userId, Guid recordId)
     {
         return GetAll()
             .Include(r => r.Account)

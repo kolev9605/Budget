@@ -9,9 +9,9 @@ using MediatR;
 namespace Budget.Application.Accounts.Commands.Create;
 
 public record UpdateAccountCommand(
-    int Id,
+    Guid Id,
     string Name,
-    int CurrencyId,
+    Guid CurrencyId,
     decimal InitialBalance,
     string UserId
 ) : IRequest<ErrorOr<AccountModel>>;

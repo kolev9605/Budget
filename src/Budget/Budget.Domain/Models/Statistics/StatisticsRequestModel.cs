@@ -5,7 +5,7 @@ namespace Budget.Domain.Models.Statistics;
 
 public class StatisticsRequestModel
 {
-    public IEnumerable<int> AccountIds { get; set; } = new List<int>();
+    public IEnumerable<Guid> AccountIds { get; set; } = new List<Guid>();
 
     public DateTime StartDate { get; set; }
 

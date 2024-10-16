@@ -1,9 +1,8 @@
 ﻿using Budget.Domain.Entities.Base;
-using System.Collections.Generic;
 
 namespace Budget.Domain.Entities;
 
-public class Category : BaseEntity
+public class Category : BaseEntity, ICreatable, IUpdatable
 {
     public string Name { get; set; } = null!;
 
@@ -11,7 +10,7 @@ public class Category : BaseEntity
 
     public CategoryType CategoryType { get; set; }
 
-    public int? ParentCategoryId { get; set; }
+    public Guid? ParentCategoryId { get; set; }
 
     public Category? ParentCategory { get; set; }
 
@@ -20,4 +19,8 @@ public class Category : BaseEntity
     public ICollection<UserCategory> Users { get; set; } = new List<UserCategory>();
 
     public bool IsInitial { get; set; } = true;
+
+    public DateTimeOffset CreatedAt { get; set; }
+
+    public DateTimeOffset UpdatedAt { get; set; }
 }

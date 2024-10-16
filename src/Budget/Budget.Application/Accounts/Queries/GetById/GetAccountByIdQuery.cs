@@ -7,7 +7,7 @@ using MediatR;
 namespace Budget.Application.Accounts.Queries.GetById;
 
 public record GetAccountByIdQuery(
-    int AccountId,
+    Guid AccountId,
     string UserId) : IRequest<ErrorOr<AccountModel>>;
 
 public class GetAccountByIdQueryHandler : IRequestHandler<GetAccountByIdQuery, ErrorOr<AccountModel>>
