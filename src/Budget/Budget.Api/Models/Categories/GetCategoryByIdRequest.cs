@@ -3,7 +3,7 @@ using Mapster;
 
 namespace Budget.Api.Models.Accounts;
 
-public record GetCategoryByIdRequest(int CategoryId);
+public record GetCategoryByIdRequest(Guid CategoryId);
 
 public class GetCategoryByIdRequestMappings : IRegister
 {

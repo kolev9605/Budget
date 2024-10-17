@@ -1,0 +1,3 @@
+DELETE {{host}}/categories/delete?id=9346e4af-cfdc-4bf2-81ec-57bd15b604d4
+content-type: application/json
+Authorization: Bearer {{token}}

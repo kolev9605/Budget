@@ -1,0 +1,9 @@
+POST {{host}}/categories/create
+content-type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "name": "TEST",
+    "categoryType": 0,
+    "parentCategoryId": null
+}

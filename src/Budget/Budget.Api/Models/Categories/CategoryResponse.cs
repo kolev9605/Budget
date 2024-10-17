@@ -3,9 +3,11 @@ using Budget.Domain.Entities;
 namespace Budget.Api.Models.Categories;
 
 public record CategoryResponse(
-    int Id,
+    Guid Id,
     string Name,
     CategoryType CategoryType,
-    int? ParentCategoryId,
+    Guid? ParentCategoryId,
     bool IsInitial,
-    IEnumerable<CategoryResponse> SubCategories);
+    IEnumerable<CategoryResponse> SubCategories,
+    DateTimeOffset CreatedAt,
+    DateTimeOffset UpdatedAt);

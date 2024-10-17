@@ -4,9 +4,9 @@ using Mapster;
 namespace Budget.Api.Models.Accounts;
 
 public record UpdateAccountRequest(
-    int Id,
+    Guid Id,
     string Name,
-    int CurrencyId,
+    Guid CurrencyId,
     decimal InitialBalance
 );
 

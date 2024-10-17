@@ -20,7 +20,7 @@ public static class EntityMockHelper
             PaymentType = paymentType,
             Amount = recordType == RecordType.Expense ? -Math.Abs(amount) : Math.Abs(amount),
             Category = category,
-            DateCreated = DateTime.UtcNow,
+            CreatedAt = DateTime.UtcNow,
             Note = id!.Value.GenerateRecordNote(),
             RecordType = recordType
         };

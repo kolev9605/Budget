@@ -8,4 +8,7 @@ public record CategoryModel(
     CategoryType CategoryType,
     Guid? ParentCategoryId,
     bool IsInitial,
-    IEnumerable<CategoryModel> SubCategories);
+    // TODO: Separate model for the categories
+    IEnumerable<CategoryModel> SubCategories,
+    DateTimeOffset CreatedAt,
+    DateTimeOffset UpdatedAt);

@@ -1,0 +1,10 @@
+PUT {{host}}/categories/update
+content-type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "id": "9346e4af-cfdc-4bf2-81ec-57bd15b604d4",
+    "name": "TEST - Updated",
+    "categoryType": 0,
+    "parentCategoryId": null
+}

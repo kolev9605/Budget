@@ -216,7 +216,7 @@ public class ImportService : IImportService
                 RecordType = recordType,
                 PaymentType = paymentType,
                 RecordDate = date,
-                DateCreated = _dateTimeProvider.UtcNow,
+                CreatedAt = _dateTimeProvider.UtcNow,
             };
 
             var createdRecord = await _recordRepository.CreateAsync(recordToAdd);

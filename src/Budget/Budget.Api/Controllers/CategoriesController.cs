@@ -1,9 +1,11 @@
 ﻿using Budget.Api.Models.Accounts;
 using Budget.Api.Models.Categories;
+using Budget.Application.Categories.Commands.Create;
+using Budget.Application.Categories.Commands.Delete;
+using Budget.Application.Categories.Commands.Update;
 using Budget.Application.Categories.Queries.GetById;
 using Budget.Common;
 using Budget.Domain.Entities;
-using Budget.Domain.Interfaces.Services;
 using Budget.Domain.Models.Categories;
 using Mapster;
 using MediatR;
@@ -13,12 +15,10 @@ namespace Budget.Api.Controllers;
 
 public class CategoriesController : BaseController
 {
-    private readonly ICategoryService _categoryService;
     private readonly IMediator _mediator;
 
-    public CategoriesController(ICategoryService categoryService, IMediator mediator)
+    public CategoriesController(IMediator mediator)
     {
-        _categoryService = categoryService;
         _mediator = mediator;
     }
 
@@ -35,18 +35,29 @@ public class CategoriesController : BaseController
     [Route(nameof(GetAll))]
     public async Task<IActionResult> GetAll()
     {
-        return Ok(await _categoryService.GetAllAsync(CurrentUser.Id));
+        var result = await _mediator.Send(CurrentUser.Adapt<GetAllCategoriesQuery>());
+
+        return MatchResponse<IEnumerable<CategoryModel>, IEnumerable<CategoryResponse>>(result);
     }
 
+    // TODO: Whaat is the difference between this and GetAll()?
     [HttpGet]
     [Route(nameof(GetAllPrimary))]
     public async Task<IActionResult> GetAllPrimary()
-        => Ok(await _categoryService.GetAllPrimaryAsync(CurrentUser.Id));
+    {
+        var result = await _mediator.Send(CurrentUser.Adapt<GetAllPrimaryQuery>());
+
+        return MatchResponse<IEnumerable<CategoryModel>, IEnumerable<CategoryResponse>>(result);
+    }
 
     [HttpGet]
     [Route(nameof(GetAllSubcategories))]
-    public async Task<IActionResult> GetAllSubcategories(Guid parentCategoryId)
-        => Ok(await _categoryService.GetAllSubcategoriesByParentCategoryIdAsync(parentCategoryId, CurrentUser.Id));
+    public async Task<IActionResult> GetAllSubcategories([FromQuery] GetAllSubcategoriesRequest request)
+    {
+        var result = await _mediator.Send((request, CurrentUser).Adapt<GetAllSubcategoriesQuery>());
+
+        return MatchResponse<IEnumerable<CategoryModel>, IEnumerable<CategoryResponse>>(result);
+    }
 
     [HttpGet]
     [Route(nameof(GetCategoryTypes))]
@@ -55,16 +66,28 @@ public class CategoriesController : BaseController
 
     [HttpPost]
     [Route(nameof(Create))]
-    public async Task<IActionResult> Create(CreateCategoryModel model)
-        => Ok(await _categoryService.CreateAsync(model, CurrentUser.Id));
+    public async Task<IActionResult> Create(CreateCategoryRequest request)
+    {
+        var result = await _mediator.Send((request, CurrentUser).Adapt<CreateCategoryCommand>());
+
+        return MatchResponse<CategoryModel, CategoryResponse>(result);
+    }
 
     [HttpDelete]
     [Route(nameof(Delete))]
-    public async Task<IActionResult> Delete(Guid categoryId)
-        => Ok(await _categoryService.DeleteAsync(categoryId, CurrentUser.Id));
+    public async Task<IActionResult> Delete([FromQuery] DeleteCategoryRequest request)
+    {
+        var result = await _mediator.Send((request, CurrentUser).Adapt<DeleteCategoryCommand>());
 
-    [HttpPost]
+        return MatchResponse<CategoryModel, CategoryResponse>(result);
+    }
+
+    [HttpPut]
     [Route(nameof(Update))]
-    public async Task<IActionResult> Update(UpdateCategoryModel updateCategoryModel)
-        => Ok(await _categoryService.UpdateAsync(updateCategoryModel, CurrentUser.Id));
+    public async Task<IActionResult> Update(UpdateCategoryRequest request)
+    {
+        var result = await _mediator.Send((request, CurrentUser).Adapt<UpdateCategoryCommand>());
+
+        return MatchResponse<CategoryModel, CategoryResponse>(result);
+    }
 }

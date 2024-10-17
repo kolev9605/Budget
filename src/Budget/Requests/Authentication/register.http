@@ -1,10 +1,8 @@
-@host = https://localhost:5001
-
 POST {{host}}/authentication/register
 content-type: application/json
 
 {
-    "username": "kolev9605+1",
-    "password": "kolev9605+1",
-    "email": "kolev9605+1@gmail.com"
+    "username": "kolev9605",
+    "password": "kolev9605",
+    "email": "kolev9605@gmail.com"
 }

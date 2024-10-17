@@ -3,7 +3,7 @@ using Mapster;
 
 namespace Budget.Api.Models.Accounts;
 
-public record DeleteAccountRequest(int AccountId);
+public record DeleteAccountRequest(Guid AccountId);
 
 public class DeleteAccountRequestMappings : IRegister
 {

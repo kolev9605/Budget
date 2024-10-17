@@ -3,9 +3,6 @@ using Budget.Domain.Interfaces.Repositories;
 using Budget.Domain.Models.Categories;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Budget.Persistance.Repositories;
 

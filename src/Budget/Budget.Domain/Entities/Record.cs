@@ -6,8 +6,6 @@ public class Record : BaseEntity, ICreatable, IUpdatable
 {
     public string? Note { get; set; }
 
-    public DateTimeOffset DateCreated { get; set; }
-
     public DateTimeOffset RecordDate { get; set; }
 
     public decimal Amount { get; set; }

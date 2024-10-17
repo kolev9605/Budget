@@ -1,0 +1,3 @@
+GET {{host}}/categories/getAllSubcategories?parentCategoryId=3633683c-fdd9-4974-a567-a1a5eaf65e25
+content-type: application/json
+Authorization: Bearer {{token}}

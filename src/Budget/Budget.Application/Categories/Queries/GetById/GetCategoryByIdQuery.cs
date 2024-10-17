@@ -22,7 +22,7 @@ public class GetCategoryByIdQueryHandler(
 
         if (category == null)
         {
-            return Errors.Category.CategoryNotFound;
+            return Errors.Category.NotFound;
         }
 
         return category;

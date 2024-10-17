@@ -18,7 +18,7 @@ public class Category : BaseEntity, ICreatable, IUpdatable
 
     public ICollection<UserCategory> Users { get; set; } = new List<UserCategory>();
 
-    public bool IsInitial { get; set; } = true;
+    public bool IsInitial { get; set; } = false;
 
     public DateTimeOffset CreatedAt { get; set; }
 

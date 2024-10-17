@@ -1,4 +1,3 @@
-using Budget.Domain.Common.Errors;
 using Budget.Domain.Interfaces.Repositories;
 using Budget.Domain.Models.Categories;
 using ErrorOr;
