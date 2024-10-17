@@ -24,12 +24,9 @@ namespace Budget.Application
         {
             services.AddScoped<ICacheManager, CacheManager>();
             services.AddScoped<IRecordService, RecordService>();
-            services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ICurrencyService, CurrencyService>();
             services.AddScoped<IPaymentTypeService, PaymentTypeService>();
-            services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IStatisticsService, StatisticsService>();
-            services.AddScoped<IAuthenticationService, AuthenticationService>();
             // services.AddScoped<IUserService, UserService>();
 
             return services;
