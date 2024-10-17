@@ -28,7 +28,6 @@ namespace Budget.Application
             services.AddScoped<ICurrencyService, CurrencyService>();
             services.AddScoped<IPaymentTypeService, PaymentTypeService>();
             services.AddScoped<ICategoryService, CategoryService>();
-            services.AddScoped<IChartService, ChartService>();
             services.AddScoped<IStatisticsService, StatisticsService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             // services.AddScoped<IUserService, UserService>();

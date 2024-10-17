@@ -117,7 +117,7 @@ public class RecordRepository : Repository<Record>, IRecordRepository
        return paginatedRecords;
     }
 
-    public async Task<IEnumerable<Record>> GetAllInRangeAndAccountsAsync(string userId, DateTime startDate, DateTime endDate, IEnumerable<Guid> accountIds)
+    public async Task<IEnumerable<Record>> GetAllInRangeAndAccountsAsync(string userId, DateTimeOffset startDate, DateTimeOffset endDate, IEnumerable<Guid> accountIds)
     {
         var records = await GetAll()
             .Include(r => r.Account)

@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace Budget.Domain.Models.Charts.CashFlow;
 
-namespace Budget.Domain.Models.Charts.CashFlow;
+public record CashFlowChartModel(
+    DateTimeOffset StartDate,
+    DateTimeOffset EndDate,
+    decimal CashFlowForPeriod,
+    List<CashFlowItemModel> Items);
 
-public class CashFlowChartModel
-{
-    public DateTime StartDate { get; set; }
-
-    public DateTime EndDate { get; set; }
-
-    public decimal CashFlowForPeriod { get; set; }
-
-    public List<CashFlowItemModel> Items { get; set; } = new();
-}
+public record CashFlowItemModel(
+    decimal CashFlow,
+    DateTimeOffset Date);

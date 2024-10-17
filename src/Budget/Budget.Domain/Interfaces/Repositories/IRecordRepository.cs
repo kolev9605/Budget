@@ -22,5 +22,5 @@ public interface IRecordRepository : IRepository<Record>
 
     Task<IPagedListContainer<RecordModel>> GetAllPaginatedAsync(string userId, PaginatedRequestModel queryStringParameters);
 
-    Task<IEnumerable<Record>> GetAllInRangeAndAccountsAsync(string userId, DateTime startDate, DateTime endDate, IEnumerable<Guid> accountIds);
+    Task<IEnumerable<Record>> GetAllInRangeAndAccountsAsync(string userId, DateTimeOffset startDate, DateTimeOffset endDate, IEnumerable<Guid> accountIds);
 }
