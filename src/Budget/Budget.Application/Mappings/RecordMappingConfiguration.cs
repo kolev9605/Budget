@@ -17,7 +17,7 @@ public class RecordMappingConfiguration : IRegister
 
         config.NewConfig<(CreateRecordModel Record, DateTimeOffset DateCreated, decimal Amount), Record>()
             .Map(dest => dest, src => src.Record)
-            .Map(dest => dest.CreatedAt, src => src.DateCreated)
+            .Map(dest => dest.CreatedOn, src => src.DateCreated)
             .Map(dest => dest.Amount, src => src.Amount);
     }
 }

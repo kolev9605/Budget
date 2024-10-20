@@ -203,7 +203,7 @@ public class RecordService : IRecordService
         {
             AccountId = createRecordModel.FromAccountId.Value,
             Amount = GetAmountByRecordType(createRecordModel.Amount, createRecordModel.RecordType, true),
-            CreatedAt = date,
+            CreatedOn = date,
             Note = createRecordModel.Note,
             CategoryId = createRecordModel.CategoryId,
             PaymentTypeId = createRecordModel.PaymentTypeId,

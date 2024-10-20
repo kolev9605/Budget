@@ -2,5 +2,5 @@
 
 public interface ICreatable
 {
-    public DateTimeOffset CreatedAt { get; set; }
+    public DateTimeOffset CreatedOn { get; set; }
 }

@@ -60,8 +60,8 @@ namespace Budget.Persistance.Migrations
                     category_type = table.Column<int>(type: "integer", nullable: false),
                     parent_category_id = table.Column<Guid>(type: "uuid", nullable: true),
                     is_initial = table.Column<bool>(type: "boolean", nullable: false),
-                    created_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    updated_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
+                    created_on = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "timezone('utc', now())"),
+                    updated_on = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "timezone('utc', now())")
                 },
                 constraints: table =>
                 {
@@ -237,8 +237,8 @@ namespace Budget.Persistance.Migrations
                     user_id = table.Column<string>(type: "text", nullable: false),
                     currency_id = table.Column<Guid>(type: "uuid", nullable: false),
                     initial_balance = table.Column<decimal>(type: "numeric", nullable: false),
-                    created_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    updated_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
+                    created_on = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "timezone('utc', now())"),
+                    updated_on = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "timezone('utc', now())")
                 },
                 constraints: table =>
                 {
@@ -263,7 +263,6 @@ namespace Budget.Persistance.Migrations
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     note = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
-                    date_created = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     record_date = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     amount = table.Column<decimal>(type: "numeric", nullable: false),
                     account_id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -271,8 +270,8 @@ namespace Budget.Persistance.Migrations
                     payment_type_id = table.Column<Guid>(type: "uuid", nullable: false),
                     category_id = table.Column<Guid>(type: "uuid", nullable: false),
                     record_type = table.Column<int>(type: "integer", nullable: false),
-                    created_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    updated_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
+                    created_on = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "timezone('utc', now())"),
+                    updated_on = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "timezone('utc', now())")
                 },
                 constraints: table =>
                 {

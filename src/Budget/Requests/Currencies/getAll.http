@@ -1,0 +1,3 @@
+GET {{host}}/currencies/getall
+content-type: application/json
+Authorization: Bearer {{token}}

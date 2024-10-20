@@ -20,7 +20,7 @@ public class Account : BaseEntity, ICreatable, IUpdatable
 
     public decimal InitialBalance { get; set; }
 
-    public DateTimeOffset CreatedAt { get; set; }
+    public DateTimeOffset CreatedOn { get; set; }
 
-    public DateTimeOffset UpdatedAt { get; set; }
+    public DateTimeOffset UpdatedOn { get; set; }
 }

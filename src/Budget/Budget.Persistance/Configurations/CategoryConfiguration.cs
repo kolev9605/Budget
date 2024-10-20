@@ -21,10 +21,10 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
             .WithOne(sc => sc.ParentCategory)
             .HasForeignKey(sc => sc.ParentCategoryId);
 
-        builder.Property(c => c.CreatedAt)
+        builder.Property(c => c.CreatedOn)
             .HasDefaultValueSql("timezone('utc', now())");
 
-        builder.Property(c => c.UpdatedAt)
+        builder.Property(c => c.UpdatedOn)
             .HasDefaultValueSql("timezone('utc', now())");
     }
 }

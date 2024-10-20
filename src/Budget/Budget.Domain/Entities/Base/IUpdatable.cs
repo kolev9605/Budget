@@ -2,5 +2,5 @@
 
 public interface IUpdatable
 {
-    public DateTimeOffset UpdatedAt { get; set; }
+    public DateTimeOffset UpdatedOn { get; set; }
 }

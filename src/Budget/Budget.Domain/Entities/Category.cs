@@ -20,7 +20,7 @@ public class Category : BaseEntity, ICreatable, IUpdatable
 
     public bool IsInitial { get; set; } = false;
 
-    public DateTimeOffset CreatedAt { get; set; }
+    public DateTimeOffset CreatedOn { get; set; }
 
-    public DateTimeOffset UpdatedAt { get; set; }
+    public DateTimeOffset UpdatedOn { get; set; }
 }

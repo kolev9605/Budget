@@ -61,7 +61,7 @@ public class RecordRepository : Repository<Record>, IRecordRepository
             .Where(r => r.FromAccountId.GetValueOrDefault() == record.AccountId)
             .Where(r => Math.Abs(r.Amount) == Math.Abs(record.Amount))
             .Where(r => r.RecordType == RecordType.Transfer)
-            .Where(r => r.CreatedAt == record.CreatedAt)
+            .Where(r => r.CreatedOn == record.CreatedOn)
             .Where(r => r.CategoryId == record.CategoryId)
             .Where(r => r.Id != record.Id)
             .FirstOrDefaultAsync();

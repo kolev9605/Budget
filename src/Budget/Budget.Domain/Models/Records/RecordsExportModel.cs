@@ -34,7 +34,7 @@ public class RecordsExportModel
             RecordType = record.RecordType,
             PaymentType = record.PaymentType.Name,
             Category = record.Category.Name,
-            DateCreated = record.CreatedAt,
+            DateCreated = record.CreatedOn,
             RecordDate = record.RecordDate,
             Amount = record.Amount,
         };
@@ -46,7 +46,7 @@ public class RecordsExportModel
         {
             Note = record.Note,
             RecordType = record.RecordType,
-            CreatedAt = record.DateCreated,
+            CreatedOn = record.DateCreated,
             RecordDate = record.RecordDate,
             Amount = record.Amount,
         };

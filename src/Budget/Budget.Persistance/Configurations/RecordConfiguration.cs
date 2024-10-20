@@ -17,10 +17,10 @@ public class RecordConfiguration : IEntityTypeConfiguration<Record>
             .HasForeignKey(r => r.PaymentTypeId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.Property(c => c.CreatedAt)
+        builder.Property(c => c.CreatedOn)
             .HasDefaultValueSql("timezone('utc', now())");
 
-        builder.Property(c => c.UpdatedAt)
+        builder.Property(c => c.UpdatedOn)
             .HasDefaultValueSql("timezone('utc', now())");
     }
 }
