@@ -24,8 +24,6 @@ namespace Budget.Application
         {
             services.AddScoped<ICacheManager, CacheManager>();
             services.AddScoped<IRecordService, RecordService>();
-            services.AddScoped<IPaymentTypeService, PaymentTypeService>();
-            services.AddScoped<IStatisticsService, StatisticsService>();
             // services.AddScoped<IUserService, UserService>();
 
             return services;

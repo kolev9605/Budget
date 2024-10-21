@@ -1,21 +1,27 @@
-﻿using Budget.Domain.Interfaces.Services;
+﻿using Budget.Api.Models.Statistics;
+using Budget.Application.Statistics.Queries;
 using Budget.Domain.Models.Statistics;
+using Mapster;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace Budget.Api.Controllers;
 
 public class StatisticsController : BaseController
 {
-    private readonly IStatisticsService _statisticsService;
+    private readonly IMediator _mediator;
 
-    public StatisticsController(IStatisticsService statisticsService)
+    public StatisticsController(IMediator mediator)
     {
-        _statisticsService = statisticsService;
+        _mediator = mediator;
     }
 
     [HttpPost]
-    [Route(nameof(GetStatistics))]
-    public async Task<IActionResult> GetStatistics(StatisticsRequestModel statisticsRequestModel)
-        => Ok(await _statisticsService.GetStatisticsByDateAsync(statisticsRequestModel, CurrentUser.Id));
+    [Route(nameof(GetCashFlow))]
+    public async Task<IActionResult> GetCashFlow(GetCashFlowStatisticsRequest request)
+    {
+        var result = await _mediator.Send((request, CurrentUser).Adapt<GetCashFlowStatisticsQuery>());
+
+        return MatchResponse<GetCashFlowStatisticsResult, GetCashFlowStatisticsResponse>(result);
+    }
 }
