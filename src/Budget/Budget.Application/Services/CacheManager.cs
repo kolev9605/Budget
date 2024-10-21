@@ -14,13 +14,18 @@ namespace Budget.Application.Services
 
         public async Task<T> GetOrCreateAsync<T>(string key, int expirationInSeconds, Func<Task<T>> generatorAsync)
         {
-            var cacheEntry = await _memoryCache.GetOrCreateAsync<T>(key, async entry =>
+            var cacheEntry = await _memoryCache.GetOrCreateAsync(key, async entry =>
             {
                 entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(expirationInSeconds);
                 return await generatorAsync();
             });
 
-            return cacheEntry!;
+            // Note: cacheEntry shouldn't be null, but Microsoft left GetOrCreateAsync to return nullable.
+            // We should handle that case and if does happen, there is nothing we can do but throw an ArgumentNullException
+            // https://github.com/dotnet/runtime/blob/main/docs/coding-guidelines/api-guidelines/nullability.md
+            ArgumentNullException.ThrowIfNull(cacheEntry);
+
+            return cacheEntry;
         }
     }
 }

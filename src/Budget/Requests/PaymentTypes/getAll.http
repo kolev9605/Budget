@@ -1,0 +1,3 @@
+GET {{host}}/paymentTypes/getall
+content-type: application/json
+Authorization: Bearer {{token}}

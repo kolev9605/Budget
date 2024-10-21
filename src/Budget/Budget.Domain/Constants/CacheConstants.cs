@@ -2,14 +2,16 @@
 
 public class CacheConstants
 {
-    public class Keys
+    public class Currencies
     {
-        public const string Currencies = "Currencies";
+        public const string Key = "currencies";
+        public const int ExpirationInSeconds = 60 * 3;
     }
 
-    public class Expirations
+    public class PaymentTypes
     {
-        public const int CurrenciesExpirationInSeconds = 60 * 3;
+        public const string Key = "payment_types";
+        public const int ExpirationInSeconds = 60 * 3;
     }
 
 }

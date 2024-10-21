@@ -47,7 +47,7 @@ public abstract class BaseController : ControllerBase
         );
     }
 
-    private IActionResult Problem(List<Error> errors)
+    protected IActionResult Problem(List<Error> errors)
     {
         var firstError = errors[0];
 

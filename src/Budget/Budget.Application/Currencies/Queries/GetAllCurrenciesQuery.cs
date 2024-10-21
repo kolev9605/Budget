@@ -26,8 +26,8 @@ public class GetAllCurrenciesQueryHandler : IRequestHandler<GetAllCurrenciesQuer
     {
         // TODO: Caching Mediatr behavior can be implemented
         return (await _cacheManager.GetOrCreateAsync(
-            CacheConstants.Keys.Currencies,
-            CacheConstants.Expirations.CurrenciesExpirationInSeconds,
+            CacheConstants.Currencies.Key,
+            CacheConstants.Currencies.ExpirationInSeconds,
             _currencyRepository.GetAllItems)).ToErrorOr();
     }
 }

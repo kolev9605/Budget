@@ -4,8 +4,6 @@ using Budget.Domain.Interfaces.Services;
 using Budget.Domain.Models.Pagination;
 using Budget.Domain.Models.Records;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Budget.Api.Controllers;
 

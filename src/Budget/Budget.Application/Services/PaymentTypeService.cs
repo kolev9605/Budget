@@ -3,8 +3,6 @@ using Budget.Domain.Interfaces.Repositories;
 using Budget.Domain.Interfaces.Services;
 using Budget.Domain.Models.PaymentTypes;
 using Mapster;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Budget.Application.Services
 {

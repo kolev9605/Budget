@@ -1,20 +1,26 @@
-﻿using Budget.Domain.Interfaces.Services;
+﻿using Budget.Api.Models.PaymentTypes;
+using Budget.Application.PaymentTypes.Queries;
+using Budget.Domain.Models.PaymentTypes;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace Budget.Api.Controllers;
 
 public class PaymentTypesController : BaseController
 {
-    private readonly IPaymentTypeService _paymentTypeService;
 
-    public PaymentTypesController(IPaymentTypeService paymentTypeService)
+    private readonly IMediator _mediator;
+    public PaymentTypesController(IMediator mediator)
     {
-        _paymentTypeService = paymentTypeService;
+        _mediator = mediator;
     }
 
     [HttpGet]
     [Route(nameof(GetAll))]
     public async Task<IActionResult> GetAll()
-        => Ok(await _paymentTypeService.GetAllAsync());
+    {
+        var result = await _mediator.Send(new GetAllPaymentTypesQuery());
+
+        return MatchResponse<IEnumerable<PaymentTypeModel>, IEnumerable<PaymentTypeResponse>>(result);
+    }
 }

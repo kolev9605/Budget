@@ -38,6 +38,5 @@ public class BudgetDbContext : IdentityDbContext<ApplicationUser>
         modelBuilder.Entity<IdentityRole>().ToTable("asp_net_roles");
         modelBuilder.Entity<IdentityUserRole<string>>().ToTable("asp_net_user_roles");
         modelBuilder.Entity<IdentityRoleClaim<string>>().ToTable("asp_net_role_claims");
-
     }
 }
