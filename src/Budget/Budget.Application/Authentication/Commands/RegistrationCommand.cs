@@ -23,7 +23,7 @@ public class RegistrationCommandHandler(
         var userExists = await _userManager.FindByNameAsync(request.Username);
         if (userExists is not null)
         {
-            return Errors.User.UserAlreadyExists;
+            return Errors.User.AlreadyExists;
         }
 
         var initialCategories = await _categoryRepository.GetInitialCategoriesAsync();

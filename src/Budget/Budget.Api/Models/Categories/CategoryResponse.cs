@@ -8,6 +8,15 @@ public record CategoryResponse(
     CategoryType CategoryType,
     Guid? ParentCategoryId,
     bool IsInitial,
-    IEnumerable<CategoryResponse> SubCategories,
+    IEnumerable<SubCategoryResponse> SubCategories,
+    DateTimeOffset CreatedAt,
+    DateTimeOffset UpdatedAt);
+
+public record SubCategoryResponse(
+    Guid Id,
+    string Name,
+    CategoryType CategoryType,
+    Guid? ParentCategoryId,
+    bool IsInitial,
     DateTimeOffset CreatedAt,
     DateTimeOffset UpdatedAt);

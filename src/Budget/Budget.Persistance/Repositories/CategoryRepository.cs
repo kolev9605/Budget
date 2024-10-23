@@ -1,6 +1,7 @@
 using Budget.Domain.Entities;
 using Budget.Domain.Interfaces.Repositories;
 using Budget.Domain.Models.Categories;
+using Budget.Domain.Models.Records.Create;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 
@@ -96,6 +97,14 @@ public class CategoryRepository : Repository<Category>, ICategoryRepository
             .ToListAsync();
 
         return subcategories;
+    }
+
+    public async Task<CategoryForRecordCreationModel?> GetForRecordCreationAsync(Guid id)
+    {
+        return await GetAll()
+            .Where(c => c.Id == id)
+            .ProjectToType<CategoryForRecordCreationModel>()
+            .FirstOrDefaultAsync();
     }
 
     private IQueryable<Category> GetUserCategories(string userId)

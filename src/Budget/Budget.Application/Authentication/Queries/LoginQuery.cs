@@ -22,7 +22,7 @@ public class LoginQueryHandler(
         var user = await _userManager.FindByNameAsync(request.Username);
         if (user == null)
         {
-            return Errors.User.UserNotFound;
+            return Errors.User.NotFound;
         }
 
         if (!await _userManager.CheckPasswordAsync(user, request.Password))

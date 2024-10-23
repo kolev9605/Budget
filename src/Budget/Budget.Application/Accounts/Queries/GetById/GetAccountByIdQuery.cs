@@ -25,7 +25,7 @@ public class GetAccountByIdQueryHandler : IRequestHandler<GetAccountByIdQuery, E
 
         if (account is null)
         {
-            return Errors.Account.AccountNotFound;
+            return Errors.Account.NotFound;
         }
 
         return account;

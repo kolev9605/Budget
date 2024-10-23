@@ -1,5 +1,6 @@
 using Budget.Domain.Entities;
 using Budget.Domain.Models.Categories;
+using Budget.Domain.Models.Records.Create;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -22,4 +23,6 @@ public interface ICategoryRepository : IRepository<Category>
     Task<IEnumerable<Category>> GetInitialCategoriesAsync();
 
     Task<IEnumerable<CategoryModel>> GetSubcategoriesByParentCategoryIdMappedAsync(Guid parentCategoryId, string userId);
+
+    Task<CategoryForRecordCreationModel?> GetForRecordCreationAsync(Guid id);
 }

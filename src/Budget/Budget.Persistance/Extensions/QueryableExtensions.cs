@@ -1,7 +1,5 @@
 using Budget.Domain.Models.Pagination;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Budget.Persistance.Extensions;
 

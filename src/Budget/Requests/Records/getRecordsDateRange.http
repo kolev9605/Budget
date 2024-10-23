@@ -1,0 +1,3 @@
+GET {{host}}/records/getRecordsDateRange
+content-type: application/json
+Authorization: Bearer {{token}}

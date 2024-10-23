@@ -15,7 +15,7 @@ public class RecordRepository : Repository<Record>, IRecordRepository
     {
     }
 
-    public async Task<Record> GetRecordByIdAsync(Guid recordId, string userId)
+    public async Task<Record?> GetRecordByIdAsync(Guid recordId, string userId)
     {
         var record = await GetRecordByIdBaseQuery(userId, recordId)
             .FirstOrDefaultAsync();
@@ -23,7 +23,7 @@ public class RecordRepository : Repository<Record>, IRecordRepository
         return record;
     }
 
-    public async Task<RecordModel> GetRecordByIdMappedAsync(Guid recordId, string userId)
+    public async Task<RecordModel?> GetRecordByIdMappedAsync(Guid recordId, string userId)
     {
         var record = await GetRecordByIdBaseQuery(userId, recordId)
             .ProjectToType<RecordModel>()
@@ -32,7 +32,7 @@ public class RecordRepository : Repository<Record>, IRecordRepository
         return record;
     }
 
-    public async Task<RecordModel> GetPositiveTransferRecordMappedAsync(DateTime recordDate, Guid categoryId, decimal recordAmount)
+    public async Task<RecordModel?> GetPositiveTransferRecordMappedAsync(DateTimeOffset recordDate, Guid categoryId, decimal recordAmount)
     {
         var fromAccountRecord = await GetAll()
             .Include(r => r.Account)
@@ -52,13 +52,13 @@ public class RecordRepository : Repository<Record>, IRecordRepository
         return fromAccountRecord;
     }
 
-    public async Task<Record> GetNegativeTransferRecordAsync(Record record)
+    public async Task<Record?> GetNegativeTransferRecordAsync(Record record)
     {
         var transferRecord = await GetAll()
             .Include(r => r.Account)
             .Where(r => r.Account.UserId == r.Account.UserId)
-            .Where(r => r.AccountId == record.FromAccountId.GetValueOrDefault())
-            .Where(r => r.FromAccountId.GetValueOrDefault() == record.AccountId)
+            .Where(r => r.AccountId == record.FromAccountId)
+            .Where(r => r.FromAccountId == record.AccountId)
             .Where(r => Math.Abs(r.Amount) == Math.Abs(record.Amount))
             .Where(r => r.RecordType == RecordType.Transfer)
             .Where(r => r.CreatedOn == record.CreatedOn)
@@ -101,18 +101,13 @@ public class RecordRepository : Repository<Record>, IRecordRepository
     //    return records;
     //}
 
-    public async Task<IPagedListContainer<RecordModel>> GetAllPaginatedAsync(string userId, PaginatedRequestModel queryStringParameters)
+    public async Task<IPagedListContainer<RecordModel>> GetAllPaginatedAsync(string userId, int pageNumber, int pageSize)
     {
        var paginatedRecords = await _budgetDbContext.Records
-           .Include(r => r.Account)
-               .ThenInclude(a => a.Currency)
-           .Include(r => r.FromAccount)
-           .Include(r => r.PaymentType)
-           .Include(r => r.Category)
            .Where(r => r.Account.UserId == userId)
            .OrderByDescending(r => r.RecordDate)
            .ProjectToType<RecordModel>()
-           .PaginateAsync(queryStringParameters.PageNumber, queryStringParameters.PageSize);
+           .PaginateAsync(pageNumber, pageSize);
 
        return paginatedRecords;
     }
@@ -128,6 +123,16 @@ public class RecordRepository : Repository<Record>, IRecordRepository
             .ToListAsync();
 
         return records;
+    }
+
+    public RecordsDateRangeResult? GetDateRangeByUser(string userId)
+    {
+        // TODO: Is this the best way of handling that? Use Dapper maybe?
+        return _budgetDbContext.Database.SqlQuery<RecordsDateRangeResult>(@$"select MIN(r.record_date) min_date, MAX(r.record_date) max_date from records r
+join accounts a on r.account_id = a.id
+where 1 = 1
+and a.user_id = {userId}")
+            .ToList().FirstOrDefault();
     }
 
     private IQueryable<Record> GetRecordByIdBaseQuery(string userId, Guid recordId)

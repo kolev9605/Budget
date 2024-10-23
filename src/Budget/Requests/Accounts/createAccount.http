@@ -4,6 +4,6 @@ Authorization: Bearer {{token}}
 
 {
     "name": "Test account 1",
-    "currencyId": "bde4a5c7-d3e3-4725-a28e-ff834796e47e",
+    "currencyId": "fdf35b26-571a-4afc-bf36-ea72885b174a",
     "initialBalance": 0
 }

@@ -14,10 +14,5 @@ public class RecordMappingConfiguration : IRegister
             .Map(dest => dest.FromAccount, src => src.FromAccount.Name)
             .Map(dest => dest.PaymentType, src => src.PaymentType.Name)
             .Map(dest => dest.Category, src => src.Category.Name);
-
-        config.NewConfig<(CreateRecordModel Record, DateTimeOffset DateCreated, decimal Amount), Record>()
-            .Map(dest => dest, src => src.Record)
-            .Map(dest => dest.CreatedOn, src => src.DateCreated)
-            .Map(dest => dest.Amount, src => src.Amount);
     }
 }

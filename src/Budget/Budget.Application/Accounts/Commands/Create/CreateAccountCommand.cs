@@ -25,7 +25,7 @@ public class CreateAccountCommandHandler(
         var currency = await _currencyRepository.BaseGetByIdAsync(request.CurrencyId);
         if (currency == null)
         {
-            return Errors.Currency.CurrencyNotFound;
+            return Errors.Currency.NotFound;
         }
 
         var account = request.Adapt<Account>();

@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Budget.Domain.Models.Pagination;
 
 public interface IPagedListContainer<T>

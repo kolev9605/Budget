@@ -1,5 +1,6 @@
 using Budget.Application.Accounts.Queries.GetAll;
 using Budget.Application.Categories.Queries.GetById;
+using Budget.Application.Records.Queries;
 using Mapster;
 
 namespace Budget.Api.Models;
@@ -19,6 +20,9 @@ public class AuthenticatedUserModelMappings : IRegister
             .Map(dest => dest.UserId, src => src.Id);
 
         config.NewConfig<AuthenticatedUserModel, GetAllPrimaryQuery>()
+            .Map(dest => dest.UserId, src => src.Id);
+
+        config.NewConfig<AuthenticatedUserModel, GetRecordsDateRangeQuery>()
             .Map(dest => dest.UserId, src => src.Id);
     }
 }

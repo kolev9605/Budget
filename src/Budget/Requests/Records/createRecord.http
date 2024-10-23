@@ -1,0 +1,14 @@
+POST {{host}}/records/create
+content-type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "note": "Test record #3",
+    "amount": 50,
+    "accountId": "b3cfd947-0f46-4094-a092-aa00bed75fd5",
+    "categoryId": "0fedc562-5e8f-4459-a692-d45211bd0739",
+    "paymentTypeId": "2df8edd7-a21a-494d-b3f1-45f196a630d6",
+    "recordType": 1,
+    "recordDate": "2024-10-17T13:32:57.692Z",
+    "fromAccountId": null
+}

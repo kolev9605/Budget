@@ -47,6 +47,14 @@ public abstract class BaseController : ControllerBase
         );
     }
 
+    protected IActionResult MatchResponse<TResult>(ErrorOr<TResult> result)
+    {
+        return result.Match(
+            value => Ok(value),
+            errors => Problem(errors)
+        );
+    }
+
     protected IActionResult Problem(List<Error> errors)
     {
         var firstError = errors[0];

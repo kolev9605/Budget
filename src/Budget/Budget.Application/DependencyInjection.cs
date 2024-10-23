@@ -23,8 +23,6 @@ namespace Budget.Application
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddScoped<ICacheManager, CacheManager>();
-            services.AddScoped<IRecordService, RecordService>();
-            // services.AddScoped<IUserService, UserService>();
 
             return services;
         }

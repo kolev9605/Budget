@@ -6,7 +6,7 @@ public static partial class Errors
 {
     public static class Currency
     {
-        public static Error CurrencyNotFound => Error.NotFound(
+        public static Error NotFound => Error.NotFound(
             code: "Currency.NotFound",
             description: "Missing currency."
         );

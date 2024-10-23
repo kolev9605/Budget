@@ -6,13 +6,13 @@ namespace Budget.Domain.Interfaces.Repositories;
 
 public interface IRecordRepository : IRepository<Record>
 {
-    Task<Record> GetRecordByIdAsync(Guid id, string userId);
+    Task<Record?> GetRecordByIdAsync(Guid id, string userId);
 
-    Task<RecordModel> GetRecordByIdMappedAsync(Guid id, string userId);
+    Task<RecordModel?> GetRecordByIdMappedAsync(Guid id, string userId);
 
-    Task<RecordModel> GetPositiveTransferRecordMappedAsync(DateTime recordDate, Guid categoryId, decimal recordAmount);
+    Task<RecordModel?> GetPositiveTransferRecordMappedAsync(DateTimeOffset recordDate, Guid categoryId, decimal recordAmount);
 
-    Task<Record> GetNegativeTransferRecordAsync(Record record);
+    Task<Record?> GetNegativeTransferRecordAsync(Record record);
 
     Task<IEnumerable<Record>> GetAllAsync(string userId);
 
@@ -20,7 +20,9 @@ public interface IRecordRepository : IRepository<Record>
 
     //Task<IDictionary<TAccountResult, IEnumerable<TRecordResult>>> GetRecordsGroupedByAccount<TAccountResult, TRecordResult>(string userId);
 
-    Task<IPagedListContainer<RecordModel>> GetAllPaginatedAsync(string userId, PaginatedRequestModel queryStringParameters);
+    Task<IPagedListContainer<RecordModel>> GetAllPaginatedAsync(string userId, int pageNumber, int pageSize);
 
     Task<IEnumerable<Record>> GetAllInRangeAndAccountsAsync(string userId, DateTimeOffset startDate, DateTimeOffset endDate, IEnumerable<Guid> accountIds);
+
+    RecordsDateRangeResult? GetDateRangeByUser(string userId);
 }

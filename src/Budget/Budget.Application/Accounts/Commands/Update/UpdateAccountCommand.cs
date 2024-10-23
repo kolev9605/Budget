@@ -26,18 +26,18 @@ public class UpdateAccountCommandHandler(
         var account = await _accountRepository.GetByIdWithCurrencyAsync(request.Id, request.UserId);
         if (account is null)
         {
-            return Errors.Account.AccountNotFound;
+            return Errors.Account.NotFound;
         }
 
         if (account.UserId != request.UserId)
         {
-            return Errors.Account.AccountBelongsToAnotherUser;
+            return Errors.Account.BelongsToAnotherUser;
         }
 
         var currency = await _currencyRepository.BaseGetByIdAsync(request.CurrencyId);
         if (currency is null)
         {
-            return Errors.Currency.CurrencyNotFound;
+            return Errors.Currency.NotFound;
         }
 
         account.CurrencyId = currency.Id;

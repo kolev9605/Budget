@@ -21,12 +21,12 @@ public class DeleteAccountCommandHandler(
         var account = await _accountRepository.GetByIdWithCurrencyAsync(request.AccountId, request.UserId);
         if (account == null)
         {
-            return Errors.Account.AccountNotFound;
+            return Errors.Account.NotFound;
         }
 
         if (account.Records.Any())
         {
-            return Errors.Account.AccountHasRecords;
+            return Errors.Account.HasRecords;
         }
 
         await _accountRepository.DeleteAsync(account);

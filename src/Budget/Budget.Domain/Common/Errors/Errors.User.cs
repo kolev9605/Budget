@@ -6,12 +6,12 @@ public static partial class Errors
 {
     public static class User
     {
-        public static Error UserNotFound => Error.NotFound(
+        public static Error NotFound => Error.NotFound(
             code: "User.NotFound",
             description: "User not found."
         );
 
-        public static Error UserAlreadyExists => Error.Conflict(
+        public static Error AlreadyExists => Error.Conflict(
             code: "User.UserAlreadyExists",
             description: "User already exists."
         );

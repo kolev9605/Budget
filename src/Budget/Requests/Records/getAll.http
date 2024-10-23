@@ -1,0 +1,3 @@
+GET {{host}}/records/GetAllPaginated?pagenumber=1
+content-type: application/json
+Authorization: Bearer {{token}}

@@ -1,0 +1,3 @@
+GET {{host}}/records/getByIdForUpdate?id=9bd45173-3533-444f-86da-ce365a6af389
+content-type: application/json
+Authorization: Bearer {{token}}
