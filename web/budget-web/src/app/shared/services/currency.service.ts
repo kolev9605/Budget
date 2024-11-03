@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class CurrencyService {
-  private controllerName: string = 'Currency';
+  private controllerName: string = 'Currencies';
 
   constructor(private http: HttpClient, private errorService: ErrorService) {}
 

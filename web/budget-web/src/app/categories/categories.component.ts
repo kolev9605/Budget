@@ -37,11 +37,11 @@ export class CategoriesComponent implements OnInit {
     this.router.navigate(['categories/create']);
   }
 
-  getCollapseTarget(categoryId: number): string {
+  getCollapseTarget(categoryId: string): string {
     return `collapse-${categoryId}`;
   }
 
-  getCollapseId(categoryId: number): string {
+  getCollapseId(categoryId: string): string {
     return `#collapse-${categoryId}`;
   }
 }

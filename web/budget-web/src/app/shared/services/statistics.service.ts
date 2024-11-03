@@ -18,7 +18,7 @@ export class StatisticsService {
   getStatistics(request: StatisticsRequestModel): Observable<StatisticsResultModel> {
     return this.http
       .post<StatisticsResultModel>(
-        `${environment.apiUrl}${this.controllerName}/GetStatistics`,
+        `${environment.apiUrl}${this.controllerName}/GetCashFlow`,
         request,
       )
       .pipe(catchError(this.errorService.handleError));

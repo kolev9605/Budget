@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Mediatr" Version="12.4.1" />
     <PackageReference Include="Moq" Version="4.18.4" />
   </ItemGroup>
 
@@ -14,6 +15,7 @@
     <ProjectReference Include="..\..\Budget.Domain\Budget.Domain.csproj" />
     <ProjectReference Include="..\..\Budget.Application\Budget.Application.csproj" />
     <ProjectReference Include="..\..\Budget.Persistance\Budget.Persistance.csproj" />
+    <ProjectReference Include="..\..\Budget.Api\Budget.Api.csproj" />
   </ItemGroup>
 
 </Project>

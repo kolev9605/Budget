@@ -3,7 +3,7 @@ import { CategoryModel } from '../categories/category.model';
 import { PaymentTypeModel } from '../payment-types/payment-type.model';
 
 export class RecordModel {
-  public id: number;
+  public id: string;
   public note: string;
   public fromAccount: AccountModel;
   public account: AccountModel;

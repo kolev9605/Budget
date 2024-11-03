@@ -66,7 +66,7 @@ export class CategoryService {
       .pipe(catchError(this.errorService.handleError));
   }
 
-  deleteCategory(categoryId: number): Observable<CategoryModel> {
+  deleteCategory(categoryId: string): Observable<CategoryModel> {
     return this.http
       .delete<CategoryModel>(`${environment.apiUrl}${this.controller}/Delete`, {
         params: {

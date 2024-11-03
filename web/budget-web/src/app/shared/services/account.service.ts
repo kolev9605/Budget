@@ -12,7 +12,7 @@ import { UpdateAccountModel } from '../models/accounts/update-account.model';
   providedIn: 'root',
 })
 export class AccountService {
-  private controller: string = 'Account';
+  private controller: string = 'Accounts';
 
   constructor(private http: HttpClient, private errorService: ErrorService) {}
 
@@ -44,7 +44,7 @@ export class AccountService {
       .pipe(catchError(this.errorService.handleError));
   }
 
-  deleteAccount(accountId: number): Observable<AccountModel> {
+  deleteAccount(accountId: string): Observable<AccountModel> {
     return this.http
       .delete<AccountModel>(`${environment.apiUrl}${this.controller}/Delete`, {
         params: {

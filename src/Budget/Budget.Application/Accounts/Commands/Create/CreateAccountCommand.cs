@@ -16,13 +16,13 @@ public record CreateAccountCommand(
 ) : IRequest<ErrorOr<AccountModel>>;
 
 public class CreateAccountCommandHandler(
-    IRepository<Currency> _currencyRepository,
+    ICurrencyRepository _currencyRepository,
     IAccountRepository _accountRepository)
     : IRequestHandler<CreateAccountCommand, ErrorOr<AccountModel>>
 {
     public async Task<ErrorOr<AccountModel>> Handle(CreateAccountCommand request, CancellationToken cancellationToken)
     {
-        var currency = await _currencyRepository.BaseGetByIdAsync(request.CurrencyId);
+        var currency = await _currencyRepository.GetByIdAsync(request.CurrencyId);
         if (currency == null)
         {
             return Errors.Currency.NotFound;

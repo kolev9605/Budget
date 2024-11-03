@@ -11,13 +11,13 @@ namespace Budget.Infrastructure.Services;
 
 public class ImportService : IImportService
 {
-    private readonly ICsvParser csvParser;
+    private readonly ICsvParser _csvParser;
     private readonly IDateTimeProvider _dateTimeProvider;
     private readonly Dictionary<string, string> _walletCategoryMapping;
     private readonly Dictionary<string, RecordType> _walletRecordTypeMapping;
     private readonly IAccountRepository _accountRepository;
-    private readonly IRepository<PaymentType> _paymentTypesRepository;
-    private readonly IRepository<Currency> _currencyRepository;
+    private readonly IPaymentTypeRepository _paymentTypesRepository;
+    private readonly ICurrencyRepository _currencyRepository;
     private readonly ICategoryRepository _categoryRepository;
     private readonly IRecordRepository _recordRepository;
 
@@ -25,12 +25,12 @@ public class ImportService : IImportService
         ICsvParser csvParser,
         IDateTimeProvider dateTimeProvider,
         IAccountRepository accountRepository,
-        IRepository<PaymentType> paymentTypesRepository,
-        IRepository<Currency> currencyRepository,
+        IPaymentTypeRepository paymentTypesRepository,
+        ICurrencyRepository currencyRepository,
         ICategoryRepository categoryRepository,
         IRecordRepository recordRepository)
     {
-        this.csvParser = csvParser;
+        _csvParser = csvParser;
         _dateTimeProvider = dateTimeProvider;
         _accountRepository = accountRepository;
         _paymentTypesRepository = paymentTypesRepository;
@@ -99,7 +99,7 @@ public class ImportService : IImportService
             { "Fines", "Fines" },
             { "Taxes", "Taxes" },
 
-            {"Financial investments", "Investments"},
+            { "Financial investments", "Investments" },
 
             { "Income", "Income" },
             { "Interests, dividends", "Interests, dividends" },
@@ -185,7 +185,7 @@ public class ImportService : IImportService
 
     public async Task<int> ImportWalletRecordsAsync(string walletFileContent, string userId)
     {
-        var records = csvParser.ParseCsvString<WalletCsvExportModel>(walletFileContent);
+        var records = _csvParser.ParseCsvString<WalletCsvExportModel>(walletFileContent);
         var paymentTypes = await _paymentTypesRepository.BaseGetAllAsync();
         var currencies = await _currencyRepository.BaseGetAllAsync();
         var debitCardPaymentType = paymentTypes.FirstOrDefault(pt => pt.Name == "Debit Card");

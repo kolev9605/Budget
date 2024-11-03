@@ -1,36 +1,23 @@
-﻿// using Budget.Tests.Utils;
-// using System.Threading.Tasks;
-// using Xunit;
+﻿using Budget.Tests.Utils.Currencies.Queries;
+using Xunit;
 
-// namespace Budget.Application.Tests;
+namespace Budget.Application.Tests;
 
-// public class CurrencyServiceTest
-// {
-//     [Fact]
-//     public async Task GetAllAsync_ValidInput_ShouldReturnOneCurrency()
-//     {
-//         // Arrange
-//         var currencyService = ServiceMockHelper.SetupCurrencyService();
+public class CurrencyServiceTest
+{
+    [Fact]
+    public async Task GetAllAsync_ValidInput_ShouldReturnOneCurrency()
+    {
+        // Arrange
+        var handler = GetAllCurrenciesQueryMockHelper.SetupHandler();
+        var query = GetAllCurrenciesQueryMockHelper.SetupQuery();
 
-//         // Act
-//         var currencies = await currencyService.GetAllAsync();
+        // Act
+        var result = await handler.Handle(query, CancellationToken.None);
 
-//         // Assert
-//         Assert.NotNull(currencies);
-//         Assert.Single(currencies);
-//     }
-
-//     [Fact]
-//     public async Task Test()
-//     {
-//         // Arrange
-//         var currencyService = ServiceMockHelper.SetupCurrencyService();
-
-//         // Act
-//         var currencies = await currencyService.GetAllAsync();
-
-//         // Assert
-//         Assert.NotNull(currencies);
-//         Assert.Single(currencies);
-//     }
-// }
+        // Assert
+        Assert.False(result.IsError);
+        Assert.NotNull(result.Value);
+        Assert.Single(result.Value);
+    }
+}

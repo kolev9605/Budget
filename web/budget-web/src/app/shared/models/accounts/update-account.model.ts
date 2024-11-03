@@ -1,8 +1,8 @@
 export class UpdateAccountModel {
   constructor(
-    public id: number,
+    public id: string,
     public name: string,
     public initialBalance: number,
-    public currencyId: number,
+    public currencyId: string,
   ) {}
 }

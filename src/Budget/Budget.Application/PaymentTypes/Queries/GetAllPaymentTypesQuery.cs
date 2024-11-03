@@ -4,7 +4,6 @@ using Budget.Domain.Interfaces.Services;
 using Budget.Domain.Models.PaymentTypes;
 using ErrorOr;
 using MediatR;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace Budget.Application.PaymentTypes.Queries;
 

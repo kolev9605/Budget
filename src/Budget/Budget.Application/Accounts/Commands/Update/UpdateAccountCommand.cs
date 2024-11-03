@@ -17,7 +17,7 @@ public record UpdateAccountCommand(
 ) : IRequest<ErrorOr<AccountModel>>;
 
 public class UpdateAccountCommandHandler(
-    IRepository<Currency> _currencyRepository,
+    ICurrencyRepository _currencyRepository,
     IAccountRepository _accountRepository)
     : IRequestHandler<UpdateAccountCommand, ErrorOr<AccountModel>>
 {
@@ -34,7 +34,7 @@ public class UpdateAccountCommandHandler(
             return Errors.Account.BelongsToAnotherUser;
         }
 
-        var currency = await _currencyRepository.BaseGetByIdAsync(request.CurrencyId);
+        var currency = await _currencyRepository.GetByIdAsync(request.CurrencyId);
         if (currency is null)
         {
             return Errors.Currency.NotFound;

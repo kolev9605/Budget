@@ -33,7 +33,9 @@ public static class EntityMockHelper
     public static Account SetupAccount(
         Currency currency,
         Guid? id = null,
-        string userId = DefaultValueConstants.User.UserId)
+        string? userId = null,
+        decimal? InitialBalance = null,
+        IEnumerable<Record>? records = null)
     {
         var account = new Account()
         {
@@ -41,24 +43,31 @@ public static class EntityMockHelper
             Currency = currency,
             Name = DefaultValueConstants.Account.DefaultName,
             CurrencyId = currency.Id,
-            UserId = userId,
-            InitialBalance = DefaultValueConstants.Account.DefaultInitialBalance
+            UserId = userId ?? DefaultValueConstants.User.Id,
+            InitialBalance = InitialBalance ?? DefaultValueConstants.Account.DefaultInitialBalance
         };
+
+        if (records is not null && records.Any())
+        {
+            account.Records.ToList().AddRange(records);
+        }
 
         return account;
     }
 
     public static Category SetupCategory(
-        ApplicationUser user,
+        ApplicationUser? user = null,
         Guid? id = null,
-        CategoryType categoryType = DefaultValueConstants.Category.Type)
+        CategoryType? categoryType = null)
     {
         var category = new Category()
         {
             Id = id ??  DefaultValueConstants.Common.Id,
             Name = $"Category{id}",
-            CategoryType = categoryType,
+            CategoryType = categoryType ?? DefaultValueConstants.Category.Type,
         };
+
+        user = user ?? SetupUser();
 
         category.Users.Add(new UserCategory()
         {
@@ -95,7 +104,7 @@ public static class EntityMockHelper
     }
 
     public static ApplicationUser SetupUser(
-        string id = DefaultValueConstants.User.UserId,
+        string id = DefaultValueConstants.User.Id,
         string username = DefaultValueConstants.User.Username)
     {
         var user = new ApplicationUser()

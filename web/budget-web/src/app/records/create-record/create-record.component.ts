@@ -101,9 +101,9 @@ export class CreateRecordComponent implements OnInit {
     const createRecordModel = new CreateRecordModel(
       this.createRecordForm.value.note,
       this.createRecordForm.value.amount,
-      +this.createRecordForm.value.account,
-      +this.createRecordForm.value.category,
-      +this.createRecordForm.value.paymentType,
+      this.createRecordForm.value.account,
+      this.createRecordForm.value.category,
+      this.createRecordForm.value.paymentType,
       this.selectedRecordType,
       new Date(this.createRecordForm.value.recordDate),
       this.createRecordForm.value.fromAccount,
@@ -114,7 +114,7 @@ export class CreateRecordComponent implements OnInit {
       .createRecord(createRecordModel)
       .subscribe({
         next: (record) => {
-          this.toastr.success(`Record created in ${record.category.name}!`);
+          this.toastr.success(`Record created in ${record.category.id}!`);
           this.router.navigate(['records']);
         },
         error: (error) => {

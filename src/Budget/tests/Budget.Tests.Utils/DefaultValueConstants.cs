@@ -8,11 +8,12 @@ public static class DefaultValueConstants
     {
         public const RecordType Type = RecordType.Expense;
         public const decimal Amount = 20;
+        public static readonly DateTimeOffset CreationDate = DateTimeOffset.UtcNow;
     }
 
     public static class User
     {
-        public const string UserId = "user_id";
+        public const string Id = "user_id";
         public const string Username = "username";
         public const string InvalidId = "invalid_id";
     }

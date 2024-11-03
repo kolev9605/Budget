@@ -53,7 +53,7 @@ public class CreateRecordCommandHandler : IRequestHandler<CreateRecordCommand, E
         var account = await _accountRepository.GetForRecordCreationAsync(command.AccountId);
         if (account is null)
         {
-            return Errors.Record.NotFound;
+            return Errors.Account.NotFound;
         }
 
         if (account.UserId != command.UserId)

@@ -1,8 +1,8 @@
 export class CategoryModel {
-  public id: number;
+  public id: string;
   public name: string;
   public categoryType: string;
-  public parentCategoryId: number;
+  public parentCategoryId: string;
   public subCategories: CategoryModel[];
   public isInitial: boolean;
 }

@@ -28,6 +28,6 @@ public class GetAllCurrenciesQueryHandler : IRequestHandler<GetAllCurrenciesQuer
         return (await _cacheManager.GetOrCreateAsync(
             CacheConstants.Currencies.Key,
             CacheConstants.Currencies.ExpirationInSeconds,
-            _currencyRepository.GetAllItems)).ToErrorOr();
+            _currencyRepository.GetAllAsync)).ToErrorOr();
     }
 }

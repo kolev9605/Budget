@@ -20,7 +20,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
     this.userSubscription = this.authService.userSubject.pipe().subscribe((user) => {
       this.isAuthenticated = !!user;
       if (this.isAuthenticated) {
-        this.isAdmin = !!user.roles.find((r) => r === Roles.Administrator);
+        // this.isAdmin = !!user.roles.find((r) => r === Roles.Administrator);
       }
     });
   }

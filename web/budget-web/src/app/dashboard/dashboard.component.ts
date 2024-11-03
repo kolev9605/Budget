@@ -22,7 +22,7 @@ import { StatisticsRequestModel } from '../shared/models/statistics/statistics-r
 })
 export class DashboardComponent implements OnInit {
   accounts: AccountModel[];
-  selectedAccountIds: number[];
+  selectedAccountIds: string[];
   isLoading: boolean = false;
   selectedDate: Date;
   cashFlowData: CashFlowChartModel;
@@ -109,7 +109,7 @@ export class DashboardComponent implements OnInit {
       .add(() => (this.isLoading = false));
   }
 
-  onAccountSelected(accountId: number) {
+  onAccountSelected(accountId: string) {
     if (this.selectedAccountIds.some((a) => a == accountId)) {
       this.selectedAccountIds = this.selectedAccountIds.filter((a) => a !== accountId);
     } else {
@@ -119,7 +119,7 @@ export class DashboardComponent implements OnInit {
     this.loadData();
   }
 
-  isAccountSelected(accountId: number): boolean {
+  isAccountSelected(accountId: string): boolean {
     return this.selectedAccountIds.some((a) => a == accountId);
   }
 

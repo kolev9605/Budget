@@ -5,5 +5,7 @@ namespace Budget.Domain.Interfaces.Repositories;
 
 public interface ICurrencyRepository : IRepository<Currency>
 {
-    Task<IEnumerable<CurrencyModel>> GetAllItems();
+    Task<IEnumerable<CurrencyModel>> GetAllAsync();
+
+    Task<CurrencyModel?> GetByIdAsync(Guid id);
 }

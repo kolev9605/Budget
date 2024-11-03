@@ -20,21 +20,21 @@ export class RecordService {
 
   constructor(private http: HttpClient, private errorService: ErrorService) {}
 
-  getById(recordId: number): Observable<RecordModel> {
+  getById(id: number): Observable<RecordModel> {
     return this.http
       .get<RecordModel>(`${environment.apiUrl}${this.controller}/GetById`, {
         params: {
-          recordId: recordId,
+          id: id,
         },
       })
       .pipe(catchError(this.errorService.handleError));
   }
 
-  getByIdForUpdate(recordId: number): Observable<RecordModel> {
+  getByIdForUpdate(id: number): Observable<RecordModel> {
     return this.http
       .get<RecordModel>(`${environment.apiUrl}${this.controller}/GetByIdForUpdate`, {
         params: {
-          recordId: recordId,
+          id: id,
         },
       })
       .pipe(catchError(this.errorService.handleError));
@@ -64,11 +64,11 @@ export class RecordService {
 
   updateRecord(updateRecordModel: UpdateRecordModel): Observable<RecordModel> {
     return this.http
-      .post<RecordModel>(`${environment.apiUrl}${this.controller}/Update`, updateRecordModel)
+      .put<RecordModel>(`${environment.apiUrl}${this.controller}/Update`, updateRecordModel)
       .pipe(catchError(this.errorService.handleError));
   }
 
-  deleteRecord(recordId: number): Observable<RecordModel> {
+  deleteRecord(recordId: string): Observable<RecordModel> {
     return this.http
       .delete<RecordModel>(`${environment.apiUrl}${this.controller}/Delete`, {
         params: {

@@ -1,203 +1,166 @@
-// using Budget.Domain.Entities;
-// using Budget.Domain.Exceptions;
-// using Budget.Domain.Models.Records;
-// using Budget.Tests.Utils;
-// using System.Threading.Tasks;
-// using Xunit;
+using Budget.Application.Records.Commands;
+using Budget.Domain.Common.Errors;
+using Budget.Tests.Utils;
+using Budget.Tests.Utils.Records.Commands;
+using Xunit;
 
-// namespace Budget.Application.Tests;
+namespace Budget.Application.Tests;
 
-// public class RecordServiceTest
-// {
-//     [Fact]
-//     public async Task CreateRecord_WithValidInputModel_ShouldSucceed()
-//     {
-//         // Arrange
-//         var recordService = ServiceMockHelper.SetupRecordService();
+public class RecordServiceTest
+{
+    [Fact]
+    public async Task CreateRecord_WithValidInputModel_ShouldSucceed()
+    {
+        // Arrange
+        var handler = CreateRecordCommandMockHelper.SetupHandler();
+        var command = CreateRecordCommandMockHelper.SetupCommand();
 
-//         var model = ModelMockHelper.CreateRecordModel();
+        // Act
+        var result = await handler.Handle(command, CancellationToken.None);
 
-//         // Act
-//         var result = await recordService.CreateAsync(model, DefaultValueConstants.User.UserId);
+        // Assert
+        // TODO: More asserts can be added. Don't just do result.Value.something - check if it is error or not
+        Assert.False(result.IsError);
+        Assert.Equal(command.Note, result.Value.Note);
+        Assert.Equal(command.AccountId, result.Value.Account.Id);
+        Assert.Equal(command.CategoryId, result.Value.Category.Id);
+        Assert.Equal(command.PaymentTypeId, result.Value.PaymentType.Id);
+        Assert.Equal(command.RecordType, result.Value.RecordType);
+    }
 
-//         // Assert
-//         Assert.Equal(model.Note, result.Note);
-//         Assert.Equal(model.AccountId, result.Account.Id);
-//         Assert.Equal(model.CategoryId, result.Category.Id);
-//         Assert.Equal(model.PaymentTypeId, result.PaymentType.Id);
-//         Assert.Equal(model.RecordType, result.RecordType);
-//     }
+    [Fact]
+    public async Task CreateRecord_WithInvalidAccountId_ShouldReturnErrorCodeAccountNotFound()
+    {
+        // Arrange
+        var handler = CreateRecordCommandMockHelper.SetupHandler();
+        var command = CreateRecordCommandMockHelper.SetupCommand(accountId: DefaultValueConstants.Common.InvalidId);
 
-//     [Fact]
-//     public async Task CreateRecord_WithInvalidAccountId_ShouldThrowBudgetValidationException()
-//     {
-//         // Arrange
-//         var recordService = ServiceMockHelper.SetupRecordService();
 
-//         var model = ModelMockHelper.CreateRecordModel(accountId: DefaultValueConstants.Common.InvalidId);
+        // Act
+        var result = await handler.Handle(command, CancellationToken.None);
 
-//         // Act
-//         var act = async () => await recordService.CreateAsync(model, DefaultValueConstants.User.UserId);
+        // Assert
+        Assert.True(result.IsError);
+        Assert.True(result.Errors.FirstOrDefault().Code == Errors.Account.NotFound.Code);
+    }
 
-//         // Assert
-//         var exception = await Assert.ThrowsAsync<BudgetValidationException>(act);
-//     }
+    [Fact]
+    public async Task CreateRecord_WithInvalidCategoryId_ShouldReturnErrorCodeCategoryNotFound()
+    {
+        // Arrange
+        var handler = CreateRecordCommandMockHelper.SetupHandler();
+        var command = CreateRecordCommandMockHelper.SetupCommand(categoryId: DefaultValueConstants.Common.InvalidId);
 
-//     [Fact]
-//     public async Task CreateRecord_WithInvalidCategoryId_ShouldThrowBudgetValidationException()
-//     {
-//         // Arrange
-//         var recordService = ServiceMockHelper.SetupRecordService();
+        // Act
+        var result = await handler.Handle(command, CancellationToken.None);
 
-//         var model = new CreateRecordModel()
-//         {
-//             AccountId = DefaultValueConstants.Common.Id,
-//             Amount = 20,
-//             CategoryId = DefaultValueConstants.Common.InvalidId,
-//             Note = "test",
-//             PaymentTypeId = DefaultValueConstants.Common.Id,
-//             RecordType = RecordType.Expense
-//         };
+        // Assert
+        Assert.True(result.IsError);
+        Assert.True(result.Errors.FirstOrDefault().Code == Errors.Category.NotFound.Code);
+    }
 
-//         // Act
-//         var act = async () => await recordService.CreateAsync(model, DefaultValueConstants.User.UserId);
+    [Fact]
+    public async Task CreateRecord_WithInvalidPaymentTypeId_ShouldReturnErrorCodePaymentTypeNotFound()
+    {
+        // Arrange
+        var handler = CreateRecordCommandMockHelper.SetupHandler();
+        var command = CreateRecordCommandMockHelper.SetupCommand(paymentTypeId: DefaultValueConstants.Common.InvalidId);
 
-//         // Assert
-//         var exception = await Assert.ThrowsAsync<BudgetValidationException>(act);
-//     }
+        // Act
+        var result = await handler.Handle(command, CancellationToken.None);
 
-//     [Fact]
-//     public async Task CreateRecord_WithInvalidPaymentTypeId_ShouldThrowBudgetValidationException()
-//     {
-//         // Arrange
-//         var recordService = ServiceMockHelper.SetupRecordService();
+        // Assert
+        Assert.True(result.IsError);
+        Assert.True(result.Errors.FirstOrDefault().Code == Errors.PaymentType.NotFound.Code);
+    }
 
-//         var model = new CreateRecordModel()
-//         {
-//             AccountId = DefaultValueConstants.Common.Id,
-//             Amount = 20,
-//             CategoryId = DefaultValueConstants.Common.Id,
-//             Note = "test",
-//             PaymentTypeId = DefaultValueConstants.Common.InvalidId,
-//             RecordType = RecordType.Expense
-//         };
+    [Fact]
+    public async Task CreateRecord_WithInvalidUserId_ShouldReturnErrorCodeAccountBelongsToAnotherUser()
+    {
+        // Arrange
+        var handler = CreateRecordCommandMockHelper.SetupHandler();
+        var command = CreateRecordCommandMockHelper.SetupCommand(userId: DefaultValueConstants.User.InvalidId);
 
-//         // Act
-//         var act = async () => await recordService.CreateAsync(model, DefaultValueConstants.User.UserId);
+        // Act
+        var result = await handler.Handle(command, CancellationToken.None);
 
-//         // Assert
-//         var exception = await Assert.ThrowsAsync<BudgetValidationException>(act);
-//     }
+        // Assert
+        Assert.True(result.IsError);
+        Assert.True(result.Errors.FirstOrDefault().Code == Errors.Account.BelongsToAnotherUser.Code);
+    }
 
-//     [Fact]
-//     public async Task CreateRecord_WithInvalidUserId_ShouldThrowBudgetValidationException()
-//     {
-//         // Arrange
-//         var recordService = ServiceMockHelper.SetupRecordService();
+    [Fact (Skip = "Validation not implemented")]
+    public async Task CreateRecord_PassNullModel_TBD()
+    {
+        // Arrange
+        var handler = CreateRecordCommandMockHelper.SetupHandler();
+        CreateRecordCommand? command = null;
 
-//         var model = new CreateRecordModel()
-//         {
-//             AccountId = DefaultValueConstants.Common.Id,
-//             Amount = 20,
-//             CategoryId = DefaultValueConstants.Common.Id,
-//             Note = "test",
-//             PaymentTypeId = DefaultValueConstants.Common.Id,
-//             RecordType = RecordType.Expense
-//         };
+        // Act
+        var result = await handler.Handle(command, CancellationToken.None);
 
-//         // Act
-//         var act = async () => await recordService.CreateAsync(model, "InvalidUser");
+        // Assert
+        Assert.True(result.IsError);
+        Assert.True(result.Errors.FirstOrDefault().Code == Errors.User.NotFound.Code);
+    }
 
-//         // Assert
-//         var exception = await Assert.ThrowsAsync<BudgetValidationException>(act);
-//     }
+    [Fact]
+    public async Task UpdateRecord_WithInvalidRecordId_ShouldReturnErrorCodeRecordNotFound()
+    {
+        // Arrange
+        var handler = UpdateRecordCommandMockHelper.SetupHandler();
+        var command = UpdateRecordCommandMockHelper.SetupCommand(recordId: DefaultValueConstants.Common.InvalidId);
 
-//     [Fact]
-//     public async Task CreateRecord_PassNullModel_ShouldThrowBudgetValidationException()
-//     {
-//         // Arrange
-//         var recordService = ServiceMockHelper.SetupRecordService();
+        // Act
+        var result = await handler.Handle(command, CancellationToken.None);
 
-//         CreateRecordModel? model = null;
+        // Assert
+        Assert.True(result.IsError);
+        Assert.True(result.Errors.FirstOrDefault().Code == Errors.Record.NotFound.Code);
+    }
 
-//         // Act
-//         var act = async () => await recordService.CreateAsync(model!, DefaultValueConstants.User.UserId);
+    [Fact]
+    public async Task UpdateRecord_WithValidInputModel_ShouldSucceed()
+    {
+        // Arrange
+        var handler = UpdateRecordCommandMockHelper.SetupHandler();
+        var command = UpdateRecordCommandMockHelper.SetupCommand();
 
-//         // Assert
-//         var exception = await Assert.ThrowsAsync<BudgetValidationException>(act);
-//     }
+        // Act
+        var result = await handler.Handle(command, CancellationToken.None);
 
-//     [Fact]
-//     public async Task UpdateRecord_WithInvalidRecordId_ShouldThrowBudgetValidationException()
-//     {
-//         // Arrange
-//         var recordService = ServiceMockHelper.SetupRecordService();
+        // Assert
+        Assert.False(result.IsError);
+        Assert.True(result.Value.Id == DefaultValueConstants.Common.Id);
+    }
 
-//         var model = new UpdateRecordModel()
-//         {
-//             Id = DefaultValueConstants.Common.InvalidId,
-//             AccountId = DefaultValueConstants.Common.Id,
-//             Amount = 20,
-//             CategoryId = DefaultValueConstants.Common.Id,
-//             Note = "test",
-//             PaymentTypeId = DefaultValueConstants.Common.Id,
-//             RecordType = RecordType.Expense
-//         };
+    [Fact]
+    public async Task DeleteRecord_WithValidInputModel_ShouldSucceed()
+    {
+        // Arrange
+        var handler = DeleteRecordCommandMockHelper.SetupHandler();
+        var command = DeleteRecordCommandMockHelper.SetupCommand();
 
-//         // Act
-//         var act = async () => await recordService.UpdateAsync(model, DefaultValueConstants.User.UserId);
+        // Act
+        var result = await handler.Handle(command, CancellationToken.None);
 
-//         // Assert
-//         var exception = await Assert.ThrowsAsync<BudgetValidationException>(act);
-//     }
+        // Assert
+        Assert.Equal(DefaultValueConstants.Common.Id, result.Value.Id);
+    }
 
-//     [Fact]
-//     public async Task UpdateRecord_WithValidInputModel_ShouldSucceed()
-//     {
-//         // Arrange
-//         var recordService = ServiceMockHelper.SetupRecordService();
+    [Fact]
+    public async Task DeleteRecord_WithInvalidRecordId_ShouldReturnErrorCodeRecordNotFound()
+    {
+        // Arrange
+        var handler = DeleteRecordCommandMockHelper.SetupHandler();
+        var command = DeleteRecordCommandMockHelper.SetupCommand(recordId: DefaultValueConstants.Common.InvalidId);
 
-//         var model = new UpdateRecordModel()
-//         {
-//             Id = DefaultValueConstants.Common.Id,
-//             AccountId = DefaultValueConstants.Common.Id,
-//             Amount = 20,
-//             CategoryId = DefaultValueConstants.Common.Id,
-//             Note = "test",
-//             PaymentTypeId = DefaultValueConstants.Common.Id,
-//             RecordType = RecordType.Expense
-//         };
+        // Act
+        var result = await handler.Handle(command, CancellationToken.None);
 
-//         // Act
-//         var result = await recordService.UpdateAsync(model, DefaultValueConstants.User.UserId);
+        // Assert
+        Assert.True(result.IsError);
+        Assert.Equal(result.Errors.FirstOrDefault().Code, Errors.Record.NotFound.Code);
 
-//         // Assert
-//         Assert.Equal(DefaultValueConstants.Common.Id, result.Id);
-//     }
-
-//     [Fact]
-//     public async Task DeleteRecord_WithValidInputModel_ShouldSucceed()
-//     {
-//         // Arrange
-//         var recordService = ServiceMockHelper.SetupRecordService();
-
-//         // Act
-//         var result = await recordService.DeleteAsync(DefaultValueConstants.Common.Id, DefaultValueConstants.User.UserId);
-
-//         // Assert
-//         Assert.Equal(DefaultValueConstants.Common.Id, result.Id);
-//     }
-
-//     [Fact]
-//     public async Task DeleteRecord_WithInvalidRecordId_ShouldThrowBudgetValidationException()
-//     {
-//         // Arrange
-//         var recordService = ServiceMockHelper.SetupRecordService();
-
-//         // Act
-//         var act = async () => await recordService.DeleteAsync(DefaultValueConstants.Common.InvalidId, DefaultValueConstants.User.UserId);
-
-//         // Assert
-//         var exception = await Assert.ThrowsAsync<BudgetValidationException>(act);
-//     }
-// }
+    }
+}

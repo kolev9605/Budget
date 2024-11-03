@@ -12,10 +12,18 @@ public class CurrencyRepository : Repository<Currency>, ICurrencyRepository
     {
     }
 
-    public async Task<IEnumerable<CurrencyModel>> GetAllItems()
+    public async Task<IEnumerable<CurrencyModel>> GetAllAsync()
     {
         return await GetAll()
             .ProjectToType<CurrencyModel>()
             .ToListAsync();
+    }
+
+    public async Task<CurrencyModel?> GetByIdAsync(Guid id)
+    {
+        return await GetAll()
+            .Where(c => c.Id == id)
+            .ProjectToType<CurrencyModel>()
+            .FirstOrDefaultAsync();
     }
 }

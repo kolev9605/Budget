@@ -11,7 +11,7 @@ import { ErrorService } from './error.service';
   providedIn: 'root',
 })
 export class ChartService {
-  private controller: string = 'Chart';
+  private controller: string = 'Charts';
 
   constructor(private http: HttpClient, private errorService: ErrorService) {}
 
