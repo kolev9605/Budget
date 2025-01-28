@@ -1,4 +1,4 @@
-using Budget.Application.Accounts.Commands.Create;
+using Budget.Application.Accounts.Commands;
 using Mapster;
 
 namespace Budget.Api.Models.Accounts;

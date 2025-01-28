@@ -19,7 +19,7 @@ public class RecordServiceTest
         var result = await handler.Handle(command, CancellationToken.None);
 
         // Assert
-        // TODO: More asserts can be added. Don't just do result.Value.something - check if it is error or not
+        // TODO: More asserts can be added.
         Assert.False(result.IsError);
         Assert.Equal(command.Note, result.Value.Note);
         Assert.Equal(command.AccountId, result.Value.Account.Id);

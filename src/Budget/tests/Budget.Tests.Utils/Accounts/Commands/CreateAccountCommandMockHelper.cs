@@ -1,4 +1,4 @@
-using Budget.Application.Accounts.Commands.Create;
+using Budget.Application.Accounts.Commands;
 
 namespace Budget.Tests.Utils.Accounts.Commands;
 

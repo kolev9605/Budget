@@ -6,7 +6,7 @@ using ErrorOr;
 using Mapster;
 using MediatR;
 
-namespace Budget.Application.Accounts.Commands.Create;
+namespace Budget.Application.Accounts.Commands;
 
 public record CreateAccountCommand(
     string Name,

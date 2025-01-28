@@ -1,12 +1,11 @@
 using Budget.Domain.Common.Errors;
-using Budget.Domain.Entities;
 using Budget.Domain.Interfaces.Repositories;
 using Budget.Domain.Models.Accounts;
 using ErrorOr;
 using Mapster;
 using MediatR;
 
-namespace Budget.Application.Accounts.Commands.Create;
+namespace Budget.Application.Accounts.Commands;
 
 public record UpdateAccountCommand(
     Guid Id,

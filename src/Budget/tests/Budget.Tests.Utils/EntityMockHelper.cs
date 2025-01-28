@@ -62,7 +62,7 @@ public static class EntityMockHelper
     {
         var category = new Category()
         {
-            Id = id ??  DefaultValueConstants.Common.Id,
+            Id = id ?? DefaultValueConstants.Common.Id,
             Name = $"Category{id}",
             CategoryType = categoryType ?? DefaultValueConstants.Category.Type,
         };
@@ -80,7 +80,7 @@ public static class EntityMockHelper
 
     public static PaymentType SetupPaymentType(Guid? id = null)
     {
-        id = id ??  DefaultValueConstants.Common.Id;
+        id = id ?? DefaultValueConstants.Common.Id;
         var paymentType = new PaymentType()
         {
             Id = id.Value,
@@ -92,7 +92,7 @@ public static class EntityMockHelper
 
     public static Currency SetupCurrency(Guid? id = null)
     {
-        id = id ??  DefaultValueConstants.Common.Id;
+        id = id ?? DefaultValueConstants.Common.Id;
         var currency = new Currency()
         {
             Id = id.Value,

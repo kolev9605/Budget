@@ -1,5 +1,5 @@
 ﻿using Budget.Api.Models.Accounts;
-using Budget.Application.Accounts.Commands.Create;
+using Budget.Application.Accounts.Commands;
 using Budget.Application.Accounts.Queries.GetAll;
 using Budget.Application.Accounts.Queries.GetById;
 using Budget.Domain.Models.Accounts;
