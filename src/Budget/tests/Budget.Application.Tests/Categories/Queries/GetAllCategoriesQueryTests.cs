@@ -24,7 +24,7 @@ public class GetAllCategoriesQueryTests
     }
 
     [Fact]
-    public async Task GetAllAsync_IvalidUserId_ShouldReturnEmptyCollection()
+    public async Task GetAllAsync_InvalidUserId_ShouldReturnEmptyCollection()
     {
         // Arrange
         var handler = GetAllCategoriesQueryMockHelper.SetupHandler();

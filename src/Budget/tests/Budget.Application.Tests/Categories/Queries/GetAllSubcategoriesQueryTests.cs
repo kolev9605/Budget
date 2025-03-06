@@ -23,7 +23,7 @@ public class GetAllSubcategoriesQueryTests
     }
 
     [Fact]
-    public async Task GetAllSubcategoriesByParentCategoryIdAsync_IvalidPrimaryCategoryId_ShouldReturnEmptyCollection()
+    public async Task GetAllSubcategoriesByParentCategoryIdAsync_InvalidPrimaryCategoryId_ShouldReturnEmptyCollection()
     {
         // Arrange
         var handler = GetAllSubcategoriesQueryMockHelper.SetupHandler();
@@ -39,7 +39,7 @@ public class GetAllSubcategoriesQueryTests
     }
 
     [Fact]
-    public async Task GetAllSubcategoriesByParentCategoryIdAsync_IvalidUserId_ShouldReturnEmptyCollection()
+    public async Task GetAllSubcategoriesByParentCategoryIdAsync_InvalidUserId_ShouldReturnEmptyCollection()
     {
         // Arrange
         var handler = GetAllSubcategoriesQueryMockHelper.SetupHandler();

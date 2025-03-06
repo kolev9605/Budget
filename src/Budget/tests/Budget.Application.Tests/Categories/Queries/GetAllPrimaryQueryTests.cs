@@ -23,7 +23,7 @@ public class GetAllPrimaryQueryTests
     }
 
     [Fact]
-    public async Task GetAllPrimaryAsync_IvalidUserId_ShouldReturnEmptyCollection()
+    public async Task GetAllPrimaryAsync_InvalidUserId_ShouldReturnEmptyCollection()
     {
         // Arrange
         var handler = GetAllPrimaryQueryMockHelper.SetupHandler();
