@@ -12,7 +12,7 @@ public static class EntityMockHelper
         RecordType recordType = DefaultValueConstants.Record.Type,
         decimal amount = DefaultValueConstants.Record.Amount)
     {
-        id = id ?? DefaultValueConstants.Common.Id;
+        id ??= DefaultValueConstants.Common.Id;
         var record = new Record()
         {
             Id = id ?? DefaultValueConstants.Common.Id,
@@ -67,7 +67,7 @@ public static class EntityMockHelper
             CategoryType = categoryType ?? DefaultValueConstants.Category.Type,
         };
 
-        user = user ?? SetupUser();
+        user ??= SetupUser();
 
         category.Users.Add(new UserCategory()
         {
@@ -80,7 +80,7 @@ public static class EntityMockHelper
 
     public static PaymentType SetupPaymentType(Guid? id = null)
     {
-        id = id ?? DefaultValueConstants.Common.Id;
+        id ??= DefaultValueConstants.Common.Id;
         var paymentType = new PaymentType()
         {
             Id = id.Value,
@@ -92,7 +92,7 @@ public static class EntityMockHelper
 
     public static Currency SetupCurrency(Guid? id = null)
     {
-        id = id ?? DefaultValueConstants.Common.Id;
+        id ??= DefaultValueConstants.Common.Id;
         var currency = new Currency()
         {
             Id = id.Value,
