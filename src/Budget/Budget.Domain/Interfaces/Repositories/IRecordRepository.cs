@@ -24,5 +24,5 @@ public interface IRecordRepository : IRepository<Record>
 
     Task<IEnumerable<Record>> GetAllInRangeAndAccountsAsync(string userId, DateTimeOffset startDate, DateTimeOffset endDate, IEnumerable<Guid> accountIds);
 
-    RecordsDateRangeResult? GetDateRangeByUser(string userId);
+    Task<RecordsDateRangeResult?> GetDateRangeByUserAsync(string userId);
 }

@@ -38,7 +38,7 @@ public class RecordRepository : Repository<Record>, IRecordRepository
             .Include(r => r.Account)
                 .ThenInclude(a => a.Currency)
             .Include(r => r.FromAccount)
-                .ThenInclude(a => a.Currency)
+                .ThenInclude(a => a!.Currency)
             .Include(r => r.PaymentType)
             .Include(r => r.Category)
             .Where(r => Math.Abs(r.Amount) == Math.Abs(recordAmount))
@@ -125,14 +125,14 @@ public class RecordRepository : Repository<Record>, IRecordRepository
         return records;
     }
 
-    public RecordsDateRangeResult? GetDateRangeByUser(string userId)
+    public async Task<RecordsDateRangeResult?> GetDateRangeByUserAsync(string userId)
     {
         // TODO: Is this the best way of handling that? Use Dapper maybe?
-        return _budgetDbContext.Database.SqlQuery<RecordsDateRangeResult>(@$"select MIN(r.record_date) min_date, MAX(r.record_date) max_date from records r
+        return (await _budgetDbContext.Database.SqlQuery<RecordsDateRangeResult>(@$"select MIN(r.record_date) min_date, MAX(r.record_date) max_date from records r
 join accounts a on r.account_id = a.id
 where 1 = 1
 and a.user_id = {userId}")
-            .ToList().FirstOrDefault();
+            .ToListAsync()).FirstOrDefault();
     }
 
     private IQueryable<Record> GetRecordByIdBaseQuery(string userId, Guid recordId)
@@ -141,7 +141,7 @@ and a.user_id = {userId}")
             .Include(r => r.Account)
                 .ThenInclude(a => a.Currency)
             .Include(r => r.FromAccount)
-                .ThenInclude(a => a.Currency)
+                .ThenInclude(a => a!.Currency)
             .Include(r => r.PaymentType)
             .Include(r => r.Category)
             .Where(r => r.Account.UserId == userId)

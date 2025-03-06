@@ -1,10 +1,6 @@
 ﻿using Budget.Domain.Exceptions;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-using System;
 using System.Net;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace Budget.Api.Helpers;
 

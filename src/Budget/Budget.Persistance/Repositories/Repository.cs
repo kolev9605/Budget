@@ -35,6 +35,8 @@ public class Repository<T> : IRepository<T>
     public async Task<T> DeleteByIdAsync(Guid id, bool saveChanges = true)
     {
         var entity = await _budgetDbContext.Set<T>().FindAsync(id);
+        ArgumentNullException.ThrowIfNull(entity);
+
         return await DeleteAsync(entity, saveChanges);
     }
 

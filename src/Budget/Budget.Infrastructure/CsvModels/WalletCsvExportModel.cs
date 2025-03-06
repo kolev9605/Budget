@@ -1,5 +1,4 @@
 ﻿using CsvHelper.Configuration.Attributes;
-using System;
 
 namespace Budget.Infrastructure.CsvModels;
 

@@ -19,7 +19,7 @@ public class GetRecordsDateRangeQueryHandler : IRequestHandler<GetRecordsDateRan
 
     public async Task<ErrorOr<RecordsDateRangeResult>> Handle(GetRecordsDateRangeQuery query, CancellationToken cancellationToken)
     {
-        var result = _recordRepository.GetDateRangeByUser(query.UserId);
+        var result = await _recordRepository.GetDateRangeByUserAsync(query.UserId);
         if (result is null)
         {
             return Errors.Record.NoRecords;
