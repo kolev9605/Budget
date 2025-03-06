@@ -1,5 +1,4 @@
-﻿
-using Budget.Domain.Entities;
+﻿using Budget.Domain.Entities;
 using Budget.Domain.Interfaces.Repositories;
 using Budget.Domain.Models.Accounts;
 using Budget.Domain.Models.Categories;
@@ -24,15 +23,15 @@ public static class RepositoryMockHelper
 
         recordRepositoryMock
             .Setup(x => x.GetRecordByIdAsync(DefaultValueConstants.Common.Id, It.IsAny<string>()))
-            .Returns(Task.FromResult(record));
+            .Returns(Task.FromResult((Record?)record));
 
         recordRepositoryMock
             .Setup(x => x.GetRecordByIdMappedAsync(DefaultValueConstants.Common.Id, It.IsAny<string>()))
-            .Returns(Task.FromResult(record.Adapt<RecordModel>()));
+            .Returns(Task.FromResult(record.Adapt<RecordModel?>()));
 
         recordRepositoryMock
             .Setup(x => x.BaseGetByIdAsync(DefaultValueConstants.Common.Id))
-            .Returns(Task.FromResult(record));
+            .Returns(Task.FromResult((Record?)record));
 
         recordRepositoryMock
             .Setup(x => x.UpdateAsync(It.IsAny<Record>(), It.IsAny<bool>()))
@@ -53,14 +52,6 @@ public static class RepositoryMockHelper
             .Setup(x => x.GetForRecordCreationAsync(DefaultValueConstants.Common.Id))
             .Returns(Task.FromResult(account.Adapt<AccountForRecordCreationModel?>()));
 
-        // accountRepositoryMock
-        //     .Setup(x => x.BaseGetByIdAsync(DefaultValueConstants.Common.Id))
-        //     .Returns(Task.FromResult(account));
-
-        // accountRepositoryMock
-        //     .Setup(x => x.GetByIdWithCurrencyAsync(DefaultValueConstants.Common.Id, DefaultValueConstants.User.Id))
-        //     .Returns(Task.FromResult((Account?)account));
-
         var accountWithRecords = EntityMockHelper.SetupAccount(
             EntityMockHelper.SetupCurrency());
 
@@ -70,7 +61,6 @@ public static class RepositoryMockHelper
 
         accountRepositoryMock
             .Setup(x => x.GetByIdWithCurrencyAsync(It.IsAny<Guid>(), DefaultValueConstants.User.Id))
-            // .Setup(x => x.GetByIdWithCurrencyAsync(DefaultValueConstants.Common.Id, DefaultValueConstants.User.Id))
             .ReturnsAsync((Guid accountId, string userId) =>
             {
                 if (accountId == DefaultValueConstants.Account.AccountIdWithRecords)
@@ -87,19 +77,11 @@ public static class RepositoryMockHelper
                 }
             });
 
-        // accountRepositoryMock
-        //     .Setup(x => x.GetByIdWithCurrencyAsync(DefaultValueConstants.Account.AccountIdWithRecords, DefaultValueConstants.User.Id))
-        //     .Returns(Task.FromResult((Account?)accountWithRecords));
-
         accountRepositoryMock
             .Setup(x => x.GetAccountModelByIdWithCurrencyAsync(DefaultValueConstants.Common.Id, DefaultValueConstants.User.Id))
             .Returns(Task.FromResult(account.Adapt<AccountModel?>()));
 
         var accounts = new List<AccountModel> { account.Adapt<AccountModel>() };
-
-        // accountRepositoryMock
-        //     .Setup(x => x.GetAllByUserIdAsync(DefaultValueConstants.User.UserId))
-        //     .Returns(Task.FromResult(accounts.AsEnumerable()));
 
         accountRepositoryMock
             .Setup(x => x.GetAllAccountModelsByUserIdAsync(DefaultValueConstants.User.Id))
@@ -132,16 +114,6 @@ public static class RepositoryMockHelper
             .Setup(x => x.GetByIdWithSubcategoriesMappedAsync(DefaultValueConstants.Common.Id, DefaultValueConstants.User.Id))
             .Returns(Task.FromResult(category.Adapt<CategoryModel?>()));
 
-        // categoryRepositoryMock
-        //     .Setup(x => x.BaseGetByIdAsync(DefaultValueConstants.Common.Id))
-        //     .Returns(Task.FromResult(category));
-
-
-
-        // categoryRepositoryMock
-        //     .Setup(x => x.GetByIdWithSubcategoriesAsync(DefaultValueConstants.Common.Id, DefaultValueConstants.User.UserId))
-        //     .Returns(Task.FromResult(category));
-
         var categories = new List<CategoryModel> { category.Adapt<CategoryModel>() };
 
         categoryRepositoryMock
@@ -156,16 +128,6 @@ public static class RepositoryMockHelper
             .Setup(x => x.GetSubcategoriesByParentCategoryIdMappedAsync(DefaultValueConstants.Common.Id, DefaultValueConstants.User.Id))
             .Returns(Task.FromResult(categories.AsEnumerable()));
 
-        // categoryRepositoryMock
-        //     .Setup(x => x.GetAllPrimaryCategoryModelsAsync(DefaultValueConstants.User.UserId))
-        //     .Returns(Task.FromResult(categories.Adapt<IEnumerable<CategoryModel>>()));
-
-
-
-        // categoryRepositoryMock
-        //     .Setup(x => x.GetByIdWithSubcategoriesMappedAsync(DefaultValueConstants.Common.Id, DefaultValueConstants.User.UserId))
-        //     .Returns(Task.FromResult(category.Adapt<CategoryModel>()));
-
         return categoryRepositoryMock.Object;
     }
 
@@ -176,10 +138,6 @@ public static class RepositoryMockHelper
         paymentTypeRepositoryMock
             .Setup(x => x.GetForRecordCreationAsync(DefaultValueConstants.Common.Id))
             .Returns(Task.FromResult(paymentType.Adapt<PaymentTypeForRecordCreationModel?>()));
-
-        // paymentTypeRepositoryMock
-        //     .Setup(x => x.BaseGetByIdAsync(DefaultValueConstants.Common.Id))
-        //     .Returns(Task.FromResult(paymentType));
 
         var paymentTypes = new List<PaymentTypeModel> { paymentType.Adapt<PaymentTypeModel>() };
 
