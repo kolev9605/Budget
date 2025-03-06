@@ -1,13 +1,14 @@
-using Budget.Application.Records.Commands;
-using Budget.Domain.Common.Errors;
 using Budget.Tests.Utils;
 using Budget.Tests.Utils.Records.Commands;
 using Xunit;
+using Budget.Domain.Common.Errors;
+using Budget.Application.Records.Commands;
 
-namespace Budget.Application.Tests;
+namespace Budget.Application.Tests.Records.Commands;
 
-public class RecordServiceTest
+public class CreateRecordCommandTests
 {
+
     [Fact]
     public async Task CreateRecord_WithValidInputModel_ShouldSucceed()
     {
@@ -34,7 +35,6 @@ public class RecordServiceTest
         // Arrange
         var handler = CreateRecordCommandMockHelper.SetupHandler();
         var command = CreateRecordCommandMockHelper.SetupCommand(accountId: DefaultValueConstants.Common.InvalidId);
-
 
         // Act
         var result = await handler.Handle(command, CancellationToken.None);
@@ -97,70 +97,10 @@ public class RecordServiceTest
         CreateRecordCommand? command = null;
 
         // Act
-        var result = await handler.Handle(command, CancellationToken.None);
+        var result = await handler.Handle(command!, CancellationToken.None);
 
         // Assert
         Assert.True(result.IsError);
         Assert.True(result.Errors.FirstOrDefault().Code == Errors.User.NotFound.Code);
-    }
-
-    [Fact]
-    public async Task UpdateRecord_WithInvalidRecordId_ShouldReturnErrorCodeRecordNotFound()
-    {
-        // Arrange
-        var handler = UpdateRecordCommandMockHelper.SetupHandler();
-        var command = UpdateRecordCommandMockHelper.SetupCommand(recordId: DefaultValueConstants.Common.InvalidId);
-
-        // Act
-        var result = await handler.Handle(command, CancellationToken.None);
-
-        // Assert
-        Assert.True(result.IsError);
-        Assert.True(result.Errors.FirstOrDefault().Code == Errors.Record.NotFound.Code);
-    }
-
-    [Fact]
-    public async Task UpdateRecord_WithValidInputModel_ShouldSucceed()
-    {
-        // Arrange
-        var handler = UpdateRecordCommandMockHelper.SetupHandler();
-        var command = UpdateRecordCommandMockHelper.SetupCommand();
-
-        // Act
-        var result = await handler.Handle(command, CancellationToken.None);
-
-        // Assert
-        Assert.False(result.IsError);
-        Assert.True(result.Value.Id == DefaultValueConstants.Common.Id);
-    }
-
-    [Fact]
-    public async Task DeleteRecord_WithValidInputModel_ShouldSucceed()
-    {
-        // Arrange
-        var handler = DeleteRecordCommandMockHelper.SetupHandler();
-        var command = DeleteRecordCommandMockHelper.SetupCommand();
-
-        // Act
-        var result = await handler.Handle(command, CancellationToken.None);
-
-        // Assert
-        Assert.Equal(DefaultValueConstants.Common.Id, result.Value.Id);
-    }
-
-    [Fact]
-    public async Task DeleteRecord_WithInvalidRecordId_ShouldReturnErrorCodeRecordNotFound()
-    {
-        // Arrange
-        var handler = DeleteRecordCommandMockHelper.SetupHandler();
-        var command = DeleteRecordCommandMockHelper.SetupCommand(recordId: DefaultValueConstants.Common.InvalidId);
-
-        // Act
-        var result = await handler.Handle(command, CancellationToken.None);
-
-        // Assert
-        Assert.True(result.IsError);
-        Assert.Equal(result.Errors.FirstOrDefault().Code, Errors.Record.NotFound.Code);
-
     }
 }
