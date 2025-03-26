@@ -8,8 +8,10 @@ import { Injectable } from '@angular/core';
 export class ErrorService {
   public handleError(errorResponse: HttpErrorResponse) {
     let errorMessage;
-    if (errorResponse.error && errorResponse.error.message) {
-      errorMessage = errorResponse.error.message;
+    console.log(errorResponse);
+
+    if (errorResponse.error && errorResponse.error.title) {
+      errorMessage = errorResponse.error.title;
     } else if (errorResponse && errorResponse.status === 401) {
       errorMessage = 'Your session has expired, please log in again.';
     } else {
