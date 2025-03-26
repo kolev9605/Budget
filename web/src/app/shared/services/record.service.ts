@@ -72,7 +72,7 @@ export class RecordService {
     return this.http
       .delete<RecordModel>(`${environment.apiUrl}${this.controller}/Delete`, {
         params: {
-          recordId: recordId,
+          id: recordId,
         },
       })
       .pipe(catchError(this.errorService.handleError));
