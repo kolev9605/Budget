@@ -70,7 +70,7 @@ export class CategoryService {
     return this.http
       .delete<CategoryModel>(`${environment.apiUrl}${this.controller}/Delete`, {
         params: {
-          categoryId: categoryId,
+          id: categoryId,
         },
       })
       .pipe(catchError(this.errorService.handleError));
