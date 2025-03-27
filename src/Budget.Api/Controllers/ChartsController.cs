@@ -1,6 +1,5 @@
 ﻿using Budget.Api.Models.Charts;
 using Budget.Application.Charts.Queries.GetCashFlowChart;
-using Budget.Domain.Interfaces.Services;
 using Budget.Domain.Models.Charts.CashFlow;
 using Mapster;
 using MediatR;

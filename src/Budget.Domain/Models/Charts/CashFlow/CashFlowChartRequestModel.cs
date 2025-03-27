@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Budget.Domain.Models.Charts.CashFlow;
+﻿namespace Budget.Domain.Models.Charts.CashFlow;
 
 public class CashFlowChartRequestModel
 {

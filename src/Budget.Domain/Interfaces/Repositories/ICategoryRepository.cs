@@ -1,8 +1,6 @@
 using Budget.Domain.Entities;
 using Budget.Domain.Models.Categories;
 using Budget.Domain.Models.Records.Create;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Budget.Domain.Interfaces.Repositories;
 

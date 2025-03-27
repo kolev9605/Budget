@@ -1,12 +1,10 @@
 ﻿using Budget.Api.Models;
 using ErrorOr;
 using Mapster;
-using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Security.Claims;
-using System.Security.Cryptography;
 
 namespace Budget.Api.Controllers;
 

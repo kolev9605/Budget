@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Budget.Common;
+﻿namespace Budget.Common;
 
 public static class EnumHelpers
 {

@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace Budget.Domain.Interfaces.Services
+﻿namespace Budget.Domain.Interfaces.Services
 {
     public interface IImportService
     {

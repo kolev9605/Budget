@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Budget.Domain.Interfaces;
+﻿namespace Budget.Domain.Interfaces;
 
 public interface ICsvParser
 {

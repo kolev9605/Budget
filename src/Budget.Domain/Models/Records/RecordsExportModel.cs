@@ -1,6 +1,4 @@
 ﻿using Budget.Domain.Entities;
-using System;
-using Budget.Common;
 
 namespace Budget.Domain.Models.Records;
 

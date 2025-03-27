@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Budget.Domain.Interfaces;
+﻿namespace Budget.Domain.Interfaces;
 
 public interface IDateTimeProvider
 {

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Budget.Common;
+﻿namespace Budget.Common;
 
 public static class DateTimeExtensions
 {
