@@ -1,8 +1,9 @@
-using Budget.Application;
-using Budget.Infrastructure;
-using Budget.Persistance;
 using Budget.Api;
 using Budget.Api.Helpers;
+using Budget.Application;
+using Budget.Domain;
+using Budget.Infrastructure;
+using Budget.Persistance;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +25,7 @@ builder.Host.UseSerilog((context, services, configuration) =>
 });
 
 builder.Services
+    .AddDomain()
     .AddPersistence(builder.Configuration)
     .AddInfrastructure(builder.Configuration)
     .AddApplication()
