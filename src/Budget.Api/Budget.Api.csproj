@@ -22,8 +22,8 @@
     <ProjectReference Include="..\Budget.Application\Budget.Application.csproj" />
     <ProjectReference Include="..\Budget.Common\Budget.Common.csproj" />
     <ProjectReference Include="..\Budget.Domain\Budget.Domain.csproj" />
-    <ProjectReference Include="..\Budget.Infrastructure\Budget.Infrastructure.csproj" />
-    <ProjectReference Include="..\Budget.Persistance\Budget.Persistance.csproj" />
+    <ProjectReference Include="..\Infrastructure\Budget.Infrastructure\Budget.Infrastructure.csproj" />
+    <ProjectReference Include="..\Infrastructure\Budget.Infrastructure.Persistence\Budget.Infrastructure.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

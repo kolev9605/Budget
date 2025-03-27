@@ -3,7 +3,7 @@ using Budget.Api.Helpers;
 using Budget.Application;
 using Budget.Domain;
 using Budget.Infrastructure;
-using Budget.Persistance;
+using Budget.Infrastructure.Persistence;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
