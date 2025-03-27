@@ -1,4 +1,5 @@
-﻿using Budget.Domain.Entities;
+﻿using System.Text.Json;
+using Budget.Domain.Entities;
 using Budget.Domain.Exceptions;
 using Budget.Domain.Interfaces;
 using Budget.Domain.Interfaces.Repositories;
@@ -37,87 +38,29 @@ public class ImportService : IImportService
         _currencyRepository = currencyRepository;
         _categoryRepository = categoryRepository;
 
-        _walletCategoryMapping = new(StringComparer.InvariantCultureIgnoreCase)
+        // Load WalletCategoryMapping.json
+        var categoryMappingFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "WalletCategoryMapping.json");
+        var categoryMappingJson = File.ReadAllText(categoryMappingFilePath);
+        _walletCategoryMapping = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string>>(categoryMappingJson, new JsonSerializerOptions
         {
-            { "Food & Drinks", "Eating out" },
-            { "Bar, cafe", "Bar Cafe" },
-            { "Groceries", "Groceries" },
-            { "Restaurant, fast-food", "Eating out" },
+            PropertyNameCaseInsensitive = true
+        }) ?? new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
 
-            { "Shopping", "Shopping" },
-            { "Clothes & shoes", "Clothes" },
-            { "Drug-store, chemist", "Medicaments" },
-            { "Electronics, accessories", "Electronics" },
-            { "Gifts, joy", "Gifts" },
-            { "GF", "Partner" },
-            { "Home, garden", "Housing" },
-            { "Stationery, tools", "Stationery, tools" },
-            { "Kids", "Kids" },
-            { "Pets, animals", "Pets" },
-
-            { "Housing", "Housing" },
-            { "Energy, utilities", "Housing" },
-            { "Maintenance, repairs", "Maintenance, repairs" },
-            { "Mortgage", "Mortgage" },
-            { "Services", "Services" },
-            { "Rent", "Rent" },
-            { "Furniture", "Furniture" },
-            { "New house", "New house" },
-
-            { "Transportation", "Transportation" },
-            { "Public transport", "Public Transport" },
-            { "Taxi", "Taxi" },
-
-            { "Vehicle", "Car" },
-            { "Fuel", "Fuel" },
-            { "Parking", "Parking" },
-            { "Vehicle insurance", "Car Insurance" },
-            { "Vehicle maintenance", "Car Maintenance" },
-
-            { "Life & Entertainment", "Life" },
-            { "Active sport, fitness", "Sports" },
-            { "Alcohol, tobacco", "Alcohol, tobacco" },
-            { "Vape", "Vape" },
-            { "Books, audio, subscriptions", "Books" },
-            { "Charity, gifts", "Charity" },
-            { "Culture, sport events", "Cinema" },
-            { "Education, development", "Education" },
-            { "Health care, doctor", "Healh Care" },
-            { "Dentist", "Dentist" },
-            { "Hobbies", "Hobbies" },
-            { "Holiday, trips, hotels", "Holiday, trips, hotels" },
-            { "Wellness, beauty", "Wellness, beauty" },
-            { "Communication, PC", "Other" },
-
-            { "Internet", "Internet" },
-            { "Phone, mobile phone", "Phone, mobile phone" },
-            { "Phone, cell phone", "Phone, mobile phone" },
-            { "Software, apps, games", "Online Services" },
-
-            { "Financial expenses", "Financial expenses" },
-            { "Charges, Fees", "Charges & Fees" },
-            { "Fines", "Fines" },
-            { "Taxes", "Taxes" },
-
-            { "Financial investments", "Investments" },
-
-            { "Income", "Income" },
-            { "Interests, dividends", "Interests, dividends" },
-            { "Lending, renting", "Bank Loan" },
-            { "Refunds (tax, purchase)", "Refunds (tax, purchase)" },
-            { "Salary, income", "Salary" },
-            { "Child Support", "Income" },
-
-            { "Others", "Other" },
-            { "Missing", "Missing" },
-            { "TRANSFER", "Transfer" },
-        };
-        _walletRecordTypeMapping = new(StringComparer.InvariantCultureIgnoreCase)
+        // Load WalletRecordTypeMapping.json
+        var recordTypeMappingFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "WalletRecordTypeMapping.json");
+        var recordTypeMappingJson = File.ReadAllText(recordTypeMappingFilePath);
+        var recordTypeMapping = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string>>(recordTypeMappingJson, new JsonSerializerOptions
         {
-            { "income", RecordType.Income },
-            { "expenses", RecordType.Expense },
-            { "transfer", RecordType.Transfer }
-        };
+            PropertyNameCaseInsensitive = true
+        }) ?? new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+
+        // Convert string values to RecordType enum
+        _walletRecordTypeMapping = recordTypeMapping.ToDictionary(
+            kvp => kvp.Key,
+            kvp => Enum.Parse<RecordType>(kvp.Value, ignoreCase: true),
+            StringComparer.InvariantCultureIgnoreCase
+        );
+
         _recordRepository = recordRepository;
     }
 
