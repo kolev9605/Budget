@@ -1,0 +1,11 @@
+{
+    "rest-client.environmentVariables": {
+
+        "$shared": {},
+
+        "development": {
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI4NGRjOGY1ZS1mODQ1LTQyYWEtYTlmNC0xMGE4OGJiYThlYzEiLCJzdWIiOiIwNjk4OWU1MC1jNDU4LTQ4ZDYtOGVkNS1kZjY0ZTcxNWYxMmUiLCJlbWFpbCI6ImtvbGV2OTYwNUBnbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJVc2VyIiwiZXhwIjoxNzMwMDQ0MTA1LCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjUwMDAiLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjQyMDAifQ.EdksgK5E2GMmtT-Ew1hecDSitZPnuFayFD0Ei2srzWY",
+            "host": "https://localhost:5001"
+        }
+    }
+}

@@ -1,0 +1,147 @@
+﻿using Budget.Domain.Entities;
+using Budget.Domain.Interfaces.Repositories;
+using Budget.Domain.Models.Pagination;
+using Budget.Domain.Models.Records;
+using Budget.Infrastructure.Persistence.Extensions;
+using Mapster;
+using Microsoft.EntityFrameworkCore;
+
+namespace Budget.Infrastructure.Persistence.Repositories;
+
+public class RecordRepository : Repository<Record>, IRecordRepository
+{
+    public RecordRepository(
+        BudgetDbContext budgetDbContext) : base(budgetDbContext)
+    {
+    }
+
+    public async Task<Record?> GetRecordByIdAsync(Guid recordId, string userId)
+    {
+        var record = await GetRecordByIdBaseQuery(userId, recordId)
+            .FirstOrDefaultAsync();
+
+        return record;
+    }
+
+    public async Task<RecordModel?> GetRecordByIdMappedAsync(Guid recordId, string userId)
+    {
+        var record = await GetRecordByIdBaseQuery(userId, recordId)
+            .ProjectToType<RecordModel>()
+            .FirstOrDefaultAsync();
+
+        return record;
+    }
+
+    public async Task<RecordModel?> GetPositiveTransferRecordMappedAsync(DateTimeOffset recordDate, Guid categoryId, decimal recordAmount)
+    {
+        var fromAccountRecord = await GetAll()
+            .Include(r => r.Account)
+                .ThenInclude(a => a.Currency)
+            .Include(r => r.FromAccount)
+                .ThenInclude(a => a!.Currency)
+            .Include(r => r.PaymentType)
+            .Include(r => r.Category)
+            .Where(r => Math.Abs(r.Amount) == Math.Abs(recordAmount))
+            .Where(r => r.Amount > 0)
+            .Where(r => r.RecordType == RecordType.Transfer)
+            .Where(r => r.RecordDate == recordDate)
+            .Where(r => r.CategoryId == categoryId)
+            .ProjectToType<RecordModel>()
+            .FirstOrDefaultAsync();
+
+        return fromAccountRecord;
+    }
+
+    public async Task<Record?> GetNegativeTransferRecordAsync(Record record)
+    {
+        var transferRecord = await GetAll()
+            .Include(r => r.Account)
+            .Where(r => r.Account.UserId == r.Account.UserId)
+            .Where(r => r.AccountId == record.FromAccountId)
+            .Where(r => r.FromAccountId == record.AccountId)
+            .Where(r => Math.Abs(r.Amount) == Math.Abs(record.Amount))
+            .Where(r => r.RecordType == RecordType.Transfer)
+            .Where(r => r.CreatedOn == record.CreatedOn)
+            .Where(r => r.CategoryId == record.CategoryId)
+            .Where(r => r.Id != record.Id)
+            .FirstOrDefaultAsync();
+
+        return transferRecord;
+    }
+
+    public async Task<IEnumerable<Record>> GetAllAsync(string userId)
+    {
+        var records = await GetAllBaseQuery(userId)
+            .ToListAsync();
+
+        return records;
+    }
+
+    public async Task<IEnumerable<RecordsExportModel>> GetAllForExportAsync(string userId)
+    {
+        var records = await GetAllBaseQuery(userId)
+            .ProjectToType<RecordsExportModel>()
+            .ToListAsync();
+
+        return records;
+    }
+
+    public async Task<IPagedListContainer<RecordModel>> GetAllPaginatedAsync(string userId, int pageNumber, int pageSize)
+    {
+        var paginatedRecords = await _budgetDbContext.Records
+            .Where(r => r.Account.UserId == userId)
+            .OrderByDescending(r => r.RecordDate)
+            .ProjectToType<RecordModel>()
+            .PaginateAsync(pageNumber, pageSize);
+
+        return paginatedRecords;
+    }
+
+    public async Task<IEnumerable<Record>> GetAllInRangeAndAccountsAsync(string userId, DateTimeOffset startDate, DateTimeOffset endDate, IEnumerable<Guid> accountIds)
+    {
+        var records = await GetAll()
+            .Include(r => r.Account)
+            .Where(r => r.Account.UserId == userId)
+            .Where(r => r.RecordDate >= startDate && r.RecordDate <= endDate)
+            .Where(r => accountIds.Contains(r.AccountId))
+            .OrderBy(r => r.RecordDate)
+            .ToListAsync();
+
+        return records;
+    }
+
+    public async Task<RecordsDateRangeResult?> GetDateRangeByUserAsync(string userId)
+    {
+        // TODO: Is this the best way of handling that? Use Dapper maybe?
+        return (await _budgetDbContext.Database.SqlQuery<RecordsDateRangeResult>(@$"select MIN(r.record_date) min_date, MAX(r.record_date) max_date from records r
+join accounts a on r.account_id = a.id
+where 1 = 1
+and a.user_id = {userId}")
+            .ToListAsync()).FirstOrDefault();
+    }
+
+    private IQueryable<Record> GetRecordByIdBaseQuery(string userId, Guid recordId)
+    {
+        return GetAll()
+            .Include(r => r.Account)
+                .ThenInclude(a => a.Currency)
+            .Include(r => r.FromAccount)
+                .ThenInclude(a => a!.Currency)
+            .Include(r => r.PaymentType)
+            .Include(r => r.Category)
+            .Where(r => r.Account.UserId == userId)
+            .Where(r => r.Id == recordId);
+    }
+
+    private IQueryable<Record> GetAllBaseQuery(string userId)
+    {
+        return GetAll()
+            .Include(r => r.Account)
+                .ThenInclude(a => a.Currency)
+            .Include(r => r.FromAccount)
+            .Include(r => r.PaymentType)
+            .Include(r => r.Category)
+            .Where(r => r.Account.UserId == userId)
+            .OrderByDescending(r => r.RecordDate);
+    }
+}
