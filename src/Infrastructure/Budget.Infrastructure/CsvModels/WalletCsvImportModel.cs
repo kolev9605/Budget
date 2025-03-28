@@ -2,16 +2,16 @@
 
 namespace Budget.Infrastructure.CsvModels;
 
-public class WalletCsvExportModel
+public class WalletCsvImportModel
 {
     [Name("account")]
-    public string Account { get; set; }
+    public string Account { get; set; } = null!;
 
     [Name("category")]
-    public string Category { get; set; }
+    public string Category { get; set; } = null!;
 
     [Name("currency")]
-    public string Currency { get; set; }
+    public string Currency { get; set; } = null!;
 
     [Name("amount")]
     public decimal Amount { get; set; }
@@ -20,16 +20,16 @@ public class WalletCsvExportModel
     public decimal RefCurrencyAmount { get; set; }
 
     [Name("type")]
-    public string Type { get; set; }
+    public string Type { get; set; } = null!;
 
     [Name("payment_type")]
-    public string PaymentType { get; set; }
+    public string PaymentType { get; set; } = null!;
 
     [Name("payment_type_local")]
-    public string PaymentTypeLocal { get; set; }
+    public string PaymentTypeLocal { get; set; } = null!;
 
     [Name("note")]
-    public string Note { get; set; }
+    public string Note { get; set; } = null!;
 
     [Name("date")]
     public DateTime Date { get; set; }

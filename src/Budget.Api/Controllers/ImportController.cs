@@ -1,32 +1,16 @@
-﻿using Budget.Domain.Interfaces.Services;
+﻿using Budget.Application.Import.Commands;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Budget.Api.Controllers;
 
 public class ImportController : BaseController
 {
-    private readonly IImportService _importService;
+    private readonly IMediator _mediator;
 
-    public ImportController(IImportService importService)
+    public ImportController(IMediator mediator)
     {
-        _importService = importService;
-    }
-
-    [HttpPost]
-    [Route(nameof(ImportRecords))]
-    public async Task<IActionResult> ImportRecords()
-    {
-        var file = Request.Form.Files[0];
-        string fileContents;
-        using (var stream = file.OpenReadStream())
-        using (var reader = new StreamReader(stream))
-        {
-            fileContents = await reader.ReadToEndAsync();
-        }
-
-        await _importService.ImportRecordsAsync(fileContents, CurrentUser.Id);
-
-        return Ok();
+        _mediator = mediator;
     }
 
     [HttpPost]
@@ -41,8 +25,8 @@ public class ImportController : BaseController
             fileContents = await reader.ReadToEndAsync();
         }
 
-        var recordsInserted = await _importService.ImportWalletRecordsAsync(fileContents, CurrentUser.Id);
+        var importedRecords = await _mediator.Send(new ImportWalletRecordsCommand(fileContents, CurrentUser.Id));
 
-        return Ok(recordsInserted);
+        return Ok(importedRecords);
     }
 }

@@ -1,187 +1,234 @@
-// using Budget.Domain.Entities;
-// using Budget.Domain.Interfaces;
-// using ErrorOr;
-// using MediatR;
+using System.Text.Json;
+using Budget.Domain.Entities;
+using Budget.Domain.Interfaces;
+using Budget.Domain.Interfaces.Repositories;
+using Budget.Domain.Interfaces.Services;
+using Budget.Domain.Models.Import.Wallet;
+using ErrorOr;
+using MediatR;
 
-// namespace Budget.Application.Import.Commands;
+namespace Budget.Application.Import.Commands;
 
-// public record ImportWalletRecordsCommand(
-// ) : IRequest<ErrorOr<Record>>;
+public record ImportWalletRecordsCommand(
+    string WalletFileContent,
+    string UserId
+) : IRequest<ErrorOr<int>>;
 
 
-// public class ImportWalletRecordsCommandHandler : IRequestHandler<ImportWalletRecordsCommand, ErrorOr<Record>>
-// {
-//     private readonly ICsvParser _csvParser;
-//     private readonly IDateTimeProvider _dateTimeProvider;
+public class ImportWalletRecordsCommandHandler : IRequestHandler<ImportWalletRecordsCommand, ErrorOr<int>>
+{
+    private readonly IDateTimeProvider _dateTimeProvider;
+    private readonly IWalletImportService _walletImportService;
+    private readonly IAccountRepository _accountRepository;
+    private readonly IPaymentTypeRepository _paymentTypesRepository;
+    private readonly ICurrencyRepository _currencyRepository;
+    private readonly ICategoryRepository _categoryRepository;
+    private readonly IRecordRepository _recordRepository;
 
-//     public ImportWalletRecordsCommandHandler(
-//         ICsvParser csvParser,
-//         IDateTimeProvider dateTimeProvider)
-//     {
-//         _csvParser = csvParser;
-//         _dateTimeProvider = dateTimeProvider;
-//     }
+    private readonly Dictionary<string, string> _walletCategoryMapping;
+    private readonly Dictionary<string, RecordType> _walletRecordTypeMapping;
 
-//     public async Task<ErrorOr<Record>> Handle(ImportWalletRecordsCommand request, CancellationToken cancellationToken)
-//     {
-//         throw new NotImplementedException();
-//     }
-//     public async Task<int> ImportWalletRecordsAsync(string walletFileContent, string userId)
-//     {
-//         var records = _csvParser.ParseCsvString<WalletCsvExportModel>(walletFileContent);
-//         var paymentTypes = await _paymentTypesRepository.BaseGetAllAsync();
-//         var currencies = await _currencyRepository.BaseGetAllAsync();
-//         var debitCardPaymentType = paymentTypes.FirstOrDefault(pt => pt.Name == "Debit Card") ?? throw new ArgumentNullException();
-//         var cashPaymentType = paymentTypes.FirstOrDefault(pt => pt.Name == "Cash") ?? throw new ArgumentNullException();
+    public ImportWalletRecordsCommandHandler(
+        IDateTimeProvider dateTimeProvider,
+        IWalletImportService walletImportService,
+        IAccountRepository accountRepository,
+        IPaymentTypeRepository paymentTypesRepository,
+        ICurrencyRepository currencyRepository,
+        ICategoryRepository categoryRepository,
+        IRecordRepository recordRepository)
+    {
+        _dateTimeProvider = dateTimeProvider;
+        _walletImportService = walletImportService;
+        _accountRepository = accountRepository;
+        _paymentTypesRepository = paymentTypesRepository;
+        _currencyRepository = currencyRepository;
+        _categoryRepository = categoryRepository;
+        _recordRepository = recordRepository;
 
-//         var insertedRecords = new List<Record>();
+        // Load WalletCategoryMapping.json
+        var categoryMappingFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "WalletCategoryMapping.json");
+        var categoryMappingJson = File.ReadAllText(categoryMappingFilePath);
+        _walletCategoryMapping = JsonSerializer.Deserialize<Dictionary<string, string>>(categoryMappingJson, new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        }) ?? new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
 
-//         foreach (var record in records)
-//         {
-//             var categoryFromDatabase = await MapCategoryAsync(record);
-//             var account = await GetOrCreateAccountAsync(record, userId, currencies);
-//             var paymentType = MapPaymentType(debitCardPaymentType, cashPaymentType, account);
-//             var recordType = MapRecordType(record);
+        // Load WalletRecordTypeMapping.json
+        var recordTypeMappingFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "WalletRecordTypeMapping.json");
+        var recordTypeMappingJson = File.ReadAllText(recordTypeMappingFilePath);
+        var recordTypeMapping = JsonSerializer.Deserialize<Dictionary<string, string>>(recordTypeMappingJson, new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        }) ?? new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
 
-//             // The dates in the Walled export are in local time
-//             var date = record.Date.ToUniversalTime();
+        // Convert string values to RecordType enum
+        _walletRecordTypeMapping = recordTypeMapping.ToDictionary(
+            kvp => kvp.Key,
+            kvp => Enum.Parse<RecordType>(kvp.Value, ignoreCase: true),
+            StringComparer.InvariantCultureIgnoreCase
+        );
+    }
 
-//             var recordToAdd = new Record()
-//             {
-//                 Account = account,
-//                 Category = categoryFromDatabase,
-//                 Note = record.Note,
-//                 Amount = record.Amount,
-//                 RecordType = recordType,
-//                 PaymentType = paymentType,
-//                 RecordDate = date,
-//                 CreatedOn = _dateTimeProvider.UtcNow,
-//             };
+    public async Task<ErrorOr<int>> Handle(ImportWalletRecordsCommand request, CancellationToken cancellationToken)
+    {
+        var createdRecords = await ImportWalletRecordsAsync(request.WalletFileContent, request.UserId);
+        return createdRecords.ToErrorOr();
+    }
+    private async Task<int> ImportWalletRecordsAsync(string walletFileContent, string userId)
+    {
+        var records = _walletImportService.ParseWalletCsv(walletFileContent);
+        var paymentTypes = await _paymentTypesRepository.BaseGetAllAsync();
+        var currencies = await _currencyRepository.BaseGetAllAsync();
+        var debitCardPaymentType = paymentTypes.FirstOrDefault(pt => pt.Name == "Debit Card") ?? throw new ArgumentNullException();
+        var cashPaymentType = paymentTypes.FirstOrDefault(pt => pt.Name == "Cash") ?? throw new ArgumentNullException();
 
-//             var createdRecord = await _recordRepository.CreateAsync(recordToAdd);
-//             insertedRecords.Add(createdRecord);
-//         }
+        var insertedRecords = new List<Record>();
 
-//         await LinkTransfersAsync(userId);
+        foreach (var record in records)
+        {
+            var categoryFromDatabase = await MapCategoryAsync(record);
+            var account = await GetOrCreateAccountAsync(record, userId, currencies);
+            var paymentType = MapPaymentType(debitCardPaymentType, cashPaymentType, account);
+            var recordType = MapRecordType(record);
 
-//         return insertedRecords.Count;
-//     }
+            // The dates in the Walled export are in local time
+            var date = record.Date.ToUniversalTime();
 
-//     private async Task LinkTransfersAsync(string userId)
-//     {
-//         var allRecords = await _recordRepository.GetAllAsync(userId);
+            var recordToAdd = new Record()
+            {
+                Account = account,
+                Category = categoryFromDatabase,
+                Note = record.Note,
+                Amount = record.Amount,
+                RecordType = recordType,
+                PaymentType = paymentType,
+                RecordDate = date,
+                CreatedOn = _dateTimeProvider.UtcNow,
+            };
 
-//         var transfers = allRecords
-//             .Where(r => r.RecordType == RecordType.Transfer)
-//             .GroupBy(r => new { r.RecordDate })
-//             .ToDictionary(r => r.Key, r => r.ToList());
+            var createdRecord = await _recordRepository.CreateAsync(recordToAdd);
+            insertedRecords.Add(createdRecord);
+        }
 
-//         foreach (var transferPair in transfers)
-//         {
-//             var groupedByAmount = transferPair.Value
-//                 .GroupBy(r => Math.Abs(r.Amount));
+        await LinkTransfersAsync(userId);
 
-//             foreach (var group in groupedByAmount)
-//             {
-//                 var transferFromRecords = group.Where(r => r.Amount < 0);
-//                 var transferToRecords = group.Where(r => r.Amount > 0);
+        return insertedRecords.Count;
+    }
 
-//                 foreach (var transferFrom in transferFromRecords)
-//                 {
-//                     transferFrom.FromAccountId = transferToRecords.FirstOrDefault().AccountId;
-//                     await _recordRepository.UpdateAsync(transferFrom);
-//                 }
+    private async Task LinkTransfersAsync(string userId)
+    {
+        var allRecords = await _recordRepository.GetAllAsync(userId);
 
-//                 foreach (var transferTo in transferToRecords)
-//                 {
-//                     transferTo.FromAccountId = transferFromRecords.FirstOrDefault().AccountId;
-//                     await _recordRepository.UpdateAsync(transferTo);
-//                 }
-//             }
-//         }
-//     }
+        var transfers = allRecords
+            .Where(r => r.RecordType == RecordType.Transfer)
+            .GroupBy(r => new { r.RecordDate })
+            .ToDictionary(r => r.Key, r => r.ToList());
 
-//     private RecordType MapRecordType(WalletCsvExportModel record)
-//     {
-//         RecordType? recordType = null;
-//         if (record.Transfer)
-//         {
-//             recordType = RecordType.Transfer;
-//         }
-//         else
-//         {
-//             recordType = _walletRecordTypeMapping.GetValueOrDefault(record.Type);
-//         }
+        foreach (var transferPair in transfers)
+        {
+            var groupedByAmount = transferPair.Value
+                .GroupBy(r => Math.Abs(r.Amount));
 
-//         if (recordType == null)
-//         {
-//             throw new ArgumentNullException(nameof(recordType));
-//         }
+            foreach (var group in groupedByAmount)
+            {
+                var transferFromRecords = group.Where(r => r.Amount < 0) ?? new List<Record>();
+                var transferToRecords = group.Where(r => r.Amount > 0) ?? new List<Record>();
 
-//         return recordType.Value;
-//     }
+                foreach (var transferFrom in transferFromRecords)
+                {
+                    transferFrom.FromAccountId = transferToRecords?.FirstOrDefault()?.AccountId;
+                    await _recordRepository.UpdateAsync(transferFrom);
+                }
 
-//     private static PaymentType MapPaymentType(PaymentType debitCardPaymentType, PaymentType cashPaymentType, Account account)
-//     {
-//         if (account.Name == "Cash")
-//         {
-//             return cashPaymentType;
-//         }
-//         else
-//         {
-//             return debitCardPaymentType;
-//         }
-//     }
+                foreach (var transferTo in transferToRecords!)
+                {
+                    transferTo.FromAccountId = transferFromRecords.FirstOrDefault()?.AccountId;
+                    await _recordRepository.UpdateAsync(transferTo);
+                }
+            }
+        }
+    }
 
-//     private async Task<Account> GetOrCreateAccountAsync(
-//         WalletCsvExportModel record,
-//         string userId,
-//         IEnumerable<Currency> currencies)
-//     {
-//         var account = await _accountRepository.GetByNameAsync(userId, record.Account);
-//         if (account != null)
-//         {
-//             return account;
-//         }
-//         else
-//         {
-//             var currency = currencies.FirstOrDefault(c => c.Abbreviation == record.Currency);
+    private RecordType MapRecordType(WalletImportModel record)
+    {
+        RecordType? recordType = null;
+        if (record.Transfer)
+        {
+            recordType = RecordType.Transfer;
+        }
+        else
+        {
+            recordType = _walletRecordTypeMapping.GetValueOrDefault(record.Type);
+        }
 
-//             if (currency == null)
-//             {
-//                 currency = currencies.FirstOrDefault(c => c.Abbreviation == "BGN");
-//             }
+        if (recordType == null)
+        {
+            throw new ArgumentNullException(nameof(recordType));
+        }
 
-//             var accountToCreate = new Account()
-//             {
-//                 Currency = currency,
-//                 InitialBalance = 0,
-//                 Name = record.Account,
-//                 UserId = userId
-//             };
+        return recordType.Value;
+    }
 
-//             var createdAccount = await _accountRepository.CreateAsync(accountToCreate);
+    private static PaymentType MapPaymentType(PaymentType debitCardPaymentType, PaymentType cashPaymentType, Account account)
+    {
+        if (account.Name == "Cash")
+        {
+            return cashPaymentType;
+        }
+        else
+        {
+            return debitCardPaymentType;
+        }
+    }
 
-//             return createdAccount;
-//         }
-//     }
+    private async Task<Account> GetOrCreateAccountAsync(
+        WalletImportModel record,
+        string userId,
+        IEnumerable<Currency> currencies)
+    {
+        var account = await _accountRepository.GetByNameAsync(userId, record.Account);
+        if (account != null)
+        {
+            return account;
+        }
+        else
+        {
+            var currency = currencies.FirstOrDefault(c => c.Abbreviation == record.Currency);
+            if (currency == null)
+            {
+                currency = currencies.FirstOrDefault(c => c.Abbreviation == "BGN") ?? throw new ArgumentNullException(nameof(currency));
+            }
 
-//     private async Task<Category> MapCategoryAsync(WalletCsvExportModel record)
-//     {
-//         var category = _walletCategoryMapping.GetValueOrDefault(record.Category);
+            var accountToCreate = new Account()
+            {
+                Currency = currency,
+                InitialBalance = 0,
+                Name = record.Account,
+                UserId = userId
+            };
 
-//         if (category == null)
-//         {
-//             throw new ArgumentNullException(nameof(category));
-//         }
+            var createdAccount = await _accountRepository.CreateAsync(accountToCreate);
 
-//         var categoryFromDatabase = await _categoryRepository.GetByNameWithUsersAsync(category);
+            return createdAccount;
+        }
+    }
 
-//         if (categoryFromDatabase == null)
-//         {
-//             throw new ArgumentNullException(nameof(categoryFromDatabase));
-//         }
+    private async Task<Category> MapCategoryAsync(WalletImportModel record)
+    {
+        var category = _walletCategoryMapping.GetValueOrDefault(record.Category);
 
-//         return categoryFromDatabase;
-//     }
-// }
+        if (category == null)
+        {
+            throw new ArgumentNullException(nameof(category));
+        }
+
+        var categoryFromDatabase = await _categoryRepository.GetByNameWithUsersAsync(category);
+
+        if (categoryFromDatabase == null)
+        {
+            throw new ArgumentNullException(nameof(categoryFromDatabase));
+        }
+
+        return categoryFromDatabase;
+    }
+}

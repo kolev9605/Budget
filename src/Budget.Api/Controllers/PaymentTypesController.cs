@@ -8,8 +8,8 @@ namespace Budget.Api.Controllers;
 
 public class PaymentTypesController : BaseController
 {
-
     private readonly IMediator _mediator;
+
     public PaymentTypesController(IMediator mediator)
     {
         _mediator = mediator;
