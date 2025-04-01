@@ -1,14 +1,23 @@
-import { useState } from 'react';
-import { FiMenu, FiX } from 'react-icons/fi';
+import { useState } from "react";
+import { FiMenu, FiX } from "react-icons/fi";
+import { useLogout } from "../hooks/useLogout";
+import { useAuthContext } from "../hooks/useAuthContext";
+import { NavLink } from "react-router";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { logout } = useLogout();
+  const handleLogout = () => {
+    logout();
+  };
+
+  const { user } = useAuthContext();
 
   const navItems = [
-    { name: 'Home', href: '#' },
-    { name: 'Features', href: '#' },
-    { name: 'Pricing', href: '#' },
-    { name: 'Contact', href: '#' },
+    { name: "Dashboard", to: "/dashboard" },
+    { name: "Records", to: "/records" },
+    { name: "Accounts", to: "/accounts" },
+    { name: "Categories", to: "/categories" },
   ];
 
   return (
@@ -24,16 +33,19 @@ const Navbar = () => {
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-8">
               {navItems.map((item) => (
-                <a
+                <NavLink
                   key={item.name}
-                  href={item.href}
+                  to={item.to}
                   className="text-gray-300 hover:text-blue-300 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
                 >
                   {item.name}
-                </a>
+                </NavLink>
               ))}
-              <button className="ml-4 bg-blue-500 hover:bg-blue-400 text-white px-6 py-2 rounded-xl text-sm font-medium transition-colors duration-200">
-                Sign In
+              <button
+                onClick={handleLogout}
+                className="ml-4 bg-blue-500 hover:bg-blue-400 text-white px-6 py-2 rounded-xl text-sm font-medium transition-colors duration-200"
+              >
+                Logout
               </button>
             </div>
           </div>
@@ -44,11 +56,7 @@ const Navbar = () => {
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
             >
-              {isMenuOpen ? (
-                <FiX className="h-6 w-6" />
-              ) : (
-                <FiMenu className="h-6 w-6" />
-              )}
+              {isMenuOpen ? <FiX className="h-6 w-6" /> : <FiMenu className="h-6 w-6" />}
             </button>
           </div>
         </div>
@@ -59,16 +67,19 @@ const Navbar = () => {
         <div className="md:hidden absolute w-full bg-gray-800 shadow-xl z-50">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             {navItems.map((item) => (
-              <a
+              <NavLink
                 key={item.name}
-                href={item.href}
+                to={item.to}
                 className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200"
               >
                 {item.name}
-              </a>
+              </NavLink>
             ))}
-            <button className="w-full bg-blue-500 hover:bg-blue-400 text-white px-6 py-3 rounded-xl text-base font-medium transition-colors duration-200 mt-2">
-              Sign In
+            <button
+              onClick={handleLogout}
+              className="w-full bg-blue-500 hover:bg-blue-400 text-white px-6 py-3 rounded-xl text-base font-medium transition-colors duration-200 mt-2"
+            >
+              Logout
             </button>
           </div>
         </div>

@@ -1,16 +1,35 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaUser, FaLock } from "react-icons/fa";
+import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { NavLink } from "react-router";
+import { useLogin } from "../hooks/useLogin";
+import Layout from "../components/Layout";
 
-const LoginForm = () => {
+const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+  const { login, error, isLoading } = useLogin();
 
-  const handleSubmit = (e) => {
+  // useEffect(() => {
+  //   const fetchAccounts = async () => {
+  //     try {
+  //       const accounts = await getAccounts();
+  //       console.log(accounts);
+  //     } catch (error) {
+  //       console.error("Error fetching accounts:", error);
+  //     }
+  //   };
+  //   fetchAccounts();
+  // }, []);
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Handle login logic here
     console.log({ email, password, rememberMe });
+
+    await login(email, password);
+
+    console.log(error);
   };
 
   return (
@@ -18,8 +37,22 @@ const LoginForm = () => {
       <div className="bg-gray-800 p-8 rounded-2xl shadow-xl w-full max-w-md transition-all duration-300 hover:shadow-2xl">
         <div className="mb-10 text-center space-y-3">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-100 transition-all duration-300">Welcome Back</h1>
-          <p className="text-gray-400 text-sm md:text-base">Sign in to your account</p>
+          <p className="text-gray-400 text-sm md:text-base">Sign in to your account {isLoading}</p>
         </div>
+
+        {error && (
+          <div className="bg-red-500/20 border border-red-500/30 rounded-xl p-4 mb-6">
+            <div className="flex items-start gap-2 text-red-400">
+              <InformationCircleIcon className="h-5 w-5 flex-shrink-0" />
+              <div className="space-y-1">
+                <p className="text-sm font-medium">There were error(s) with your submission</p>
+                <ul className="list-disc list-inside text-sm">
+                  <li> {error}</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-8">
           <div className="space-y-6">
@@ -42,7 +75,6 @@ const LoginForm = () => {
                 />
               </div>
             </div>
-
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-3">
                 Password
@@ -80,10 +112,10 @@ const LoginForm = () => {
           </div>
 
           <button
+            disabled={isLoading}
             type="submit"
-            className="w-full bg-blue-500 hover:bg-blue-400 text-white py-3.5 rounded-xl
-              font-medium text-sm md:text-base tracking-wide transition-all duration-300
-              transform hover:scale-[1.01] shadow-lg hover:shadow-blue-500/20"
+            className={`w-full py-3.5 rounded-xl font-medium text-sm md:text-base tracking-wide transition-all duration-300 transform shadow-lg
+              ${isLoading ? "bg-gray-500 text-gray-300 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-400 text-white hover:scale-[1.01] hover:shadow-blue-500/20"}`}
           >
             Sign In
           </button>
@@ -103,4 +135,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default LoginPage;

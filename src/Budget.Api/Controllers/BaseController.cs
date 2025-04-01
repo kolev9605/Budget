@@ -8,7 +8,7 @@ using System.Security.Claims;
 
 namespace Budget.Api.Controllers;
 
-[Authorize]
+// [Authorize]
 [ApiController]
 [Route("[controller]")]
 public abstract class BaseController : ControllerBase

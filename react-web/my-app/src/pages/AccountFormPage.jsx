@@ -8,7 +8,7 @@ import {
   XMarkIcon,
   InformationCircleIcon,
 } from "@heroicons/react/24/outline";
-import Layout from "./Layout";
+import Layout from "../components/Layout";
 
 const AccountFormPage = ({ existingAccounts = [] }) => {
   const { id } = useParams();

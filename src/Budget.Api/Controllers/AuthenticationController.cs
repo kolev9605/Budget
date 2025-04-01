@@ -27,7 +27,13 @@ public class AuthenticationController(
     public async Task<IActionResult> Register(RegistrationRequest registrationRequest)
     {
         var result = await _mediator.Send(registrationRequest.Adapt<RegistrationCommand>());
+        if (!result.IsError)
+        {
+            var loginResult = await _mediator.Send(registrationRequest.Adapt<LoginQuery>());
+            return MatchResponse<AuthenticationResult, AuthenticationResponse>(loginResult);
+        }
 
+        // This is reached only if registration fails - fix the return
         return MatchResponse<RegistrationResult, RegistrationResponse>(result);
     }
 }

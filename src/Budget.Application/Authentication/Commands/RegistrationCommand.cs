@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Identity;
 namespace Budget.Application.Authentication.Commands;
 
 public record RegistrationCommand(
-    string Username,
     string Password,
     string Email) : IRequest<ErrorOr<RegistrationResult>>;
 
@@ -20,7 +19,7 @@ public class RegistrationCommandHandler(
 {
     public async Task<ErrorOr<RegistrationResult>> Handle(RegistrationCommand request, CancellationToken cancellationToken)
     {
-        var userExists = await _userManager.FindByNameAsync(request.Username);
+        var userExists = await _userManager.FindByNameAsync(request.Email);
         if (userExists is not null)
         {
             return Errors.User.AlreadyExists;
@@ -37,7 +36,7 @@ public class RegistrationCommandHandler(
         {
             Email = request.Email,
             SecurityStamp = Guid.NewGuid().ToString(),
-            UserName = request.Username,
+            UserName = request.Email,
             Categories = userCategories
         };
 

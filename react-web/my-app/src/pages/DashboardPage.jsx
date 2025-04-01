@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { ArrowUpIcon, ArrowDownIcon, CurrencyDollarIcon, ChartBarIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
-import Layout from "./Layout";
+import Layout from "../components/Layout";
 
-const Dashboard = () => {
+const DashboardPage = () => {
   const [quickAddAmount, setQuickAddAmount] = useState("");
 
   // Example data - replace with real data
@@ -183,4 +183,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default DashboardPage;

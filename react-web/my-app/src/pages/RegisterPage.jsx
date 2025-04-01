@@ -1,16 +1,20 @@
 import { useState } from "react";
 import { FaUser, FaLock } from "react-icons/fa";
 import { NavLink } from "react-router";
+import { useRegister } from "../hooks/useRegister";
+import { InformationCircleIcon } from "@heroicons/react/24/outline";
 
-const RegisterForm = () => {
+const RegisterPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const { register, error, isLoading } = useRegister();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Handle registration logic here
     console.log({ email, password, confirmPassword });
+    await register(email, password);
   };
 
   return (
@@ -20,6 +24,20 @@ const RegisterForm = () => {
           <h1 className="text-3xl md:text-4xl font-bold text-gray-100 transition-all duration-300">Create Account</h1>
           <p className="text-gray-400 text-sm md:text-base">Get started with your free account</p>
         </div>
+
+        {error && (
+          <div className="bg-red-500/20 border border-red-500/30 rounded-xl p-4 mb-6">
+            <div className="flex items-start gap-2 text-red-400">
+              <InformationCircleIcon className="h-5 w-5 flex-shrink-0" />
+              <div className="space-y-1">
+                <p className="text-sm font-medium">There were error(s) with your submission</p>
+                <ul className="list-disc list-inside text-sm">
+                  <li> {error}</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-8">
           <div className="space-y-6">
@@ -85,12 +103,16 @@ const RegisterForm = () => {
           </div>
 
           <button
+            disabled={isLoading}
             type="submit"
-            className="w-full bg-blue-500 hover:bg-blue-400 text-white py-3.5 rounded-xl
-              font-medium text-sm md:text-base tracking-wide transition-all duration-300
-              transform hover:scale-[1.01] shadow-lg hover:shadow-blue-500/20"
+            className={`w-full py-3.5 rounded-xl font-medium text-sm md:text-base tracking-wide transition-all duration-300 transform shadow-lg
+              ${
+                isLoading
+                  ? "bg-gray-500 text-gray-300 cursor-not-allowed"
+                  : "bg-blue-500 hover:bg-blue-400 text-white hover:scale-[1.01] hover:shadow-blue-500/20"
+              }`}
           >
-            Sign Up
+            Register
           </button>
         </form>
 
@@ -105,4 +127,4 @@ const RegisterForm = () => {
   );
 };
 
-export default RegisterForm;
+export default RegisterPage;
