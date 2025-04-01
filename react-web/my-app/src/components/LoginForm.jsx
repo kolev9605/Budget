@@ -1,10 +1,10 @@
-import { useState } from 'react';
-import { FaUser, FaLock } from 'react-icons/fa';
+import { useState } from "react";
+import { FaUser, FaLock } from "react-icons/fa";
 import { NavLink } from "react-router";
 
 const LoginForm = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
 
   const handleSubmit = (e) => {
@@ -17,12 +17,8 @@ const LoginForm = () => {
     <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4 sm:p-6 lg:p-8">
       <div className="bg-gray-800 p-8 rounded-2xl shadow-xl w-full max-w-md transition-all duration-300 hover:shadow-2xl">
         <div className="mb-10 text-center space-y-3">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-100 transition-all duration-300">
-            Welcome Back
-          </h1>
-          <p className="text-gray-400 text-sm md:text-base">
-            Sign in to your account
-          </p>
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-100 transition-all duration-300">Welcome Back</h1>
+          <p className="text-gray-400 text-sm md:text-base">Sign in to your account</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-8">
@@ -94,8 +90,11 @@ const LoginForm = () => {
         </form>
 
         <p className="mt-8 text-center text-sm text-gray-400">
-          Don't have an account?{' '}
-          <NavLink to="/register" className="text-blue-400 hover:text-blue-300 font-medium transition-colors duration-200">
+          Don't have an account?{" "}
+          <NavLink
+            to="/register"
+            className="text-blue-400 hover:text-blue-300 font-medium transition-colors duration-200"
+          >
             Get started
           </NavLink>
         </p>
