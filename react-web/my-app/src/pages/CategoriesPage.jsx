@@ -1,16 +1,16 @@
-import { Link } from 'react-router-dom';
-import { PlusIcon, PencilIcon, TrashIcon, ChevronDownIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
-import { useState } from 'react';
-import Layout from '../components/Layout';
+import { Link } from "react-router-dom";
+import { PlusIcon, PencilIcon, TrashIcon, ChevronDownIcon, ChevronRightIcon, BanknotesIcon, FolderIcon } from "@heroicons/react/24/outline";
+import { useState } from "react";
+import Layout from "../components/Layout";
 
 const CategoryPage = ({ categories }) => {
   // Sample data - replace with real data
   const sampleCategories = [
-    { id: 1, name: 'Shopping', parentId: null, description: 'General shopping expenses' },
-    { id: 2, name: 'Clothes', parentId: 1, description: 'Clothing and accessories' },
-    { id: 7, name: 'Home', parentId: 1, description: 'Home stuff' },
-    { id: 3, name: 'Food & Dining', parentId: null, description: 'Groceries, restaurants, etc.' },
-    { id: 4, name: 'Transportation', parentId: null, description: 'Fuel, public transport, etc.' },
+    { id: 1, name: "Shopping", parentId: null, description: "General shopping expenses" },
+    { id: 2, name: "Clothes", parentId: 1, description: "Clothing and accessories" },
+    { id: 7, name: "Home", parentId: 1, description: "Home stuff" },
+    { id: 3, name: "Food & Dining", parentId: null, description: "Groceries, restaurants, etc." },
+    { id: 4, name: "Transportation", parentId: null, description: "Fuel, public transport, etc." },
   ];
 
   const [collapsed, setCollapsed] = useState(() => {
@@ -20,6 +20,7 @@ const CategoryPage = ({ categories }) => {
         initialState[category.id] = true; // Default to collapsed for parent categories
       }
     });
+
     return initialState;
   });
 
@@ -36,24 +37,25 @@ const CategoryPage = ({ categories }) => {
         className={`flex justify-between items-center bg-gray-800 p-4 shadow-md ${
           isParent
             ? collapsed[category.id]
-              ? 'rounded-lg' // Fully rounded when collapsed
-              : 'rounded-t-lg' // Remove bottom-right radius when expanded
-            : '' /* No border radius for sub-categories */
+              ? "rounded-lg" // Fully rounded when collapsed
+              : "rounded-t-lg" // Remove bottom-right radius when expanded
+            : "" /* No border radius for sub-categories */
         }`}
       >
         <div className="flex items-center gap-2">
-          {isParent && hasSubCategories && ( // Show icon only if there are sub-categories
-            <button
-              onClick={() => toggleCollapse(category.id)}
-              className="text-gray-400 hover:text-gray-300 transition-colors"
-            >
-              {collapsed[category.id] ? (
-                <ChevronRightIcon className="h-4 w-4" /> // Points right when collapsed
-              ) : (
-                <ChevronDownIcon className="h-4 w-4" /> // Points down when expanded
-              )}
-            </button>
-          )}
+          {isParent &&
+            hasSubCategories && ( // Show icon only if there are sub-categories
+              <button
+                onClick={() => toggleCollapse(category.id)}
+                className="text-gray-400 hover:text-gray-300 transition-colors"
+              >
+                {collapsed[category.id] ? (
+                  <ChevronRightIcon className="h-4 w-4" /> // Points right when collapsed
+                ) : (
+                  <ChevronDownIcon className="h-4 w-4" /> // Points down when expanded
+                )}
+              </button>
+            )}
           <div>
             <h3 className="text-sm font-semibold text-gray-100">{category.name}</h3>
             <p className="text-xs text-gray-400">{category.description}</p>
@@ -81,7 +83,7 @@ const CategoryPage = ({ categories }) => {
         <div key={category.id}>
           {renderCategory(category, parentId === null)}
           {parentId === null && !collapsed[category.id] && (
-            <div className="bg-gray-850 rounded-b-lg"> {/* Removed pl-4 to eliminate left padding */}
+            <div className="bg-gray-850 rounded-b-lg">
               {renderCategories(categories, category.id)}
             </div>
           )}
@@ -90,32 +92,37 @@ const CategoryPage = ({ categories }) => {
   };
 
   return (
-    <Layout>
-      <div className="min-h-screen bg-gray-900"> {/* Ensures full page has a dark background */}
-        <div className="max-w-4xl mx-auto p-6 sm:p-8 lg:p-10"> {/* Added max-w-4xl and mx-auto for consistent width */}
-          <div className="flex items-center justify-between mb-6">
-            <h1 className="text-xl font-bold text-gray-100">Expense Categories</h1>
-            <Link
-              to="/categories/new"
-              className="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
-            >
-              <PlusIcon className="h-5 w-5" />
-              New Category
-            </Link>
-          </div>
-
-          <div className="bg-gray-900 p-4 rounded-lg shadow-md">
-            {sampleCategories.length > 0 ? (
-              <div className="space-y-4">{renderCategories(sampleCategories)}</div>
-            ) : (
-              <div className="text-center text-gray-400">
-                No categories found. Create your first category to organize transactions.
-              </div>
-            )}
-          </div>
+    <div className="min-h-screen bg-gray-900 p-6 sm:p-8 lg:p-10">
+      {" "}
+      {/* Ensures full page has a dark background */}
+      <div className="max-w-7xl mx-auto">
+        {" "}
+        {/* Added max-w-4xl and mx-auto for consistent width */}
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-bold text-gray-100 flex items-center gap-2">
+            <FolderIcon className="h-6 w-6 text-blue-400" />
+            Categories
+          </h1>
+          <Link
+            to="/categories/new"
+            className="bg-blue-500 hover:bg-blue-400 text-white px-6 py-3 rounded-xl
+              flex items-center gap-2 transition-colors"
+          >
+            <PlusIcon className="h-5 w-5" />
+            New Category
+          </Link>
+        </div>
+        <div className="bg-gray-900 rounded-lg shadow-md">
+          {sampleCategories.length > 0 ? (
+            <div className="space-y-4">{renderCategories(sampleCategories)}</div>
+          ) : (
+            <div className="text-center text-gray-400">
+              No categories found. Create your first category to organize transactions.
+            </div>
+          )}
         </div>
       </div>
-    </Layout>
+    </div>
   );
 };
 

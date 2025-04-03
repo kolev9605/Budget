@@ -12,17 +12,16 @@ namespace Budget.Api.Controllers;
 public class AccountsController(
     IMediator _mediator) : BaseController
 {
-    [HttpGet]
-    [Route(nameof(GetById))]
-    public async Task<IActionResult> GetById([FromQuery] GetAccountByIdRequest getAccountByIdRequest)
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById([FromRoute] Guid id)
     {
+        var getAccountByIdRequest = new GetAccountByIdRequest(id);
         var result = await _mediator.Send((getAccountByIdRequest, CurrentUser).Adapt<GetAccountByIdQuery>());
 
         return MatchResponse<AccountModel, AccountResponse>(result);
     }
 
     [HttpGet]
-    [Route(nameof(GetAll))]
     public async Task<IActionResult> GetAll()
     {
         var result = await _mediator.Send(CurrentUser.Adapt<GetAllAccountsQuery>());
@@ -31,7 +30,6 @@ public class AccountsController(
     }
 
     [HttpPost]
-    [Route(nameof(Create))]
     public async Task<IActionResult> Create(CreateAccountRequest createAccountRequest)
     {
         var result = await _mediator.Send((createAccountRequest, CurrentUser).Adapt<CreateAccountCommand>());
@@ -40,7 +38,6 @@ public class AccountsController(
     }
 
     [HttpPut]
-    [Route(nameof(Update))]
     public async Task<IActionResult> Update(UpdateAccountRequest updateAccountRequest)
     {
         var result = await _mediator.Send((updateAccountRequest, CurrentUser).Adapt<UpdateAccountCommand>());
@@ -48,11 +45,10 @@ public class AccountsController(
         return MatchResponse<AccountModel, AccountResponse>(result);
     }
 
-    [HttpDelete]
-    [Route(nameof(Delete))]
-    public async Task<IActionResult> Delete([FromQuery] DeleteAccountRequest deleteAccountRequest)
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete([FromRoute] Guid id)
     {
-        var result = await _mediator.Send((deleteAccountRequest, CurrentUser).Adapt<DeleteAccountCommand>());
+        var result = await _mediator.Send(new DeleteAccountCommand(id, CurrentUser.Id));
 
         return MatchResponse<AccountModel, AccountResponse>(result);
     }

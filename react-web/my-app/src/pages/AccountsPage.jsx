@@ -11,9 +11,8 @@ const AccountsPage = ({ accounts }) => {
   ];
 
   return (
-    <Layout>
       <div className="min-h-screen bg-gray-900 p-6 sm:p-8 lg:p-10">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between mb-8">
             <h1 className="text-2xl font-bold text-gray-100 flex items-center gap-2">
               <BanknotesIcon className="h-6 w-6 text-blue-400" />
@@ -85,7 +84,6 @@ const AccountsPage = ({ accounts }) => {
           )}
         </div>
       </div>
-    </Layout>
   );
 };
 

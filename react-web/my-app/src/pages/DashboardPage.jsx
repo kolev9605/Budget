@@ -32,7 +32,6 @@ const DashboardPage = () => {
   };
 
   return (
-    <Layout>
       <div className="min-h-screen bg-gray-900">
         {/* Navbar - Use the previous navbar component */}
 
@@ -179,7 +178,6 @@ const DashboardPage = () => {
           </div>
         </main>
       </div>
-    </Layout>
   );
 };
 

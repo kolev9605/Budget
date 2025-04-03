@@ -6,27 +6,28 @@ import DashboardPage from "./pages/DashboardPage.jsx";
 import AccountsPage from "./pages/AccountsPage.jsx";
 import AccountFormPage from "./pages/AccountFormPage.jsx";
 import RecordFormPage from "./pages/RecordFormPage.jsx";
+import RecordsPageOld from "./pages/RecordsPageOld.jsx";
 import RecordsPage from "./pages/RecordsPage.jsx";
-import RecordsPagev2 from "./pages/RecordsPagev2.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import CategoryPage from "./pages/CategoriesPage.jsx";
 import CategoryFormPage from "./pages/CategoryFormPage.jsx";
+import Layout from "./components/Layout.jsx";
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<App />} />
-      <Route path="login" element={<LoginPage/>} />
+      <Route path="login" element={<LoginPage />} />
       <Route path="register" element={<RegisterPage />} />
-      <Route path="nav" element={<Navbar />} />
-      <Route path="dashboard" element={<DashboardPage />} />
-      <Route path="accounts" element={<AccountsPage />} />
-      <Route path="addaccount" element={<AccountFormPage />} />
-      <Route path="add2" element={<RecordFormPage />} />
-      <Route path="records" element={<RecordsPage />} />
-      <Route path="categories" element={<CategoryPage/>} />
-      <Route path="categoryform" element={<CategoryFormPage/>} />
-      <Route path="records2" element={<RecordsPagev2 />} />
+      <Route element={<Layout />}>
+        <Route path="dashboard" element={<DashboardPage />} />
+        <Route path="accounts" element={<AccountsPage />}></Route>
+
+        <Route path="accounts/new" element={<AccountFormPage />} />
+        <Route path="categories" element={<CategoryPage />} />
+        <Route path="categories/new" element={<CategoryFormPage />} />
+        <Route path="records" element={<RecordsPage />} />
+        <Route path="records/new" element={<RecordFormPage />} />
+      </Route>
     </Routes>
   );
 }
