@@ -1,82 +1,62 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-  BanknotesIcon,
-  CreditCardIcon,
-  WalletIcon,
-  CurrencyDollarIcon,
-  XMarkIcon,
-  InformationCircleIcon,
-} from "@heroicons/react/24/outline";
+import { WalletIcon, CurrencyDollarIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { getCurrencies } from "../api/currencies.service";
+import { createAccount } from "../api/accounts.service.js";
 import ErrorSection from "../components/ErrorSection.jsx";
+import { useAuthContext } from "../hooks/useAuthContext.js";
 
-const AccountFormPage = ({ existingAccounts = [] }) => {
+const AccountFormPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuthContext();
   const isEditing = !!id;
-
-  // Sample account types - extend as needed
-  const accountTypes = [
-    { value: "cash", label: "Cash", icon: WalletIcon },
-    { value: "credit", label: "Credit Card", icon: CreditCardIcon },
-    { value: "debit", label: "Debit Card", icon: CreditCardIcon },
-    { value: "savings", label: "Savings Account", icon: BanknotesIcon },
-    { value: "investment", label: "Investment", icon: BanknotesIcon },
-  ];
 
   const [formData, setFormData] = useState({
     name: "",
-    type: "cash",
     balance: "",
-    currency: "",
+    currencyId: "",
     description: "",
   });
 
   const [errors, setErrors] = useState({});
   const [currencies, setCurrencies] = useState([]);
 
-  // Load data if editing
   useEffect(() => {
-    if (isEditing) {
-      // Replace with actual data fetching
-      const fakeAccountData = {
-        name: "Example Account",
-        type: "credit",
-        balance: 1500.0,
-        currency: "USD",
-        description: "Sample account data",
-      };
-    }
+    // if (isEditing) {
+    //   // Replace with actual data fetching
+    //   const fakeAccountData = {
+    //     name: "Example Account",
+    //     balance: 1500.0,
+    //     currency: "USD",
+    //     description: "Sample account data",
+    //   };
+    // }
 
     const fetchCurrencies = async () => {
-      try {
-        const response = await getCurrencies();
-        if (!response.ok) {
-          // TODO: Toastify error
-          throw new Error("Failed to fetch currencies");
-        }
-        const data = await response.json();
-        setCurrencies(data);
-        setFormData((prevFormData) => ({
-          ...prevFormData,
-          currency: data[0]?.id || "",
-        }));
-      } catch (error) {
+      const response = await getCurrencies(user.token);
+      if (!response.ok) {
         // TODO: Toastify error
-        console.error("Error fetching currencies:", error);
+        return;
       }
+
+      const data = await response.json();
+      setCurrencies(data);
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        currencyId: data[0]?.id || "",
+      }));
     };
 
-    fetchCurrencies();
-  }, [isEditing]);
+    if (user) fetchCurrencies();
+  }, [isEditing, user]);
 
   const validateForm = () => {
     const newErrors = {};
 
     if (!formData.name.trim()) newErrors.name = "Account name is required";
-    if (!formData.type) newErrors.type = "Account type is required";
     if (isNaN(formData.balance)) newErrors.balance = "Valid balance is required";
+    if (!formData.currencyId.trim()) newErrors.currency = "Currency is required";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -91,12 +71,22 @@ const AccountFormPage = ({ existingAccounts = [] }) => {
       balance: parseFloat(formData.balance),
     };
 
+    const submitCreateAccount = async () => {
+      const response = await createAccount(accountData, user.token);
+
+      if (!response.ok) {
+        // todo: toast
+        return;
+      }
+    };
+
+    submitCreateAccount();
+
     if (isEditing) {
       accountData.id = id;
     }
 
-    console.log("Saving account:", accountData);
-    // navigate("/accounts");
+    navigate("/accounts");
   };
 
   return (
@@ -133,33 +123,6 @@ const AccountFormPage = ({ existingAccounts = [] }) => {
               </div>
             </div>
 
-            {/* Account Type */}
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-3">Account Type</label>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {accountTypes.map((type) => {
-                  const Icon = type.icon;
-                  return (
-                    <button
-                      key={type.value}
-                      type="button"
-                      onClick={() => setFormData({ ...formData, type: type.value })}
-                      className={`p-4 rounded-xl flex flex-col items-center gap-2 transition-colors
-                        ${
-                          formData.type === type.value
-                            ? "bg-blue-500 text-white"
-                            : "bg-gray-700 hover:bg-gray-600 text-gray-300"
-                        }
-                      `}
-                    >
-                      <Icon className="h-6 w-6" />
-                      <span className="text-sm">{type.label}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
             {/* Balance and Currency */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
@@ -182,8 +145,8 @@ const AccountFormPage = ({ existingAccounts = [] }) => {
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-3">Currency</label>
                 <select
-                  value={formData.currency}
-                  onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
+                  value={formData.currencyId}
+                  onChange={(e) => setFormData({ ...formData, currencyId: e.target.value })}
                   className="w-full bg-gray-700 border border-gray-600 rounded-xl px-4 py-3.5
                     text-gray-100 focus:outline-none focus:border-blue-400 focus:ring-2 
                     focus:ring-blue-400/30 appearance-none"

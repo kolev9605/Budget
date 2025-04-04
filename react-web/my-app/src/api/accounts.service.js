@@ -1,18 +1,23 @@
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-export const getAccounts = () => {
-  return fetch(`${API_BASE_URL}/accounts`)
+export const getAccounts = (token) => {
+  return fetch(`${API_BASE_URL}/accounts`, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  });
 }
 
 export const getAccountById = (id) => {
   return fetch(`${API_BASE_URL}/accounts/${id}`)
 }
 
-export const createAccount = (account) => {
+export const createAccount = (account, token) => {
   return fetch(`${API_BASE_URL}/accounts`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
     },
     body: JSON.stringify(account),
   });

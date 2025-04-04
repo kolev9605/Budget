@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { FiMenu, FiX } from "react-icons/fi";
 import { useLogout } from "../hooks/useLogout";
-import { useAuthContext } from "../hooks/useAuthContext";
 import { NavLink } from "react-router";
 
 const Navbar = () => {
@@ -11,10 +10,8 @@ const Navbar = () => {
     logout();
   };
 
-  const { user } = useAuthContext();
-
   const navItems = [
-    { name: "Dashboard", to: "/dashboard" },
+    { name: "Dashboard", to: "/" },
     { name: "Records", to: "/records" },
     { name: "Accounts", to: "/accounts" },
     { name: "Categories", to: "/categories" },

@@ -24,12 +24,7 @@ const LoginPage = () => {
   // }, []);
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log({ email, password, rememberMe });
-
     await login(email, password);
-
-    console.log(error);
   };
 
   return (

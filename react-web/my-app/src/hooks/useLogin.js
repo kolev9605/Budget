@@ -32,7 +32,7 @@ export const useLogin = () => {
       dispatch({ type: "LOGIN", payload: json });
       setIsLoading(false);
 
-      return navigate("/dashboard");
+      return navigate("/");
     }
   };
 
