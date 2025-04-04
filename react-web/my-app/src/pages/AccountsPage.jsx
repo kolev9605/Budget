@@ -46,7 +46,7 @@ const AccountsPage = () => {
             <p className="text-gray-400">No accounts found. Create your first account to get started.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-6">
             {accounts.map((account) => (
               <div
                 key={account.id}

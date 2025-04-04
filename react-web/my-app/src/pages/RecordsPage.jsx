@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router";
 import {
   PlusIcon,
   FunnelIcon,
@@ -103,14 +103,14 @@ const RecordsPage = ({ records, accounts }) => {
             <DocumentTextIcon className="h-6 w-6 text-blue-400" />
             Records
           </h1>
-          <Link
+          <NavLink
             to="/records/new"
             className="bg-blue-500 hover:bg-blue-400 text-white px-6 py-3 rounded-xl
               flex items-center gap-2 transition-colors"
           >
-            <PlusIcon className="h-4 w-4" />
-            New
-          </Link>
+            <PlusIcon className="h-5 w-5" />
+            Add Record
+          </NavLink>
         </div>
 
         {/* Filters */}
@@ -242,12 +242,12 @@ const RecordsPage = ({ records, accounts }) => {
 
                 {/* Actions */}
                 <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Link
+                  <NavLink
                     to={`/records/edit/${record.id}`}
                     className="text-gray-400 hover:text-blue-400 p-1 rounded-lg transition-colors"
                   >
                     <PencilIcon className="h-4 w-4" />
-                  </Link>
+                  </NavLink>
                   <button className="text-gray-400 hover:text-red-400 p-1 rounded-lg transition-colors">
                     <TrashIcon className="h-4 w-4" />
                   </button>

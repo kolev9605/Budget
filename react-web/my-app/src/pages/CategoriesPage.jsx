@@ -1,5 +1,13 @@
-import { Link } from "react-router-dom";
-import { PlusIcon, PencilIcon, TrashIcon, ChevronDownIcon, ChevronRightIcon, BanknotesIcon, FolderIcon } from "@heroicons/react/24/outline";
+import { Link, NavLink } from "react-router-dom";
+import {
+  PlusIcon,
+  PencilIcon,
+  TrashIcon,
+  ChevronDownIcon,
+  ChevronRightIcon,
+  BanknotesIcon,
+  FolderIcon,
+} from "@heroicons/react/24/outline";
 import { useState } from "react";
 import Layout from "../components/Layout";
 
@@ -83,9 +91,7 @@ const CategoryPage = ({ categories }) => {
         <div key={category.id}>
           {renderCategory(category, parentId === null)}
           {parentId === null && !collapsed[category.id] && (
-            <div className="bg-gray-850 rounded-b-lg">
-              {renderCategories(categories, category.id)}
-            </div>
+            <div className="bg-gray-850 rounded-b-lg">{renderCategories(categories, category.id)}</div>
           )}
         </div>
       ));
@@ -103,14 +109,14 @@ const CategoryPage = ({ categories }) => {
             <FolderIcon className="h-6 w-6 text-blue-400" />
             Categories
           </h1>
-          <Link
+          <NavLink
             to="/categories/new"
             className="bg-blue-500 hover:bg-blue-400 text-white px-6 py-3 rounded-xl
               flex items-center gap-2 transition-colors"
           >
             <PlusIcon className="h-5 w-5" />
-            New Category
-          </Link>
+            Add Category
+          </NavLink>
         </div>
         <div className="bg-gray-900 rounded-lg shadow-md">
           {sampleCategories.length > 0 ? (

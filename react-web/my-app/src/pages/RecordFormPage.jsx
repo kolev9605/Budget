@@ -6,7 +6,8 @@ import {
   ArrowsRightLeftIcon,
   PlusIcon,
   PencilIcon,
-  XMarkIcon
+  XMarkIcon,
+  ChevronLeftIcon
 } from '@heroicons/react/24/outline';
 
 const RecordFormPage = ({ accounts, categories, transactions }) => {
@@ -97,26 +98,16 @@ const RecordFormPage = ({ accounts, categories, transactions }) => {
     <div className="min-h-screen bg-gray-900 p-6 sm:p-8 lg:p-10">
       <div className="max-w-2xl mx-auto">
         <div className="bg-gray-800 p-6 rounded-2xl shadow-xl">
-          <div className="flex items-center justify-between mb-6">
-            <h1 className="text-2xl font-bold text-gray-100 flex items-center gap-2">
-              {isEditing ? (
-                <>
-                  <PencilIcon className="h-6 w-6 text-blue-400" />
-                  Edit Transaction
-                </>
-              ) : (
-                <>
-                  <PlusIcon className="h-6 w-6 text-blue-400" />
-                  Add New Transaction
-                </>
-              )}
-            </h1>
-            <button 
+          <div className="flex items-center mb-6">
+            <button
               onClick={() => navigate(-1)}
-              className="text-gray-400 hover:text-blue-400 p-2 rounded-lg transition-colors"
+              className="flex items-center text-gray-400 hover:text-blue-400 px-3 py-2 rounded-lg transition-colors bg-gray-800 hover:bg-gray-700 shadow-md"
             >
-              <XMarkIcon className="h-6 w-6" />
+              <ChevronLeftIcon className="h-5 w-5" />
             </button>
+            <h1 className="text-2xl font-bold text-gray-100 ml-2">
+              {isEditing ? "Edit record" : "Create new Record"}
+            </h1>
           </div>
 
           {Object.keys(errors).length > 0 && (
