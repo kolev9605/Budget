@@ -1,18 +1,21 @@
-﻿using Budget.Domain.Exceptions;
-using System.Net;
+﻿using System.Net;
+using System.Net.Mime;
 using System.Text.Json;
+using Budget.Domain.Exceptions;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace Budget.Api.Helpers;
 
 public class ErrorHandlerMiddleware
 {
     private readonly RequestDelegate _next;
-    private readonly ILogger _logger;
-
-    public ErrorHandlerMiddleware(RequestDelegate next, ILoggerFactory loggerFactory)
+    private readonly ILogger<ErrorHandlerMiddleware> _logger;
+    private readonly ProblemDetailsFactory _problemDetailsFactory;
+    public ErrorHandlerMiddleware(RequestDelegate next, ILogger<ErrorHandlerMiddleware> logger, ProblemDetailsFactory problemDetailsFactory)
     {
         _next = next;
-        _logger = loggerFactory.CreateLogger<ErrorHandlerMiddleware>();
+        _logger = logger;
+        _problemDetailsFactory = problemDetailsFactory;
     }
 
     public async Task Invoke(HttpContext context)
@@ -23,28 +26,17 @@ public class ErrorHandlerMiddleware
         }
         catch (Exception error)
         {
-            var response = context.Response;
-            response.ContentType = "application/json";
+            _logger.LogError("{exception}", error);
 
-            switch (error)
-            {
-                // TODO: take advantage of the templates and log more detailed information about the error
-                case BudgetValidationException:
-                    response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    _logger.LogWarning("{exception}", error);
-                    break;
-                case BudgetAuthenticationException:
-                    response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                    _logger.LogWarning("{exception}", error);
-                    break;
-                default:
-                    response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                    _logger.LogError("{exception}", error);
-                    break;
-            }
+            var problemDetails = _problemDetailsFactory.CreateProblemDetails(
+                context,
+                statusCode: StatusCodes.Status500InternalServerError,
+                title: "An error occurred while processing your request.");
 
-            var result = JsonSerializer.Serialize(new { message = error?.Message });
-            await response.WriteAsync(result);
+            context.Response.ContentType = MediaTypeNames.Application.ProblemJson;
+            context.Response.StatusCode = problemDetails.Status!.Value;
+
+            await context.Response.WriteAsJsonAsync(problemDetails);
         }
     }
 }
