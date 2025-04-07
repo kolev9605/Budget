@@ -9,7 +9,7 @@ import {
   TrashIcon,
   ArrowRightCircleIcon,
 } from "@heroicons/react/24/outline";
-import Layout from "../components/Layout";
+import Layout from "../../components/Layout";
 
 const RecordsPageOld = ({ records }) => {
   const [searchTerm, setSearchTerm] = useState("");
