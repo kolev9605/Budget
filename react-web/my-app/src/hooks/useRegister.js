@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuthContext } from "./useAuthContext";
 import { useNavigate } from "react-router";
+import axios from "axios";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -14,25 +15,22 @@ export const useRegister = () => {
     setError(null);
     setIsLoading(true);
 
-    const response = await fetch(`${API_BASE_URL}/authentication/register`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
+    try {
+      const response = await axios.post(`${API_BASE_URL}/authentication/register`, {
+        email,
+        password,
+      });
 
-    const json = await response.json();
+      const json = response.data;
 
-    if (!response.ok) {
-      setIsLoading(false);
-      setError(json.title);
-    }
-
-    if (response.ok) {
       localStorage.setItem("user", JSON.stringify(json));
       dispatch({ type: "LOGIN", payload: json });
       setIsLoading(false);
 
       return navigate("/dashboard");
+    } catch (err) {
+      setIsLoading(false);
+      setError(err.response?.data?.title || "An error occurred");
     }
   };
 
