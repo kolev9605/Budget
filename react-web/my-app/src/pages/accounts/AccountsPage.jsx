@@ -8,7 +8,7 @@ import { getAccounts } from "../../api/accounts.service.js";
 const AccountsPage = () => {
   const [accounts, setAccounts] = useState([]);
   const { user } = useAuthContext();
-  const axiosAuth = useMemo(() => createAxiosAuth(user?.token), [user?.token]);
+  const axiosAuth = createAxiosAuth(user?.token);
 
   useEffect(() => {
     const fetchAccounts = async () => {
@@ -19,7 +19,7 @@ const AccountsPage = () => {
     };
 
     fetchAccounts();
-  }, [axiosAuth]);
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-900 p-6 sm:p-8 lg:p-10">
