@@ -19,7 +19,7 @@ const AccountsPage = () => {
     };
 
     fetchAccounts();
-  });
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-900 p-6 sm:p-8 lg:p-10">

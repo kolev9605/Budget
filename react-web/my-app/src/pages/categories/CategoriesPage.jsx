@@ -5,39 +5,50 @@ import {
   TrashIcon,
   ChevronDownIcon,
   ChevronRightIcon,
-  BanknotesIcon,
   FolderIcon,
 } from "@heroicons/react/24/outline";
-import { useState } from "react";
-import Layout from "../components/Layout";
+import { useEffect, useState } from "react";
+import { getCategories } from "../../api/categories.service.js";
+import { createAxiosAuth } from "../../api/createAxiosAuth.js";
+import { useAuthContext } from "../../hooks/useAuthContext.js";
 
-const CategoryPage = ({ categories }) => {
+const CategoryPage = () => {
   // Sample data - replace with real data
-  const sampleCategories = [
-    { id: 1, name: "Shopping", parentId: null, description: "General shopping expenses" },
-    { id: 2, name: "Clothes", parentId: 1, description: "Clothing and accessories" },
-    { id: 7, name: "Home", parentId: 1, description: "Home stuff" },
-    { id: 3, name: "Food & Dining", parentId: null, description: "Groceries, restaurants, etc." },
-    { id: 4, name: "Transportation", parentId: null, description: "Fuel, public transport, etc." },
-  ];
+  // const categories = [
+  //   { id: 1, name: "Shopping", parentId: null, description: "General shopping expenses" },
+  //   { id: 2, name: "Clothes", parentId: 1, description: "Clothing and accessories" },
+  //   { id: 7, name: "Home", parentId: 1, description: "Home stuff" },
+  //   { id: 3, name: "Food & Dining", parentId: null, description: "Groceries, restaurants, etc." },
+  //   { id: 4, name: "Transportation", parentId: null, description: "Fuel, public transport, etc." },
+  // ];
 
-  const [collapsed, setCollapsed] = useState(() => {
-    const initialState = {};
-    sampleCategories.forEach((category) => {
-      if (!category.parentId) {
-        initialState[category.id] = true; // Default to collapsed for parent categories
-      }
-    });
+  const [categories, setCategories] = useState([]);
+  const { user } = useAuthContext();
+  const axiosAuth = createAxiosAuth(user?.token);
 
-    return initialState;
-  });
+  const [collapsed, setCollapsed] = useState({});
+
+  useEffect(() => {
+    const fetchAccounts = async () => {
+      const response = await getCategories(axiosAuth);
+      setCategories(response);
+
+      response.forEach((category) => {
+        if (!category.parentCategoryId) {
+          setCollapsed((prev) => ({ ...prev, [category.id]: true }));
+        }
+      });
+    };
+
+    fetchAccounts();
+  }, []);
 
   const toggleCollapse = (categoryId) => {
     setCollapsed((prev) => ({ ...prev, [categoryId]: !prev[categoryId] }));
   };
 
   const renderCategory = (category, isParent = false) => {
-    const hasSubCategories = sampleCategories.some((subCategory) => subCategory.parentId === category.id);
+    const hasSubCategories = categories.some((subCategory) => subCategory.parentCategoryId === category.id);
 
     return (
       <div
@@ -84,13 +95,13 @@ const CategoryPage = ({ categories }) => {
     );
   };
 
-  const renderCategories = (categories, parentId = null) => {
+  const renderCategories = (categories, parentCategoryId = null) => {
     return categories
-      .filter((category) => category.parentId === parentId)
+      .filter((category) => category.parentCategoryId === parentCategoryId)
       .map((category) => (
         <div key={category.id}>
-          {renderCategory(category, parentId === null)}
-          {parentId === null && !collapsed[category.id] && (
+          {renderCategory(category, parentCategoryId === null)}
+          {parentCategoryId === null && !collapsed[category.id] && (
             <div className="bg-gray-850 rounded-b-lg">{renderCategories(categories, category.id)}</div>
           )}
         </div>
@@ -119,8 +130,8 @@ const CategoryPage = ({ categories }) => {
           </NavLink>
         </div>
         <div className="bg-gray-900 rounded-lg shadow-md">
-          {sampleCategories.length > 0 ? (
-            <div className="space-y-4">{renderCategories(sampleCategories)}</div>
+          {categories.length > 0 ? (
+            <div className="space-y-4">{renderCategories(categories)}</div>
           ) : (
             <div className="text-center text-gray-400">
               No categories found. Create your first category to organize transactions.
