@@ -1,6 +1,6 @@
 import { NavLink } from "react-router";
-import { PlusIcon, PencilIcon, BanknotesIcon, CreditCardIcon, WalletIcon } from "@heroicons/react/24/outline";
-import { useEffect, useState, useMemo } from "react";
+import { PlusIcon, PencilIcon, BanknotesIcon, CreditCardIcon } from "@heroicons/react/24/outline";
+import { useEffect, useState } from "react";
 import { createAxiosAuth } from "../../api/createAxiosAuth.js";
 import { useAuthContext } from "../../hooks/useAuthContext.js";
 import { getAccounts } from "../../api/accounts.service.js";
@@ -19,7 +19,7 @@ const AccountsPage = () => {
     };
 
     fetchAccounts();
-  }, []);
+  });
 
   return (
     <div className="min-h-screen bg-gray-900 p-6 sm:p-8 lg:p-10">
