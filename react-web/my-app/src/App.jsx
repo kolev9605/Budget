@@ -2,8 +2,7 @@ import "./App.css";
 import RegisterPage from "./pages/RegisterPage.jsx";
 import { Routes, Route, Navigate } from "react-router";
 import DashboardPage from "./pages/DashboardPage.jsx";
-import AccountsPage from "./pages/AccountsPage.jsx";
-import AccountFormPage from "./pages/AccountFormPage.jsx";
+import AccountsPage from "./pages/accounts/AccountsPage.jsx";
 import RecordFormPage from "./pages/RecordFormPage.jsx";
 import RecordsPage from "./pages/RecordsPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
@@ -12,6 +11,8 @@ import CategoryFormPage from "./pages/CategoryFormPage.jsx";
 import Layout from "./components/Layout.jsx";
 import PrivateRoutes from "./components/PrivateRoutes.jsx";
 import UnauthenticatedRoutes from "./components/UnauthenticatedRoutes.jsx";
+import AddAccountPage from "./pages/accounts/AddAccountPage.jsx";
+import EditAccountPage from "./pages/accounts/EditAccountPage.jsx";
 
 function App() {
   return (
@@ -25,7 +26,8 @@ function App() {
           <Route path="/" element={<DashboardPage />} />
           <Route path="accounts" element={<AccountsPage />}></Route>
 
-          <Route path="accounts/new" element={<AccountFormPage />} />
+          <Route path="accounts/new" element={<AddAccountPage/>} />
+          <Route path="accounts/edit/:id" element={<EditAccountPage />} />
           <Route path="categories" element={<CategoryPage />} />
           <Route path="categories/new" element={<CategoryFormPage />} />
           <Route path="records" element={<RecordsPage />} />

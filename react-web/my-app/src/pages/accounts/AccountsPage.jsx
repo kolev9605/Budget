@@ -1,27 +1,25 @@
 import { NavLink } from "react-router";
 import { PlusIcon, PencilIcon, BanknotesIcon, CreditCardIcon, WalletIcon } from "@heroicons/react/24/outline";
-import { useEffect, useState } from "react";
-import { getAccounts } from "../api/accounts.service";
-import { useAuthContext } from "../hooks/useAuthContext.js";
+import { useEffect, useState, useMemo } from "react";
+import { createAxiosAuth } from "../../api/createAxiosAuth.js";
+import { useAuthContext } from "../../hooks/useAuthContext.js";
+import { getAccounts } from "../../api/accounts.service.js";
 
 const AccountsPage = () => {
-  const { user } = useAuthContext();
   const [accounts, setAccounts] = useState([]);
+  const { user } = useAuthContext();
+  const axiosAuth = useMemo(() => createAxiosAuth(user?.token), [user?.token]);
 
   useEffect(() => {
     const fetchAccounts = async () => {
-      const response = await getAccounts(user?.token);
-      if (!response.ok) {
-        // TODO: Toastify error
-        return;
-      }
-
-      const data = await response.json();
-      setAccounts(data);
+      const response = await getAccounts(axiosAuth);
+      console.log(response);
+      
+      setAccounts(response);
     };
 
-    if (user) fetchAccounts();
-  }, [user]);
+    fetchAccounts();
+  }, [axiosAuth]);
 
   return (
     <div className="min-h-screen bg-gray-900 p-6 sm:p-8 lg:p-10">
@@ -41,7 +39,7 @@ const AccountsPage = () => {
           </NavLink>
         </div>
 
-        {accounts.length === 0 ? (
+        {!accounts || accounts.length === 0 ? (
           <div className="bg-gray-800 p-8 rounded-2xl text-center">
             <p className="text-gray-400">No accounts found. Create your first account to get started.</p>
           </div>
