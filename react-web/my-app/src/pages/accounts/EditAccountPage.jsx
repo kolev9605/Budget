@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import AccountFormFields from "./AccountFormFields.jsx";
-import { updateAccount } from "../../api/accounts.service.js";
+import { updateAccount, deleteAccount } from "../../api/accounts.service.js";
 import { getAccountById } from "../../api/accounts.service.js";
 import { useAuthContext } from "../../hooks/useAuthContext.js";
 import { createAxiosAuth } from "../../api/createAxiosAuth.js";
@@ -32,6 +32,13 @@ const EditAccountPage = () => {
     navigate("/accounts");
   };
 
+  const handleDeleteAccount = async () => {
+    if (window.confirm("Are you sure you want to delete this account?")) {
+      await deleteAccount(id, axiosAuth);
+      navigate("/accounts");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-900 p-6 sm:p-8 lg:p-10">
       <div className="max-w-2xl mx-auto">
@@ -40,7 +47,15 @@ const EditAccountPage = () => {
           {isLoading ? ( // Conditionally render loading or form
             <p className="text-gray-400">Loading...</p>
           ) : (
-            <AccountFormFields account={account} onSubmit={handleUpdateAccount} axiosAuth={axiosAuth} />
+            <>
+              <AccountFormFields account={account} onSubmit={handleUpdateAccount} axiosAuth={axiosAuth} />
+              <button
+                onClick={handleDeleteAccount}
+                className="mt-4 w-full bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2"
+              >
+                Delete Account
+              </button>
+            </>
           )}
         </div>
       </div>

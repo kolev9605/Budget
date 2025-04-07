@@ -14,7 +14,7 @@ const AccountsPage = () => {
     const fetchAccounts = async () => {
       const response = await getAccounts(axiosAuth);
       console.log(response);
-      
+
       setAccounts(response);
     };
 
@@ -46,7 +46,8 @@ const AccountsPage = () => {
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-6">
             {accounts.map((account) => (
-              <div
+              <NavLink
+                to={`/accounts/edit/${account.id}`}
                 key={account.id}
                 className="bg-gray-800 p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-shadow"
               >
@@ -67,12 +68,9 @@ const AccountsPage = () => {
                       {/* <p className="text-sm text-gray-400">{account.description}</p> */}
                     </div>
                   </div>
-                  <NavLink
-                    to={`/accounts/edit/${account.id}`}
-                    className="text-gray-400 hover:text-blue-400 p-2 rounded-lg transition-colors"
-                  >
+                  <div className="text-gray-400 hover:text-blue-400 p-2 rounded-lg transition-colors">
                     <PencilIcon className="h-5 w-5" />
-                  </NavLink>
+                  </div>
                 </div>
 
                 <div className="flex items-center justify-between mt-4">
@@ -88,7 +86,7 @@ const AccountsPage = () => {
                   </div>
                   <span className="px-3 py-1 text-sm rounded-full bg-gray-700 text-gray-300">Credit</span>
                 </div>
-              </div>
+              </NavLink>
             ))}
           </div>
         )}
