@@ -19,9 +19,6 @@ public class AuthenticatedUserModelMappings : IRegister
         config.NewConfig<AuthenticatedUserModel, GetAllCategoriesQuery>()
             .Map(dest => dest.UserId, src => src.Id);
 
-        config.NewConfig<AuthenticatedUserModel, GetAllPrimaryQuery>()
-            .Map(dest => dest.UserId, src => src.Id);
-
         config.NewConfig<AuthenticatedUserModel, GetRecordsDateRangeQuery>()
             .Map(dest => dest.UserId, src => src.Id);
     }

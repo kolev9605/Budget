@@ -15,7 +15,7 @@ public class GetAllCategoriesQueryHandler(
 {
     public async Task<ErrorOr<IEnumerable<CategoryModel>>> Handle(GetAllCategoriesQuery request, CancellationToken cancellationToken)
     {
-        var categories = await _categoryRepository.GetAllWithSubcategoriesCategoryModelsAsync(request.UserId);
+        var categories = await _categoryRepository.GetAllModelsAsync(request.UserId);
 
         return categories.ToErrorOr();
     }

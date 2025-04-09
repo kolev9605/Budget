@@ -117,11 +117,7 @@ public static class RepositoryMockHelper
         var categories = new List<CategoryModel> { category.Adapt<CategoryModel>() };
 
         categoryRepositoryMock
-            .Setup(x => x.GetAllWithSubcategoriesCategoryModelsAsync(DefaultValueConstants.User.Id))
-            .Returns(Task.FromResult(categories.AsEnumerable()));
-
-        categoryRepositoryMock
-            .Setup(x => x.GetAllPrimaryCategoryModelsAsync(DefaultValueConstants.User.Id))
+            .Setup(x => x.GetAllModelsAsync(DefaultValueConstants.User.Id))
             .Returns(Task.FromResult(categories.AsEnumerable()));
 
         categoryRepositoryMock

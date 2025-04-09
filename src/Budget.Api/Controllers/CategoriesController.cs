@@ -39,25 +39,6 @@ public class CategoriesController : BaseController
         return MatchResponse<IEnumerable<CategoryModel>, IEnumerable<CategoryResponse>>(result);
     }
 
-    // // TODO: Whaat is the difference between this and GetAll()?
-    // [HttpGet]
-    // [Route(nameof(GetAllPrimary))]
-    // public async Task<IActionResult> GetAllPrimary()
-    // {
-    //     var result = await _mediator.Send(CurrentUser.Adapt<GetAllPrimaryQuery>());
-
-    //     return MatchResponse<IEnumerable<CategoryModel>, IEnumerable<CategoryResponse>>(result);
-    // }
-
-    // [HttpGet]
-    // [Route(nameof(GetAllSubcategories))]
-    // public async Task<IActionResult> GetAllSubcategories([FromQuery] GetAllSubcategoriesRequest request)
-    // {
-    //     var result = await _mediator.Send((request, CurrentUser).Adapt<GetAllSubcategoriesQuery>());
-
-    //     return MatchResponse<IEnumerable<CategoryModel>, IEnumerable<CategoryResponse>>(result);
-    // }
-
     [HttpGet("types")]
     public IActionResult GetCategoryTypes()
         => Ok(EnumHelpers.GetListFromEnum<CategoryType>());
