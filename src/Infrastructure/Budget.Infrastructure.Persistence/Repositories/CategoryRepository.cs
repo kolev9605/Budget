@@ -30,7 +30,7 @@ public class CategoryRepository : Repository<Category>, ICategoryRepository
     public async Task<IEnumerable<CategoryModel>> GetAllWithSubcategoriesCategoryModelsAsync(string userId)
     {
         var categories = await GetUserCategories(userId)
-            .Include(c => c.SubCategories)
+            // .Include(c => c.SubCategories)
             .OrderBy(c => c.ParentCategoryId ?? c.Id)
             .ThenBy(c => c.Id)
             .ProjectToType<CategoryModel>()

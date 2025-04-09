@@ -8,9 +8,9 @@ public record CategoryResponse(
     CategoryType CategoryType,
     Guid? ParentCategoryId,
     bool IsInitial,
-    IEnumerable<SubCategoryResponse> SubCategories,
-    DateTimeOffset CreatedAt,
-    DateTimeOffset UpdatedAt);
+    // IEnumerable<SubCategoryResponse> SubCategories,
+    DateTimeOffset CreatedOn,
+    DateTimeOffset UpdatedOn);
 
 public record SubCategoryResponse(
     Guid Id,
@@ -18,5 +18,5 @@ public record SubCategoryResponse(
     CategoryType CategoryType,
     Guid? ParentCategoryId,
     bool IsInitial,
-    DateTimeOffset CreatedAt,
-    DateTimeOffset UpdatedAt);
+    DateTimeOffset CreatedOn,
+    DateTimeOffset UpdatedOn);

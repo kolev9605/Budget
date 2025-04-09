@@ -8,20 +8,11 @@ import {
   FolderIcon,
 } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
-import { getCategories } from "../../api/categories.service.js";
+import { getCategories, deleteCategory } from "../../api/categories.service.js";
 import { createAxiosAuth } from "../../api/createAxiosAuth.js";
 import { useAuthContext } from "../../hooks/useAuthContext.js";
 
 const CategoryPage = () => {
-  // Sample data - replace with real data
-  // const categories = [
-  //   { id: 1, name: "Shopping", parentId: null, description: "General shopping expenses" },
-  //   { id: 2, name: "Clothes", parentId: 1, description: "Clothing and accessories" },
-  //   { id: 7, name: "Home", parentId: 1, description: "Home stuff" },
-  //   { id: 3, name: "Food & Dining", parentId: null, description: "Groceries, restaurants, etc." },
-  //   { id: 4, name: "Transportation", parentId: null, description: "Fuel, public transport, etc." },
-  // ];
-
   const [categories, setCategories] = useState([]);
   const { user } = useAuthContext();
   const axiosAuth = createAxiosAuth(user?.token);
@@ -29,7 +20,7 @@ const CategoryPage = () => {
   const [collapsed, setCollapsed] = useState({});
 
   useEffect(() => {
-    const fetchAccounts = async () => {
+    const fetchCategories = async () => {
       const response = await getCategories(axiosAuth);
       setCategories(response);
 
@@ -40,11 +31,22 @@ const CategoryPage = () => {
       });
     };
 
-    fetchAccounts();
+    fetchCategories();
   }, []);
 
   const toggleCollapse = (categoryId) => {
     setCollapsed((prev) => ({ ...prev, [categoryId]: !prev[categoryId] }));
+  };
+
+  const handleDelete = async (categoryId) => {
+    if (window.confirm("Are you sure you want to delete this category?")) {
+      try {
+        await deleteCategory(categoryId, axiosAuth);
+        setCategories((prev) => prev.filter((category) => category.id !== categoryId));
+      } catch (error) {
+        console.error("Failed to delete category:", error);
+      }
+    }
   };
 
   const renderCategory = (category, isParent = false) => {
@@ -87,7 +89,10 @@ const CategoryPage = () => {
           >
             <PencilIcon className="h-4 w-4" />
           </Link>
-          <button className="text-gray-400 hover:text-red-400 p-2 rounded-lg transition-colors">
+          <button
+            onClick={() => handleDelete(category.id)}
+            className="text-gray-400 hover:text-red-400 p-2 rounded-lg transition-colors"
+          >
             <TrashIcon className="h-4 w-4" />
           </button>
         </div>
@@ -124,6 +129,7 @@ const CategoryPage = () => {
             to="/categories/new"
             className="bg-blue-500 hover:bg-blue-400 text-white px-6 py-3 rounded-xl
               flex items-center gap-2 transition-colors"
+            state={{ categories }}
           >
             <PlusIcon className="h-5 w-5" />
             Add Category
