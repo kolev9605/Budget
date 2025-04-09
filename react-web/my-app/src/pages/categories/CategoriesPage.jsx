@@ -54,6 +54,7 @@ const CategoryPage = () => {
 
     return (
       <div
+        onClick={() => toggleCollapse(category.id)}
         key={category.id}
         className={`flex justify-between items-center bg-gray-800 p-4 shadow-md ${
           isParent
@@ -66,8 +67,7 @@ const CategoryPage = () => {
         <div className="flex items-center gap-2">
           {isParent &&
             hasSubCategories && ( // Show icon only if there are sub-categories
-              <button
-                onClick={() => toggleCollapse(category.id)}
+              <span
                 className="text-gray-400 hover:text-gray-300 transition-colors"
               >
                 {collapsed[category.id] ? (
@@ -75,7 +75,7 @@ const CategoryPage = () => {
                 ) : (
                   <ChevronDownIcon className="h-4 w-4" /> // Points down when expanded
                 )}
-              </button>
+              </span>
             )}
           <div>
             <h3 className="text-sm font-semibold text-gray-100">{category.name}</h3>
