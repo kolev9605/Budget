@@ -9,10 +9,12 @@ public static class UpdateAccountCommandMockHelper
     {
         var currency = EntityMockHelper.SetupCurrency();
         var account = EntityMockHelper.SetupAccount(currency);
+        var paymentType = EntityMockHelper.SetupPaymentType();
 
         var handler = new UpdateAccountCommandHandler(
             RepositoryMockHelper.SetupCurrencyRepository(currency),
-            RepositoryMockHelper.SetupAccountRepository(account));
+            RepositoryMockHelper.SetupAccountRepository(account),
+            RepositoryMockHelper.SetupPaymentTypeRepository(paymentType));
 
         return handler;
     }
@@ -21,6 +23,7 @@ public static class UpdateAccountCommandMockHelper
         Guid? id = null,
         string? name = null,
         Guid? currencyId = null,
+        Guid? paymentTypeId = null,
         decimal? initialBalance = null,
         string? userId = null)
     {
@@ -28,6 +31,7 @@ public static class UpdateAccountCommandMockHelper
             id ?? DefaultValueConstants.Common.Id,
             name ?? DefaultValueConstants.Account.DefaultName,
             currencyId ?? DefaultValueConstants.Common.Id,
+            paymentTypeId ?? DefaultValueConstants.Common.Id,
             initialBalance ?? DefaultValueConstants.Account.DefaultInitialBalance,
             userId ?? DefaultValueConstants.User.Id
         );

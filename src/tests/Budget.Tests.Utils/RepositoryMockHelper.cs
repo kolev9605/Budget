@@ -55,7 +55,7 @@ public static class RepositoryMockHelper
         var accountWithRecords = EntityMockHelper.SetupAccount(
             EntityMockHelper.SetupCurrency());
 
-        var record = EntityMockHelper.SetupRecord(account, EntityMockHelper.SetupPaymentType(), EntityMockHelper.SetupCategory());
+        var record = EntityMockHelper.SetupRecord(account, EntityMockHelper.SetupCategory());
 
         accountWithRecords.Records.Add(record);
 
