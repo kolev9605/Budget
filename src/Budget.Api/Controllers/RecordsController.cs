@@ -39,7 +39,6 @@ public class RecordsController : BaseController
     }
 
     [HttpGet]
-    [Route(nameof(GetAllPaginated))]
     public async Task<IActionResult> GetAllPaginated([FromQuery] GetAllRecordsRequest request)
     {
         var result = await _mediator.Send((request, CurrentUser).Adapt<GetAllRecordsQuery>());
@@ -48,7 +47,6 @@ public class RecordsController : BaseController
     }
 
     [HttpPost]
-    [Route(nameof(Create))]
     public async Task<IActionResult> Create(CreateRecordRequest request)
     {
         var result = await _mediator.Send((request, CurrentUser).Adapt<CreateRecordCommand>());
@@ -57,7 +55,6 @@ public class RecordsController : BaseController
     }
 
     [HttpPut]
-    [Route(nameof(Update))]
     public async Task<IActionResult> Update(UpdateRecordRequest request)
     {
         var result = await _mediator.Send((request, CurrentUser).Adapt<UpdateRecordCommand>());
@@ -74,8 +71,7 @@ public class RecordsController : BaseController
         return MatchResponse<RecordModel, RecordResponse>(result);
     }
 
-    [HttpGet]
-    [Route(nameof(GetRecordTypes))]
+    [HttpGet("Types")]
     public IActionResult GetRecordTypes()
         => Ok(EnumHelpers.GetListFromEnum<RecordType>());
 

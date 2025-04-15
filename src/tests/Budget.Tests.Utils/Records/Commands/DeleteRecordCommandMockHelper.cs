@@ -9,10 +9,9 @@ public static class DeleteRecordCommandMockHelper
     {
         var user = EntityMockHelper.SetupUser();
         var currency = EntityMockHelper.SetupCurrency();
-        var paymentType = EntityMockHelper.SetupPaymentType();
         var category = EntityMockHelper.SetupCategory(user);
         var account = EntityMockHelper.SetupAccount(currency);
-        var record = EntityMockHelper.SetupRecord(account, paymentType, category);
+        var record = EntityMockHelper.SetupRecord(account, category);
 
         var handler = new DeleteRecordCommandHandler(
             RepositoryMockHelper.SetupRecordRepository(record));

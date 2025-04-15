@@ -12,23 +12,31 @@ public record CreateAccountCommand(
     string Name,
     Guid CurrencyId,
     decimal InitialBalance,
+    Guid PaymentTypeId,
     string UserId
 ) : IRequest<ErrorOr<AccountModel>>;
 
 public class CreateAccountCommandHandler(
     ICurrencyRepository _currencyRepository,
-    IAccountRepository _accountRepository)
+    IAccountRepository _accountRepository,
+    IPaymentTypeRepository _paymentTypeRepository)
     : IRequestHandler<CreateAccountCommand, ErrorOr<AccountModel>>
 {
-    public async Task<ErrorOr<AccountModel>> Handle(CreateAccountCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<AccountModel>> Handle(CreateAccountCommand command, CancellationToken cancellationToken)
     {
-        var currency = await _currencyRepository.GetByIdAsync(request.CurrencyId);
+        var currency = await _currencyRepository.GetByIdAsync(command.CurrencyId);
         if (currency == null)
         {
             return Errors.Currency.NotFound;
         }
 
-        var account = request.Adapt<Account>();
+        var paymentType =  await _paymentTypeRepository.GetForRecordCreationAsync(command.PaymentTypeId);
+        if (paymentType == null)
+        {
+            return Errors.PaymentType.NotFound;
+        }
+
+        var account = command.Adapt<Account>();
 
         var createdAccount = await _accountRepository.CreateAsync(account);
 

@@ -16,7 +16,6 @@ public class PaymentTypesController : BaseController
     }
 
     [HttpGet]
-    [Route(nameof(GetAll))]
     public async Task<IActionResult> GetAll()
     {
         var result = await _mediator.Send(new GetAllPaymentTypesQuery());

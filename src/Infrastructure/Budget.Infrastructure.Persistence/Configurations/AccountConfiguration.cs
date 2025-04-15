@@ -36,6 +36,11 @@ internal class AccountConfiguration : IEntityTypeConfiguration<Account>
             .HasForeignKey(a => a.CurrencyId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        builder.HasOne(a => a.PaymentType)
+            .WithMany(pt => pt.Accounts)
+            .HasForeignKey(a => a.PaymentTypeId)
+            .OnDelete(DeleteBehavior.Restrict);
+
         builder.Property(c => c.CreatedOn)
             .HasDefaultValueSql("timezone('utc', now())");
 

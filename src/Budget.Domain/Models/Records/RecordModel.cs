@@ -1,18 +1,26 @@
 ﻿using Budget.Domain.Entities;
 using Budget.Domain.Models.Accounts;
 using Budget.Domain.Models.Categories;
-using Budget.Domain.Models.PaymentTypes;
 
 namespace Budget.Domain.Models.Records;
 
-public record RecordModel(
-    Guid Id,
-    string Note,
-    // AccountModel FromAccount,
-    AccountModel Account,
-    RecordType RecordType,
-    PaymentTypeModel PaymentType,
-    CategoryModel Category,
-    DateTimeOffset DateCreated,
-    DateTimeOffset RecordDate,
-    decimal Amount);
+public class RecordModel
+{
+    public Guid Id { get; set; }
+
+    public string Note { get; set; } = null!;
+
+    public AccountModel? FromAccount { get; set; }
+
+    public AccountModel Account { get; set; } = null!;
+
+    public RecordType RecordType { get; set; }
+
+    public CategoryModel Category { get; set; } = null!;
+
+    public DateTimeOffset DateCreated { get; set; }
+
+    public DateTimeOffset RecordDate { get; set; }
+
+    public decimal Amount { get; set; }
+}

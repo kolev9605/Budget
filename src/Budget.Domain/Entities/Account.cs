@@ -20,6 +20,10 @@ public class Account : BaseEntity, ICreatable, IUpdatable
 
     public decimal InitialBalance { get; set; }
 
+    public Guid PaymentTypeId { get; set; }
+
+    public PaymentType PaymentType { get; set; } = null!;
+
     public DateTimeOffset CreatedOn { get; set; }
 
     public DateTimeOffset UpdatedOn { get; set; }

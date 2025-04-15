@@ -101,7 +101,6 @@ public class ImportWalletRecordsCommandHandler : IRequestHandler<ImportWalletRec
                 Note = record.Note,
                 Amount = record.Amount,
                 RecordType = recordType,
-                PaymentType = paymentType,
                 RecordDate = date,
                 CreatedOn = _dateTimeProvider.UtcNow,
             };

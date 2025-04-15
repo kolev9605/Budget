@@ -2,16 +2,22 @@ import { useState, useEffect } from "react";
 import { WalletIcon, CurrencyDollarIcon } from "@heroicons/react/24/outline";
 import ErrorSection from "../../components/ErrorSection.jsx";
 import { getCurrencies } from "../../api/currencies.service.js";
+import { getPaymentTypes } from "../../api/paymentTypes.service.js";
 
 const AccountFormFields = ({ account, onSubmit, axiosAuth }) => {
   const [formData, setFormData] = useState(account);
   const [errors, setErrors] = useState({});
   const [currencies, setCurrencies] = useState([]);
 
+  const [paymentTypes, setPaymentTypes] = useState([]);
+
   useEffect(() => {
-    const fetchCurrencies = async () => {
+    const fetchData = async () => {
       const response = await getCurrencies(axiosAuth);
       setCurrencies(response);
+
+      const types = await getPaymentTypes(axiosAuth);
+      setPaymentTypes(types);
 
       setFormData((prevFormData) => ({
         ...prevFormData,
@@ -19,7 +25,7 @@ const AccountFormFields = ({ account, onSubmit, axiosAuth }) => {
       }));
     };
 
-    fetchCurrencies();
+    fetchData();
   }, [axiosAuth]);
 
   const validateForm = () => {
@@ -49,7 +55,7 @@ const AccountFormFields = ({ account, onSubmit, axiosAuth }) => {
 
       {/* Account Name */}
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-3">Account Name</label>
+        <label className="block text-sm font-medium text-gray-300 mb-3">Name</label>
         <div className="relative">
           <input
             type="text"
@@ -61,6 +67,25 @@ const AccountFormFields = ({ account, onSubmit, axiosAuth }) => {
             placeholder="e.g. Primary Credit Card"
           />
           <WalletIcon className="h-5 w-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
+        </div>
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-300 mb-3">Payment Type</label>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          {paymentTypes.map((paymentType) => (
+            <div
+              key={paymentType.id}
+              onClick={() => setFormData({ ...formData, paymentTypeId: paymentType.id })}
+              className={`cursor-pointer p-4 rounded-lg shadow-md transition-transform transform flex flex-col items-center justify-center gap-2 ${
+                formData.paymentTypeId === paymentType.id
+                  ? "bg-blue-500 text-white scale-105"
+                  : "bg-gray-800 text-gray-300 hover:bg-gray-700 hover:scale-105"
+              }`}
+            >
+              <span className="text-sm font-bold">{paymentType.name}</span>
+            </div>
+          ))}
         </div>
       </div>
 

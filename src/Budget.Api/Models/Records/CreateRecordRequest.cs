@@ -9,7 +9,6 @@ public record CreateRecordRequest(
     decimal Amount,
     Guid AccountId,
     Guid CategoryId,
-    Guid PaymentTypeId,
     RecordType RecordType,
     DateTimeOffset RecordDate,
     Guid? FromAccountId);

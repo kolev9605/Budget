@@ -7,6 +7,7 @@ public record UpdateAccountRequest(
     Guid Id,
     string Name,
     Guid CurrencyId,
+    Guid PaymentTypeId,
     decimal InitialBalance
 );
 

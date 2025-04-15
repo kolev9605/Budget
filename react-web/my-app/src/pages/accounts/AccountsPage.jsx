@@ -84,7 +84,7 @@ const AccountsPage = () => {
                       })}
                     </p>
                   </div>
-                  <span className="px-3 py-1 text-sm rounded-full bg-gray-700 text-gray-300">Credit</span>
+                  <span className="px-3 py-1 text-sm rounded-full bg-gray-700 text-gray-300">{account.paymentType.name}</span>
                 </div>
               </NavLink>
             ))}

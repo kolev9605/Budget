@@ -30,7 +30,6 @@ public class RecordsExportModel
             Account = record.Account.Name,
             FromAccount = record.FromAccount?.Name,
             RecordType = record.RecordType,
-            PaymentType = record.PaymentType.Name,
             Category = record.Category.Name,
             DateCreated = record.CreatedOn,
             RecordDate = record.RecordDate,

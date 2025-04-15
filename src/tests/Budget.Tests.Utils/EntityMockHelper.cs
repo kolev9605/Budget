@@ -6,7 +6,6 @@ public static class EntityMockHelper
 {
     public static Record SetupRecord(
         Account account,
-        PaymentType paymentType,
         Category category,
         Guid? id = null,
         RecordType recordType = DefaultValueConstants.Record.Type,
@@ -17,7 +16,6 @@ public static class EntityMockHelper
         {
             Id = id ?? DefaultValueConstants.Common.Id,
             Account = account,
-            PaymentType = paymentType,
             Amount = recordType == RecordType.Expense ? -Math.Abs(amount) : Math.Abs(amount),
             Category = category,
             CreatedOn = DateTime.UtcNow,

@@ -23,7 +23,7 @@ public class GetAllRecordsQueryHandler : IRequestHandler<GetAllRecordsQuery, Err
 
     public async Task<ErrorOr<IPagedListContainer<RecordModel>>> Handle(GetAllRecordsQuery query, CancellationToken cancellationToken)
     {
-        var paginated = await _recordRepository.GetAllPaginatedAsync(query.UserId, query.PageNumber, query.PageSize ?? PaginationConstants.DefaultPageSize);
+        var paginated = await _recordRepository.GetAllPaginatedAsync(query.UserId, query.PageNumber + 1, query.PageSize ?? PaginationConstants.DefaultPageSize);
 
         return paginated.ToErrorOr();
     }

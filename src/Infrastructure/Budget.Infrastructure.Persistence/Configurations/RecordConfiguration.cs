@@ -12,11 +12,6 @@ public class RecordConfiguration : IEntityTypeConfiguration<Record>
         builder.Property(p => p.Note)
             .HasMaxLength(Validations.Records.NoteMaxLength);
 
-        builder.HasOne(r => r.PaymentType)
-            .WithMany(pt => pt.Records)
-            .HasForeignKey(r => r.PaymentTypeId)
-            .OnDelete(DeleteBehavior.Restrict);
-
         builder.Property(c => c.CreatedOn)
             .HasDefaultValueSql("timezone('utc', now())");
 

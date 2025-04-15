@@ -9,18 +9,17 @@ public static class UpdateRecordCommandMockHelper
     {
         var user = EntityMockHelper.SetupUser();
         var currency = EntityMockHelper.SetupCurrency();
-        var paymentType = EntityMockHelper.SetupPaymentType();
         var category = EntityMockHelper.SetupCategory(user);
         var account = EntityMockHelper.SetupAccount(currency);
-        var record = EntityMockHelper.SetupRecord(account, paymentType, category);
+        var record = EntityMockHelper.SetupRecord(account, category);
 
         var handler = new UpdateRecordCommandHandler(
             ServiceMockHelper.SetupDateTimeProvider(),
             RepositoryMockHelper.SetupRecordRepository(record),
             RepositoryMockHelper.SetupAccountRepository(account),
             ServiceMockHelper.SetupUserService(),
-            RepositoryMockHelper.SetupCategoryRepository(category),
-            RepositoryMockHelper.SetupPaymentTypeRepository(paymentType));
+            RepositoryMockHelper.SetupCategoryRepository(category)
+        );
 
         return handler;
     }
@@ -30,7 +29,6 @@ public static class UpdateRecordCommandMockHelper
         Guid? accountId = null,
         Guid? fromAccountId = null,
         Guid? categoryId = null,
-        Guid? paymentTypeId = null,
         string? userId = null)
     {
         var command = new UpdateRecordCommand(
@@ -39,11 +37,10 @@ public static class UpdateRecordCommandMockHelper
             DefaultValueConstants.Record.Amount,
             accountId ?? DefaultValueConstants.Common.Id,
             categoryId ?? DefaultValueConstants.Common.Id,
-            paymentTypeId ?? DefaultValueConstants.Common.Id,
             DefaultValueConstants.Record.Type,
             DefaultValueConstants.Record.CreationDate,
             fromAccountId,
-            userId?? DefaultValueConstants.User.Id);
+            userId ?? DefaultValueConstants.User.Id);
 
         return command;
     }

@@ -14,6 +14,8 @@ import AddAccountPage from "./pages/accounts/AddAccountPage.jsx";
 import EditAccountPage from "./pages/accounts/EditAccountPage.jsx";
 import AddCategoryPage from "./pages/categories/AddCategoryPage.jsx";
 import EditCategoryPage from "./pages/categories/EditCategoryPage.jsx";
+import AddRecordPage from "./pages/records/AddRecordPage.jsx";
+import EditRecordPage from "./pages/records/EditRecordPage.jsx";
 
 function App() {
   return (
@@ -27,13 +29,15 @@ function App() {
           <Route path="/" element={<DashboardPage />} />
           <Route path="accounts" element={<AccountsPage />}></Route>
 
-          <Route path="accounts/new" element={<AddAccountPage/>} />
+          <Route path="accounts/new" element={<AddAccountPage />} />
           <Route path="accounts/edit/:id" element={<EditAccountPage />} />
           <Route path="categories" element={<CategoryPage />} />
-          <Route path="categories/new" element={<AddCategoryPage/>} />
-          <Route path="categories/edit/:id" element={<EditCategoryPage/>} />
+          <Route path="categories/new" element={<AddCategoryPage />} />
+          <Route path="categories/edit/:id" element={<EditCategoryPage />} />
           <Route path="records" element={<RecordsPage />} />
-          <Route path="records/new" element={<RecordFormPage />} />
+          <Route path="records/new" element={<AddRecordPage />} />
+          <Route path="records/new2" element={<RecordFormPage/>} />
+          <Route path="records/edit/:id" element={<EditRecordPage />} />
         </Route>
       </Route>
     </Routes>

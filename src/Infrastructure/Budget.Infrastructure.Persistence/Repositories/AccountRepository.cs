@@ -39,6 +39,7 @@ public class AccountRepository : Repository<Account>, IAccountRepository
         var account = await GetAll()
             .Include(a => a.Currency)
             .Include(a => a.Records)
+            .Include(a => a.PaymentType)
             .Where(a => a.UserId == userId)
             .Where(a => a.Id == accountId)
             .FirstOrDefaultAsync();
@@ -74,21 +75,4 @@ public class AccountRepository : Repository<Account>, IAccountRepository
             .ProjectToType<AccountForRecordCreationModel>()
             .FirstOrDefaultAsync();
     }
-
-    // private IQueryable<Account> GetAllByUserIdBaseQuery(string userId)
-    // {
-    //     return GetAll()
-    //         .Include(a => a.Currency)
-    //         .Include(a => a.Records)
-    //         .Where(a => a.UserId == userId);
-    // }
-
-    // private IQueryable<Account> GetByIdWithCurrencyBaseQuery(string userId, Guid accountId)
-    // {
-    //     return GetAll()
-    //         .Include(a => a.Currency)
-    //         .Include(a => a.Records)
-    //         .Where(a => a.UserId == userId)
-    //         .Where(a => a.Id == accountId);
-    // }
 }

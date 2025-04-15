@@ -6,6 +6,7 @@ namespace Budget.Api.Models.Accounts;
 public record CreateAccountRequest(
     string Name,
     Guid CurrencyId,
+    Guid PaymentTypeId,
     decimal InitialBalance
 );
 

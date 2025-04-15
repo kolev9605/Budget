@@ -1,5 +1,6 @@
 ﻿using Budget.Domain.Entities;
 using Budget.Domain.Models.Currencies;
+using Budget.Domain.Models.PaymentTypes;
 using Mapster;
 
 namespace Budget.Domain.Models.Accounts;
@@ -9,7 +10,8 @@ public record AccountModel(
     string Name,
     decimal InitialBalance,
     decimal Balance,
-    CurrencyModel Currency);
+    CurrencyModel Currency,
+    PaymentTypeModel PaymentType);
 
 public class AccountMappingConfiguration : IRegister
 {

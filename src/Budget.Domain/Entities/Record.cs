@@ -12,7 +12,6 @@ public class Record : BaseEntity, ICreatable, IUpdatable
         decimal amount,
         Guid accountId,
         Guid? fromAccountId,
-        Guid paymentTypeId,
         Guid categoryId,
         RecordType recordType,
         DateTimeOffset createdOn,
@@ -22,7 +21,6 @@ public class Record : BaseEntity, ICreatable, IUpdatable
         RecordDate = recordDate;
         AccountId = accountId;
         FromAccountId = fromAccountId;
-        PaymentTypeId = paymentTypeId;
         CategoryId = categoryId;
         RecordType = recordType;
         CreatedOn = createdOn;
@@ -42,10 +40,6 @@ public class Record : BaseEntity, ICreatable, IUpdatable
     public Guid? FromAccountId { get; set; }
 
     public Account? FromAccount { get; set; }
-
-    public Guid PaymentTypeId { get; set; }
-
-    public PaymentType PaymentType { get; set; } = null!;
 
     public Guid CategoryId { get; set; }
 
@@ -76,7 +70,6 @@ public class Record : BaseEntity, ICreatable, IUpdatable
             // TODO: Maybe validate here?
             FromAccountId!.Value,
             AccountId,
-            PaymentTypeId,
             CategoryId,
             RecordType,
             CreatedOn,
@@ -91,7 +84,6 @@ public class Record : BaseEntity, ICreatable, IUpdatable
         decimal amount,
         Guid accountId,
         Guid? fromAccountId,
-        Guid paymentTypeId,
         Guid categoryId,
         RecordType recordType,
         DateTimeOffset utcNow,
@@ -101,7 +93,6 @@ public class Record : BaseEntity, ICreatable, IUpdatable
         RecordDate = recordDate;
         AccountId = accountId;
         FromAccountId = fromAccountId;
-        PaymentTypeId = paymentTypeId;
         CategoryId = categoryId;
         RecordType = recordType;
         UpdatedOn = utcNow;

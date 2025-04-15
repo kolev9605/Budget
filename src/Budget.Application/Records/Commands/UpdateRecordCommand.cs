@@ -16,7 +16,6 @@ public record UpdateRecordCommand(
     decimal Amount,
     Guid AccountId,
     Guid CategoryId,
-    Guid PaymentTypeId,
     RecordType RecordType,
     DateTimeOffset RecordDate,
     Guid? FromAccountId,
@@ -29,22 +28,20 @@ public class UpdateRecordCommandHandler : IRequestHandler<UpdateRecordCommand, E
     private readonly IAccountRepository _accountRepository;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ICategoryRepository _categoryRepository;
-    private readonly IPaymentTypeRepository _paymentTypeRepository;
 
     public UpdateRecordCommandHandler(
         IDateTimeProvider dateTimeProvider,
         IRecordRepository recordRepository,
         IAccountRepository accountRepository,
         UserManager<ApplicationUser> userManager,
-        ICategoryRepository categoryRepository,
-        IPaymentTypeRepository paymentTypeRepository)
+        ICategoryRepository categoryRepository
+        )
     {
         _dateTimeProvider = dateTimeProvider;
         _recordRepository = recordRepository;
         _accountRepository = accountRepository;
         _userManager = userManager;
         _categoryRepository = categoryRepository;
-        _paymentTypeRepository = paymentTypeRepository;
     }
 
     public async Task<ErrorOr<RecordModel>> Handle(UpdateRecordCommand command, CancellationToken cancellationToken)
@@ -80,19 +77,12 @@ public class UpdateRecordCommandHandler : IRequestHandler<UpdateRecordCommand, E
             return Errors.Category.NotFound;
         }
 
-        var paymentType = await _paymentTypeRepository.GetForRecordCreationAsync(command.PaymentTypeId);
-        if (paymentType == null)
-        {
-            return Errors.PaymentType.NotFound;
-        }
-
         record.Update(
             command.Note,
             command.RecordDate,
             command.Amount,
             command.AccountId,
             command.FromAccountId,
-            command.PaymentTypeId,
             command.CategoryId,
             command.RecordType,
             _dateTimeProvider.UtcNow);
@@ -128,7 +118,6 @@ public class UpdateRecordCommandHandler : IRequestHandler<UpdateRecordCommand, E
                 command.Amount,
                 accountId: command.FromAccountId.Value,
                 fromAccountId: record.AccountId,
-                command.PaymentTypeId,
                 command.CategoryId,
                 command.RecordType,
                 _dateTimeProvider.UtcNow,

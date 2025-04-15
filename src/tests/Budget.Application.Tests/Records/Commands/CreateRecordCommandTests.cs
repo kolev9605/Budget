@@ -25,7 +25,6 @@ public class CreateRecordCommandTests
         Assert.Equal(command.Note, result.Value.Note);
         Assert.Equal(command.AccountId, result.Value.Account.Id);
         Assert.Equal(command.CategoryId, result.Value.Category.Id);
-        Assert.Equal(command.PaymentTypeId, result.Value.PaymentType.Id);
         Assert.Equal(command.RecordType, result.Value.RecordType);
     }
 
@@ -57,21 +56,6 @@ public class CreateRecordCommandTests
         // Assert
         Assert.True(result.IsError);
         Assert.True(result.Errors.FirstOrDefault().Code == Errors.Category.NotFound.Code);
-    }
-
-    [Fact]
-    public async Task CreateRecord_WithInvalidPaymentTypeId_ShouldReturnErrorCodePaymentTypeNotFound()
-    {
-        // Arrange
-        var handler = CreateRecordCommandMockHelper.SetupHandler();
-        var command = CreateRecordCommandMockHelper.SetupCommand(paymentTypeId: DefaultValueConstants.Common.InvalidId);
-
-        // Act
-        var result = await handler.Handle(command, CancellationToken.None);
-
-        // Assert
-        Assert.True(result.IsError);
-        Assert.True(result.Errors.FirstOrDefault().Code == Errors.PaymentType.NotFound.Code);
     }
 
     [Fact]

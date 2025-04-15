@@ -1,4 +1,4 @@
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import CategoryForm from "./CategoryForm.jsx";
 import { createCategory, getCategories, getCategoryTypes } from "../../api/categories.service.js";
 import { useEffect, useState } from "react";

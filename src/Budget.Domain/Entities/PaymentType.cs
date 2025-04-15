@@ -6,5 +6,5 @@ public class PaymentType : BaseEntity
 {
     public string Name { get; set; } = null!;
 
-    public ICollection<Record> Records { get; set; } = new List<Record>();
+    public ICollection<Account> Accounts { get; set; } = new List<Account>();
 }

@@ -1,27 +1,67 @@
-import React, { useState } from "react"; // Add React to the import statement
+import React, { useState, useEffect } from "react"; // Add React to the import statement
 import { NavLink } from "react-router";
 import {
   PlusIcon,
-  FunnelIcon,
-  CalendarIcon,
   ChevronDownIcon,
   PencilIcon,
   TrashIcon,
   MagnifyingGlassIcon,
-  ArrowsRightLeftIcon,
-  BanknotesIcon,
   DocumentTextIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "@heroicons/react/24/outline";
+import { useAuthContext } from "../../hooks/useAuthContext.js";
+import { createAxiosAuth } from "../../api/createAxiosAuth.js";
+import { getRecords } from "../../api/records.service.js"; // Import the getRecords function
 
-const RecordsPage = ({ records, accounts }) => {
+const RecordsPage = () => {
+  const [records, setRecords] = useState([]);
+  const [groupedRecords, setGroupedRecords] = useState({});
+  const [filteredRecords, setFilteredRecords] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState("all");
   const [selectedAccount, setSelectedAccount] = useState("all");
   const [dateRange, setDateRange] = useState("all");
   const [specificMonth, setSpecificMonth] = useState(new Date()); // Use Date object for specific month
   const [showFilters, setShowFilters] = useState(false); // New state for toggling filters
+
+  const { user } = useAuthContext();
+  const axiosAuth = createAxiosAuth(user?.token);
+
+  useEffect(() => {
+    const fetchRecords = async () => {
+      const response = await getRecords(axiosAuth);
+      console.log("response.items", response.items);
+
+      setRecords(response.items);
+      setFilteredRecords(response.items);
+
+      const groupedRecords = response.items.reduce((groups, record) => {
+        const date = new Date(record.recordDate).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        });
+        if (!groups[date]) {
+          groups[date] = [];
+        }
+        groups[date].push(record);
+        return groups;
+      }, {});
+
+      setGroupedRecords(groupedRecords);
+
+      console.log(groupedRecords);
+      console.log(
+        "hii iiiii",
+        Object.entries(groupedRecords).map(([date, records]) => ({ date, records }))
+      );
+      console.log(filteredRecords);
+      console.log(records);
+    };
+
+    fetchRecords();
+  }, []);
 
   const formatMonth = (date) => date.toLocaleDateString("en-US", { year: "numeric", month: "long" });
 
@@ -33,45 +73,12 @@ const RecordsPage = ({ records, accounts }) => {
     setSpecificMonth(new Date(specificMonth.getFullYear(), specificMonth.getMonth() + 1, 1));
   };
 
-  // Sample data - replace with real data
-
   const sampleAccounts = [
     { id: "1", name: "Cash", type: "cash", balance: 2450.75, description: "Physical cash and coins" },
     { id: "2", name: "Primary Credit Card", type: "credit", balance: -1250.0, description: "Visa Platinum **** 1234" },
     { id: "3", name: "Savings Account", type: "savings", balance: 15000.0, description: "Bank of Example - 5% APY" },
   ];
 
-  const sampleRecords = [
-    {
-      id: 1,
-      date: "2024-03-15",
-      amount: -245.75,
-      category: "Food",
-      type: "expense",
-      account: "Cash",
-      note: "Grocery shopping",
-      destinationAccount: "",
-    },
-    {
-      id: 2,
-      date: "2024-03-13",
-      amount: 5000.0,
-      category: "Salary",
-      type: "income",
-      account: "Bank Account",
-      note: "Monthly salary",
-      destinationAccount: "",
-    },
-    {
-      id: 3,
-      date: "2024-03-13",
-      amount: -1000.0,
-      type: "transfer",
-      account: "Savings",
-      note: "Monthly savings",
-      destinationAccount: "Investment Account",
-    },
-  ];
   const getDateRange = () => {
     const now = new Date();
     switch (dateRange) {
@@ -94,37 +101,6 @@ const RecordsPage = ({ records, accounts }) => {
         return { start: null, end: null };
     }
   };
-
-  const filteredRecords = sampleRecords.filter((record) => {
-    const matchesSearch = record.note.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesType = filterType === "all" || record.type === filterType;
-    const matchesAccount =
-      selectedAccount === "all" || record.account === selectedAccount || record.destinationAccount === selectedAccount;
-
-    const { start, end } = getDateRange();
-    const matchesDate = !start || (new Date(record.date) >= start && new Date(record.date) <= end);
-
-    const matchesSpecificMonth =
-      dateRange === "custom" &&
-      record.date.startsWith(`${specificMonth.getFullYear()}-${String(specificMonth.getMonth() + 1).padStart(2, "0")}`);
-
-    return (
-      matchesSearch && matchesType && matchesAccount && matchesDate && (dateRange !== "custom" || matchesSpecificMonth)
-    );
-  });
-
-  const groupedRecords = filteredRecords.reduce((groups, record) => {
-    const date = new Date(record.date).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-    if (!groups[date]) {
-      groups[date] = [];
-    }
-    groups[date].push(record);
-    return groups;
-  }, {});
 
   return (
     <div className="min-h-screen bg-gray-900 p-6 sm:p-8 lg:p-10">
@@ -225,7 +201,6 @@ const RecordsPage = ({ records, accounts }) => {
               </button>
             </div>
           )}
-
         </div>
 
         {/* Records Table (Desktop) */}
@@ -242,46 +217,43 @@ const RecordsPage = ({ records, accounts }) => {
               </tr>
             </thead>
             <tbody>
-              {Object.entries(groupedRecords).map(([date, records]) => (
-                <React.Fragment key={date}>
+              {Object.entries(groupedRecords).map(([date, records], index) => (
+                <React.Fragment key={index}>
                   <tr className="bg-gray-700">
                     <td colSpan="6" className="px-7 py-3 text-gray-300 font-semibold">
                       {date}
                     </td>
                   </tr>
                   {records.map((record) => (
-                    <tr
-                      key={record.id}
-                      className="border-b border-gray-700 hover:bg-gray-750 transition-colors"
-                    >
+                    <tr key={record.id} className="border-b border-gray-700 hover:bg-gray-750 transition-colors">
                       <td className="px-7 py-4 text-gray-400">
-                        {new Date(record.date).toLocaleTimeString("en-US", {
+                        {new Date(record.recordDate).toLocaleTimeString("en-US", {
                           hour: "2-digit",
                           minute: "2-digit",
                         })}
                       </td>
                       <td className="px-7 py-3 text-gray-100 truncate">{record.note}</td>
                       <td className="px-7 py-3 text-gray-500">
-                        {record.type === "transfer" ? (
+                        {record.recordType === "Transfer" ? (
                           <>
-                            {record.account} → {record.destinationAccount}
+                            {record.account.name} → {record.fromAccount.name}
                           </>
                         ) : (
-                          record.account
+                          record.account.name
                         )}
                       </td>
-                      <td className="px-7 py-3 text-gray-500">{record.category || "-"}</td>
+                      <td className="px-7 py-3 text-gray-500">{record.category.name || "-"}</td>
                       <td
                         className={`px-7 py-3 text-right font-medium ${
-                          record.type === "income"
+                          record.recordType === "Income"
                             ? "text-green-400"
-                            : record.type === "expense"
+                            : record.recordType === "Expense"
                             ? "text-red-400"
                             : "text-blue-400"
                         }`}
                       >
-                        {record.type !== "transfer" && (
-                          <span className="text-xs">{record.type === "income" ? "+" : "-"}</span>
+                        {record.recordType !== "Transfer" && (
+                          <span className="text-xs">{record.recordType === "Income" ? "+" : "-"}</span>
                         )}
                         $
                         {Math.abs(record.amount).toLocaleString(undefined, {
@@ -320,32 +292,29 @@ const RecordsPage = ({ records, accounts }) => {
 
         {/* Records Cards (Mobile) */}
         <div className="block md:hidden space-y-4">
-          {Object.entries(groupedRecords).map(([date, records]) => (
-            <div key={date} className="bg-gray-700 rounded-lg shadow-md">
+          {Object.entries(groupedRecords).map(([date, records], index) => (
+            <div key={index} className="bg-gray-700 rounded-lg shadow-md">
               <div className="px-4 py-2 text-gray-300 font-semibold">{date}</div>
-              {records.map((record) => (
-                <div
-                  key={record.id}
-                  className="bg-gray-800 p-2 hover:bg-gray-750 transition-colors"
-                >
+              {records.map((record, index) => (
+                <div key={index} className="bg-gray-800 p-2 hover:bg-gray-750 transition-colors">
                   <div className="flex justify-between items-center">
                     <div className="text-gray-400 text-xs">
-                      {new Date(record.date).toLocaleTimeString("en-US", {
+                      {new Date(record.recordDate).toLocaleTimeString("en-US", {
                         hour: "2-digit",
                         minute: "2-digit",
                       })}
                     </div>
                     <div
                       className={`font-medium text-sm ${
-                        record.type === "income"
+                        record.recordType === "Income"
                           ? "text-green-400"
-                          : record.type === "expense"
+                          : record.recordType === "Expense"
                           ? "text-red-400"
                           : "text-blue-400"
                       }`}
                     >
-                      {record.type !== "transfer" && (
-                        <span className="text-xs">{record.type === "income" ? "+" : "-"}</span>
+                      {record.recordType !== "Transfer" && (
+                        <span className="text-xs">{record.recordType === "Income" ? "+" : "-"}</span>
                       )}
                       $
                       {Math.abs(record.amount).toLocaleString(undefined, {
@@ -357,15 +326,15 @@ const RecordsPage = ({ records, accounts }) => {
                   <div className="text-gray-100 text-xs truncate mt-1">{record.note || "No description"}</div>
                   <div className="text-gray-500 text-xs mt-1 flex justify-between">
                     <span>
-                      {record.type === "transfer" ? (
+                      {record.recordType === "Transfer" ? (
                         <>
-                          {record.account} → {record.destinationAccount}
+                          {record.account.name} → {record.fromAccount.name}
                         </>
                       ) : (
-                        record.account
+                        record.account.name
                       )}
                     </span>
-                    {record.category && <span>{record.category}</span>}
+                    {record.category && <span>{record.category.name}</span>}
                   </div>
                 </div>
               ))}
