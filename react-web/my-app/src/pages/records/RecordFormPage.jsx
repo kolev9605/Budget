@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import axiosInstance from '../../api/createAxiosAuth.js';
 import { 
   CurrencyDollarIcon,
   DocumentTextIcon,
@@ -42,22 +43,15 @@ const RecordFormPage = ({ accounts, categories, transactions }) => {
   // Load data if editing
   useEffect(() => {
     if (isEditing) {
-      // Replace with actual data fetching
-      const sampleTransaction = {
-        id: '1',
-        amount: 245.75,
-        type: 'expense',
-        category: 'Food',
-        note: 'Grocery shopping',
-        account: '1',
-        date: '2024-03-15',
+      const fetchTransaction = async () => {
+        const sampleTransaction = await axiosInstance.get(`/transactions/${id}`);
+        setFormData({
+          ...sampleTransaction.data,
+          amount: Math.abs(sampleTransaction.data.amount).toString(),
+          destinationAccount: '',
+        });
       };
-      
-      setFormData({
-        ...sampleTransaction,
-        amount: Math.abs(sampleTransaction.amount).toString(),
-        destinationAccount: '',
-      });
+      fetchTransaction();
     }
   }, [isEditing]);
 
@@ -80,7 +74,7 @@ const RecordFormPage = ({ accounts, categories, transactions }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
 
@@ -90,7 +84,12 @@ const RecordFormPage = ({ accounts, categories, transactions }) => {
       date: new Date(formData.date).toISOString(),
     };
 
-    console.log(isEditing ? 'Updating:' : 'Creating:', recordData);
+    if (isEditing) {
+      await axiosInstance.put(`/transactions/${id}`, recordData);
+    } else {
+      await axiosInstance.post('/transactions', recordData);
+    }
+
     navigate('/transactions'); // Redirect to transactions list
   };
 

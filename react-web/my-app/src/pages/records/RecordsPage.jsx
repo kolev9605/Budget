@@ -10,9 +10,8 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "@heroicons/react/24/outline";
-import { useAuthContext } from "../../hooks/useAuthContext.js";
-import { createAxiosAuth } from "../../api/createAxiosAuth.js";
 import { getRecords } from "../../api/records.service.js"; // Import the getRecords function
+import axiosInstance from "../../api/createAxiosAuth.js";
 
 const RecordsPage = () => {
   const [records, setRecords] = useState([]);
@@ -25,12 +24,9 @@ const RecordsPage = () => {
   const [specificMonth, setSpecificMonth] = useState(new Date()); // Use Date object for specific month
   const [showFilters, setShowFilters] = useState(false); // New state for toggling filters
 
-  const { user } = useAuthContext();
-  const axiosAuth = createAxiosAuth(user?.token);
-
   useEffect(() => {
     const fetchRecords = async () => {
-      const response = await getRecords(axiosAuth);
+      const response = await getRecords(axiosInstance);
       console.log("response.items", response.items);
 
       setRecords(response.items);

@@ -1,4 +1,6 @@
-export const getPaymentTypes = async (axiosAuth) => {
-  const response = await axiosAuth.get("/paymenttypes");
+import axiosInstance from "./createAxiosAuth";
+
+export const getPaymentTypes = async () => {
+  const response = await axiosInstance.get("/paymenttypes");
   return response.data;
 }

@@ -9,19 +9,14 @@ import {
 } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import { getCategories, deleteCategory } from "../../api/categories.service.js";
-import { createAxiosAuth } from "../../api/createAxiosAuth.js";
-import { useAuthContext } from "../../hooks/useAuthContext.js";
 
 const CategoryPage = () => {
   const [categories, setCategories] = useState([]);
-  const { user } = useAuthContext();
-  const axiosAuth = createAxiosAuth(user?.token);
-
   const [collapsed, setCollapsed] = useState({});
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const response = await getCategories(axiosAuth);
+      const response = await getCategories();
       setCategories(response);
 
       response.forEach((category) => {
@@ -41,7 +36,7 @@ const CategoryPage = () => {
   const handleDelete = async (categoryId) => {
     if (window.confirm("Are you sure you want to delete this category?")) {
       try {
-        await deleteCategory(categoryId, axiosAuth);
+        await deleteCategory(categoryId);
         setCategories((prev) => prev.filter((category) => category.id !== categoryId));
       } catch (error) {
         console.error("Failed to delete category:", error);

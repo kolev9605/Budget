@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuthContext } from "./useAuthContext";
 import { useNavigate } from "react-router";
-import axios from "axios";
+import axiosInstance, { setAuthToken } from "../api/createAxiosAuth";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -16,14 +16,15 @@ export const useLogin = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/authentication/login`, {
-        email,
-        password,
-      });
+      const response = await axiosInstance.post(
+        `${API_BASE_URL}/authentication/login`,
+        { email, password }
+      );
 
       const json = response.data;
 
       localStorage.setItem("user", JSON.stringify(json));
+      setAuthToken(json.token); // Set the token globally
       dispatch({ type: "LOGIN", payload: json });
       setIsLoading(false);
 

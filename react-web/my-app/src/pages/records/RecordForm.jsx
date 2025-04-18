@@ -6,20 +6,25 @@ import {
   ChevronLeftIcon,
 } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
+import axiosInstance from "../../api/createAxiosAuth.js";
 
 const RecordForm = ({ accounts, categories, recordTypes, onSubmit, record }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState(record);
 
-  const handleSubmit = (e) => {
-    console.log("Submitting:", formData);
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
     const recordData = {
       ...formData,
       amount: parseFloat(formData.amount) ?? 0,
       recordDate: new Date(formData.recordDate).toISOString(),
     };
+
+    if (record?.id) {
+      await axiosInstance.put(`/records/${record.id}`, recordData);
+    } else {
+      await axiosInstance.post("/records", recordData);
+    }
 
     onSubmit(recordData);
   };

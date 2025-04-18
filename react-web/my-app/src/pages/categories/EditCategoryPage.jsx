@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import CategoryForm from "./CategoryForm.jsx";
 import { getCategories, getCategoryTypes, updateCategory } from "../../api/categories.service.js";
-import { useAuthContext } from "../../hooks/useAuthContext.js";
-import { createAxiosAuth } from "../../api/createAxiosAuth.js";
 
 const EditCategoryPage = () => {
   const { id } = useParams();
@@ -11,14 +9,12 @@ const EditCategoryPage = () => {
   const [categoryTypes, setCategoryTypes] = useState([]);
   const navigate = useNavigate();
   const [initialData, setInitialData] = useState(null);
-  const { user } = useAuthContext();
-  const axiosAuth = createAxiosAuth(user?.token);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const categoriesResponse = await getCategories(axiosAuth);
-      const typesResponse = await getCategoryTypes(axiosAuth);
+      const categoriesResponse = await getCategories();
+      const typesResponse = await getCategoryTypes();
       setCategories(categoriesResponse);
       setCategoryTypes(typesResponse);
       const category = categoriesResponse.find((cat) => cat.id === id);
@@ -33,7 +29,7 @@ const EditCategoryPage = () => {
   }, [id]);
 
   const handleEditCategory = async (categoryData) => {
-    await updateCategory(categoryData, axiosAuth);
+    await updateCategory(categoryData);
     navigate("/categories");
   };
 

@@ -4,7 +4,7 @@ import ErrorSection from "../../components/ErrorSection.jsx";
 import { getCurrencies } from "../../api/currencies.service.js";
 import { getPaymentTypes } from "../../api/paymentTypes.service.js";
 
-const AccountForm = ({ account, onSubmit, axiosAuth }) => {
+const AccountForm = ({ account, onSubmit }) => {
   const [formData, setFormData] = useState(account);
   const [errors, setErrors] = useState({});
   const [currencies, setCurrencies] = useState([]);
@@ -12,10 +12,10 @@ const AccountForm = ({ account, onSubmit, axiosAuth }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const currencies = await getCurrencies(axiosAuth);
+      const currencies = await getCurrencies();
       setCurrencies(currencies);
 
-      const paymentTypes = await getPaymentTypes(axiosAuth);
+      const paymentTypes = await getPaymentTypes();
       setPaymentTypes(paymentTypes);
 
       setFormData((prevFormData) => ({

@@ -1,25 +1,22 @@
 import { useNavigate } from "react-router-dom";
 import RecordForm from "./RecordForm";
 import { useState, useEffect } from "react";
-import { useAuthContext } from "../../hooks/useAuthContext.js";
-import { createAxiosAuth } from "../../api/createAxiosAuth.js";
 import { getAccounts } from "../../api/accounts.service.js";
 import { getCategories } from "../../api/categories.service.js";
 import { getRecordTypes, createRecord } from "../../api/records.service.js";
+import axiosInstance from "../../api/createAxiosAuth.js";
 
 const AddRecordPage = () => {
   const [categories, setCategories] = useState([]);
   const [accounts, setAccounts] = useState([]);
   const [recordTypes, setRecordTypes] = useState([]);
-  const { user } = useAuthContext();
-  const axiosAuth = createAxiosAuth(user?.token);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
-      const categoriesResponse = await getCategories(axiosAuth);
-      const accountsResponse = await getAccounts(axiosAuth);
-      const recordTypesResponse = await getRecordTypes(axiosAuth);
+      const categoriesResponse = await getCategories(axiosInstance);
+      const accountsResponse = await getAccounts(axiosInstance);
+      const recordTypesResponse = await getRecordTypes(axiosInstance);
       setCategories(categoriesResponse);
       setAccounts(accountsResponse);
       setRecordTypes(recordTypesResponse);
@@ -29,7 +26,7 @@ const AddRecordPage = () => {
   }, []);
   const handleSubmit = async (formData) => {
     console.log("Creating:", formData);
-    await createRecord(formData, axiosAuth);
+    await createRecord(formData, axiosInstance);
     navigate("/records"); // Redirect to transactions list
   };
 

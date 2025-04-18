@@ -1,11 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import RecordForm from "./RecordForm";
-import { useAuthContext } from "../../hooks/useAuthContext.js";
-import { createAxiosAuth } from "../../api/createAxiosAuth.js";
-import { getAccounts } from "../../api/accounts.service.js";
-import { getCategories } from "../../api/categories.service.js";
-import { getRecordById, getRecordTypes, updateRecord } from "../../api/records.service.js";
+import axiosInstance from "../../api/createAxiosAuth.js";
 
 const EditRecordPage = () => {
   const { id } = useParams();
@@ -14,47 +10,43 @@ const EditRecordPage = () => {
   const [categories, setCategories] = useState([]);
   const [accounts, setAccounts] = useState([]);
   const [recordTypes, setRecordTypes] = useState([]);
-  const { user } = useAuthContext();
-  const axiosAuth = createAxiosAuth(user?.token);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
-      const categoriesResponse = await getCategories(axiosAuth);
-      const accountsResponse = await getAccounts(axiosAuth);
-      const recordResponse = await getRecordById(id, axiosAuth);
-      const recordTypesResponse = await getRecordTypes(axiosAuth);
+      const categoriesResponse = await axiosInstance.get("/categories");
+      const accountsResponse = await axiosInstance.get("/accounts");
+      const recordResponse = await axiosInstance.get(`/records/${id}`);
+      const recordTypesResponse = await axiosInstance.get("/records/types");
 
       setRecord({
-        id: recordResponse.id || "",
-        amount: Math.abs(recordResponse.amount),
-        fromAccountId: recordResponse.fromAccount?.id || null,
-        categoryId: recordResponse.category.id || "",
-        accountId: recordResponse.account.id || "",
-        // todo: not optimal conversion
-        recordDate: new Date(recordResponse.recordDate).toISOString().split("T")[0],
-        note: recordResponse.note || "",
-        recordType: recordResponse.recordType,
+        id: recordResponse.data.id || "",
+        amount: Math.abs(recordResponse.data.amount),
+        fromAccountId: recordResponse.data.fromAccount?.id || null,
+        categoryId: recordResponse.data.category.id || "",
+        accountId: recordResponse.data.account.id || "",
+        recordDate: new Date(recordResponse.data.recordDate).toISOString().split("T")[0],
+        note: recordResponse.data.note || "",
+        recordType: recordResponse.data.recordType,
       });
 
-      setCategories(categoriesResponse);
-      setAccounts(accountsResponse);
-      setRecordTypes(recordTypesResponse);
-      setIsLoading(false); // Set loading to false after data is fetched
+      setCategories(categoriesResponse.data);
+      setAccounts(accountsResponse.data);
+      setRecordTypes(recordTypesResponse.data);
+      setIsLoading(false);
     };
 
     fetchData();
   }, [id]);
 
   const handleSubmit = async (formData) => {
-    console.log("Updating:", formData);
-    await updateRecord(formData, axiosAuth);
-    navigate("/records"); // Redirect to transactions list
+    await axiosInstance.put(`/records/${formData.id}`, formData);
+    navigate("/records");
   };
 
   if (!record) return <div>Loading...</div>;
 
-  return isLoading ? ( // Conditionally render loading or form
+  return isLoading ? (
     <p className="text-gray-400">Loading...</p>
   ) : (
     <RecordForm

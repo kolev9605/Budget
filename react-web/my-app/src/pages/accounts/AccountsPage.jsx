@@ -1,19 +1,15 @@
 import { NavLink } from "react-router";
 import { PlusIcon, PencilIcon, BanknotesIcon, CreditCardIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
-import { createAxiosAuth } from "../../api/createAxiosAuth.js";
-import { useAuthContext } from "../../hooks/useAuthContext.js";
 import { getAccounts } from "../../api/accounts.service.js";
 import { getCurrencySymbol } from "../../utils/currencyUtils";
 
 const AccountsPage = () => {
   const [accounts, setAccounts] = useState([]);
-  const { user } = useAuthContext();
-  const axiosAuth = createAxiosAuth(user?.token);
 
   useEffect(() => {
     const fetchAccounts = async () => {
-      const response = await getAccounts(axiosAuth);
+      const response = await getAccounts();
       console.log(response);
 
       setAccounts(response);

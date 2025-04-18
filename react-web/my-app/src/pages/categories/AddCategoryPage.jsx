@@ -2,20 +2,16 @@ import { useNavigate } from "react-router-dom";
 import CategoryForm from "./CategoryForm.jsx";
 import { createCategory, getCategories, getCategoryTypes } from "../../api/categories.service.js";
 import { useEffect, useState } from "react";
-import { useAuthContext } from "../../hooks/useAuthContext.js";
-import { createAxiosAuth } from "../../api/createAxiosAuth.js";
 
 const AddCategoryPage = () => {
   const [categories, setCategories] = useState([]);
   const [categoryTypes, setCategoryTypes] = useState([]);
-  const { user } = useAuthContext();
-  const axiosAuth = createAxiosAuth(user?.token);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const categoriesResponse = await getCategories(axiosAuth);
-      const typesResponse = await getCategoryTypes(axiosAuth);
+      const categoriesResponse = await getCategories();
+      const typesResponse = await getCategoryTypes();
       setCategories(categoriesResponse);
       setCategoryTypes(typesResponse);
     };
@@ -28,7 +24,7 @@ const AddCategoryPage = () => {
       ...categoryData,
     };
 
-    await createCategory(newCategory, axiosAuth);
+    await createCategory(newCategory);
 
     console.log("Adding category:", newCategory);
     navigate("/categories");

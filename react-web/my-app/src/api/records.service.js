@@ -1,29 +1,31 @@
-export const getRecords = async (axiosAuth) => {
-  const response = await axiosAuth.get("/records");
+import axiosInstance from "./createAxiosAuth";
+
+export const getRecords = async () => {
+  const response = await axiosInstance.get("/records");
   return response.data;
 }
 
-export const getRecordById = async (id, axiosAuth) => {
-  const response = await axiosAuth.get(`/records/${id}`);
+export const getRecordById = async (id) => {
+  const response = await axiosInstance.get(`/records/${id}`);
   return response.data;
 }
 
-export const createRecord = async (recordData, axiosAuth) => {
-  const response = await axiosAuth.post("/records", recordData);
+export const createRecord = async (recordData) => {
+  const response = await axiosInstance.post("/records", recordData);
   return response.data;
 }
 
-export const updateRecord = async (recordData, axiosAuth) => {
-  const response = await axiosAuth.put("/records", recordData);
+export const updateRecord = async (recordData) => {
+  const response = await axiosInstance.put("/records", recordData);
   return response.data;
 }
 
-export const deleteRecord = async (id, axiosAuth) => {
-  const response = await axiosAuth.delete(`/records/${id}`);
+export const deleteRecord = async (id) => {
+  const response = await axiosInstance.delete(`/records/${id}`);
   return response.data;
 }
 
-export const getRecordTypes = async (axiosAuth) => {
-  const response = await axiosAuth.get("/records/types");
+export const getRecordTypes = async () => {
+  const response = await axiosInstance.get("/records/types");
   return response.data;
 }
