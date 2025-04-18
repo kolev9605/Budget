@@ -5,13 +5,12 @@ import { updateAccount, deleteAccount } from "../../api/accounts.service.js";
 import { getAccountById } from "../../api/accounts.service.js";
 import { useAuthContext } from "../../hooks/useAuthContext.js";
 import { createAxiosAuth } from "../../api/createAxiosAuth.js";
-import { useMemo } from "react";
 
 const EditAccountPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuthContext();
-  const axiosAuth = useMemo(() => createAxiosAuth(user?.token), [user?.token]);
+  const axiosAuth = createAxiosAuth(user?.token);
   const [account, setAccount] = useState();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -24,7 +23,7 @@ const EditAccountPage = () => {
     };
 
     fetchAccountData();
-  }, [axiosAuth, id]);
+  }, [id]);
 
   const handleUpdateAccount = async (accountData) => {
     const response = await updateAccount(accountData, axiosAuth);
