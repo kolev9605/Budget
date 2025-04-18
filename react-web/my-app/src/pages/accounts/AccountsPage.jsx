@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { createAxiosAuth } from "../../api/createAxiosAuth.js";
 import { useAuthContext } from "../../hooks/useAuthContext.js";
 import { getAccounts } from "../../api/accounts.service.js";
+import { getCurrencySymbol } from "../../utils/currencyUtils";
 
 const AccountsPage = () => {
   const [accounts, setAccounts] = useState([]);
@@ -77,11 +78,10 @@ const AccountsPage = () => {
                   <div>
                     <span className="text-sm text-gray-400">Current Balance</span>
                     <p className={`text-xl font-semibold ${account.balance < 0 ? "text-red-400" : "text-green-400"}`}>
-                      $
-                      {Math.abs(account.balance).toLocaleString(undefined, {
+                      {getCurrencySymbol(account.currency.abbreviation, Math.abs(account.balance).toLocaleString(undefined, {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2,
-                      })}
+                      }))}
                     </p>
                   </div>
                   <span className="px-3 py-1 text-sm rounded-full bg-gray-700 text-gray-300">{account.paymentType.name}</span>

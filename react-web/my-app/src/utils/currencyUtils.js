@@ -1,0 +1,17 @@
+export const getCurrencySymbol = (currencyCode, amount) => {
+  const currencyFormats = {
+    USD: { symbol: "$", position: "before" },
+    EUR: { symbol: "€", position: "after" },
+    BGN: { symbol: "лв.", position: "after" },
+    GBP: { symbol: "£", position: "before" },
+    JPY: { symbol: "¥", position: "before" },
+    AUD: { symbol: "A$", position: "before" },
+    CAD: { symbol: "C$", position: "before" },
+  };
+
+  const format = currencyFormats[currencyCode] || { symbol: currencyCode, position: "after" };
+
+  return format.position === "before"
+    ? `${format.symbol}${amount}`
+    : `${amount}${format.symbol}`;
+};

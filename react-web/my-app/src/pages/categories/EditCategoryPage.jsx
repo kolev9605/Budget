@@ -13,6 +13,7 @@ const EditCategoryPage = () => {
   const [initialData, setInitialData] = useState(null);
   const { user } = useAuthContext();
   const axiosAuth = createAxiosAuth(user?.token);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -23,9 +24,9 @@ const EditCategoryPage = () => {
       const category = categoriesResponse.find((cat) => cat.id === id);
       if (category) {
         setInitialData(category);
-      } else {
-        // navigate("/categories"); // Redirect if category not found
       }
+
+      setIsLoading(false); // Set loading to false after data is fetched
     };
 
     fetchCategories();
@@ -36,22 +37,15 @@ const EditCategoryPage = () => {
     navigate("/categories");
   };
 
-  if (!initialData) return null; // Wait for data to load
-
-  return (
-    <div className="min-h-screen bg-gray-900 p-6 sm:p-8 lg:p-10">
-      <div className="max-w-2xl mx-auto">
-        <div className="bg-gray-800 p-6 rounded-2xl shadow-xl">
-          <h1 className="text-2xl font-bold text-gray-100 mb-6">Edit Category</h1>
-          <CategoryForm
-            initialData={initialData}
-            onSubmit={handleEditCategory}
-            categories={categories}
-            categoryTypes={categoryTypes}
-          />
-        </div>
-      </div>
-    </div>
+  return isLoading ? ( // Conditionally render loading or form
+    <p className="text-gray-400">Loading...</p>
+  ) : (
+    <CategoryForm
+      category={initialData}
+      onSubmit={handleEditCategory}
+      categories={categories}
+      categoryTypes={categoryTypes}
+    />
   );
 };
 

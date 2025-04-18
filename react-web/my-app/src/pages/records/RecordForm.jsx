@@ -7,16 +7,17 @@ import {
 } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
 
-const RecordForm = ({ accounts, categories, recordTypes, onSubmit, initialData }) => {
+const RecordForm = ({ accounts, categories, recordTypes, onSubmit, record }) => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState(initialData);
+  const [formData, setFormData] = useState(record);
 
   const handleSubmit = (e) => {
+    console.log("Submitting:", formData);
     e.preventDefault();
 
     const recordData = {
       ...formData,
-      amount: parseFloat(formData.amount),
+      amount: parseFloat(formData.amount) ?? 0,
       recordDate: new Date(formData.recordDate).toISOString(),
     };
 
@@ -35,7 +36,7 @@ const RecordForm = ({ accounts, categories, recordTypes, onSubmit, initialData }
               <ChevronLeftIcon className="h-5 w-5" />
             </button>
             <h1 className="text-2xl font-bold text-gray-100 ml-2">
-              {initialData.id ? "Edit Record" : "Create New Record"}
+              {record?.id ? "Edit Record" : "Create New Record"}
             </h1>
           </div>
 
@@ -49,7 +50,9 @@ const RecordForm = ({ accounts, categories, recordTypes, onSubmit, initialData }
                   onClick={() => setFormData({ ...formData, recordType: recordType })}
                   className={`p-3 rounded-xl flex items-center justify-center gap-2 transition-colors
                     ${
-                      formData.recordType === recordType ? "bg-blue-500 text-white" : "bg-gray-700 hover:bg-gray-600 text-gray-300"
+                      formData.recordType === recordType
+                        ? "bg-blue-500 text-white"
+                        : "bg-gray-700 hover:bg-gray-600 text-gray-300"
                     }`}
                 >
                   {recordType === "Transfer" ? (
@@ -192,7 +195,7 @@ const RecordForm = ({ accounts, categories, recordTypes, onSubmit, initialData }
                 className="w-full sm:w-auto px-6 py-3 bg-blue-500 hover:bg-blue-400 
                   text-white rounded-xl flex items-center justify-center gap-2 transition-colors"
               >
-                {initialData.id ? "Save Changes" : "Create Transaction"}
+                {record.id ? "Save Changes" : "Create Transaction"}
               </button>
             </div>
           </form>

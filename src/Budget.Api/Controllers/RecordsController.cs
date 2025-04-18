@@ -20,20 +20,11 @@ public class RecordsController : BaseController
         _mediator = mediator;
     }
 
-    [HttpGet]
-    [Route(nameof(GetById))]
-    public async Task<IActionResult> GetById([FromQuery] GetRecordByIdRequest request)
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(Guid id)
     {
+        var request = new GetRecordByIdRequest(id);
         var result = await _mediator.Send((request, CurrentUser).Adapt<GetRecordByIdQuery>());
-
-        return MatchResponse<RecordModel, RecordResponse>(result);
-    }
-
-    [HttpGet]
-    [Route(nameof(GetByIdForUpdate))]
-    public async Task<IActionResult> GetByIdForUpdate([FromQuery] GetRecordByIdForUpdateRequest request)
-    {
-        var result = await _mediator.Send((request, CurrentUser).Adapt<GetRecordByIdForUpdateQuery>());
 
         return MatchResponse<RecordModel, RecordResponse>(result);
     }
