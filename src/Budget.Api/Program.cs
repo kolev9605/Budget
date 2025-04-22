@@ -35,8 +35,7 @@ var app = builder.Build();
 
 app.MapHealthChecks("/");
 
-app.MapControllers();
-// app.MapDefaultControllerRoute();
+app.UseMiddleware<ErrorHandlerMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -57,6 +56,5 @@ app.UseCors(x => x.AllowAnyHeader()
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseMiddleware<ErrorHandlerMiddleware>();
-
+app.MapControllers();
 app.Run();
