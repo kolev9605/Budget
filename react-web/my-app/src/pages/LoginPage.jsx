@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FaUser, FaLock } from "react-icons/fa";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { NavLink } from "react-router";
 import { useLogin } from "../hooks/useLogin";
-import Layout from "../components/Layout";
+import LoadingOverlay from "../components/LoadingOverlay";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -11,23 +11,14 @@ const LoginPage = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const { login, error, isLoading } = useLogin();
 
-  // useEffect(() => {
-  //   const fetchAccounts = async () => {
-  //     try {
-  //       const accounts = await getAccounts();
-  //       console.log(accounts);
-  //     } catch (error) {
-  //       console.error("Error fetching accounts:", error);
-  //     }
-  //   };
-  //   fetchAccounts();
-  // }, []);
   const handleSubmit = async (e) => {
     e.preventDefault();
     await login(email, password);
   };
 
-  return (
+  return isLoading ? (
+    <LoadingOverlay />
+  ) : (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4 sm:p-6 lg:p-8">
       <div className="bg-gray-800 p-8 rounded-2xl shadow-xl w-full max-w-md transition-all duration-300 hover:shadow-2xl">
         <div className="mb-10 text-center space-y-3">
@@ -110,7 +101,11 @@ const LoginPage = () => {
             disabled={isLoading}
             type="submit"
             className={`w-full py-3.5 rounded-xl font-medium text-sm md:text-base tracking-wide transition-all duration-300 transform shadow-lg
-              ${isLoading ? "bg-gray-500 text-gray-300 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-400 text-white hover:scale-[1.01] hover:shadow-blue-500/20"}`}
+              ${
+                isLoading
+                  ? "bg-gray-500 text-gray-300 cursor-not-allowed"
+                  : "bg-blue-500 hover:bg-blue-400 text-white hover:scale-[1.01] hover:shadow-blue-500/20"
+              }`}
           >
             Sign In
           </button>

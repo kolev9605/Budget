@@ -3,6 +3,7 @@ import { FaUser, FaLock } from "react-icons/fa";
 import { NavLink } from "react-router";
 import { useRegister } from "../hooks/useRegister";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
+import LoadingOverlay from "../components/LoadingOverlay";
 
 const RegisterPage = () => {
   const [email, setEmail] = useState("");
@@ -12,12 +13,10 @@ const RegisterPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle registration logic here
-    console.log({ email, password, confirmPassword });
     await register(email, password);
   };
 
-  return (
+  return isLoading ? <LoadingOverlay/> : (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4 sm:p-6 lg:p-8">
       <div className="bg-gray-800 p-8 rounded-2xl shadow-xl w-full max-w-md transition-all duration-300 hover:shadow-2xl">
         <div className="mb-10 text-center space-y-3">
