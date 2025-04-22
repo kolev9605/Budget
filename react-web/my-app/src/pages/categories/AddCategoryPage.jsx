@@ -3,6 +3,7 @@ import CategoryForm from "./CategoryForm.jsx";
 import { createCategory, getCategories, getCategoryTypes } from "../../api/categories.service.js";
 import { useEffect, useState } from "react";
 import LoadingOverlay from "../../components/LoadingOverlay.jsx";
+import { toast } from "react-toastify";
 
 const AddCategoryPage = () => {
   const [categories, setCategories] = useState([]);
@@ -30,10 +31,11 @@ const AddCategoryPage = () => {
       setIsLoading(true);
       const newCategory = { ...categoryData };
       await createCategory(newCategory);
-      console.log("Adding category:", newCategory);
     } finally {
       setIsLoading(false);
     }
+
+    toast.success("Category created successfully!");
     navigate("/categories");
   };
 

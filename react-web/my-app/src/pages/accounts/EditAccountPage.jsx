@@ -4,6 +4,7 @@ import AccountForm from "./AccountForm.jsx";
 import { updateAccount, deleteAccount } from "../../api/accounts.service.js";
 import { getAccountById } from "../../api/accounts.service.js";
 import LoadingOverlay from "../../components/LoadingOverlay.jsx";
+import { toast } from "react-toastify";
 
 const EditAccountPage = () => {
   const { id } = useParams();
@@ -27,11 +28,12 @@ const EditAccountPage = () => {
   const handleUpdateAccount = async (accountData) => {
     try {
       setIsLoading(true);
-      const response = await updateAccount(accountData);
-      console.log("submitting", response);
+      await updateAccount(accountData);
     } finally {
       setIsLoading(false);
     }
+
+    toast.success("Account updated successfully!");
     navigate("/accounts");
   };
 
@@ -43,6 +45,8 @@ const EditAccountPage = () => {
       } finally {
         setIsLoading(false);
       }
+
+      toast.success("Account deleted successfully!");
       navigate("/accounts");
     }
   };

@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import CategoryForm from "./CategoryForm.jsx";
 import { getCategories, getCategoryTypes, updateCategory } from "../../api/categories.service.js";
 import LoadingOverlay from "../../components/LoadingOverlay.jsx";
+import { toast } from "react-toastify";
 
 const EditCategoryPage = () => {
   const { id } = useParams();
@@ -38,6 +39,8 @@ const EditCategoryPage = () => {
     } finally {
       setIsLoading(false);
     }
+
+    toast.success("Category updated successfully!");
     navigate("/categories");
   };
 

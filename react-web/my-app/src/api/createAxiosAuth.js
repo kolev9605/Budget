@@ -1,6 +1,7 @@
 // hooks/useAxiosAuth.ts
 import axios from "axios";
 import { performLogout } from "../utils/logout";
+import { toast } from "react-toastify";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -19,8 +20,8 @@ axiosInstance.interceptors.response.use(
       performLogout();
     }
 
-    const message = error.response?.data?.message || error.message || "Something went wrong";
-    // toast.error(message); // Uncomment if you want global toast here
+    const message = error.response?.data?.title || "Something went wrong";
+    toast.error(message);
     return Promise.reject(error);
   }
 );

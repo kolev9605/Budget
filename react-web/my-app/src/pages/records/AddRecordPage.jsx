@@ -6,6 +6,7 @@ import { getCategories } from "../../api/categories.service.js";
 import { getRecordTypes, createRecord } from "../../api/records.service.js";
 import axiosInstance from "../../api/createAxiosAuth.js";
 import LoadingOverlay from "../../components/LoadingOverlay.jsx";
+import { toast } from "react-toastify";
 
 const AddRecordPage = () => {
   const [categories, setCategories] = useState([]);
@@ -32,8 +33,14 @@ const AddRecordPage = () => {
   }, []);
 
   const handleSubmit = async (formData) => {
-    console.log("Creating:", formData);
-    await createRecord(formData, axiosInstance);
+    try {
+      setIsLoading(true);
+      await createRecord(formData, axiosInstance);
+    } finally {
+      setIsLoading(false);
+    }
+
+    toast.success("Record created successfully!");
     navigate("/records");
   };
 

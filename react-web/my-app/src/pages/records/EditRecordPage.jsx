@@ -3,6 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import RecordForm from "./RecordForm";
 import axiosInstance from "../../api/createAxiosAuth.js";
 import LoadingOverlay from "../../components/LoadingOverlay.jsx";
+import { toast } from "react-toastify";
+import { updateRecord } from "../../api/records.service.js";
 
 const EditRecordPage = () => {
   const { id } = useParams();
@@ -41,11 +43,15 @@ const EditRecordPage = () => {
   }, [id]);
 
   const handleSubmit = async (formData) => {
-    await axiosInstance.put(`/records/${formData.id}`, formData);
+    try {
+      setIsLoading(true);
+      await updateRecord(formData);
+    } finally {
+      setIsLoading(false);
+    }
+    toast.success("Record updated successfully!");
     navigate("/records");
   };
-
-  if (!record) return <div>Loading...</div>;
 
   return isLoading ? (
     <LoadingOverlay />

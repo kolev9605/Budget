@@ -3,7 +3,6 @@ import RegisterPage from "./pages/RegisterPage.jsx";
 import { Routes, Route, Navigate } from "react-router";
 import DashboardPage from "./pages/DashboardPage.jsx";
 import AccountsPage from "./pages/accounts/AccountsPage.jsx";
-import RecordFormPage from "./pages/records/RecordFormPage.jsx";
 import RecordsPage from "./pages/records/RecordsPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import CategoryPage from "./pages/categories/CategoriesPage.jsx";
@@ -36,7 +35,6 @@ function App() {
           <Route path="categories/edit/:id" element={<EditCategoryPage />} />
           <Route path="records" element={<RecordsPage />} />
           <Route path="records/new" element={<AddRecordPage />} />
-          <Route path="records/new2" element={<RecordFormPage/>} />
           <Route path="records/edit/:id" element={<EditRecordPage />} />
         </Route>
       </Route>
