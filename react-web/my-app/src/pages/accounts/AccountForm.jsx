@@ -3,26 +3,32 @@ import { WalletIcon, CurrencyDollarIcon } from "@heroicons/react/24/outline";
 import ErrorSection from "../../components/ErrorSection.jsx";
 import { getCurrencies } from "../../api/currencies.service.js";
 import { getPaymentTypes } from "../../api/paymentTypes.service.js";
+import LoadingOverlay from "../../components/LoadingOverlay.jsx";
 
-const AccountForm = ({ account, onSubmit }) => {
+const AccountForm = ({ account, onSubmit, handleDeleteAccount }) => {
   const [formData, setFormData] = useState(account);
   const [errors, setErrors] = useState({});
   const [currencies, setCurrencies] = useState([]);
   const [paymentTypes, setPaymentTypes] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
-      const currencies = await getCurrencies();
-      setCurrencies(currencies);
+      try {
+        const currencies = await getCurrencies();
+        const paymentTypes = await getPaymentTypes();
 
-      const paymentTypes = await getPaymentTypes();
-      setPaymentTypes(paymentTypes);
+        setCurrencies(currencies);
+        setPaymentTypes(paymentTypes);
 
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        currencyId: account?.currency?.id || currencies[0]?.id || "",
-        paymentTypeId: account?.paymentType?.id || paymentTypes[0]?.id || "",
-      }));
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          currencyId: account?.currency?.id || currencies[0]?.id || "",
+          paymentTypeId: account?.paymentType?.id || paymentTypes[0]?.id || "",
+        }));
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchData();
@@ -49,11 +55,15 @@ const AccountForm = ({ account, onSubmit }) => {
     });
   };
 
-  return (
+  return isLoading ? (
+    <LoadingOverlay />
+  ) : (
     <div className="min-h-screen bg-gray-900 p-6 sm:p-8 lg:p-10">
       <div className="max-w-2xl mx-auto">
         <div className="bg-gray-800 p-6 rounded-2xl shadow-xl">
-          <h1 className="text-2xl font-bold text-gray-100 mb-6">{account?.id ? "Edit Account" : "Create New Account"}</h1>
+          <h1 className="text-2xl font-bold text-gray-100 mb-6">
+            {account?.id ? "Edit Account" : "Create New Account"}
+          </h1>
           <form onSubmit={handleSubmit} className="space-y-6">
             <ErrorSection errors={errors} />
 
@@ -148,6 +158,14 @@ const AccountForm = ({ account, onSubmit }) => {
                 Submit
               </button>
             </div>
+            {account?.id && (
+              <button
+                onClick={handleDeleteAccount}
+                className="mt-4 w-full bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2"
+              >
+                Delete Account
+              </button>
+            )}
           </form>
         </div>
       </div>

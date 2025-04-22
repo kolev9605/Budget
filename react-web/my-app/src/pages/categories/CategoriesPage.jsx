@@ -9,21 +9,27 @@ import {
 } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import { getCategories, deleteCategory } from "../../api/categories.service.js";
+import LoadingOverlay from "../../components/LoadingOverlay.jsx";
 
 const CategoryPage = () => {
   const [categories, setCategories] = useState([]);
   const [collapsed, setCollapsed] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const response = await getCategories();
-      setCategories(response);
+      try {
+        const response = await getCategories();
+        setCategories(response);
 
-      response.forEach((category) => {
-        if (!category.parentCategoryId) {
-          setCollapsed((prev) => ({ ...prev, [category.id]: true }));
-        }
-      });
+        response.forEach((category) => {
+          if (!category.parentCategoryId) {
+            setCollapsed((prev) => ({ ...prev, [category.id]: true }));
+          }
+        });
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchCategories();
@@ -36,10 +42,11 @@ const CategoryPage = () => {
   const handleDelete = async (categoryId) => {
     if (window.confirm("Are you sure you want to delete this category?")) {
       try {
+        setIsLoading(true);
         await deleteCategory(categoryId);
         setCategories((prev) => prev.filter((category) => category.id !== categoryId));
-      } catch (error) {
-        console.error("Failed to delete category:", error);
+      } finally {
+        setIsLoading(false);
       }
     }
   };
@@ -108,7 +115,9 @@ const CategoryPage = () => {
       ));
   };
 
-  return (
+  return isLoading ? (
+    <LoadingOverlay />
+  ) : (
     <div className="min-h-screen bg-gray-900 p-6 sm:p-8 lg:p-10">
       {" "}
       {/* Ensures full page has a dark background */}

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import AccountForm from "./AccountForm.jsx";
 import { updateAccount, deleteAccount } from "../../api/accounts.service.js";
 import { getAccountById } from "../../api/accounts.service.js";
+import LoadingOverlay from "../../components/LoadingOverlay.jsx";
 
 const EditAccountPage = () => {
   const { id } = useParams();
@@ -12,40 +13,44 @@ const EditAccountPage = () => {
 
   useEffect(() => {
     const fetchAccountData = async () => {
-      const response = await getAccountById(id);
-      setAccount(response);
-      setIsLoading(false); // Set loading to false after data is fetched
-      console.log(response);
+      try {
+        const response = await getAccountById(id);
+        setAccount(response);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchAccountData();
   }, [id]);
 
   const handleUpdateAccount = async (accountData) => {
-    const response = await updateAccount(accountData);
-    console.log("submitting", response);
+    try {
+      setIsLoading(true);
+      const response = await updateAccount(accountData);
+      console.log("submitting", response);
+    } finally {
+      setIsLoading(false);
+    }
     navigate("/accounts");
   };
 
   const handleDeleteAccount = async () => {
     if (window.confirm("Are you sure you want to delete this account?")) {
-      await deleteAccount(id);
+      try {
+        setIsLoading(true);
+        await deleteAccount(id);
+      } finally {
+        setIsLoading(false);
+      }
       navigate("/accounts");
     }
   };
 
-  return isLoading ? ( // Conditionally render loading or form
-    <p className="text-gray-400">Loading...</p>
+  return isLoading ? (
+    <LoadingOverlay />
   ) : (
-    <>
-      <AccountForm account={account} onSubmit={handleUpdateAccount} />
-      <button
-        onClick={handleDeleteAccount}
-        className="mt-4 w-full bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2"
-      >
-        Delete Account
-      </button>
-    </>
+    <AccountForm account={account} onSubmit={handleUpdateAccount} onDelete={handleDeleteAccount} />
   );
 };
 

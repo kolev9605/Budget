@@ -12,6 +12,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { getRecords } from "../../api/records.service.js"; // Import the getRecords function
 import axiosInstance from "../../api/createAxiosAuth.js";
+import LoadingOverlay from "../../components/LoadingOverlay.jsx";
 
 const RecordsPage = () => {
   const [records, setRecords] = useState([]);
@@ -23,37 +24,42 @@ const RecordsPage = () => {
   const [dateRange, setDateRange] = useState("all");
   const [specificMonth, setSpecificMonth] = useState(new Date()); // Use Date object for specific month
   const [showFilters, setShowFilters] = useState(false); // New state for toggling filters
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchRecords = async () => {
-      const response = await getRecords(axiosInstance);
-      console.log("response.items", response.items);
+      try {
+        const response = await getRecords(axiosInstance);
+        console.log("response.items", response.items);
 
-      setRecords(response.items);
-      setFilteredRecords(response.items);
+        setRecords(response.items);
+        setFilteredRecords(response.items);
 
-      const groupedRecords = response.items.reduce((groups, record) => {
-        const date = new Date(record.recordDate).toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-        });
-        if (!groups[date]) {
-          groups[date] = [];
-        }
-        groups[date].push(record);
-        return groups;
-      }, {});
+        const groupedRecords = response.items.reduce((groups, record) => {
+          const date = new Date(record.recordDate).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          });
+          if (!groups[date]) {
+            groups[date] = [];
+          }
+          groups[date].push(record);
+          return groups;
+        }, {});
 
-      setGroupedRecords(groupedRecords);
+        setGroupedRecords(groupedRecords);
 
-      console.log(groupedRecords);
-      console.log(
-        "hii iiiii",
-        Object.entries(groupedRecords).map(([date, records]) => ({ date, records }))
-      );
-      console.log(filteredRecords);
-      console.log(records);
+        console.log(groupedRecords);
+        console.log(
+          "hii iiiii",
+          Object.entries(groupedRecords).map(([date, records]) => ({ date, records }))
+        );
+        console.log(filteredRecords);
+        console.log(records);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchRecords();
@@ -98,7 +104,9 @@ const RecordsPage = () => {
     }
   };
 
-  return (
+  return isLoading ? (
+    <LoadingOverlay />
+  ) : (
     <div className="min-h-screen bg-gray-900 p-6 sm:p-8 lg:p-10">
       <div className="max-w-7xl mx-auto">
         {/* Header */}

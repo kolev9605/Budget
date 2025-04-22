@@ -5,32 +5,41 @@ import { getAccounts } from "../../api/accounts.service.js";
 import { getCategories } from "../../api/categories.service.js";
 import { getRecordTypes, createRecord } from "../../api/records.service.js";
 import axiosInstance from "../../api/createAxiosAuth.js";
+import LoadingOverlay from "../../components/LoadingOverlay.jsx";
 
 const AddRecordPage = () => {
   const [categories, setCategories] = useState([]);
   const [accounts, setAccounts] = useState([]);
   const [recordTypes, setRecordTypes] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
-      const categoriesResponse = await getCategories(axiosInstance);
-      const accountsResponse = await getAccounts(axiosInstance);
-      const recordTypesResponse = await getRecordTypes(axiosInstance);
-      setCategories(categoriesResponse);
-      setAccounts(accountsResponse);
-      setRecordTypes(recordTypesResponse);
+      try {
+        const categoriesResponse = await getCategories(axiosInstance);
+        const accountsResponse = await getAccounts(axiosInstance);
+        const recordTypesResponse = await getRecordTypes(axiosInstance);
+        setCategories(categoriesResponse);
+        setAccounts(accountsResponse);
+        setRecordTypes(recordTypesResponse);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchData();
   }, []);
+
   const handleSubmit = async (formData) => {
     console.log("Creating:", formData);
     await createRecord(formData, axiosInstance);
-    navigate("/records"); // Redirect to transactions list
+    navigate("/records");
   };
 
-  return (
+  return isLoading ? (
+    <LoadingOverlay />
+  ) : (
     <RecordForm
       accounts={accounts}
       categories={categories}

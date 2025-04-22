@@ -3,22 +3,29 @@ import { PlusIcon, PencilIcon, BanknotesIcon, CreditCardIcon } from "@heroicons/
 import { useEffect, useState } from "react";
 import { getAccounts } from "../../api/accounts.service.js";
 import { getCurrencySymbol } from "../../utils/currencyUtils";
+import LoadingOverlay from "../../components/LoadingOverlay.jsx";
 
 const AccountsPage = () => {
   const [accounts, setAccounts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchAccounts = async () => {
-      const response = await getAccounts();
-      console.log(response);
-
-      setAccounts(response);
+      try {
+        const response = await getAccounts();
+        console.log(response);
+        setAccounts(response);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchAccounts();
   }, []);
 
-  return (
+  return isLoading ? (
+    <LoadingOverlay />
+  ) : (
     <div className="min-h-screen bg-gray-900 p-6 sm:p-8 lg:p-10">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-8">

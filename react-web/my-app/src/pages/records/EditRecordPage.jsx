@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import RecordForm from "./RecordForm";
 import axiosInstance from "../../api/createAxiosAuth.js";
+import LoadingOverlay from "../../components/LoadingOverlay.jsx";
 
 const EditRecordPage = () => {
   const { id } = useParams();
@@ -47,7 +48,7 @@ const EditRecordPage = () => {
   if (!record) return <div>Loading...</div>;
 
   return isLoading ? (
-    <p className="text-gray-400">Loading...</p>
+    <LoadingOverlay />
   ) : (
     <RecordForm
       accounts={accounts}
