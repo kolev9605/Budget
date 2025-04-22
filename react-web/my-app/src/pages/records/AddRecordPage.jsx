@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { getAccounts } from "../../api/accounts.service.js";
 import { getCategories } from "../../api/categories.service.js";
 import { getRecordTypes, createRecord } from "../../api/records.service.js";
-import axiosInstance from "../../api/createAxiosAuth.js";
 import LoadingOverlay from "../../components/LoadingOverlay.jsx";
 import { toast } from "react-toastify";
 
@@ -18,9 +17,9 @@ const AddRecordPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const categoriesResponse = await getCategories(axiosInstance);
-        const accountsResponse = await getAccounts(axiosInstance);
-        const recordTypesResponse = await getRecordTypes(axiosInstance);
+        const categoriesResponse = await getCategories();
+        const accountsResponse = await getAccounts();
+        const recordTypesResponse = await getRecordTypes();
         setCategories(categoriesResponse);
         setAccounts(accountsResponse);
         setRecordTypes(recordTypesResponse);
@@ -35,7 +34,7 @@ const AddRecordPage = () => {
   const handleSubmit = async (formData) => {
     try {
       setIsLoading(true);
-      await createRecord(formData, axiosInstance);
+      await createRecord(formData);
     } finally {
       setIsLoading(false);
     }

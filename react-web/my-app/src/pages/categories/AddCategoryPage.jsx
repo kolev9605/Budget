@@ -14,7 +14,7 @@ const AddCategoryPage = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const categoriesResponse = await getCategories();
+        const categoriesResponse = await getCategories(true);
         const typesResponse = await getCategoryTypes();
         setCategories(categoriesResponse);
         setCategoryTypes(typesResponse);

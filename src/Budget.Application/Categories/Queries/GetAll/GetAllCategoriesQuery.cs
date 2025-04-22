@@ -6,6 +6,7 @@ using MediatR;
 namespace Budget.Application.Categories.Queries.GetById;
 
 public record GetAllCategoriesQuery(
+    bool PrimaryOnly,
     string UserId
 ) : IRequest<ErrorOr<IEnumerable<CategoryModel>>>;
 
@@ -15,8 +16,15 @@ public class GetAllCategoriesQueryHandler(
 {
     public async Task<ErrorOr<IEnumerable<CategoryModel>>> Handle(GetAllCategoriesQuery request, CancellationToken cancellationToken)
     {
-        var categories = await _categoryRepository.GetAllModelsAsync(request.UserId);
-
-        return categories.ToErrorOr();
+        if (request.PrimaryOnly)
+        {
+            var primaryCategories = await _categoryRepository.GetAllPrimaryAsync(request.UserId);
+            return primaryCategories.ToErrorOr();
+        }
+        else
+        {
+            var allCategories = await _categoryRepository.GetAllAsync(request.UserId);
+            return allCategories.ToErrorOr();
+        }
     }
 }

@@ -32,9 +32,9 @@ public class CategoriesController : BaseController
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll([FromQuery] GetAllCategoriesRequest request)
     {
-        var result = await _mediator.Send(CurrentUser.Adapt<GetAllCategoriesQuery>());
+        var result = await _mediator.Send((request, CurrentUser).Adapt<GetAllCategoriesQuery>());
 
         return MatchResponse<IEnumerable<CategoryModel>, IEnumerable<CategoryResponse>>(result);
     }

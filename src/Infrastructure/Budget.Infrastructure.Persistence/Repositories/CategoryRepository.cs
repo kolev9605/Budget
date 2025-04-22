@@ -14,7 +14,7 @@ public class CategoryRepository : Repository<Category>, ICategoryRepository
     {
     }
 
-    public async Task<IEnumerable<CategoryModel>> GetAllModelsAsync(string userId)
+    public async Task<IEnumerable<CategoryModel>> GetAllAsync(string userId)
     {
         var categories = await GetUserCategories(userId)
             .OrderBy(c => c.ParentCategoryId ?? c.Id)
@@ -25,6 +25,17 @@ public class CategoryRepository : Repository<Category>, ICategoryRepository
         return categories;
     }
 
+    public async Task<IEnumerable<CategoryModel>> GetAllPrimaryAsync(string userId)
+    {
+        var categories = await GetUserCategories(userId)
+            .Where(c => c.ParentCategoryId == null)
+            .OrderBy(c => c.ParentCategoryId ?? c.Id)
+            .ThenBy(c => c.Id)
+            .ProjectToType<CategoryModel>()
+            .ToListAsync();
+
+        return categories;
+    }
     public async Task<Category?> GetByIdWithSubcategoriesAsync(Guid categoryId, string userId)
     {
         var category = await GetByIdWithSubcategoriesBaseQuery(userId, categoryId)

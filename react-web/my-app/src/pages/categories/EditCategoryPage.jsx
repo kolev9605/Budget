@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import CategoryForm from "./CategoryForm.jsx";
-import { getCategories, getCategoryTypes, updateCategory } from "../../api/categories.service.js";
+import { getCategories, getCategoryTypes, updateCategory, getCategoryById } from "../../api/categories.service.js";
 import LoadingOverlay from "../../components/LoadingOverlay.jsx";
 import { toast } from "react-toastify";
 
@@ -16,14 +16,12 @@ const EditCategoryPage = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const categoriesResponse = await getCategories();
+        const categoriesResponse = await getCategories(true); // Explicitly pass "true" as a string
         const typesResponse = await getCategoryTypes();
+        const categoryResponse = await getCategoryById(id);
         setCategories(categoriesResponse);
         setCategoryTypes(typesResponse);
-        const category = categoriesResponse.find((cat) => cat.id === id);
-        if (category) {
-          setInitialData(category);
-        }
+        setInitialData(categoryResponse);
       } finally {
         setIsLoading(false);
       }

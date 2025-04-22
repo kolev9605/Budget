@@ -1,7 +1,7 @@
 import axiosInstance from "./createAxiosAuth";
 
-export const getCategories = async () => {
-  const response = await axiosInstance.get('/categories');
+export const getCategories = async (primaryOnly) => {
+  const response = await axiosInstance.get(`/categories?primaryOnly=${primaryOnly}`);
   return response.data;
 }
 

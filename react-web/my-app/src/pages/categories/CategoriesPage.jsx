@@ -19,7 +19,7 @@ const CategoryPage = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await getCategories();
+        const response = await getCategories(false);
         setCategories(response);
 
         response.forEach((category) => {
@@ -67,7 +67,7 @@ const CategoryPage = () => {
         }`}
       >
         <div className="flex items-center gap-2">
-          {isParent &&
+          {
             hasSubCategories && ( // Show icon only if there are sub-categories
               <span
                 className="text-gray-400 hover:text-gray-300 transition-colors"
