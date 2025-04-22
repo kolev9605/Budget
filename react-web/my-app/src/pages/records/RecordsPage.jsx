@@ -5,31 +5,28 @@ import {
   ChevronDownIcon,
   PencilIcon,
   TrashIcon,
-  MagnifyingGlassIcon,
   DocumentTextIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "@heroicons/react/24/outline";
 import { getRecords } from "../../api/records.service.js"; // Import the getRecords function
-import axiosInstance from "../../api/createAxiosAuth.js";
 import LoadingOverlay from "../../components/LoadingOverlay.jsx";
 
 const RecordsPage = () => {
   const [records, setRecords] = useState([]);
   const [groupedRecords, setGroupedRecords] = useState({});
   const [filteredRecords, setFilteredRecords] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState("all");
   const [selectedAccount, setSelectedAccount] = useState("all");
-  const [dateRange, setDateRange] = useState("all");
-  const [specificMonth, setSpecificMonth] = useState(new Date()); // Use Date object for specific month
+  const [dateRange, setDateRange] = useState("today");
+  const [contextDate, setContextDate] = useState(new Date()); // Use Date object for specific month
   const [showFilters, setShowFilters] = useState(false); // New state for toggling filters
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchRecords = async () => {
       try {
-        const response = await getRecords(axiosInstance);
+        const response = await getRecords();
         console.log("response.items", response.items);
 
         setRecords(response.items);
@@ -65,43 +62,75 @@ const RecordsPage = () => {
     fetchRecords();
   }, []);
 
-  const formatMonth = (date) => date.toLocaleDateString("en-US", { year: "numeric", month: "long" });
-
-  const handlePrevMonth = () => {
-    setSpecificMonth(new Date(specificMonth.getFullYear(), specificMonth.getMonth() - 1, 1));
-  };
-
-  const handleNextMonth = () => {
-    setSpecificMonth(new Date(specificMonth.getFullYear(), specificMonth.getMonth() + 1, 1));
-  };
-
   const sampleAccounts = [
     { id: "1", name: "Cash", type: "cash", balance: 2450.75, description: "Physical cash and coins" },
     { id: "2", name: "Primary Credit Card", type: "credit", balance: -1250.0, description: "Visa Platinum **** 1234" },
     { id: "3", name: "Savings Account", type: "savings", balance: 15000.0, description: "Bank of Example - 5% APY" },
   ];
 
-  const getDateRange = () => {
-    const now = new Date();
+  const getDateRangeLabel = () => {
     switch (dateRange) {
       case "today":
-        return { start: new Date(now.setHours(0, 0, 0, 0)), end: new Date(now.setHours(23, 59, 59, 999)) };
-      case "week":
-        const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay()));
-        return { start: new Date(startOfWeek.setHours(0, 0, 0, 0)), end: new Date() };
+        return contextDate.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+      case "week": {
+        const startOfWeek = new Date(contextDate);
+        startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
+        const endOfWeek = new Date(startOfWeek);
+        endOfWeek.setDate(startOfWeek.getDate() + 6);
+        return `${startOfWeek.toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+        })} - ${endOfWeek.toLocaleDateString("en-US", { month: "short", day: "numeric" })}`;
+      }
       case "month":
-        return {
-          start: new Date(now.getFullYear(), now.getMonth(), 1),
-          end: new Date(now.getFullYear(), now.getMonth() + 1, 0),
-        };
+        return contextDate.toLocaleDateString("en-US", { year: "numeric", month: "long" });
       case "year":
-        return {
-          start: new Date(now.getFullYear(), 0, 1),
-          end: new Date(now.getFullYear(), 11, 31),
-        };
+        return contextDate.getFullYear().toString();
       default:
-        return { start: null, end: null };
+        return "";
     }
+  };
+
+  const handlePrevRange = () => {
+    const newDate = new Date(contextDate);
+    switch (dateRange) {
+      case "today":
+        newDate.setDate(newDate.getDate() - 1);
+        break;
+      case "week":
+        newDate.setDate(newDate.getDate() - 7);
+        break;
+      case "month":
+        newDate.setMonth(newDate.getMonth() - 1);
+        break;
+      case "year":
+        newDate.setFullYear(newDate.getFullYear() - 1);
+        break;
+      default:
+        break;
+    }
+    setContextDate(newDate);
+  };
+
+  const handleNextRange = () => {
+    const newDate = new Date(contextDate);
+    switch (dateRange) {
+      case "today":
+        newDate.setDate(newDate.getDate() + 1);
+        break;
+      case "week":
+        newDate.setDate(newDate.getDate() + 7);
+        break;
+      case "month":
+        newDate.setMonth(newDate.getMonth() + 1);
+        break;
+      case "year":
+        newDate.setFullYear(newDate.getFullYear() + 1);
+        break;
+      default:
+        break;
+    }
+    setContextDate(newDate);
   };
 
   return isLoading ? (
@@ -135,21 +164,8 @@ const RecordsPage = () => {
             <ChevronDownIcon className={`h-5 w-5 transition-transform ${showFilters ? "rotate-180" : "rotate-0"}`} />
           </button>
           <div
-            className={`grid grid-cols-1 md:grid-cols-4 gap-3 mt-4 md:mt-0 ${showFilters ? "block" : "hidden md:grid"}`}
+            className={`grid grid-cols-1 md:grid-cols-3 gap-3 mt-4 md:mt-0 ${showFilters ? "block" : "hidden md:grid"}`}
           >
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full bg-gray-700 border border-gray-600 rounded-lg pl-10 pr-3 py-2
-                  text-gray-100 placeholder-gray-500 focus:outline-none focus:border-blue-400
-                  focus:ring-1 focus:ring-blue-400/30 text-sm"
-              />
-              <MagnifyingGlassIcon className="h-4 w-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
-            </div>
-
             <select
               value={filterType}
               onChange={(e) => setFilterType(e.target.value)}
@@ -185,26 +201,22 @@ const RecordsPage = () => {
                 text-gray-100 focus:outline-none focus:border-blue-400 focus:ring-1 
                 focus:ring-blue-400/30 text-sm"
             >
-              <option value="all">All Time</option>
               <option value="today">Today</option>
               <option value="week">This Week</option>
               <option value="month">This Month</option>
               <option value="year">This Year</option>
-              <option value="custom">Custom</option>
             </select>
           </div>
 
-          {dateRange === "custom" && (
-            <div className={`flex items-center justify-center mt-4 ${showFilters ? "block" : "hidden"} md:flex`}>
-              <button onClick={handlePrevMonth} className="hover:text-blue-400">
-                <ChevronLeftIcon className="h-5 w-5 text-gray-400" />
-              </button>
-              <span className="mx-4 text-gray-100 text-sm">{formatMonth(specificMonth)}</span>
-              <button onClick={handleNextMonth} className="hover:text-blue-400">
-                <ChevronRightIcon className="h-5 w-5 text-gray-400" />
-              </button>
-            </div>
-          )}
+          <div className="flex items-center justify-center mt-4">
+            <button onClick={handlePrevRange} className="text-gray-400 hover:text-blue-400 transition-colors">
+              <ChevronLeftIcon className="h-5 w-5" />
+            </button>
+            <span className="mx-4 text-gray-100 text-sm">{getDateRangeLabel()}</span>
+            <button onClick={handleNextRange} className="text-gray-400 hover:text-blue-400 transition-colors">
+              <ChevronRightIcon className="h-5 w-5" />
+            </button>
+          </div>
         </div>
 
         {/* Records Table (Desktop) */}
