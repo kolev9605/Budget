@@ -17,7 +17,7 @@ const AddRecordPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const categoriesResponse = await getCategories();
+        const categoriesResponse = await getCategories(false);
         const accountsResponse = await getAccounts();
         const recordTypesResponse = await getRecordTypes();
         setCategories(categoriesResponse);

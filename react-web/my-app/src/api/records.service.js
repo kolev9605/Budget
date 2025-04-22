@@ -1,7 +1,9 @@
 import axiosInstance from "./createAxiosAuth";
 
-export const getRecords = async () => {
-  const response = await axiosInstance.get("/records");
+export const getRecords = async (pageNumber, pageSize) => {
+  const response = await axiosInstance.get("/records", {
+    params: { PageNumber: pageNumber, PageSize: pageSize },
+  });
   return response.data;
 }
 
