@@ -176,6 +176,8 @@ const RecordsPage = () => {
 
   const handleNextRange = () => {
     const newDate = new Date(referenceDate);
+    const today = new Date();
+
     switch (selectedDateRange) {
       case "day":
         newDate.setDate(newDate.getDate() + 1);
@@ -193,7 +195,11 @@ const RecordsPage = () => {
         break;
     }
 
-    setContextDate(newDate);
+    if (newDate > today) {
+      setContextDate(today);
+    } else {
+      setContextDate(newDate);
+    }
   };
 
   const handleBackToToday = () => {
