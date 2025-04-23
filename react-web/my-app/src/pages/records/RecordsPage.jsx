@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"; // Add React to the import statement
+import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router";
 import {
   PlusIcon,
@@ -9,93 +9,149 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "@heroicons/react/24/outline";
-import { getRecords } from "../../api/records.service.js"; // Import the getRecords function
+import { getRecords, getRecordTypes } from "../../api/records.service.js";
 import LoadingOverlay from "../../components/LoadingOverlay.jsx";
 import { toast } from "react-toastify";
-import { importWalletRecords } from "../../api/import.service.js"; // Import the importRecords function
+import { importWalletRecords } from "../../api/import.service.js";
+import { getAccounts } from "../../api/accounts.service.js";
+import { getCategories } from "../../api/categories.service.js";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const RecordsPage = () => {
-  const [records, setRecords] = useState([]);
+  const [recordTypes, setRecordTypes] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [accounts, setAccounts] = useState([]);
   const [groupedRecords, setGroupedRecords] = useState({});
-  const [filteredRecords, setFilteredRecords] = useState([]);
-  const [filterType, setFilterType] = useState("all");
+  const [hasNextPage, setHasNextPage] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedRecordType, setSelectedRecordType] = useState("all");
   const [selectedAccount, setSelectedAccount] = useState("all");
-  const [dateRange, setDateRange] = useState("today");
-  const [contextDate, setContextDate] = useState(new Date()); // Use Date object for specific month
-  const [showFilters, setShowFilters] = useState(false); // New state for toggling filters
+  const [selectedDateRange, setSelectedDateRange] = useState("today");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [referenceDate, setContextDate] = useState(new Date());
+  const [showFilters, setShowFilters] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+  const fetchRecords = async (page) => {
+    const startOfRange = new Date(referenceDate);
+    const endOfRange = new Date(referenceDate);
+
+    switch (selectedDateRange) {
+      case "today":
+        startOfRange.setHours(0, 0, 0, 0);
+        endOfRange.setHours(23, 59, 59, 999);
+        break;
+      case "week":
+        startOfRange.setDate(referenceDate.getDate() - referenceDate.getDay());
+        endOfRange.setDate(startOfRange.getDate() + 6);
+        break;
+      case "month":
+        startOfRange.setDate(1);
+        endOfRange.setMonth(referenceDate.getMonth() + 1);
+        endOfRange.setDate(0);
+        break;
+      case "year":
+        startOfRange.setMonth(0, 1);
+        endOfRange.setMonth(11, 31);
+        break;
+      default:
+        toast.error("Invalid date range selected.");
+        return;
+    }
+
+    const response = await getRecords(
+      page,
+      20,
+      selectedAccount,
+      startOfRange,
+      endOfRange,
+      selectedRecordType,
+      selectedCategory
+    );
+
+    const newGroupedRecords = response.items.reduce((groups, record) => {
+      const date = new Date(record.recordDate).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+
+      if (!groups[date]) {
+        groups[date] = [];
+      }
+      groups[date].push(record);
+      return groups;
+    }, {});
+
+    setGroupedRecords((prev) => ({ ...prev, ...newGroupedRecords }));
+    setHasNextPage(response.hasNextPage);
+  };
+
   useEffect(() => {
-    const fetchRecords = async () => {
+    const fetchInitialData = async () => {
       try {
-        const response = await getRecords();
-        console.log("response.items", response.items);
+        setIsLoading(true);
+        const accountsResponse = await getAccounts();
+        const recordTypesResponse = await getRecordTypes();
+        const categoriesResponse = await getCategories(false);
 
-        setRecords(response.items);
-        setFilteredRecords(response.items);
-
-        const groupedRecords = response.items.reduce((groups, record) => {
-          const date = new Date(record.recordDate).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-          });
-          if (!groups[date]) {
-            groups[date] = [];
-          }
-          groups[date].push(record);
-          return groups;
-        }, {});
-
-        setGroupedRecords(groupedRecords);
-
-        console.log(groupedRecords);
-        console.log(
-          "hii iiiii",
-          Object.entries(groupedRecords).map(([date, records]) => ({ date, records }))
-        );
-        console.log(filteredRecords);
-        console.log(records);
+        setAccounts(accountsResponse);
+        setRecordTypes(recordTypesResponse);
+        setCategories(categoriesResponse);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchRecords();
-  }, []);
+    fetchInitialData();
+  }, []); // Fetch only once when the component is mounted
 
-  const sampleAccounts = [
-    { id: "1", name: "Cash", type: "cash", balance: 2450.75, description: "Physical cash and coins" },
-    { id: "2", name: "Primary Credit Card", type: "credit", balance: -1250.0, description: "Visa Platinum **** 1234" },
-    { id: "3", name: "Savings Account", type: "savings", balance: 15000.0, description: "Bank of Example - 5% APY" },
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        setGroupedRecords({}); // Clear groupedRecords when filters or date range change
+        await fetchRecords(1);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [selectedRecordType, selectedAccount, selectedDateRange, selectedCategory, referenceDate]);
+
+  const fetchNextPage = async () => {
+    const nextPage = currentPage + 1;
+    await fetchRecords(nextPage);
+    setCurrentPage(nextPage);
+  };
 
   const getDateRangeLabel = () => {
-    switch (dateRange) {
+    switch (selectedDateRange) {
       case "today":
-        return contextDate.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+        return referenceDate.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
       case "week": {
-        const startOfWeek = new Date(contextDate);
+        const startOfWeek = new Date(referenceDate);
         startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
         const endOfWeek = new Date(startOfWeek);
         endOfWeek.setDate(startOfWeek.getDate() + 6);
         return `${startOfWeek.toLocaleDateString("en-US", {
           month: "short",
           day: "numeric",
-        })} - ${endOfWeek.toLocaleDateString("en-US", { month: "short", day: "numeric" })}`;
+        })} - ${endOfWeek.toLocaleDateString("en-US", { month: "short", day: "numeric" })} ${startOfWeek.getFullYear()}`;
       }
       case "month":
-        return contextDate.toLocaleDateString("en-US", { year: "numeric", month: "long" });
+        return referenceDate.toLocaleDateString("en-US", { year: "numeric", month: "long" });
       case "year":
-        return contextDate.getFullYear().toString();
+        return referenceDate.getFullYear().toString();
       default:
         return "";
     }
   };
 
   const handlePrevRange = () => {
-    const newDate = new Date(contextDate);
-    switch (dateRange) {
+    const newDate = new Date(referenceDate);
+    switch (selectedDateRange) {
       case "today":
         newDate.setDate(newDate.getDate() - 1);
         break;
@@ -115,8 +171,8 @@ const RecordsPage = () => {
   };
 
   const handleNextRange = () => {
-    const newDate = new Date(contextDate);
-    switch (dateRange) {
+    const newDate = new Date(referenceDate);
+    switch (selectedDateRange) {
       case "today":
         newDate.setDate(newDate.getDate() + 1);
         break;
@@ -132,7 +188,13 @@ const RecordsPage = () => {
       default:
         break;
     }
+
     setContextDate(newDate);
+  };
+
+  const handleBackToToday = () => {
+    setContextDate(new Date());
+    setSelectedDateRange("today");
   };
 
   const handleImport = async (event) => {
@@ -176,13 +238,7 @@ const RecordsPage = () => {
               <DocumentTextIcon className="h-4 sm:h-5 w-4 sm:w-5" />
               Import from Wallet
             </label>
-            <input
-              id="import-file"
-              type="file"
-              accept=".csv"
-              className="hidden"
-              onChange={handleImport}
-            />
+            <input id="import-file" type="file" accept=".csv" className="hidden" onChange={handleImport} />
           </div>
         </div>
 
@@ -196,19 +252,21 @@ const RecordsPage = () => {
             <ChevronDownIcon className={`h-5 w-5 transition-transform ${showFilters ? "rotate-180" : "rotate-0"}`} />
           </button>
           <div
-            className={`grid grid-cols-1 md:grid-cols-3 gap-3 mt-4 md:mt-0 ${showFilters ? "block" : "hidden md:grid"}`}
+            className={`grid grid-cols-1 md:grid-cols-4 gap-3 mt-4 md:mt-0 ${showFilters ? "block" : "hidden md:grid"}`}
           >
             <select
-              value={filterType}
-              onChange={(e) => setFilterType(e.target.value)}
+              value={selectedRecordType}
+              onChange={(e) => setSelectedRecordType(e.target.value)}
               className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-2
                 text-gray-100 focus:outline-none focus:border-blue-400 focus:ring-1 
                 focus:ring-blue-400/30 text-sm"
             >
               <option value="all">All Types</option>
-              <option value="income">Income</option>
-              <option value="expense">Expense</option>
-              <option value="transfer">Transfer</option>
+              {recordTypes.map((rt, index) => (
+                <option key={index} value={rt}>
+                  {rt}
+                </option>
+              ))}
             </select>
 
             <select
@@ -219,7 +277,7 @@ const RecordsPage = () => {
                 focus:ring-blue-400/30 text-sm"
             >
               <option value="all">All Accounts</option>
-              {sampleAccounts.map((account) => (
+              {accounts.map((account) => (
                 <option key={account.id} value={account.id}>
                   {account.name}
                 </option>
@@ -227,20 +285,35 @@ const RecordsPage = () => {
             </select>
 
             <select
-              value={dateRange}
-              onChange={(e) => setDateRange(e.target.value)}
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
               className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-2
                 text-gray-100 focus:outline-none focus:border-blue-400 focus:ring-1 
                 focus:ring-blue-400/30 text-sm"
             >
-              <option value="today">Today</option>
-              <option value="week">This Week</option>
-              <option value="month">This Month</option>
-              <option value="year">This Year</option>
+              <option value="all">All Categories</option>
+              {categories.map((ct, index) => (
+                <option key={index} value={ct.id}>
+                  {ct.name}
+                </option>
+              ))}
+            </select>
+
+            <select
+              value={selectedDateRange}
+              onChange={(e) => setSelectedDateRange(e.target.value)}
+              className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-2
+                text-gray-100 focus:outline-none focus:border-blue-400 focus:ring-1 
+                focus:ring-blue-400/30 text-sm"
+            >
+              <option value="today">Day</option>
+              <option value="week">Week</option>
+              <option value="month">Month</option>
+              <option value="year">Year</option>
             </select>
           </div>
 
-          <div className="flex items-center justify-center mt-4">
+          <div className="flex items-center justify-center mt-4 gap-4">
             <button onClick={handlePrevRange} className="text-gray-400 hover:text-blue-400 transition-colors">
               <ChevronLeftIcon className="h-5 w-5" />
             </button>
@@ -248,94 +321,107 @@ const RecordsPage = () => {
             <button onClick={handleNextRange} className="text-gray-400 hover:text-blue-400 transition-colors">
               <ChevronRightIcon className="h-5 w-5" />
             </button>
+            <button
+              onClick={handleBackToToday}
+              className="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded-lg text-sm transition-colors"
+            >
+              Back to Today
+            </button>
           </div>
         </div>
 
         {/* Records Table (Desktop) */}
         <div className="hidden md:block bg-gray-800 rounded-xl shadow-lg overflow-hidden">
-          <table className="min-w-full table-auto text-sm text-left text-gray-400">
-            <thead className="bg-gray-700 text-gray-300 uppercase text-xs font-medium">
-              <tr>
-                <th className="px-7 py-3">Date</th>
-                <th className="px-7 py-3">Description</th>
-                <th className="px-7 py-3">Account</th>
-                <th className="px-7 py-3">Category</th>
-                <th className="px-7 py-3 text-right">Amount</th>
-                <th className="px-7 py-3 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Object.entries(groupedRecords).map(([date, records], index) => (
-                <React.Fragment key={index}>
-                  <tr className="bg-gray-700">
-                    <td colSpan="6" className="px-7 py-3 text-gray-300 font-semibold">
-                      {date}
-                    </td>
-                  </tr>
-                  {records.map((record) => (
-                    <tr key={record.id} className="border-b border-gray-700 hover:bg-gray-750 transition-colors">
-                      <td className="px-7 py-4 text-gray-400">
-                        {new Date(record.recordDate).toLocaleTimeString("en-US", {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </td>
-                      <td className="px-7 py-3 text-gray-100 truncate">{record.note}</td>
-                      <td className="px-7 py-3 text-gray-500">
-                        {record.recordType === "Transfer" ? (
-                          <>
-                            {record.account.name} → {record.fromAccount.name}
-                          </>
-                        ) : (
-                          record.account.name
-                        )}
-                      </td>
-                      <td className="px-7 py-3 text-gray-500">{record.category.name || "-"}</td>
-                      <td
-                        className={`px-7 py-3 text-right font-medium ${
-                          record.recordType === "Income"
-                            ? "text-green-400"
-                            : record.recordType === "Expense"
-                            ? "text-red-400"
-                            : "text-blue-400"
-                        }`}
-                      >
-                        {record.recordType !== "Transfer" && (
-                          <span className="text-xs">{record.recordType === "Income" ? "+" : "-"}</span>
-                        )}
-                        $
-                        {Math.abs(record.amount).toLocaleString(undefined, {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        })}
-                      </td>
-                      <td className="px-7 py-3 text-right">
-                        <div className="flex items-center justify-end gap-2">
-                          <NavLink
-                            to={`/records/edit/${record.id}`}
-                            className="text-gray-400 hover:text-blue-400 p-1 rounded-lg transition-colors"
-                          >
-                            <PencilIcon className="h-4 w-4" />
-                          </NavLink>
-                          <button className="text-gray-400 hover:text-red-400 p-1 rounded-lg transition-colors">
-                            <TrashIcon className="h-4 w-4" />
-                          </button>
-                        </div>
+          <InfiniteScroll
+            dataLength={Object.keys(groupedRecords).length}
+            next={fetchNextPage}
+            hasMore={hasNextPage}
+            loader={<div className="text-center text-gray-400 py-4">Loading more records...</div>}
+          >
+            <table className="min-w-full table-auto text-sm text-left text-gray-400">
+              <thead className="bg-gray-700 text-gray-300 uppercase text-xs font-medium">
+                <tr>
+                  <th className="px-7 py-3">Date</th>
+                  <th className="px-7 py-3">Description</th>
+                  <th className="px-7 py-3">Account</th>
+                  <th className="px-7 py-3">Category</th>
+                  <th className="px-7 py-3 text-right">Amount</th>
+                  <th className="px-7 py-3 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Object.entries(groupedRecords).map(([date, records], index) => (
+                  <React.Fragment key={index}>
+                    <tr className="bg-gray-700">
+                      <td colSpan="6" className="px-7 py-3 text-gray-300 font-semibold">
+                        {date}
                       </td>
                     </tr>
-                  ))}
-                </React.Fragment>
-              ))}
+                    {records.map((record) => (
+                      <tr key={record.id} className="border-b border-gray-700 hover:bg-gray-750 transition-colors">
+                        <td className="px-7 py-4 text-gray-400">
+                          {new Date(record.recordDate).toLocaleTimeString("en-US", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </td>
+                        <td className="px-7 py-3 text-gray-100 truncate">{record.note}</td>
+                        <td className="px-7 py-3 text-gray-500">
+                          {record.recordType === "Transfer" ? (
+                            <>
+                              {record.account.name} → {record.fromAccount.name}
+                            </>
+                          ) : (
+                            record.account.name
+                          )}
+                        </td>
+                        <td className="px-7 py-3 text-gray-500">{record.category.name || "-"}</td>
+                        <td
+                          className={`px-7 py-3 text-right font-medium ${
+                            record.recordType === "Income"
+                              ? "text-green-400"
+                              : record.recordType === "Expense"
+                              ? "text-red-400"
+                              : "text-blue-400"
+                          }`}
+                        >
+                          {record.recordType !== "Transfer" && (
+                            <span className="text-xs">{record.recordType === "Income" ? "+" : "-"}</span>
+                          )}
+                          $
+                          {Math.abs(record.amount).toLocaleString(undefined, {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}
+                        </td>
+                        <td className="px-7 py-3 text-right">
+                          <div className="flex items-center justify-end gap-2">
+                            <NavLink
+                              to={`/records/edit/${record.id}`}
+                              className="text-gray-400 hover:text-blue-400 p-1 rounded-lg transition-colors"
+                            >
+                              <PencilIcon className="h-4 w-4" />
+                            </NavLink>
+                            <button className="text-gray-400 hover:text-red-400 p-1 rounded-lg transition-colors">
+                              <TrashIcon className="h-4 w-4" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </React.Fragment>
+                ))}
 
-              {filteredRecords.length === 0 && (
-                <tr>
-                  <td colSpan="6" className="px-7 py-3 text-center text-gray-400 text-sm">
-                    No transactions found matching your criteria
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+                {Object.keys(groupedRecords).length === 0 && (
+                  <tr>
+                    <td colSpan="6" className="px-7 py-3 text-center text-gray-400 text-sm">
+                      No records found matching your criteria
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </InfiniteScroll>
         </div>
 
         {/* Records Cards (Mobile) */}
@@ -389,9 +475,9 @@ const RecordsPage = () => {
             </div>
           ))}
 
-          {filteredRecords.length === 0 && (
+          {Object.keys(groupedRecords).length === 0 && (
             <div className="bg-gray-800 p-4 rounded-lg text-center text-gray-400 text-sm">
-              No transactions found matching your criteria
+              No records found matching your criteria
             </div>
           )}
         </div>

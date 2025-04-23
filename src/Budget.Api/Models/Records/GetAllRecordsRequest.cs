@@ -1,9 +1,15 @@
 using Budget.Application.Records.Queries;
+using Budget.Domain.Entities;
 using Mapster;
 
 namespace Budget.Api.Models.Records;
 
 public record GetAllRecordsRequest(
+    Guid? AccountId,
+    RecordType? RecordType,
+    Guid? CategoryId,
+    DateTime? StartDateRange,
+    DateTime? EndDateRange,
     int PageNumber,
     int? PageSize);
 

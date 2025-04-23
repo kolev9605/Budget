@@ -1,4 +1,5 @@
-﻿using Budget.Domain.Entities;
+﻿using Budget.Application.Records.Queries;
+using Budget.Domain.Entities;
 using Budget.Domain.Interfaces.Repositories;
 using Budget.Domain.Models.Pagination;
 using Budget.Domain.Models.Records;
@@ -86,10 +87,40 @@ public class RecordRepository : Repository<Record>, IRecordRepository
         return records;
     }
 
-    public async Task<IPagedListContainer<RecordModel>> GetAllPaginatedAsync(string userId, int pageNumber, int pageSize)
+    public async Task<IPagedListContainer<RecordModel>> GetAllPaginatedAsync(
+        string userId,
+        Guid? accountId,
+        RecordType? recordType,
+        Guid? categoryId,
+        DateTime? referenceStartDate,
+        DateTime? referenceEndDate,
+        int pageNumber,
+        int pageSize)
     {
-        var paginatedRecords = await _budgetDbContext.Records
-            .Where(r => r.Account.UserId == userId)
+        var baseQuery = _budgetDbContext.Records
+            .Where(r => r.Account.UserId == userId);
+
+        if (accountId.HasValue)
+        {
+            baseQuery = baseQuery.Where(r => r.AccountId == accountId.Value);
+        }
+
+        if (recordType.HasValue)
+        {
+            baseQuery = baseQuery.Where(r => r.RecordType == recordType.Value);
+        }
+
+        if (categoryId.HasValue)
+        {
+            baseQuery = baseQuery.Where(r => r.CategoryId == categoryId.Value);
+        }
+
+        if (referenceStartDate.HasValue && referenceEndDate.HasValue)
+        {
+            baseQuery = baseQuery.Where(r => r.RecordDate >= referenceStartDate.Value && r.RecordDate <= referenceEndDate.Value);
+        }
+
+        var paginatedRecords = await baseQuery
             .OrderByDescending(r => r.RecordDate)
             .ProjectToType<RecordModel>()
             .PaginateAsync(pageNumber, pageSize);
