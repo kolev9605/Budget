@@ -32,7 +32,7 @@ const RecordsPage = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [referenceDate, setContextDate] = useState(new Date());
   const [showFilters, setShowFilters] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchRecords = async (page) => {
     let startOfRange = DateTime.fromJSDate(new Date(referenceDate));
@@ -324,20 +324,26 @@ const RecordsPage = () => {
           </div>
 
           <div className="flex items-center justify-center mt-4 gap-4">
-            <button onClick={handlePrevRange} className="text-gray-400 hover:text-blue-400 transition-colors">
+            <button
+              onClick={handlePrevRange}
+              className="bg-gray-700 text-gray-300 hover:bg-blue-500 hover:text-white transition-colors p-2 rounded-lg shadow-md"
+            >
               <ChevronLeftIcon className="h-5 w-5" />
             </button>
-            <span className="mx-4 text-gray-100 text-sm">{getDateRangeLabel()}</span>
-            <button onClick={handleNextRange} className="text-gray-400 hover:text-blue-400 transition-colors">
+            <div className="text-gray-100 text-sm text-center w-48">{getDateRangeLabel()}</div>
+            <button
+              onClick={handleNextRange}
+              className="bg-gray-700 text-gray-300 hover:bg-blue-500 hover:text-white transition-colors p-2 rounded-lg shadow-md"
+            >
               <ChevronRightIcon className="h-5 w-5" />
             </button>
-            <button
-              onClick={handleBackToToday}
-              className="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded-lg text-sm transition-colors"
-            >
-              Back to Today
-            </button>
           </div>
+          {/* <button
+            onClick={handleBackToToday}
+            className="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded-lg text-sm transition-colors mt-4"
+          >
+            Back to Today
+          </button> */}
         </div>
 
         {/* Records Table (Desktop) */}
@@ -346,7 +352,11 @@ const RecordsPage = () => {
             dataLength={Object.keys(groupedRecords).length}
             next={fetchNextPage}
             hasMore={hasNextPage}
-            loader={<div className="text-center text-gray-400 py-4">Loading more records...</div>}
+            loader={
+              <div className="text-center text-gray-400 py-4">
+                Loading more records...
+              </div>
+            }
           >
             <table className="min-w-full table-auto text-sm text-left text-gray-400">
               <thead className="bg-gray-700 text-gray-300 uppercase text-xs font-medium">
