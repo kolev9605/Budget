@@ -2,7 +2,7 @@ import { NavLink } from "react-router";
 import { PlusIcon, PencilIcon, BanknotesIcon, CreditCardIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import { getAccounts } from "../../api/accounts.service.js";
-import { getCurrencySymbol } from "../../utils/currencyUtils";
+import { getCurrencyLabel } from "../../utils/currencyUtils";
 import LoadingOverlay from "../../components/LoadingOverlay.jsx";
 
 const AccountsPage = () => {
@@ -13,7 +13,6 @@ const AccountsPage = () => {
     const fetchAccounts = async () => {
       try {
         const response = await getAccounts();
-        console.log(response);
         setAccounts(response);
       } finally {
         setIsLoading(false);
@@ -83,10 +82,7 @@ const AccountsPage = () => {
                       <div>
                         <span className="text-sm text-gray-400">Current Balance</span>
                         <p className={`text-xl font-semibold ${account.balance < 0 ? "text-red-400" : "text-green-400"}`}>
-                          {getCurrencySymbol(account.currency.abbreviation, Math.abs(account.balance).toLocaleString(undefined, {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2,
-                          }))}
+                          {getCurrencyLabel(account.currency.abbreviation, account.balance)}
                         </p>
                       </div>
                       <span className="px-3 py-1 text-sm rounded-full bg-gray-700 text-gray-300">{account.paymentType.name}</span>

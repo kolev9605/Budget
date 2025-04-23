@@ -16,6 +16,7 @@ import { importWalletRecords } from "../../api/import.service.js";
 import { getAccounts } from "../../api/accounts.service.js";
 import { getCategories } from "../../api/categories.service.js";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { getCurrencyLabel } from "../../utils/currencyUtils.js";
 
 const RecordsPage = () => {
   const [recordTypes, setRecordTypes] = useState([]);
@@ -26,7 +27,7 @@ const RecordsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRecordType, setSelectedRecordType] = useState("all");
   const [selectedAccount, setSelectedAccount] = useState("all");
-  const [selectedDateRange, setSelectedDateRange] = useState("today");
+  const [selectedDateRange, setSelectedDateRange] = useState("month");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [referenceDate, setContextDate] = useState(new Date());
   const [showFilters, setShowFilters] = useState(false);
@@ -37,7 +38,7 @@ const RecordsPage = () => {
     const endOfRange = new Date(referenceDate);
 
     switch (selectedDateRange) {
-      case "today":
+      case "day":
         startOfRange.setHours(0, 0, 0, 0);
         endOfRange.setHours(23, 59, 59, 999);
         break;
@@ -128,7 +129,7 @@ const RecordsPage = () => {
 
   const getDateRangeLabel = () => {
     switch (selectedDateRange) {
-      case "today":
+      case "day":
         return referenceDate.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
       case "week": {
         const startOfWeek = new Date(referenceDate);
@@ -138,7 +139,10 @@ const RecordsPage = () => {
         return `${startOfWeek.toLocaleDateString("en-US", {
           month: "short",
           day: "numeric",
-        })} - ${endOfWeek.toLocaleDateString("en-US", { month: "short", day: "numeric" })} ${startOfWeek.getFullYear()}`;
+        })} - ${endOfWeek.toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+        })} ${startOfWeek.getFullYear()}`;
       }
       case "month":
         return referenceDate.toLocaleDateString("en-US", { year: "numeric", month: "long" });
@@ -152,7 +156,7 @@ const RecordsPage = () => {
   const handlePrevRange = () => {
     const newDate = new Date(referenceDate);
     switch (selectedDateRange) {
-      case "today":
+      case "day":
         newDate.setDate(newDate.getDate() - 1);
         break;
       case "week":
@@ -173,7 +177,7 @@ const RecordsPage = () => {
   const handleNextRange = () => {
     const newDate = new Date(referenceDate);
     switch (selectedDateRange) {
-      case "today":
+      case "day":
         newDate.setDate(newDate.getDate() + 1);
         break;
       case "week":
@@ -194,7 +198,7 @@ const RecordsPage = () => {
 
   const handleBackToToday = () => {
     setContextDate(new Date());
-    setSelectedDateRange("today");
+    setSelectedDateRange("day");
   };
 
   const handleImport = async (event) => {
@@ -306,7 +310,7 @@ const RecordsPage = () => {
                 text-gray-100 focus:outline-none focus:border-blue-400 focus:ring-1 
                 focus:ring-blue-400/30 text-sm"
             >
-              <option value="today">Day</option>
+              <option value="day">Day</option>
               <option value="week">Week</option>
               <option value="month">Month</option>
               <option value="year">Year</option>
@@ -385,14 +389,7 @@ const RecordsPage = () => {
                               : "text-blue-400"
                           }`}
                         >
-                          {record.recordType !== "Transfer" && (
-                            <span className="text-xs">{record.recordType === "Income" ? "+" : "-"}</span>
-                          )}
-                          $
-                          {Math.abs(record.amount).toLocaleString(undefined, {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2,
-                          })}
+                          {getCurrencyLabel(record.account.currency.abbreviation, record.amount)}
                         </td>
                         <td className="px-7 py-3 text-right">
                           <div className="flex items-center justify-end gap-2">
@@ -447,14 +444,7 @@ const RecordsPage = () => {
                           : "text-blue-400"
                       }`}
                     >
-                      {record.recordType !== "Transfer" && (
-                        <span className="text-xs">{record.recordType === "Income" ? "+" : "-"}</span>
-                      )}
-                      $
-                      {Math.abs(record.amount).toLocaleString(undefined, {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })}
+                      {getCurrencyLabel(record.account.currency.abbreviation, record.amount)}
                     </div>
                   </div>
                   <div className="text-gray-100 text-xs truncate mt-1">{record.note || "No description"}</div>

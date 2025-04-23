@@ -1,4 +1,4 @@
-export const getCurrencySymbol = (currencyCode, amount) => {
+export const getCurrencyLabel = (currencyCode, amount) => {
   const currencyFormats = {
     USD: { symbol: "$", position: "before" },
     EUR: { symbol: "€", position: "after" },
@@ -10,8 +10,12 @@ export const getCurrencySymbol = (currencyCode, amount) => {
   };
 
   const format = currencyFormats[currencyCode] || { symbol: currencyCode, position: "after" };
+  const amountFormat = parseFloat(amount).toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 
   return format.position === "before"
-    ? `${format.symbol}${amount}`
-    : `${amount}${format.symbol}`;
+    ? `${format.symbol}${amountFormat}`
+    : `${amountFormat}${format.symbol}`;
 };
