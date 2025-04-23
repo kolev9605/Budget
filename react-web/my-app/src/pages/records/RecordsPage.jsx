@@ -17,6 +17,7 @@ import { getAccounts } from "../../api/accounts.service.js";
 import { getCategories } from "../../api/categories.service.js";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { getCurrencyLabel } from "../../utils/currencyUtils.js";
+import { DateTime } from "luxon";
 
 const RecordsPage = () => {
   const [recordTypes, setRecordTypes] = useState([]);
@@ -34,26 +35,25 @@ const RecordsPage = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchRecords = async (page) => {
-    const startOfRange = new Date(referenceDate);
-    const endOfRange = new Date(referenceDate);
+    let startOfRange = DateTime.fromJSDate(new Date(referenceDate));
+    let endOfRange = DateTime.fromJSDate(new Date(referenceDate));
 
     switch (selectedDateRange) {
       case "day":
-        startOfRange.setHours(0, 0, 0, 0);
-        endOfRange.setHours(23, 59, 59, 999);
+        startOfRange = startOfRange.startOf("day");
+        endOfRange = endOfRange.endOf("day");
         break;
       case "week":
-        startOfRange.setDate(referenceDate.getDate() - referenceDate.getDay());
-        endOfRange.setDate(startOfRange.getDate() + 6);
+        startOfRange = startOfRange.startOf("week");
+        endOfRange = endOfRange.endOf("week");
         break;
       case "month":
-        startOfRange.setDate(1);
-        endOfRange.setMonth(referenceDate.getMonth() + 1);
-        endOfRange.setDate(0);
+        startOfRange = startOfRange.startOf("month");
+        endOfRange = endOfRange.endOf("month");
         break;
       case "year":
-        startOfRange.setMonth(0, 1);
-        endOfRange.setMonth(11, 31);
+        startOfRange = startOfRange.startOf("year");
+        endOfRange = endOfRange.endOf("year");
         break;
       default:
         toast.error("Invalid date range selected.");
@@ -64,8 +64,8 @@ const RecordsPage = () => {
       page,
       20,
       selectedAccount,
-      startOfRange,
-      endOfRange,
+      startOfRange.toISO(),
+      endOfRange.toISO(),
       selectedRecordType,
       selectedCategory
     );
@@ -105,13 +105,13 @@ const RecordsPage = () => {
     };
 
     fetchInitialData();
-  }, []); // Fetch only once when the component is mounted
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        setGroupedRecords({}); // Clear groupedRecords when filters or date range change
+        setGroupedRecords({});
         await fetchRecords(1);
       } finally {
         setIsLoading(false);
