@@ -87,8 +87,7 @@ public class ImportWalletRecordsCommandHandler : IRequestHandler<ImportWalletRec
         foreach (var record in records)
         {
             var categoryFromDatabase = await MapCategoryAsync(record);
-            var account = await GetOrCreateAccountAsync(record, userId, currencies);
-            var paymentType = MapPaymentType(debitCardPaymentType, cashPaymentType, account);
+            var account = await GetOrCreateAccountAsync(record, userId, currencies, debitCardPaymentType, cashPaymentType);
             var recordType = MapRecordType(record);
 
             // The dates in the Walled export are in local time
@@ -168,9 +167,9 @@ public class ImportWalletRecordsCommandHandler : IRequestHandler<ImportWalletRec
         return recordType.Value;
     }
 
-    private static PaymentType MapPaymentType(PaymentType debitCardPaymentType, PaymentType cashPaymentType, Account account)
+    private static PaymentType MapPaymentType(PaymentType debitCardPaymentType, PaymentType cashPaymentType, string accountName)
     {
-        if (account.Name == "Cash")
+        if (accountName == "Cash")
         {
             return cashPaymentType;
         }
@@ -183,7 +182,9 @@ public class ImportWalletRecordsCommandHandler : IRequestHandler<ImportWalletRec
     private async Task<Account> GetOrCreateAccountAsync(
         WalletImportModel record,
         string userId,
-        IEnumerable<Currency> currencies)
+        IEnumerable<Currency> currencies,
+        PaymentType debitCardPaymentType,
+        PaymentType cashPaymentType)
     {
         var account = await _accountRepository.GetByNameAsync(userId, record.Account);
         if (account != null)
@@ -198,12 +199,15 @@ public class ImportWalletRecordsCommandHandler : IRequestHandler<ImportWalletRec
                 currency = currencies.FirstOrDefault(c => c.Abbreviation == "BGN") ?? throw new ArgumentNullException(nameof(currency));
             }
 
+            var paymentType = MapPaymentType(debitCardPaymentType, cashPaymentType, record.Account);
+
             var accountToCreate = new Account()
             {
                 Currency = currency,
                 InitialBalance = 0,
                 Name = record.Account,
-                UserId = userId
+                UserId = userId,
+                PaymentType = paymentType,
             };
 
             var createdAccount = await _accountRepository.CreateAsync(accountToCreate);

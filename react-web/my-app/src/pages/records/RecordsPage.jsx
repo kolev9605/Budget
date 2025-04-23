@@ -11,6 +11,8 @@ import {
 } from "@heroicons/react/24/outline";
 import { getRecords } from "../../api/records.service.js"; // Import the getRecords function
 import LoadingOverlay from "../../components/LoadingOverlay.jsx";
+import { toast } from "react-toastify";
+import { importWalletRecords } from "../../api/import.service.js"; // Import the importRecords function
 
 const RecordsPage = () => {
   const [records, setRecords] = useState([]);
@@ -133,6 +135,19 @@ const RecordsPage = () => {
     setContextDate(newDate);
   };
 
+  const handleImport = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    try {
+      setIsLoading(true);
+      await importWalletRecords(file);
+      toast.success("Records imported successfully!");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return isLoading ? (
     <LoadingOverlay />
   ) : (
@@ -144,14 +159,31 @@ const RecordsPage = () => {
             <DocumentTextIcon className="h-5 sm:h-6 w-5 sm:w-6 text-blue-400" />
             Records
           </h1>
-          <NavLink
-            to="/records/new"
-            className="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl
-              flex items-center gap-2 transition-colors text-sm sm:text-base whitespace-nowrap"
-          >
-            <PlusIcon className="h-4 sm:h-5 w-4 sm:w-5" />
-            Add Record
-          </NavLink>
+          <div className="flex gap-3">
+            <NavLink
+              to="/records/new"
+              className="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl
+                flex items-center gap-2 transition-colors text-sm sm:text-base whitespace-nowrap"
+            >
+              <PlusIcon className="h-4 sm:h-5 w-4 sm:w-5" />
+              Add Record
+            </NavLink>
+            <label
+              htmlFor="import-file"
+              className="bg-green-500 hover:bg-green-400 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl
+                flex items-center gap-2 transition-colors text-sm sm:text-base cursor-pointer whitespace-nowrap"
+            >
+              <DocumentTextIcon className="h-4 sm:h-5 w-4 sm:w-5" />
+              Import from Wallet
+            </label>
+            <input
+              id="import-file"
+              type="file"
+              accept=".csv"
+              className="hidden"
+              onChange={handleImport}
+            />
+          </div>
         </div>
 
         {/* Filters */}

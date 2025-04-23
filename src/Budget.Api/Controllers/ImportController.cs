@@ -17,6 +17,11 @@ public class ImportController : BaseController
     [Route(nameof(ImportWalletRecords))]
     public async Task<IActionResult> ImportWalletRecords()
     {
+        if (Request.Form.Files.Count == 0)
+        {
+            return BadRequest("No file uploaded.");
+        }
+
         var file = Request.Form.Files[0];
         string fileContents;
         using (var stream = file.OpenReadStream())
