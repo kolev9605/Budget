@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ArrowUpIcon, ArrowDownIcon, CurrencyDollarIcon, ChartBarIcon, PlusIcon } from "@heroicons/react/24/outline";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, CartesianGrid, Legend } from "recharts";
 import PeriodPicker from "../components/PeriodPicker";
 
 const DashboardPage = () => {
@@ -32,6 +32,16 @@ const DashboardPage = () => {
       { month: "Apr", income: 7500, expenses: 4900 },
     ],
   };
+
+  // Example data for cash flow comparison
+  const cashFlowData = [
+    { day: 1, currentMonth: 500, previousMonth: 450, lastYear: 400 },
+    { day: 2, currentMonth: 700, previousMonth: 600, lastYear: 550 },
+    { day: 3, currentMonth: 800, previousMonth: 750, lastYear: 700 },
+    { day: 4, currentMonth: 900, previousMonth: 850, lastYear: 800 },
+    { day: 5, currentMonth: 1000, previousMonth: 950, lastYear: 900 },
+    // Add more data points as needed
+  ];
 
   return (
     <div className="min-h-screen bg-gray-900">
@@ -94,19 +104,44 @@ const DashboardPage = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Chart Section */}
           <div className="lg:col-span-2 bg-gray-800 p-6 rounded-2xl shadow-lg">
-            <h3 className="text-lg font-semibold text-gray-100 mb-6">Monthly Overview</h3>
+            <h3 className="text-lg font-semibold text-gray-100 mb-6">Cash Flow Comparison</h3>
             <div className="h-80">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={dashboardData.monthlyData}>
-                  <XAxis dataKey="month" stroke="#6B7280" />
+                <LineChart data={cashFlowData}>
+                  <CartesianGrid stroke="#374151" strokeDasharray="3 3" />
+                  <XAxis dataKey="day" stroke="#6B7280" />
                   <YAxis stroke="#6B7280" />
                   <Tooltip
                     contentStyle={{ backgroundColor: "#1F2937", border: "none" }}
+                    labelStyle={{ color: "#F9FAFB" }}
                     itemStyle={{ color: "#F9FAFB" }}
                   />
-                  <Bar dataKey="income" fill="#60A5FA" radius={[4, 4, 0, 0]} name="Income" />
-                  <Bar dataKey="expenses" fill="#F87171" radius={[4, 4, 0, 0]} name="Expenses" />
-                </BarChart>
+                  <Legend
+                    wrapperStyle={{ color: "#F9FAFB" }}
+                    iconType="circle"
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="currentMonth"
+                    stroke="#60A5FA"
+                    strokeWidth={2}
+                    name="Current Month"
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="previousMonth"
+                    stroke="#F87171"
+                    strokeWidth={2}
+                    name="Previous Month"
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="lastYear"
+                    stroke="#FBBF24"
+                    strokeWidth={2}
+                    name="Same Month Last Year"
+                  />
+                </LineChart>
               </ResponsiveContainer>
             </div>
           </div>
