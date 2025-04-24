@@ -128,13 +128,12 @@ public class RecordRepository : Repository<Record>, IRecordRepository
         return paginatedRecords;
     }
 
-    public async Task<IEnumerable<Record>> GetAllInRangeAndAccountsAsync(string userId, DateTimeOffset startDate, DateTimeOffset endDate, IEnumerable<Guid> accountIds)
+    public async Task<IEnumerable<Record>> GetAllInRangeAsync(string userId, DateTimeOffset startDate, DateTimeOffset endDate)
     {
         var records = await GetAll()
             .Include(r => r.Account)
             .Where(r => r.Account.UserId == userId)
             .Where(r => r.RecordDate >= startDate && r.RecordDate <= endDate)
-            .Where(r => accountIds.Contains(r.AccountId))
             .OrderBy(r => r.RecordDate)
             .ToListAsync();
 

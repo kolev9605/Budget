@@ -2,7 +2,7 @@
 
 namespace Budget.Domain.Models.Statistics;
 
-public record GetCashFlowStatisticsResponse(decimal Expense, decimal Income)
+public record GetCashFlowStatisticsResponse(decimal TotalBalance, decimal Expense, decimal Income)
 {
     public decimal CashFlow => Income - Math.Abs(Expense);
 }

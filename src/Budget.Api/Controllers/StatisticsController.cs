@@ -16,9 +16,8 @@ public class StatisticsController : BaseController
         _mediator = mediator;
     }
 
-    [HttpPost]
-    [Route(nameof(GetCashFlow))]
-    public async Task<IActionResult> GetCashFlow(GetCashFlowStatisticsRequest request)
+    [HttpGet("cashflow")]
+    public async Task<IActionResult> GetCashFlow([FromQuery] GetCashFlowStatisticsRequest request)
     {
         var result = await _mediator.Send((request, CurrentUser).Adapt<GetCashFlowStatisticsQuery>());
 

@@ -28,7 +28,7 @@ public interface IRecordRepository : IRepository<Record>
         int pageNumber,
         int pageSize);
 
-    Task<IEnumerable<Record>> GetAllInRangeAndAccountsAsync(string userId, DateTimeOffset startDate, DateTimeOffset endDate, IEnumerable<Guid> accountIds);
+    Task<IEnumerable<Record>> GetAllInRangeAsync(string userId, DateTimeOffset startDate, DateTimeOffset endDate);
 
     Task<RecordsDateRangeResult?> GetDateRangeByUserAsync(string userId);
 }

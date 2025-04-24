@@ -4,7 +4,6 @@ using Mapster;
 namespace Budget.Api.Models.Statistics;
 
 public record GetCashFlowStatisticsRequest(
-    IEnumerable<Guid> AccountIds,
     DateTimeOffset StartDate,
     DateTimeOffset EndDate);
 

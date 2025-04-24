@@ -7,7 +7,6 @@ using MediatR;
 namespace Budget.Application.Statistics.Queries;
 
 public record GetCashFlowStatisticsQuery(
-    IEnumerable<Guid> AccountIds,
     DateTimeOffset StartDate,
     DateTimeOffset EndDate,
     string UserId) : IRequest<ErrorOr<GetCashFlowStatisticsResult>>;
@@ -21,12 +20,16 @@ public class GetCashFlowStatisticsQueryHandler : IRequestHandler<GetCashFlowStat
         _recordRepository = recordRepository;
     }
 
+    // TODO: inefficient - can be done in the database
     public async Task<ErrorOr<GetCashFlowStatisticsResult>> Handle(GetCashFlowStatisticsQuery query, CancellationToken cancellationToken)
     {
-        var recordsInRange = await _recordRepository.GetAllInRangeAndAccountsAsync(
+        var recordsInRange = await _recordRepository.GetAllInRangeAsync(
             query.UserId,
             query.StartDate,
-            query.EndDate, query.AccountIds);
+            query.EndDate);
+
+        var TotalBalance = recordsInRange
+            .Sum(r => r.Amount);
 
         var income = recordsInRange
             .Where(r => r.Amount > 0)
@@ -38,7 +41,7 @@ public class GetCashFlowStatisticsQueryHandler : IRequestHandler<GetCashFlowStat
             .Where(r => r.RecordType == RecordType.Expense)
             .Sum(r => r.Amount);
 
-        var resultModel = new GetCashFlowStatisticsResult(income, expense);
+        var resultModel = new GetCashFlowStatisticsResult(TotalBalance, income, expense);
 
         return resultModel;
     }
