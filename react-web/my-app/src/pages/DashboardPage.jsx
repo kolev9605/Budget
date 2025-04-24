@@ -1,17 +1,6 @@
 import { useState, useEffect } from "react";
 import { ArrowUpIcon, ArrowDownIcon, CurrencyDollarIcon, ChartBarIcon, PlusIcon } from "@heroicons/react/24/outline";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  CartesianGrid,
-  Legend,
-} from "recharts";
+import { XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, CartesianGrid, Legend } from "recharts";
 import PeriodPicker from "../components/PeriodPicker";
 import { DateTime } from "luxon";
 import { getCashFlow } from "../api/statistics.service";
@@ -127,7 +116,7 @@ const DashboardPage = () => {
               <div>
                 <p className="text-gray-400 text-sm mb-1">Savings Rate</p>
                 <p className="text-2xl font-bold text-blue-400">
-                  {(((1 - dashboardData.expense / dashboardData.income) * 100) || 0).toFixed(1)}%
+                  {((1 - dashboardData.expense / dashboardData.income) * 100 || 0).toFixed(1)}%
                 </p>
               </div>
               <ChartBarIcon className="h-8 w-8 text-blue-400" />
