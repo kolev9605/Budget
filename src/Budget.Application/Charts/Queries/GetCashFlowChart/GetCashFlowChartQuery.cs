@@ -24,7 +24,7 @@ public class GetCashFlowChartQueryHandler : IRequestHandler<GetCashFlowChartQuer
 
     public async Task<ErrorOr<CashFlowChartModel?>> Handle(GetCashFlowChartQuery query, CancellationToken cancellationToken)
     {
-        var records = await _recordRepository.GetAllInRangeAndAccountsAsync(query.UserId, query.StartDate, query.EndDate, query.AccountIds);
+        var records = await _recordRepository.GetAllInRangeAsync(query.UserId, query.StartDate, query.EndDate);
 
         if (!records.Any())
         {

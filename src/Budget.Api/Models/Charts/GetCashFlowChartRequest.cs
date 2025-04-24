@@ -5,8 +5,8 @@ namespace Budget.Api.Models.Charts;
 
 public record GetCashFlowChartRequest(
     List<Guid> AccountIds,
-    DateTimeOffset StartDate,
-    DateTimeOffset EndDate);
+    DateTimeOffset StartDateRange,
+    DateTimeOffset EndDateRange);
 
 public class CashFlowChartRequestMappings : IRegister
 {

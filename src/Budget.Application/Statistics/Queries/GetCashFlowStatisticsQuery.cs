@@ -7,8 +7,8 @@ using MediatR;
 namespace Budget.Application.Statistics.Queries;
 
 public record GetCashFlowStatisticsQuery(
-    DateTimeOffset StartDate,
-    DateTimeOffset EndDate,
+    DateTimeOffset StartDateRange,
+    DateTimeOffset EndDateRange,
     string UserId) : IRequest<ErrorOr<GetCashFlowStatisticsResult>>;
 
 public class GetCashFlowStatisticsQueryHandler : IRequestHandler<GetCashFlowStatisticsQuery, ErrorOr<GetCashFlowStatisticsResult>>
@@ -25,8 +25,8 @@ public class GetCashFlowStatisticsQueryHandler : IRequestHandler<GetCashFlowStat
     {
         var recordsInRange = await _recordRepository.GetAllInRangeAsync(
             query.UserId,
-            query.StartDate,
-            query.EndDate);
+            query.StartDateRange.UtcDateTime,
+            query.EndDateRange.UtcDateTime);
 
         var TotalBalance = recordsInRange
             .Sum(r => r.Amount);

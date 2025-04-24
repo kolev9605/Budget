@@ -1,15 +1,48 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ArrowUpIcon, ArrowDownIcon, CurrencyDollarIcon, ChartBarIcon, PlusIcon } from "@heroicons/react/24/outline";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, CartesianGrid, Legend } from "recharts";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  CartesianGrid,
+  Legend,
+} from "recharts";
 import PeriodPicker from "../components/PeriodPicker";
+import { DateTime } from "luxon";
+import { getCashFlow } from "../api/statistics.service";
+import LoadingOverlay from "../components/LoadingOverlay";
 
 const DashboardPage = () => {
   const [quickAddAmount, setQuickAddAmount] = useState("");
   const [selectedDateRange, setSelectedDateRange] = useState("month");
   const [referenceDate, setReferenceDate] = useState(new Date());
+  const [isLoading, setIsLoading] = useState(true);
+  const [dashboardData, setDashboardData] = useState(null);
+
+  useEffect(() => {
+    let startOfRange = DateTime.fromJSDate(new Date(referenceDate)).startOf("month");
+    let endOfRange = DateTime.fromJSDate(new Date(referenceDate)).endOf("month");
+
+    const fetchDashboardData = async () => {
+      try {
+        const dashboardDataResponse = await getCashFlow(startOfRange.toISO(), endOfRange.toISO());
+        console.log("Dashboard Data:", dashboardDataResponse);
+        setDashboardData(dashboardDataResponse);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, [referenceDate]);
 
   // Example data - replace with real data
-  const dashboardData = {
+  const dashboardDataMock = {
     balance: 45250.75,
     income: 75000.0,
     expenses: 29749.25,
@@ -43,7 +76,9 @@ const DashboardPage = () => {
     // Add more data points as needed
   ];
 
-  return (
+  return isLoading ? (
+    <LoadingOverlay />
+  ) : (
     <div className="min-h-screen bg-gray-900">
       {/* Navbar - Use the previous navbar component */}
 
@@ -61,7 +96,7 @@ const DashboardPage = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm mb-1">Total Balance</p>
-                <p className="text-2xl font-bold text-gray-100">${dashboardData.balance.toLocaleString()}</p>
+                <p className="text-2xl font-bold text-gray-100">${dashboardData.totalBalance.toLocaleString()}</p>
               </div>
               <CurrencyDollarIcon className="h-8 w-8 text-blue-400" />
             </div>
@@ -81,7 +116,7 @@ const DashboardPage = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm mb-1">Total Expenses</p>
-                <p className="text-2xl font-bold text-red-400">-${dashboardData.expenses.toLocaleString()}</p>
+                <p className="text-2xl font-bold text-red-400">-${dashboardData.expense.toLocaleString()}</p>
               </div>
               <ArrowDownIcon className="h-8 w-8 text-red-400" />
             </div>
@@ -92,7 +127,7 @@ const DashboardPage = () => {
               <div>
                 <p className="text-gray-400 text-sm mb-1">Savings Rate</p>
                 <p className="text-2xl font-bold text-blue-400">
-                  {((1 - dashboardData.expenses / dashboardData.income) * 100).toFixed(1)}%
+                  {(((1 - dashboardData.expense / dashboardData.income) * 100) || 0).toFixed(1)}%
                 </p>
               </div>
               <ChartBarIcon className="h-8 w-8 text-blue-400" />
@@ -116,17 +151,8 @@ const DashboardPage = () => {
                     labelStyle={{ color: "#F9FAFB" }}
                     itemStyle={{ color: "#F9FAFB" }}
                   />
-                  <Legend
-                    wrapperStyle={{ color: "#F9FAFB" }}
-                    iconType="circle"
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="currentMonth"
-                    stroke="#60A5FA"
-                    strokeWidth={2}
-                    name="Current Month"
-                  />
+                  <Legend wrapperStyle={{ color: "#F9FAFB" }} iconType="circle" />
+                  <Line type="monotone" dataKey="currentMonth" stroke="#60A5FA" strokeWidth={2} name="Current Month" />
                   <Line
                     type="monotone"
                     dataKey="previousMonth"
@@ -154,7 +180,7 @@ const DashboardPage = () => {
             </div>
 
             <div className="space-y-4">
-              {dashboardData.recentTransactions.map((transaction) => (
+              {dashboardDataMock.recentTransactions.map((transaction) => (
                 <div
                   key={transaction.id}
                   className="bg-gray-700 p-4 rounded-xl flex items-center justify-between hover:bg-gray-600 transition-colors"
@@ -180,7 +206,7 @@ const DashboardPage = () => {
           <div className="bg-gray-800 p-6 rounded-2xl shadow-lg">
             <h3 className="text-lg font-semibold text-gray-100 mb-6">Expense Categories</h3>
             <div className="space-y-6">
-              {dashboardData.categories.map((category) => (
+              {dashboardDataMock.categories.map((category) => (
                 <div key={category.name} className="space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-gray-300 text-sm">{category.name}</span>
@@ -189,7 +215,7 @@ const DashboardPage = () => {
                   <div className="w-full bg-gray-700 rounded-full h-2">
                     <div
                       className={`${category.color} h-2 rounded-full`}
-                      style={{ width: `${(category.amount / dashboardData.expenses) * 100}%` }}
+                      style={{ width: `${(category.amount / dashboardDataMock.expenses) * 100}%` }}
                     />
                   </div>
                 </div>

@@ -4,8 +4,8 @@ using Mapster;
 namespace Budget.Api.Models.Statistics;
 
 public record GetCashFlowStatisticsRequest(
-    DateTimeOffset StartDate,
-    DateTimeOffset EndDate);
+    DateTimeOffset StartDateRange,
+    DateTimeOffset EndDateRange);
 
 public class GetStatisticsRequestMappings : IRegister
 {
