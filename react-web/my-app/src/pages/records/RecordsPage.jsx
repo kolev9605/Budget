@@ -1,14 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router";
-import {
-  PlusIcon,
-  ChevronDownIcon,
-  PencilIcon,
-  TrashIcon,
-  DocumentTextIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-} from "@heroicons/react/24/outline";
+import { PlusIcon, ChevronDownIcon, PencilIcon, TrashIcon, DocumentTextIcon } from "@heroicons/react/24/outline";
 import { getRecords, getRecordTypes } from "../../api/records.service.js";
 import LoadingOverlay from "../../components/LoadingOverlay.jsx";
 import { toast } from "react-toastify";
@@ -18,6 +10,7 @@ import { getCategories } from "../../api/categories.service.js";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { getCurrencyLabel } from "../../utils/currencyUtils.js";
 import { DateTime } from "luxon";
+import PeriodPicker from "../../components/PeriodPicker";
 
 const RecordsPage = () => {
   const [recordTypes, setRecordTypes] = useState([]);
@@ -30,7 +23,7 @@ const RecordsPage = () => {
   const [selectedAccount, setSelectedAccount] = useState("all");
   const [selectedDateRange, setSelectedDateRange] = useState("month");
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [referenceDate, setContextDate] = useState(new Date());
+  const [referenceDate, setReferenceDate] = useState(new Date());
   const [showFilters, setShowFilters] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -125,86 +118,6 @@ const RecordsPage = () => {
     const nextPage = currentPage + 1;
     await fetchRecords(nextPage);
     setCurrentPage(nextPage);
-  };
-
-  const getDateRangeLabel = () => {
-    switch (selectedDateRange) {
-      case "day":
-        return referenceDate.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
-      case "week": {
-        const startOfWeek = new Date(referenceDate);
-        startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
-        const endOfWeek = new Date(startOfWeek);
-        endOfWeek.setDate(startOfWeek.getDate() + 6);
-        return `${startOfWeek.toLocaleDateString("en-US", {
-          month: "short",
-          day: "numeric",
-        })} - ${endOfWeek.toLocaleDateString("en-US", {
-          month: "short",
-          day: "numeric",
-        })} ${startOfWeek.getFullYear()}`;
-      }
-      case "month":
-        return referenceDate.toLocaleDateString("en-US", { year: "numeric", month: "long" });
-      case "year":
-        return referenceDate.getFullYear().toString();
-      default:
-        return "";
-    }
-  };
-
-  const handlePrevRange = () => {
-    const newDate = new Date(referenceDate);
-    switch (selectedDateRange) {
-      case "day":
-        newDate.setDate(newDate.getDate() - 1);
-        break;
-      case "week":
-        newDate.setDate(newDate.getDate() - 7);
-        break;
-      case "month":
-        newDate.setMonth(newDate.getMonth() - 1);
-        break;
-      case "year":
-        newDate.setFullYear(newDate.getFullYear() - 1);
-        break;
-      default:
-        break;
-    }
-    setContextDate(newDate);
-  };
-
-  const handleNextRange = () => {
-    const newDate = new Date(referenceDate);
-    const today = new Date();
-
-    switch (selectedDateRange) {
-      case "day":
-        newDate.setDate(newDate.getDate() + 1);
-        break;
-      case "week":
-        newDate.setDate(newDate.getDate() + 7);
-        break;
-      case "month":
-        newDate.setMonth(newDate.getMonth() + 1);
-        break;
-      case "year":
-        newDate.setFullYear(newDate.getFullYear() + 1);
-        break;
-      default:
-        break;
-    }
-
-    if (newDate > today) {
-      setContextDate(today);
-    } else {
-      setContextDate(newDate);
-    }
-  };
-
-  const handleBackToToday = () => {
-    setContextDate(new Date());
-    setSelectedDateRange("day");
   };
 
   const handleImport = async (event) => {
@@ -323,27 +236,9 @@ const RecordsPage = () => {
             </select>
           </div>
 
-          <div className="flex items-center justify-center mt-4 gap-4">
-            <button
-              onClick={handlePrevRange}
-              className="bg-gray-700 text-gray-300 hover:bg-blue-500 hover:text-white transition-colors p-2 rounded-lg shadow-md"
-            >
-              <ChevronLeftIcon className="h-5 w-5" />
-            </button>
-            <div className="text-gray-100 text-sm text-center w-48">{getDateRangeLabel()}</div>
-            <button
-              onClick={handleNextRange}
-              className="bg-gray-700 text-gray-300 hover:bg-blue-500 hover:text-white transition-colors p-2 rounded-lg shadow-md"
-            >
-              <ChevronRightIcon className="h-5 w-5" />
-            </button>
+          <div className="mt-3">
+            <PeriodPicker selectedDateRange={selectedDateRange} referenceDate={referenceDate} setReferenceDate={setReferenceDate}/>
           </div>
-          {/* <button
-            onClick={handleBackToToday}
-            className="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded-lg text-sm transition-colors mt-4"
-          >
-            Back to Today
-          </button> */}
         </div>
 
         {/* Records Table (Desktop) */}
@@ -352,11 +247,7 @@ const RecordsPage = () => {
             dataLength={Object.keys(groupedRecords).length}
             next={fetchNextPage}
             hasMore={hasNextPage}
-            loader={
-              <div className="text-center text-gray-400 py-4">
-                Loading more records...
-              </div>
-            }
+            loader={<div className="text-center text-gray-400 py-4">Loading more records...</div>}
           >
             <table className="min-w-full table-auto text-sm text-left text-gray-400">
               <thead className="bg-gray-700 text-gray-300 uppercase text-xs font-medium">
