@@ -3,7 +3,7 @@ import { ArrowUpIcon, ArrowDownIcon, CurrencyDollarIcon, ChartBarIcon, PlusIcon 
 import { XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, CartesianGrid, Legend } from "recharts";
 import PeriodPicker from "../components/PeriodPicker";
 import { DateTime } from "luxon";
-import { getStatistics, getTotalBalance } from "../api/records.service";
+import { getStatistics, getTotalBalance, getRecords } from "../api/records.service";
 import LoadingOverlay from "../components/LoadingOverlay";
 
 const DashboardPage = () => {
@@ -14,6 +14,7 @@ const DashboardPage = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const [recordsData, setRecordsData] = useState(null);
   const [chartData, setChartData] = useState([]);
+  const [recentRecordsData, setRecentRecordsData] = useState(null);
 
   useEffect(() => {
     setSelectedDateRange("month");
