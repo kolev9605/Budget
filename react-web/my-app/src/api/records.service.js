@@ -47,3 +47,18 @@ export const getRecordTypes = async () => {
   const response = await axiosInstance.get("/records/types");
   return response.data;
 };
+
+export const getStatistics = async (startDateRange, endDateRange) => {
+  const response = await axiosInstance.get("/records/statistics", {
+    params: {
+      startDateRange: startDateRange,
+      endDateRange: endDateRange,
+    },
+  });
+  return response.data;
+};
+
+export const getTotalBalance = async () => {
+  const response = await axiosInstance.get("/records/totalbalance");
+  return response.data;
+};

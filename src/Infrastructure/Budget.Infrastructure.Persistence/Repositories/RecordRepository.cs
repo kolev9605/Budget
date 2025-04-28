@@ -1,8 +1,8 @@
-﻿using Budget.Application.Records.Queries;
-using Budget.Domain.Entities;
+﻿using Budget.Domain.Entities;
 using Budget.Domain.Interfaces.Repositories;
 using Budget.Domain.Models.Pagination;
 using Budget.Domain.Models.Records;
+using Budget.Domain.Models.Records.Statistics;
 using Budget.Infrastructure.Persistence.Extensions;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
@@ -128,18 +128,6 @@ public class RecordRepository : Repository<Record>, IRecordRepository
         return paginatedRecords;
     }
 
-    public async Task<IEnumerable<Record>> GetAllInRangeAsync(string userId, DateTimeOffset startDate, DateTimeOffset endDate)
-    {
-        var records = await GetAll()
-            .Include(r => r.Account)
-            .Where(r => r.Account.UserId == userId)
-            .Where(r => r.RecordDate >= startDate && r.RecordDate <= endDate)
-            .OrderBy(r => r.RecordDate)
-            .ToListAsync();
-
-        return records;
-    }
-
     public async Task<RecordsDateRangeResult?> GetDateRangeByUserAsync(string userId)
     {
         // TODO: Is this the best way of handling that? Use Dapper maybe?
@@ -148,6 +136,18 @@ join accounts a on r.account_id = a.id
 where 1 = 1
 and a.user_id = {userId}")
             .ToListAsync()).FirstOrDefault();
+    }
+
+    public async Task<IEnumerable<GetRecordsStatisticsResult>> GetCashFlowStatisticsAsync(string userId, DateTimeOffset startDateRange, DateTimeOffset endDateRange)
+    {
+        var recordsInRange = await GetAll()
+            .Where(r => r.Account.UserId == userId)
+            .Where(r => r.RecordDate >= startDateRange && r.RecordDate <= endDateRange)
+            .OrderBy(r => r.RecordDate)
+            .ProjectToType<GetRecordsStatisticsResult>()
+            .ToListAsync();
+
+        return recordsInRange;
     }
 
     private IQueryable<Record> GetRecordByIdBaseQuery(string userId, Guid recordId)

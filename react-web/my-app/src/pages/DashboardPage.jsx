@@ -3,25 +3,42 @@ import { ArrowUpIcon, ArrowDownIcon, CurrencyDollarIcon, ChartBarIcon, PlusIcon 
 import { XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, CartesianGrid, Legend } from "recharts";
 import PeriodPicker from "../components/PeriodPicker";
 import { DateTime } from "luxon";
-import { getCashFlow } from "../api/statistics.service";
+import { getStatistics, getTotalBalance } from "../api/records.service";
 import LoadingOverlay from "../components/LoadingOverlay";
 
 const DashboardPage = () => {
   const [quickAddAmount, setQuickAddAmount] = useState("");
-  const [selectedDateRange, setSelectedDateRange] = useState("month");
+  const [selectedDateRange, setSelectedDateRange] = useState("");
   const [referenceDate, setReferenceDate] = useState(new Date());
   const [isLoading, setIsLoading] = useState(true);
   const [dashboardData, setDashboardData] = useState(null);
+  const [recordsData, setRecordsData] = useState(null);
+  const [chartData, setChartData] = useState([]);
 
   useEffect(() => {
+    setSelectedDateRange("month");
     let startOfRange = DateTime.fromJSDate(new Date(referenceDate)).startOf("month");
     let endOfRange = DateTime.fromJSDate(new Date(referenceDate)).endOf("month");
 
     const fetchDashboardData = async () => {
       try {
-        const dashboardDataResponse = await getCashFlow(startOfRange.toISO(), endOfRange.toISO());
-        console.log("Dashboard Data:", dashboardDataResponse);
-        setDashboardData(dashboardDataResponse);
+        const recordsResponse = await getStatistics(startOfRange.toISO(), endOfRange.toISO());
+        const totalBalanceResponse = await getTotalBalance();
+
+        const totalExpenses = recordsResponse
+          .filter((r) => r.amount < 0 && r.recordType === "Expense")
+          .reduce((acc, item) => acc + item.amount, 0);
+
+        const totalIncome = recordsResponse
+          .filter((r) => r.amount > 0 && r.recordType === "Income")
+          .reduce((acc, item) => acc + item.amount, 0);
+
+        setRecordsData(recordsResponse);
+        setDashboardData({
+          totalBalance: totalBalanceResponse,
+          income: totalIncome,
+          expense: Math.abs(totalExpenses),
+        });
       } finally {
         setIsLoading(false);
       }
@@ -29,6 +46,28 @@ const DashboardPage = () => {
 
     fetchDashboardData();
   }, [referenceDate]);
+
+  useEffect(() => {
+    if (recordsData) {
+      const groupedData = Object.entries(
+        recordsData.reduce((acc, record) => {
+          const dateKey = DateTime.fromISO(record.recordDate).toISODate();
+          acc[dateKey] = (acc[dateKey] || 0) + record.amount;
+          return acc;
+        }, {})
+      )
+        .map(([date, amount]) => ({ recordDate: DateTime.fromISO(date).toFormat("MMM dd"), cashFlow: amount }))
+        .sort((a, b) => DateTime.fromFormat(a.recordDate, "MMM dd") - DateTime.fromFormat(b.recordDate, "MMM dd"));
+
+      let cumulativeSum = 0;
+      const cumulativeData = groupedData.map((item) => {
+        cumulativeSum += item.cashFlow;
+        return { ...item, cashFlow: cumulativeSum };
+      });
+
+      setChartData(cumulativeData);
+    }
+  }, [recordsData]);
 
   // Example data - replace with real data
   const dashboardDataMock = {
@@ -54,16 +93,6 @@ const DashboardPage = () => {
       { month: "Apr", income: 7500, expenses: 4900 },
     ],
   };
-
-  // Example data for cash flow comparison
-  const cashFlowData = [
-    { day: 1, currentMonth: 500, previousMonth: 450, lastYear: 400 },
-    { day: 2, currentMonth: 700, previousMonth: 600, lastYear: 550 },
-    { day: 3, currentMonth: 800, previousMonth: 750, lastYear: 700 },
-    { day: 4, currentMonth: 900, previousMonth: 850, lastYear: 800 },
-    { day: 5, currentMonth: 1000, previousMonth: 950, lastYear: 900 },
-    // Add more data points as needed
-  ];
 
   return isLoading ? (
     <LoadingOverlay />
@@ -131,9 +160,9 @@ const DashboardPage = () => {
             <h3 className="text-lg font-semibold text-gray-100 mb-6">Cash Flow Comparison</h3>
             <div className="h-80">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={cashFlowData}>
+                <LineChart data={chartData}>
                   <CartesianGrid stroke="#374151" strokeDasharray="3 3" />
-                  <XAxis dataKey="day" stroke="#6B7280" />
+                  <XAxis dataKey="recordDate" stroke="#6B7280" />
                   <YAxis stroke="#6B7280" />
                   <Tooltip
                     contentStyle={{ backgroundColor: "#1F2937", border: "none" }}
@@ -141,21 +170,7 @@ const DashboardPage = () => {
                     itemStyle={{ color: "#F9FAFB" }}
                   />
                   <Legend wrapperStyle={{ color: "#F9FAFB" }} iconType="circle" />
-                  <Line type="monotone" dataKey="currentMonth" stroke="#60A5FA" strokeWidth={2} name="Current Month" />
-                  <Line
-                    type="monotone"
-                    dataKey="previousMonth"
-                    stroke="#F87171"
-                    strokeWidth={2}
-                    name="Previous Month"
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="lastYear"
-                    stroke="#FBBF24"
-                    strokeWidth={2}
-                    name="Same Month Last Year"
-                  />
+                  <Line type="monotone" dataKey="cashFlow" stroke="#60A5FA" strokeWidth={2} name="Cash Flow" />
                 </LineChart>
               </ResponsiveContainer>
             </div>

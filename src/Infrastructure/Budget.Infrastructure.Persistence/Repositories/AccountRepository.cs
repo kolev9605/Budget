@@ -75,4 +75,14 @@ public class AccountRepository : Repository<Account>, IAccountRepository
             .ProjectToType<AccountForRecordCreationModel>()
             .FirstOrDefaultAsync();
     }
+
+    public async Task<decimal> GetTotalBalanceByUserIdAsync(string userId)
+    {
+        var totalBalance = await GetAll()
+            .Where(a => a.UserId == userId)
+            .Select(a => a.InitialBalance + a.Records.Select(r => r.Amount).Sum())
+            .SumAsync();
+
+        return totalBalance;
+    }
 }

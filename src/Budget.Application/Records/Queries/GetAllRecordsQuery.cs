@@ -8,14 +8,6 @@ using MediatR;
 
 namespace Budget.Application.Records.Queries;
 
-public enum DateRange
-{
-    Today,
-    Week,
-    Month,
-    Year,
-}
-
 public record GetAllRecordsQuery(
     string UserId,
     Guid? AccountId,
@@ -44,7 +36,7 @@ public class GetAllRecordsQueryHandler : IRequestHandler<GetAllRecordsQuery, Err
             query.CategoryId,
             query.StartDateRange,
             query.EndDateRange,
-            query.PageNumber + 1,
+            query.PageNumber,
             query.PageSize ?? PaginationConstants.DefaultPageSize);
 
         return paginated.ToErrorOr();

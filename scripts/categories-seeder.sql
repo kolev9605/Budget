@@ -25,7 +25,7 @@ values
 (uuid_generate_v4(), 'Kids', 0, null, true),
 (uuid_generate_v4(), 'Housing', 0, null, true),
 (uuid_generate_v4(), 'Car', 0, null, true),
-(uuid_generate_v4(), 'Healh Care', 0, null, true),
+(uuid_generate_v4(), 'Health Care', 0, null, true),
 (uuid_generate_v4(), 'Transportation', 0, null, true),
 (uuid_generate_v4(), 'Financial Expenses', 0, null, true),
 
@@ -78,14 +78,14 @@ BEGIN
     (uuid_generate_v4(), 'Car Insurance', parent_category_type, parent_category_id, true);
 END $$;
 
--- Add Healh Care sub-categories
+-- Add Health Care sub-categories
 DO $$
 DECLARE 
     parent_category_id uuid;
     parent_category_type integer;
 BEGIN
-    parent_category_id := (SELECT id from categories where name = 'Healh Care' LIMIT 1);
-    parent_category_type := (SELECT category_type from categories where name = 'Healh Care' LIMIT 1);
+    parent_category_id := (SELECT id from categories where name = 'Health Care' LIMIT 1);
+    parent_category_type := (SELECT category_type from categories where name = 'Health Care' LIMIT 1);
     
     insert into categories(id, name, category_type, parent_category_id, is_initial)
     values

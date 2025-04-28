@@ -17,4 +17,6 @@ public interface IAccountRepository : IRepository<Account>
     Task<Account?> GetByNameAsync(string userId, string accountName);
 
     Task<AccountForRecordCreationModel?> GetForRecordCreationAsync(Guid id);
+
+    Task<decimal> GetTotalBalanceByUserIdAsync(string userId);
 }

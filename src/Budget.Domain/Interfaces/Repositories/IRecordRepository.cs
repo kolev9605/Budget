@@ -1,6 +1,7 @@
 ﻿using Budget.Domain.Entities;
 using Budget.Domain.Models.Pagination;
 using Budget.Domain.Models.Records;
+using Budget.Domain.Models.Records.Statistics;
 
 namespace Budget.Domain.Interfaces.Repositories;
 
@@ -28,7 +29,7 @@ public interface IRecordRepository : IRepository<Record>
         int pageNumber,
         int pageSize);
 
-    Task<IEnumerable<Record>> GetAllInRangeAsync(string userId, DateTimeOffset startDate, DateTimeOffset endDate);
+    Task<IEnumerable<GetRecordsStatisticsResult>> GetCashFlowStatisticsAsync(string userId, DateTimeOffset startDateRange, DateTimeOffset endDateRange);
 
     Task<RecordsDateRangeResult?> GetDateRangeByUserAsync(string userId);
 }

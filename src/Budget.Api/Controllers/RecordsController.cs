@@ -5,6 +5,7 @@ using Budget.Common;
 using Budget.Domain.Entities;
 using Budget.Domain.Models.Pagination;
 using Budget.Domain.Models.Records;
+using Budget.Domain.Models.Records.Statistics;
 using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -73,5 +74,21 @@ public class RecordsController : BaseController
         var result = await _mediator.Send(CurrentUser.Adapt<GetRecordsDateRangeQuery>());
 
         return MatchResponse(result);
+    }
+
+    [HttpGet("totalbalance")]
+    public async Task<IActionResult> GetTotalBalance()
+    {
+        var result = await _mediator.Send(new GetTotalBalanceQuery(CurrentUser.Id));
+
+        return MatchResponse<decimal, decimal>(result);
+    }
+
+    [HttpGet("statistics")]
+    public async Task<IActionResult> GetCashFlow([FromQuery] GetRecordsStatisticsRequest request)
+    {
+        var result = await _mediator.Send((request, CurrentUser).Adapt<GetRecordsStatisticsQuery>());
+
+        return MatchResponse<IEnumerable<GetRecordsStatisticsResult>, IEnumerable<GetRecordsStatisticsResponse>>(result);
     }
 }
