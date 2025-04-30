@@ -5,6 +5,7 @@ using Budget.Domain;
 using Budget.Infrastructure;
 using Budget.Infrastructure.Persistence;
 using Serilog;
+using Budget.Infrastructure.AI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,7 +30,9 @@ builder.Services
     .AddPersistence(builder.Configuration)
     .AddInfrastructure(builder.Configuration)
     .AddApplication()
-    .AddPresentation();
+    .AddPresentation()
+    .AddAI(builder.Configuration)
+;
 
 var app = builder.Build();
 

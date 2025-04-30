@@ -150,6 +150,16 @@ and a.user_id = {userId}")
         return recordsInRange;
     }
 
+    public async Task<IEnumerable<RecordModel>> GetLastRecordsAsync(string userId, int count)
+    {
+        var records = await GetAllBaseQuery(userId)
+            .Take(count)
+            .ProjectToType<RecordModel>()
+            .ToListAsync();
+
+        return records;
+    }
+
     private IQueryable<Record> GetRecordByIdBaseQuery(string userId, Guid recordId)
     {
         return GetAll()

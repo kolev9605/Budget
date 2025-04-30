@@ -24,6 +24,7 @@
     <ProjectReference Include="..\Budget.Domain\Budget.Domain.csproj" />
     <ProjectReference Include="..\Infrastructure\Budget.Infrastructure\Budget.Infrastructure.csproj" />
     <ProjectReference Include="..\Infrastructure\Budget.Infrastructure.Persistence\Budget.Infrastructure.Persistence.csproj" />
+    <ProjectReference Include="..\Infrastructure\Budget.Infrastructure.AI\Budget.Infrastructure.AI.csproj" />
   </ItemGroup>
 
 </Project>

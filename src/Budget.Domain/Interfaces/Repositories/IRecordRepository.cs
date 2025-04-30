@@ -32,4 +32,6 @@ public interface IRecordRepository : IRepository<Record>
     Task<IEnumerable<GetRecordsStatisticsResult>> GetCashFlowStatisticsAsync(string userId, DateTimeOffset startDateRange, DateTimeOffset endDateRange);
 
     Task<RecordsDateRangeResult?> GetDateRangeByUserAsync(string userId);
+
+    Task<IEnumerable<RecordModel>> GetLastRecordsAsync(string userId, int count);
 }

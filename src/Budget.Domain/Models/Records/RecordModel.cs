@@ -23,4 +23,9 @@ public class RecordModel
     public DateTimeOffset RecordDate { get; set; }
 
     public decimal Amount { get; set; }
+
+    public string ToCsv()
+    {
+        return $"{Amount},{Account.Name},{FromAccount?.Name ?? ""},{Category.Name},{Note},{RecordDate.ToString("yyyy-MM-dd")},{RecordType}";
+    }
 }

@@ -17,10 +17,12 @@ public static class GetAllCategoriesQueryMockHelper
     }
 
     public static GetAllCategoriesQuery SetupQuery(
+        bool? primaryOnly = null,
         string? userId = null
     )
     {
         var query = new GetAllCategoriesQuery(
+            primaryOnly ?? false,
             userId ?? DefaultValueConstants.User.Id
         );
 
