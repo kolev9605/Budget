@@ -1,13 +1,22 @@
 import { useState, useEffect } from "react";
-import { ArrowUpIcon, ArrowDownIcon, CurrencyDollarIcon, ChartBarIcon, PlusIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowUpIcon,
+  ArrowDownIcon,
+  CurrencyDollarIcon,
+  ChartBarIcon,
+  PlusIcon,
+  SparklesIcon,
+} from "@heroicons/react/24/outline";
 import { XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, CartesianGrid, Legend } from "recharts";
 import PeriodPicker from "../components/PeriodPicker";
 import { DateTime } from "luxon";
-import { getStatistics, getTotalBalance, getRecords } from "../api/records.service";
+import { getStatistics, getTotalBalance, getRecords, askAiGenerate, createRecord } from "../api/records.service";
 import LoadingOverlay from "../components/LoadingOverlay";
+import Modal from "../components/Modal";
+import { getCurrencyLabel } from "../utils/currencyUtils"; // Assuming you have a utility function for currency formatting
 
 const DashboardPage = () => {
-  const [quickAddAmount, setQuickAddAmount] = useState("");
+  const [quickAddText, setQuickAddText] = useState(""); // Renamed state to reflect free text input
   const [selectedDateRange, setSelectedDateRange] = useState("");
   const [referenceDate, setReferenceDate] = useState(new Date());
   const [isLoading, setIsLoading] = useState(true);
@@ -15,6 +24,32 @@ const DashboardPage = () => {
   const [recordsData, setRecordsData] = useState(null);
   const [chartData, setChartData] = useState([]);
   const [recentRecordsData, setRecentRecordsData] = useState(null);
+  const [aiGeneratedRecord, setAiGeneratedRecord] = useState(null); // Single record instead of an array
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const dashboardDataMock = {
+    balance: 45250.75,
+    income: 75000.0,
+    expenses: 29749.25,
+    categories: [
+      { name: "Food & Drinks", amount: 8450, color: "bg-blue-400" },
+      { name: "Shopping", amount: 6200, color: "bg-purple-400" },
+      { name: "Bills", amount: 4500, color: "bg-green-400" },
+      { name: "Transport", amount: 3200, color: "bg-yellow-400" },
+    ],
+    recentTransactions: [
+      { id: 1, name: "Grocery Store", date: "2024-03-15", amount: -245.75, category: "Food" },
+      { id: 2, name: "Salary Deposit", date: "2024-03-14", amount: 5000.0, category: "Income" },
+      { id: 3, name: "Internet Bill", date: "2024-03-13", amount: -89.99, category: "Bills" },
+      { id: 4, name: "Coffee Shop", date: "2024-03-13", amount: -12.5, category: "Food" },
+    ],
+    monthlyData: [
+      { month: "Jan", income: 6500, expenses: 4200 },
+      { month: "Feb", income: 7200, expenses: 4800 },
+      { month: "Mar", income: 8000, expenses: 5200 },
+      { month: "Apr", income: 7500, expenses: 4900 },
+    ],
+  };
 
   useEffect(() => {
     setSelectedDateRange("month");
@@ -70,29 +105,28 @@ const DashboardPage = () => {
     }
   }, [recordsData]);
 
-  // Example data - replace with real data
-  const dashboardDataMock = {
-    balance: 45250.75,
-    income: 75000.0,
-    expenses: 29749.25,
-    categories: [
-      { name: "Food & Drinks", amount: 8450, color: "bg-blue-400" },
-      { name: "Shopping", amount: 6200, color: "bg-purple-400" },
-      { name: "Bills", amount: 4500, color: "bg-green-400" },
-      { name: "Transport", amount: 3200, color: "bg-yellow-400" },
-    ],
-    recentTransactions: [
-      { id: 1, name: "Grocery Store", date: "2024-03-15", amount: -245.75, category: "Food" },
-      { id: 2, name: "Salary Deposit", date: "2024-03-14", amount: 5000.0, category: "Income" },
-      { id: 3, name: "Internet Bill", date: "2024-03-13", amount: -89.99, category: "Bills" },
-      { id: 4, name: "Coffee Shop", date: "2024-03-13", amount: -12.5, category: "Food" },
-    ],
-    monthlyData: [
-      { month: "Jan", income: 6500, expenses: 4200 },
-      { month: "Feb", income: 7200, expenses: 4800 },
-      { month: "Mar", income: 8000, expenses: 5200 },
-      { month: "Apr", income: 7500, expenses: 4900 },
-    ],
+  const handleQuickAdd = async () => {
+    if (!quickAddText.trim()) return; // Ensure input is not empty
+    try {
+      const response = await askAiGenerate(quickAddText); // Use free text input
+      setAiGeneratedRecord(response || null); // Set record or null
+      setIsModalOpen(true);
+    } catch (error) {
+      console.error("Error generating AI record:", error);
+      setAiGeneratedRecord(null); // Handle error case
+      setIsModalOpen(true);
+    }
+  };
+
+  const handleConfirmRecord = async () => {
+    if (!aiGeneratedRecord) return;
+    try {
+      await createRecord(aiGeneratedRecord);
+      setIsModalOpen(false);
+      setQuickAddText("");
+    } catch (error) {
+      console.error("Error creating record:", error);
+    }
   };
 
   return isLoading ? (
@@ -115,7 +149,7 @@ const DashboardPage = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm mb-1">Total Balance</p>
-                <p className="text-2xl font-bold text-gray-100">${dashboardData.totalBalance.toLocaleString()}</p>
+                <p className="text-2xl font-bold text-gray-100">{getCurrencyLabel("BGN", dashboardDataMock.balance)}</p>
               </div>
               <CurrencyDollarIcon className="h-8 w-8 text-blue-400" />
             </div>
@@ -125,7 +159,7 @@ const DashboardPage = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm mb-1">Total Income</p>
-                <p className="text-2xl font-bold text-green-400">+${dashboardData.income.toLocaleString()}</p>
+                <p className="text-2xl font-bold text-green-400">+{getCurrencyLabel("BGN", dashboardDataMock.income)}</p>
               </div>
               <ArrowUpIcon className="h-8 w-8 text-green-400" />
             </div>
@@ -135,7 +169,7 @@ const DashboardPage = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm mb-1">Total Expenses</p>
-                <p className="text-2xl font-bold text-red-400">-${dashboardData.expense.toLocaleString()}</p>
+                <p className="text-2xl font-bold text-red-400">-{getCurrencyLabel("BGN", dashboardDataMock.expenses)}</p>
               </div>
               <ArrowDownIcon className="h-8 w-8 text-red-400" />
             </div>
@@ -146,7 +180,7 @@ const DashboardPage = () => {
               <div>
                 <p className="text-gray-400 text-sm mb-1">Savings Rate</p>
                 <p className="text-2xl font-bold text-blue-400">
-                  {((1 - dashboardData.expense / dashboardData.income) * 100 || 0).toFixed(1)}%
+                  {((1 - dashboardDataMock.expenses / dashboardDataMock.income) * 100 || 0).toFixed(1)}%
                 </p>
               </div>
               <ChartBarIcon className="h-8 w-8 text-blue-400" />
@@ -185,22 +219,25 @@ const DashboardPage = () => {
             </div>
 
             <div className="space-y-4">
-              {dashboardDataMock.recentTransactions.map((transaction) => (
-                <div
-                  key={transaction.id}
-                  className="bg-gray-700 p-4 rounded-xl flex items-center justify-between hover:bg-gray-600 transition-colors"
-                >
-                  <div>
-                    <p className="text-gray-100 font-medium">{transaction.name}</p>
-                    <p className="text-gray-400 text-sm">{transaction.date}</p>
-                  </div>
-                  <span
-                    className={`text-sm font-semibold ${transaction.amount > 0 ? "text-green-400" : "text-red-400"}`}
+              {recordsData
+                .slice(1)
+                .slice(-4)
+                .map((record) => (
+                  <div
+                    key={record.id}
+                    className="bg-gray-700 p-4 rounded-xl flex items-center justify-between hover:bg-gray-600 transition-colors"
                   >
-                    ${Math.abs(transaction.amount).toFixed(2)}
-                  </span>
-                </div>
-              ))}
+                    <div>
+                      <p className="text-gray-100 font-medium">{record.categoryName}</p>
+                      <p className="text-gray-400 text-sm">
+                        {DateTime.fromISO(record.recordDate).toLocaleString(DateTime.DATE_MED)}
+                      </p>
+                    </div>
+                    <span className={`text-sm font-semibold ${record.amount > 0 ? "text-green-400" : "text-red-400"}`}>
+                      {getCurrencyLabel("BGN", record.amount)}
+                    </span>
+                  </div>
+                ))}
             </div>
           </div>
         </div>
@@ -233,24 +270,82 @@ const DashboardPage = () => {
             <h3 className="text-lg font-semibold text-gray-100 mb-6">Quick Add Expense</h3>
             <div className="space-y-4">
               <input
-                type="number"
-                placeholder="Amount"
-                value={quickAddAmount}
-                onChange={(e) => setQuickAddAmount(e.target.value)}
+                type="text" // Changed input type to text
+                placeholder="Enter a description or amount (e.g., 'Lunch $15')"
+                value={quickAddText} // Updated to use quickAddText state
+                onChange={(e) => setQuickAddText(e.target.value)} // Updated handler
                 className="w-full bg-gray-700 border border-gray-600 rounded-xl px-4 py-3
                   text-gray-100 placeholder-gray-500 focus:outline-none focus:border-blue-400
                   focus:ring-2 focus:ring-blue-400/30 transition-all"
               />
               <button
+                onClick={handleQuickAdd}
                 className="w-full bg-blue-500 hover:bg-blue-400 text-white py-3 rounded-xl
                 font-medium flex items-center justify-center gap-2 transition-colors"
               >
                 <PlusIcon className="h-5 w-5" />
-                Add Expense
+                Generate Record
               </button>
             </div>
           </div>
         </div>
+
+        {/* AI-Generated Record Modal */}
+        {isModalOpen && (
+          <Modal onClose={() => setIsModalOpen(false)}>
+            {aiGeneratedRecord ? (
+              <>
+                <h3 className="text-lg font-semibold text-gray-100 mb-4 flex items-center gap-2">
+                  <SparklesIcon className="h-5 w-5 text-yellow-400" />
+                  AI-Generated Record
+                </h3>
+                <table className="min-w-full table-auto text-sm text-left text-gray-400">
+                  <thead className="bg-gray-700 text-gray-300 uppercase text-xs font-medium">
+                    <tr>
+                      <th className="px-4 py-2">Category</th>
+                      <th className="px-4 py-2">Account</th>
+                      <th className="px-4 py-2">From Account</th>
+                      <th className="px-4 py-2">Amount</th>
+                      <th className="px-4 py-2">Date</th>
+                      <th className="px-4 py-2">Notes</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="border-b border-gray-700">
+                      <td className="px-4 py-2">{aiGeneratedRecord.categoryName}</td>
+                      <td className="px-4 py-2">{aiGeneratedRecord.accountName}</td>
+                      <td className="px-4 py-2">{aiGeneratedRecord.fromAccountName || "-"}</td>
+                      <td className="px-4 py-2">{aiGeneratedRecord.amount.toFixed(2)}</td>
+                      <td className="px-4 py-2">{new Date(aiGeneratedRecord.recordDate).toLocaleDateString()}</td>
+                      <td className="px-4 py-2">{aiGeneratedRecord.note}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div className="mt-4 flex justify-end">
+                  <button
+                    onClick={handleConfirmRecord}
+                    className="bg-green-500 hover:bg-green-400 text-white px-4 py-2 rounded-lg text-sm"
+                  >
+                    Confirm
+                  </button>
+                </div>
+              </>
+            ) : (
+              <div className="text-center">
+                <h3 className="text-lg font-semibold text-gray-100 mb-4">AI Failed to Generate a Record</h3>
+                <p className="text-gray-400 mb-6">
+                  The AI could not generate a record based on your input. Please try again with a different description.
+                </p>
+                <button
+                  onClick={() => setIsModalOpen(false)}
+                  className="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded-lg text-sm"
+                >
+                  Close
+                </button>
+              </div>
+            )}
+          </Modal>
+        )}
       </main>
     </div>
   );

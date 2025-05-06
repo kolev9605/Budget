@@ -28,8 +28,8 @@ export const getRecordById = async (id) => {
   return response.data;
 };
 
-export const createRecord = async (recordData) => {
-  const response = await axiosInstance.post("/records", recordData);
+export const createRecord = async (record) => {
+  const response = await axiosInstance.post("/records", record);
   return response.data;
 };
 
@@ -60,5 +60,10 @@ export const getStatistics = async (startDateRange, endDateRange) => {
 
 export const getTotalBalance = async () => {
   const response = await axiosInstance.get("/records/totalbalance");
+  return response.data;
+};
+
+export const askAiGenerate = async (prompt) => {
+  const response = await axiosInstance.post("/records/ai-generate", prompt);
   return response.data;
 };

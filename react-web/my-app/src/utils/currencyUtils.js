@@ -9,6 +9,8 @@ export const getCurrencyLabel = (currencyCode, amount) => {
     CAD: { symbol: "C$", position: "before" },
   };
 
+  currencyCode = currencyCode || "BGN";
+
   const format = currencyFormats[currencyCode] || { symbol: currencyCode, position: "after" };
   const amountFormat = parseFloat(amount).toLocaleString(undefined, {
     minimumFractionDigits: 2,

@@ -9,6 +9,7 @@ public class QuickAddService : IQuickAddService
     private readonly Kernel _kernel;
     private readonly KernelFunction _quickAddFunction;
     private readonly ILogger<QuickAddService> _logger;
+
     public QuickAddService(Kernel kernel, ILogger<QuickAddService> logger)
     {
         var categoryMappingFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Prompts", "QuickAddPrompt.skprompt.txt");

@@ -1,43 +1,27 @@
 ﻿using Budget.Api.Models.Records;
 using Budget.Application.Records.Commands;
 using Budget.Application.Records.Queries;
+using Budget.Application.Records.Queries.AiGenerate;
 using Budget.Common;
 using Budget.Domain.Entities;
-using Budget.Domain.Interfaces.Repositories;
-using Budget.Domain.Interfaces.Services;
 using Budget.Domain.Models.Pagination;
 using Budget.Domain.Models.Records;
 using Budget.Domain.Models.Records.Statistics;
 using Mapster;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.ChatCompletion;
-using Microsoft.SemanticKernel.Connectors.OpenAI;
 
 namespace Budget.Api.Controllers;
 
 public class RecordsController : BaseController
 {
     private readonly IMediator _mediator;
-    private readonly Kernel _kernel;
-    private readonly IRecordRepository _recordRepository;
-    private readonly IQuickAddService _quickAddService;
-    private readonly ICategoryRepository _categoryRepository;
 
     public RecordsController(
-        IMediator mediator,
-        Kernel kernel,
-        IRecordRepository recordRepository,
-        IQuickAddService quickAddService,
-        ICategoryRepository categoryRepository)
+        IMediator mediator
+        )
     {
         _mediator = mediator;
-        _kernel = kernel;
-        _recordRepository = recordRepository;
-        _quickAddService = quickAddService;
-        _categoryRepository = categoryRepository;
     }
 
     [HttpGet("{id}")]
@@ -111,29 +95,12 @@ public class RecordsController : BaseController
         return MatchResponse<IEnumerable<GetRecordsStatisticsResult>, IEnumerable<GetRecordsStatisticsResponse>>(result);
     }
 
-    [HttpPost("ask")]
-    [AllowAnonymous]
-    public async Task<IActionResult> Ask([FromBody] string prompt)
+    [HttpPost("ai-generate")]
+    public async Task<IActionResult> AiGenerate([FromBody] string prompt)
     {
-        // var chatService = _kernel.GetRequiredService<IChatCompletionService>();
-        // var history = new ChatHistory();
-        // history.AddUserMessage(prompt);
+        var result = await _mediator.Send(new AiGenerateRecordQuery(prompt, CurrentUser.Id));
+        await Task.Delay(1000); // Simulate some delay for the AI generation
 
-        // OpenAIPromptExecutionSettings openAIPromptExecutionSettings = new()
-        // {
-        //     FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
-        // };
-
-        // var result = await chatService.GetChatMessageContentAsync(history,
-        //     openAIPromptExecutionSettings, _kernel);
-        var last100records = await _recordRepository.GetLastRecordsAsync("d8f5bbe2-888b-42e8-bbe0-f3a6bec4e37e", 1000);
-        var historyCsv = string.Join(Environment.NewLine, last100records.Select(r => r.ToCsv()));
-
-        var categories = await _categoryRepository.GetAllAsync("d8f5bbe2-888b-42e8-bbe0-f3a6bec4e37e");
-        var categoriesCsv = string.Join(", ", categories.Select(c => c.Name));
-
-        var response = await _quickAddService.ParseQuickAddAsync(prompt, historyCsv, categoriesCsv);
-
-        return Ok(response);
+        return MatchResponse<AiGenerateRecordQueryResult, AiGenerateRecordQueryResult>(result);
     }
 }

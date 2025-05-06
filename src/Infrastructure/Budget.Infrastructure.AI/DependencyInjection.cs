@@ -1,27 +1,37 @@
-﻿using Budget.Domain.Interfaces.Services;
+﻿using System.ClientModel;
+using Budget.Domain.Interfaces.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.SemanticKernel;
+using OpenAI;
+
 namespace Budget.Infrastructure.AI;
 
 public static class DependencyInjection
 {
     public static IServiceCollection AddAI(this IServiceCollection services, IConfiguration configuration)
     {
-        var kernelBuilder = Kernel.CreateBuilder();
+        var openAISettings = new OpenAISettings();
+        configuration.Bind(OpenAISettings.SectionName, openAISettings);
+        services.AddSingleton(Options.Create(openAISettings));
 
-        kernelBuilder.AddOpenAIChatCompletion(
-            modelId: "llama3.2:3b", // or gpt-3.5-turbo
-            apiKey: "<your-openai-api-key>", // Use secure configuration in production
-            endpoint: new Uri("http://localhost:11434/v1")
-        );
+        // Create a client to our GitHub Model
+        var client = new OpenAIClient(new ApiKeyCredential(openAISettings.Key), new OpenAIClientOptions
+        {
+            Endpoint = new Uri(openAISettings.Endpoint),
+        });
 
-        var kernel = kernelBuilder.Build();
+        // Create a chat completion service
+        var builder = Kernel.CreateBuilder();
+        builder.AddOpenAIChatCompletion(openAISettings.Model, client);
+
+        // Get the chat completion service
+        Kernel kernel = builder.Build();
+
         services.AddSingleton(kernel);
         services.AddSingleton<IQuickAddService, QuickAddService>();
 
-
         return services;
     }
-
 }

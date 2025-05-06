@@ -16,24 +16,23 @@ Use user history to guess account and category if not explicit.
 
 If the input doesn't match a category exactly, use the closest reasonable one from this list only: {{$categories}}. Never invent a new category.
 
----
+--- 
 
 🔁 Past records:
 {{$history}}
-
-🔖 Available categories:
-{{$categories}}
 
 ---
 
 🧪 Examples:
 
 Input: "50лв трансфер от Revolut към Cash"
-Output: "50,3,,Cash,Revolut,2025-04-29T09:00:00"
+Output: "50,3,Transfer,Cash,Revolut,2025-04-29T09:00:00"
+
+Input: "изтеглих 50лв от Allianz в Cash днес 12:00"
+Output: 85,3,Transfer,Allianz,Cash,2025-04-30T12:00"
 
 Input: "10лв кафе вчера"
-Output:
-"10, 1,Eating out,Family account,,2025-04-28T09:00:00"
+Output: "10, 1,Eating out,Family account,,2025-04-28T09:00:00"
 
 Input: "20лв храна"
 Output: "20,1,Groceries,Family account,,2025-04-29T09:00:00"
