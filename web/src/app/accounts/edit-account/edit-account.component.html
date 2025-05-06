@@ -1,9 +1,0 @@
-<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
-
-<app-account-form
-  *ngIf="currencies"
-  (formSubmitted)="onSubmit()"
-  (accountDeleted)="deleteAccount()"
-  [inEditMode]="true"
-  [currencies]="currencies"
-  [accountForm]="editAccountForm"></app-account-form>
