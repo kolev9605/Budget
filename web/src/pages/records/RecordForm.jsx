@@ -63,6 +63,37 @@ const RecordForm = ({ accounts, categories, recordTypes, onSubmit, record }) => 
               ))}
             </div>
 
+            {/* Most Used Categories */}
+            {formData.recordType !== "transfer" && (
+              <div>
+                <div className="mb-2 mt-6 text-gray-300 font-semibold text-sm">
+                  Most Used Categories
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
+                  {categories
+                    .sort((a, b) => (b.usageCount || 0) - (a.usageCount || 0))
+                    .slice(0, 4)
+                    .map((category) => (
+                      <button
+                        key={category.id}
+                        type="button"
+                        onClick={() => setFormData({ ...formData, categoryId: category.id })}
+                        className={`flex flex-col items-center justify-center p-4 rounded-xl shadow-md transition-colors
+                          ${
+                            formData.categoryId === category.id
+                              ? "bg-blue-500 text-white"
+                              : "bg-gray-700 hover:bg-gray-600 text-gray-300"
+                          }`}
+                      >
+                        {/* Optionally add an icon here if your category has one */}
+                        <span className="font-medium text-sm">{category.name}</span>
+                        {/* <span className="text-xs text-gray-400 mt-1">{category.usageCount || 0} uses</span> */}
+                      </button>
+                    ))}
+                </div>
+              </div>
+            )}
+
             {/* Amount and Date */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
