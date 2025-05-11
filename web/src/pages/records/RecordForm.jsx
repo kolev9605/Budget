@@ -85,8 +85,12 @@ const RecordForm = ({ accounts, categories, recordTypes, onSubmit, record }) => 
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-3">Date</label>
                 <input
-                  type="date"
-                  value={formData.recordDate}
+                  type="datetime-local"
+                  value={
+                    formData.recordDate
+                      ? new Date(formData.recordDate).toISOString().slice(0, 16)
+                      : ""
+                  }
                   onChange={(e) => setFormData({ ...formData, recordDate: e.target.value })}
                   className="w-full bg-gray-700 border border-gray-600 rounded-xl px-4 py-3.5
                     text-gray-100 focus:outline-none focus:border-blue-400 focus:ring-2 
