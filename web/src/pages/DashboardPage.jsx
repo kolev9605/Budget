@@ -147,7 +147,7 @@ const DashboardPage = () => {
               <div>
                 <p className="text-gray-400 text-sm mb-1">Total Balance</p>
                 <p className="text-2xl font-bold text-gray-100">
-                  {getCurrencyLabel("BGN", dashboardData.totalBalance)}
+                  {getCurrencyLabel("BGN", dashboardData?.totalBalance ?? 0)}
                 </p>
               </div>
               <CurrencyDollarIcon className="h-8 w-8 text-blue-400" />
@@ -158,7 +158,9 @@ const DashboardPage = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm mb-1">Total Income</p>
-                <p className="text-2xl font-bold text-green-400">+{getCurrencyLabel("BGN", dashboardData.income)}</p>
+                <p className="text-2xl font-bold text-green-400">
+                  +{getCurrencyLabel("BGN", dashboardData?.income ?? 0)}
+                </p>
               </div>
               <ArrowUpIcon className="h-8 w-8 text-green-400" />
             </div>
@@ -168,7 +170,9 @@ const DashboardPage = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm mb-1">Total Expenses</p>
-                <p className="text-2xl font-bold text-red-400">-{getCurrencyLabel("BGN", dashboardData.expense)}</p>
+                <p className="text-2xl font-bold text-red-400">
+                  -{getCurrencyLabel("BGN", dashboardData?.expense ?? 0)}
+                </p>
               </div>
               <ArrowDownIcon className="h-8 w-8 text-red-400" />
             </div>
@@ -178,178 +182,194 @@ const DashboardPage = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm mb-1">Savings Rate</p>
-                <p className="text-2xl font-bold text-blue-400">{dashboardData.savingRate.toFixed(2)}%</p>
+                <p className="text-2xl font-bold text-blue-400">
+                  {(dashboardData?.savingRate ?? 0).toFixed(2)}%
+                </p>
               </div>
               <ChartBarIcon className="h-8 w-8 text-blue-400" />
             </div>
           </div>
         </div>
 
-        {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Chart Section */}
-          <div className="lg:col-span-2 bg-gray-800 p-6 rounded-2xl shadow-lg">
-            <h3 className="text-lg font-semibold text-gray-100 mb-6">Cash Flow Comparison</h3>
-            <div className="h-80">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={chartData}>
-                  <CartesianGrid stroke="#374151" strokeDasharray="3 3" />
-                  <XAxis dataKey="recordDate" stroke="#6B7280" />
-                  <YAxis stroke="#6B7280" />
-                  <Tooltip
-                    contentStyle={{ backgroundColor: "#1F2937", border: "none" }}
-                    labelStyle={{ color: "#F9FAFB" }}
-                    itemStyle={{ color: "#F9FAFB" }}
-                  />
-                  <Legend wrapperStyle={{ color: "#F9FAFB" }} iconType="circle" />
-                  <Line type="monotone" dataKey="cashFlow" stroke="#60A5FA" strokeWidth={2} name="Cash Flow" />
-                </LineChart>
-              </ResponsiveContainer>
+        {!recordsData || recordsData.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-12">
+            <div className="bg-gray-800 rounded-xl p-8 shadow-lg flex flex-col items-center">
+              <h2 className="text-2xl font-bold text-gray-100 mb-2">No Data Available</h2>
+              <p className="text-gray-400 mb-4 text-center">
+                There are no records for the selected period.<br />
+                Try adding a new record or changing the date range.
+              </p>
             </div>
           </div>
+        ) : (
+          <>
+            {/* Main Content */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* Chart Section */}
+              <div className="lg:col-span-2 bg-gray-800 p-6 rounded-2xl shadow-lg">
+                <h3 className="text-lg font-semibold text-gray-100 mb-6">Cash Flow Comparison</h3>
+                <div className="h-80">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={chartData}>
+                      <CartesianGrid stroke="#374151" strokeDasharray="3 3" />
+                      <XAxis dataKey="recordDate" stroke="#6B7280" />
+                      <YAxis stroke="#6B7280" />
+                      <Tooltip
+                        contentStyle={{ backgroundColor: "#1F2937", border: "none" }}
+                        labelStyle={{ color: "#F9FAFB" }}
+                        itemStyle={{ color: "#F9FAFB" }}
+                      />
+                      <Legend wrapperStyle={{ color: "#F9FAFB" }} iconType="circle" />
+                      <Line type="monotone" dataKey="cashFlow" stroke="#60A5FA" strokeWidth={2} name="Cash Flow" />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
 
-          {/* Recent Transactions */}
-          <div className="bg-gray-800 p-6 rounded-2xl shadow-lg">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-gray-100">Recent Transactions</h3>
-              <Link
-                to="/records"
-                className="text-blue-400 text-sm hover:text-blue-300"
-              >
-                See All
-              </Link>
-            </div>
-
-            <div className="space-y-4">
-              {recordsData
-                .slice(1)
-                .slice(-4)
-                .map((record) => (
+              {/* Recent Transactions */}
+              <div className="bg-gray-800 p-6 rounded-2xl shadow-lg">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-lg font-semibold text-gray-100">Recent Transactions</h3>
                   <Link
                     to="/records"
-                    key={record.id}
-                    className="block bg-gray-700 p-4 rounded-xl flex items-center justify-between hover:bg-gray-600 transition-colors"
+                    className="text-blue-400 text-sm hover:text-blue-300"
                   >
-                    <div>
-                      <p className="text-gray-100 font-medium">{record.categoryName}</p>
-                      <p className="text-gray-400 text-sm">
-                        {DateTime.fromISO(record.recordDate).toLocaleString(DateTime.DATE_MED)}
-                      </p>
-                    </div>
-                    <span className={`text-sm font-semibold ${record.amount > 0 ? "text-green-400" : "text-red-400"}`}>
-                      {getCurrencyLabel("BGN", record.amount)}
-                    </span>
+                    See All
                   </Link>
-                ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom Row */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
-          {/* Expense Categories */}
-          <div className="bg-gray-800 p-6 rounded-2xl shadow-lg">
-            <h3 className="text-lg font-semibold text-gray-100 mb-6">Expense Categories</h3>
-            <div className="space-y-6">
-              {getTopExpenseCategories().map((category, idx, arr) => (
-                <div key={category.name} className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-300 text-sm">{category.name}</span>
-                    <span className="text-gray-400 text-sm">{getCurrencyLabel("BGN", category.amount)}</span>
-                  </div>
-                  <div className="w-full bg-gray-700 rounded-full h-2">
-                    <div
-                      className={`${category.color} h-2 rounded-full`}
-                      style={{
-                        width: arr[0].amount > 0 ? `${Math.round((category.amount / arr[0].amount) * 100)}%` : "0%",
-                      }}
-                    />
-                  </div>
                 </div>
-              ))}
-            </div>
-          </div>
 
-          {/* Quick Add Expense */}
-          <div className="bg-gray-800 p-6 rounded-2xl shadow-lg">
-            <h3 className="text-lg font-semibold text-gray-100 mb-6">Quick Add Expense</h3>
-            <div className="space-y-4">
-              <input
-                type="text" // Changed input type to text
-                placeholder="Enter a description or amount (e.g., 'Lunch $15')"
-                value={quickAddText} // Updated to use quickAddText state
-                onChange={(e) => setQuickAddText(e.target.value)} // Updated handler
-                className="w-full bg-gray-700 border border-gray-600 rounded-xl px-4 py-3
-                  text-gray-100 placeholder-gray-500 focus:outline-none focus:border-blue-400
-                  focus:ring-2 focus:ring-blue-400/30 transition-all"
-              />
-              <button
-                onClick={handleQuickAdd}
-                className="w-full bg-blue-500 hover:bg-blue-400 text-white py-3 rounded-xl
-                font-medium flex items-center justify-center gap-2 transition-colors"
-              >
-                <PlusIcon className="h-5 w-5" />
-                Generate Record
-              </button>
+                <div className="space-y-4">
+                  {recordsData
+                    .slice(1)
+                    .slice(-4)
+                    .map((record) => (
+                      <Link
+                        to="/records"
+                        key={record.id}
+                        className="block bg-gray-700 p-4 rounded-xl flex items-center justify-between hover:bg-gray-600 transition-colors"
+                      >
+                        <div>
+                          <p className="text-gray-100 font-medium">{record.categoryName}</p>
+                          <p className="text-gray-400 text-sm">
+                            {DateTime.fromISO(record.recordDate).toLocaleString(DateTime.DATE_MED)}
+                          </p>
+                        </div>
+                        <span className={`text-sm font-semibold ${record.amount > 0 ? "text-green-400" : "text-red-400"}`}>
+                          {getCurrencyLabel("BGN", record.amount)}
+                        </span>
+                      </Link>
+                    ))}
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
 
-        {/* AI-Generated Record Modal */}
-        {isModalOpen && (
-          <Modal onClose={() => setIsModalOpen(false)}>
-            {aiGeneratedRecord ? (
-              <>
-                <h3 className="text-lg font-semibold text-gray-100 mb-4 flex items-center gap-2">
-                  <SparklesIcon className="h-5 w-5 text-yellow-400" />
-                  AI-Generated Record
-                </h3>
-                <table className="min-w-full table-auto text-sm text-left text-gray-400">
-                  <thead className="bg-gray-700 text-gray-300 uppercase text-xs font-medium">
-                    <tr>
-                      <th className="px-4 py-2">Category</th>
-                      <th className="px-4 py-2">Account</th>
-                      <th className="px-4 py-2">From Account</th>
-                      <th className="px-4 py-2">Amount</th>
-                      <th className="px-4 py-2">Date</th>
-                      <th className="px-4 py-2">Notes</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b border-gray-700">
-                      <td className="px-4 py-2">{aiGeneratedRecord.categoryName}</td>
-                      <td className="px-4 py-2">{aiGeneratedRecord.accountName}</td>
-                      <td className="px-4 py-2">{aiGeneratedRecord.fromAccountName || "-"}</td>
-                      <td className="px-4 py-2">{aiGeneratedRecord.amount.toFixed(2)}</td>
-                      <td className="px-4 py-2">{new Date(aiGeneratedRecord.recordDate).toLocaleDateString()}</td>
-                      <td className="px-4 py-2">{aiGeneratedRecord.note}</td>
-                    </tr>
-                  </tbody>
-                </table>
-                <div className="mt-4 flex justify-end">
+            {/* Bottom Row */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+              {/* Expense Categories */}
+              <div className="bg-gray-800 p-6 rounded-2xl shadow-lg">
+                <h3 className="text-lg font-semibold text-gray-100 mb-6">Expense Categories</h3>
+                <div className="space-y-6">
+                  {getTopExpenseCategories().map((category, idx, arr) => (
+                    <div key={category.name} className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-gray-300 text-sm">{category.name}</span>
+                        <span className="text-gray-400 text-sm">{getCurrencyLabel("BGN", category.amount)}</span>
+                      </div>
+                      <div className="w-full bg-gray-700 rounded-full h-2">
+                        <div
+                          className={`${category.color} h-2 rounded-full`}
+                          style={{
+                            width: arr[0].amount > 0 ? `${Math.round((category.amount / arr[0].amount) * 100)}%` : "0%",
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Quick Add Expense */}
+              <div className="bg-gray-800 p-6 rounded-2xl shadow-lg">
+                <h3 className="text-lg font-semibold text-gray-100 mb-6">Quick Add Expense</h3>
+                <div className="space-y-4">
+                  <input
+                    type="text" // Changed input type to text
+                    placeholder="Enter a description or amount (e.g., 'Lunch $15')"
+                    value={quickAddText} // Updated to use quickAddText state
+                    onChange={(e) => setQuickAddText(e.target.value)} // Updated handler
+                    className="w-full bg-gray-700 border border-gray-600 rounded-xl px-4 py-3
+                      text-gray-100 placeholder-gray-500 focus:outline-none focus:border-blue-400
+                      focus:ring-2 focus:ring-blue-400/30 transition-all"
+                  />
                   <button
-                    onClick={handleConfirmRecord}
-                    className="bg-green-500 hover:bg-green-400 text-white px-4 py-2 rounded-lg text-sm"
+                    onClick={handleQuickAdd}
+                    className="w-full bg-blue-500 hover:bg-blue-400 text-white py-3 rounded-xl
+                    font-medium flex items-center justify-center gap-2 transition-colors"
                   >
-                    Confirm
+                    <PlusIcon className="h-5 w-5" />
+                    Generate Record
                   </button>
                 </div>
-              </>
-            ) : (
-              <div className="text-center">
-                <h3 className="text-lg font-semibold text-gray-100 mb-4">AI Failed to Generate a Record</h3>
-                <p className="text-gray-400 mb-6">
-                  The AI could not generate a record based on your input. Please try again with a different description.
-                </p>
-                <button
-                  onClick={() => setIsModalOpen(false)}
-                  className="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded-lg text-sm"
-                >
-                  Close
-                </button>
               </div>
+            </div>
+
+            {/* AI-Generated Record Modal */}
+            {isModalOpen && (
+              <Modal onClose={() => setIsModalOpen(false)}>
+                {aiGeneratedRecord ? (
+                  <>
+                    <h3 className="text-lg font-semibold text-gray-100 mb-4 flex items-center gap-2">
+                      <SparklesIcon className="h-5 w-5 text-yellow-400" />
+                      AI-Generated Record
+                    </h3>
+                    <table className="min-w-full table-auto text-sm text-left text-gray-400">
+                      <thead className="bg-gray-700 text-gray-300 uppercase text-xs font-medium">
+                        <tr>
+                          <th className="px-4 py-2">Category</th>
+                          <th className="px-4 py-2">Account</th>
+                          <th className="px-4 py-2">From Account</th>
+                          <th className="px-4 py-2">Amount</th>
+                          <th className="px-4 py-2">Date</th>
+                          <th className="px-4 py-2">Notes</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr className="border-b border-gray-700">
+                          <td className="px-4 py-2">{aiGeneratedRecord.categoryName}</td>
+                          <td className="px-4 py-2">{aiGeneratedRecord.accountName}</td>
+                          <td className="px-4 py-2">{aiGeneratedRecord.fromAccountName || "-"}</td>
+                          <td className="px-4 py-2">{aiGeneratedRecord.amount.toFixed(2)}</td>
+                          <td className="px-4 py-2">{new Date(aiGeneratedRecord.recordDate).toLocaleDateString()}</td>
+                          <td className="px-4 py-2">{aiGeneratedRecord.note}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div className="mt-4 flex justify-end">
+                      <button
+                        onClick={handleConfirmRecord}
+                        className="bg-green-500 hover:bg-green-400 text-white px-4 py-2 rounded-lg text-sm"
+                      >
+                        Confirm
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <div className="text-center">
+                    <h3 className="text-lg font-semibold text-gray-100 mb-4">AI Failed to Generate a Record</h3>
+                    <p className="text-gray-400 mb-6">
+                      The AI could not generate a record based on your input. Please try again with a different description.
+                    </p>
+                    <button
+                      onClick={() => setIsModalOpen(false)}
+                      className="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded-lg text-sm"
+                    >
+                      Close
+                    </button>
+                  </div>
+                )}
+              </Modal>
             )}
-          </Modal>
+          </>
         )}
       </main>
     </div>

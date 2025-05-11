@@ -29,6 +29,7 @@ public class QuickAddService : IQuickAddService
             ["input"] = inputText,
             ["history"] = historyCsv,
             ["categories"] = categoriesCsv,
+            ["today"] = DateTime.UtcNow.ToString("yyyy-MM-dd"),
         };
 
         var result = await _kernel.InvokeAsync(_quickAddFunction, args);

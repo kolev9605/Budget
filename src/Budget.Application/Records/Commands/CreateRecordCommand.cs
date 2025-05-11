@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Identity;
 namespace Budget.Application.Records.Commands;
 
 public record CreateRecordCommand(
-    string Note,
+    string? Note,
     decimal Amount,
     Guid AccountId,
     Guid CategoryId,
@@ -71,7 +71,7 @@ public class CreateRecordCommandHandler : IRequestHandler<CreateRecordCommand, E
 
         var record = new Record(
             command.Note,
-            command.RecordDate,
+            command.RecordDate.UtcDateTime,
             command.Amount,
             command.AccountId,
             command.FromAccountId,

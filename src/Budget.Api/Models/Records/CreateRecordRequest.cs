@@ -5,7 +5,7 @@ using Mapster;
 namespace Budget.Api.Models.Records;
 
 public record CreateRecordRequest(
-    string Note,
+    string? Note,
     decimal Amount,
     Guid AccountId,
     Guid CategoryId,

@@ -4,6 +4,7 @@ using Mapster;
 namespace Budget.Domain.Models.Records.Statistics;
 
 public record GetRecordsStatisticsResult(
+    Guid Id,
     decimal Amount,
     DateTimeOffset RecordDate,
     RecordType RecordType,
