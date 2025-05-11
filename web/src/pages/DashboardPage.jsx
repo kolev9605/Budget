@@ -109,7 +109,7 @@ const DashboardPage = () => {
     if (!quickAddText.trim()) return; // Ensure input is not empty
     try {
       const response = await askAiGenerate(quickAddText); // Use free text input
-      setAiGeneratedRecord(response || null); // Set record or null
+      setAiGeneratedRecord(response || null);
       setIsModalOpen(true);
     } catch (error) {
       console.error("Error generating AI record:", error);
@@ -159,7 +159,9 @@ const DashboardPage = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm mb-1">Total Income</p>
-                <p className="text-2xl font-bold text-green-400">+{getCurrencyLabel("BGN", dashboardDataMock.income)}</p>
+                <p className="text-2xl font-bold text-green-400">
+                  +{getCurrencyLabel("BGN", dashboardDataMock.income)}
+                </p>
               </div>
               <ArrowUpIcon className="h-8 w-8 text-green-400" />
             </div>
@@ -169,7 +171,9 @@ const DashboardPage = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm mb-1">Total Expenses</p>
-                <p className="text-2xl font-bold text-red-400">-{getCurrencyLabel("BGN", dashboardDataMock.expenses)}</p>
+                <p className="text-2xl font-bold text-red-400">
+                  -{getCurrencyLabel("BGN", dashboardDataMock.expenses)}
+                </p>
               </div>
               <ArrowDownIcon className="h-8 w-8 text-red-400" />
             </div>

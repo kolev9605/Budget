@@ -28,5 +28,15 @@ public class Account : BaseEntity, ICreatable, IUpdatable
 
     public DateTimeOffset UpdatedOn { get; set; }
 
-    public bool IsActive { get; set; }
+    public bool IsActive { get; set; } = true;
+
+    public void Deactivate()
+    {
+        IsActive = false;
+    }
+
+    public void Activate()
+    {
+        IsActive = true;
+    }
 }

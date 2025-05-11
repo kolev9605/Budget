@@ -22,9 +22,11 @@ public class AccountsController(
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll(bool includeHidden)
     {
-        var result = await _mediator.Send(CurrentUser.Adapt<GetAllAccountsQuery>());
+        var query = new GetAllAccountsQuery(CurrentUser.Id, includeHidden);
+
+        var result = await _mediator.Send(query);
 
         return MatchResponse<IEnumerable<AccountModel>, IEnumerable<AccountResponse>>(result);
     }
@@ -51,5 +53,13 @@ public class AccountsController(
         var result = await _mediator.Send(new DeleteAccountCommand(id, CurrentUser.Id));
 
         return MatchResponse<AccountModel, AccountResponse>(result);
+    }
+
+    [HttpPost("{id}/toggle-activation")]
+    public async Task<IActionResult> ToggleActivationStatus([FromRoute] Guid id)
+    {
+        var result = await _mediator.Send(new ToggleAccountActivationStatusCommand(id));
+
+        return MatchResponse<ToggleAccountActivationStatusCommandResult, ToggleAccountActivationStatusCommandResult>(result);
     }
 }

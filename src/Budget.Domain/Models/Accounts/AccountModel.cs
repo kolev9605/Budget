@@ -11,7 +11,8 @@ public record AccountModel(
     decimal InitialBalance,
     decimal Balance,
     CurrencyModel Currency,
-    PaymentTypeModel PaymentType);
+    PaymentTypeModel PaymentType,
+    bool IsActive);
 
 public class AccountMappingConfiguration : IRegister
 {

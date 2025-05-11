@@ -46,5 +46,8 @@ internal class AccountConfiguration : IEntityTypeConfiguration<Account>
 
         builder.Property(c => c.UpdatedOn)
             .HasDefaultValueSql("timezone('utc', now())");
+
+        builder.Property(c => c.IsActive)
+            .HasDefaultValue(true);
     }
 }

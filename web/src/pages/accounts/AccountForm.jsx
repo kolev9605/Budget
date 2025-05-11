@@ -5,7 +5,7 @@ import { getCurrencies } from "../../api/currencies.service.js";
 import { getPaymentTypes } from "../../api/paymentTypes.service.js";
 import LoadingOverlay from "../../components/LoadingOverlay.jsx";
 
-const AccountForm = ({ account, onSubmit, handleDeleteAccount }) => {
+const AccountForm = ({ account, onSubmit, handleDeleteAccount, handleToggleActivationStatus }) => {
   const [formData, setFormData] = useState(account);
   const [errors, setErrors] = useState({});
   const [currencies, setCurrencies] = useState([]);
@@ -159,12 +159,26 @@ const AccountForm = ({ account, onSubmit, handleDeleteAccount }) => {
               </button>
             </div>
             {account?.id && (
-              <button
-                onClick={handleDeleteAccount}
-                className="mt-4 w-full bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2"
-              >
-                Delete Account
-              </button>
+              <div className="flex flex-row gap-4 mt-4">
+                <button
+                  type="button"
+                  onClick={handleDeleteAccount}
+                  className="flex-1 px-6 py-3 bg-red-500 text-white rounded-xl hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 transition-colors"
+                >
+                  Delete Account
+                </button>
+                <button
+                  type="button"
+                  onClick={handleToggleActivationStatus}
+                  className={`flex-1 px-6 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors
+                    ${account.isActive
+                      ? "bg-yellow-500 text-white hover:bg-yellow-600 focus:ring-yellow-400"
+                      : "bg-green-500 text-white hover:bg-green-600 focus:ring-green-400"
+                    }`}
+                >
+                  {account.isActive ? "Hide Account" : "Show Account"}
+                </button>
+              </div>
             )}
           </form>
         </div>

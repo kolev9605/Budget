@@ -1,7 +1,13 @@
 import axiosInstance from "./createAxiosAuth"; // Adjust the import path as necessary
 
-export const getAccounts = async () => {
-  const response = await axiosInstance.get("/accounts");
+export const getAccounts = async (includeHidden = false) => {
+  const response = await axiosInstance.get("/accounts",
+    {
+      params: {
+        includeHidden,
+      },
+    }
+  );
   return response.data;
 };
 
@@ -22,5 +28,10 @@ export const updateAccount = async (account) => {
 
 export const deleteAccount = async (id) => {
   const response = await axiosInstance.delete(`/accounts/${id}`);
+  return response.data;
+};
+
+export const toggleAccountActivationStatus = async (id) => {
+  const response = await axiosInstance.post(`/accounts/${id}/toggle-activation`);
   return response.data;
 };

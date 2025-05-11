@@ -6,9 +6,7 @@ namespace Budget.Domain.Interfaces.Repositories;
 
 public interface IAccountRepository : IRepository<Account>
 {
-    Task<IEnumerable<Account>> GetAllByUserIdAsync(string userId);
-
-    Task<IEnumerable<AccountModel>> GetAllAccountModelsByUserIdAsync(string userId);
+    Task<IEnumerable<AccountModel>> GetAllAccountModelsByUserIdAsync(string userId, bool includeHidden = false);
 
     Task<Account?> GetByIdWithCurrencyAsync(Guid accountId, string userId);
 

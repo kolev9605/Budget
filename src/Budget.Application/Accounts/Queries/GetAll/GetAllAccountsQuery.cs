@@ -6,7 +6,8 @@ using MediatR;
 namespace Budget.Application.Accounts.Queries.GetAll;
 
 public record GetAllAccountsQuery(
-    string UserId) : IRequest<ErrorOr<IEnumerable<AccountModel>>>;
+    string UserId,
+    bool IncludeHidden) : IRequest<ErrorOr<IEnumerable<AccountModel>>>;
 
 public class GetAllAccountsQueryHandler : IRequestHandler<GetAllAccountsQuery, ErrorOr<IEnumerable<AccountModel>>>
 {
@@ -17,9 +18,9 @@ public class GetAllAccountsQueryHandler : IRequestHandler<GetAllAccountsQuery, E
         _accountRepository = accountRepository;
     }
 
-    public async Task<ErrorOr<IEnumerable<AccountModel>>> Handle(GetAllAccountsQuery request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<IEnumerable<AccountModel>>> Handle(GetAllAccountsQuery query, CancellationToken cancellationToken)
     {
-        var accounts = await _accountRepository.GetAllAccountModelsByUserIdAsync(request.UserId);
+        var accounts = await _accountRepository.GetAllAccountModelsByUserIdAsync(query.UserId, query.IncludeHidden);
 
         return accounts.ToErrorOr();
     }

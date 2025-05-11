@@ -9,5 +9,6 @@ public record AccountResponse(
     decimal InitialBalance,
     decimal Balance,
     CurrencyResponse Currency,
-    PaymentTypeResponse PaymentType
+    PaymentTypeResponse PaymentType,
+    bool IsActive
 );

@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import AccountForm from "./AccountForm.jsx";
-import { updateAccount, deleteAccount } from "../../api/accounts.service.js";
+import { updateAccount, deleteAccount, toggleAccountActivationStatus } from "../../api/accounts.service.js";
 import { getAccountById } from "../../api/accounts.service.js";
 import LoadingOverlay from "../../components/LoadingOverlay.jsx";
 import { toast } from "react-toastify";
@@ -51,10 +51,29 @@ const EditAccountPage = () => {
     }
   };
 
+  const handleToggleActivationStatus = async () => {
+    if (window.confirm("Are you sure you want to hide this account?")) {
+      try {
+        setIsLoading(true);
+        await toggleAccountActivationStatus(id);
+      } finally {
+        setIsLoading(false);
+      }
+
+      toast.success("Account hidden successfully!");
+      navigate("/accounts");
+    }
+  };
+
   return isLoading ? (
     <LoadingOverlay />
   ) : (
-    <AccountForm account={account} onSubmit={handleUpdateAccount} onDelete={handleDeleteAccount} />
+    <AccountForm
+      account={account}
+      onSubmit={handleUpdateAccount}
+      handleDeleteAccount={handleDeleteAccount}
+      handleToggleActivationStatus={handleToggleActivationStatus}
+    />
   );
 };
 

@@ -20,5 +20,15 @@ public static partial class Errors
             code: "Account.AccountHasRecords",
             description: "The account has records and cannot be deleted."
         );
+
+        public static Error AlreadyExists => Error.Conflict(
+            code: "Account.AlreadyExists",
+            description: "The account already exists."
+        );
+
+        public static Error AlreadyDeactivated => Error.Validation(
+            code: "Account.AlreadyDeactivated",
+            description: "The account is already deactivated."
+        );
     }
 }

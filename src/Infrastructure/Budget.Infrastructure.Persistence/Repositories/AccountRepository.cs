@@ -1,10 +1,10 @@
 
 using Budget.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
-using Mapster;
 using Budget.Domain.Interfaces.Repositories;
 using Budget.Domain.Models.Accounts;
 using Budget.Domain.Models.Records.Create;
+using Mapster;
+using Microsoft.EntityFrameworkCore;
 
 namespace Budget.Infrastructure.Persistence.Repositories;
 
@@ -16,19 +16,16 @@ public class AccountRepository : Repository<Account>, IAccountRepository
 
     }
 
-    // TODO: Projection
-    public async Task<IEnumerable<Account>> GetAllByUserIdAsync(string userId)
+    public async Task<IEnumerable<AccountModel>> GetAllAccountModelsByUserIdAsync(string userId, bool includeHidden = false)
     {
-        return await GetAll()
-            .Include(a => a.Currency)
-            .Include(a => a.Records)
-            .Where(a => a.UserId == userId)
-            .ToListAsync();
-    }
+        var query = GetAll();
 
-    public async Task<IEnumerable<AccountModel>> GetAllAccountModelsByUserIdAsync(string userId)
-    {
-        return await GetAll()
+        if (!includeHidden)
+        {
+            query = query.Where(a => a.IsActive);
+        }
+
+        return await query
             .Where(a => a.UserId == userId)
             .ProjectToType<AccountModel>()
             .ToListAsync();
@@ -61,6 +58,7 @@ public class AccountRepository : Repository<Account>, IAccountRepository
     public async Task<Account?> GetByNameAsync(string userId, string accountName)
     {
         var account = await GetAll()
+            .Where(a => a.IsActive)
             .Where(a => a.UserId == userId)
             .Where(a => a.Name == accountName)
             .FirstOrDefaultAsync();
@@ -71,6 +69,7 @@ public class AccountRepository : Repository<Account>, IAccountRepository
     public async Task<AccountForRecordCreationModel?> GetForRecordCreationAsync(Guid id)
     {
         return await GetAll()
+            .Where(a => a.IsActive)
             .Where(a => a.Id == id)
             .ProjectToType<AccountForRecordCreationModel>()
             .FirstOrDefaultAsync();
