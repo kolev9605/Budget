@@ -10,46 +10,22 @@ import {
 import { XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, CartesianGrid, Legend } from "recharts";
 import PeriodPicker from "../components/PeriodPicker";
 import { DateTime } from "luxon";
-import { getStatistics, getTotalBalance, getRecords, askAiGenerate, createRecord } from "../api/records.service";
+import { getStatistics, getTotalBalance, askAiGenerate, createRecord } from "../api/records.service";
 import LoadingOverlay from "../components/LoadingOverlay";
 import Modal from "../components/Modal";
-import { getCurrencyLabel } from "../utils/currencyUtils"; // Assuming you have a utility function for currency formatting
+import { getCurrencyLabel } from "../utils/currencyUtils";
+import { Link } from "react-router-dom";
 
 const DashboardPage = () => {
-  const [quickAddText, setQuickAddText] = useState(""); // Renamed state to reflect free text input
+  const [quickAddText, setQuickAddText] = useState("");
   const [selectedDateRange, setSelectedDateRange] = useState("");
   const [referenceDate, setReferenceDate] = useState(new Date());
   const [isLoading, setIsLoading] = useState(true);
   const [dashboardData, setDashboardData] = useState(null);
   const [recordsData, setRecordsData] = useState(null);
   const [chartData, setChartData] = useState([]);
-  const [recentRecordsData, setRecentRecordsData] = useState(null);
-  const [aiGeneratedRecord, setAiGeneratedRecord] = useState(null); // Single record instead of an array
+  const [aiGeneratedRecord, setAiGeneratedRecord] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const dashboardDataMock = {
-    balance: 45250.75,
-    income: 75000.0,
-    expenses: 29749.25,
-    categories: [
-      { name: "Food & Drinks", amount: 8450, color: "bg-blue-400" },
-      { name: "Shopping", amount: 6200, color: "bg-purple-400" },
-      { name: "Bills", amount: 4500, color: "bg-green-400" },
-      { name: "Transport", amount: 3200, color: "bg-yellow-400" },
-    ],
-    recentTransactions: [
-      { id: 1, name: "Grocery Store", date: "2024-03-15", amount: -245.75, category: "Food" },
-      { id: 2, name: "Salary Deposit", date: "2024-03-14", amount: 5000.0, category: "Income" },
-      { id: 3, name: "Internet Bill", date: "2024-03-13", amount: -89.99, category: "Bills" },
-      { id: 4, name: "Coffee Shop", date: "2024-03-13", amount: -12.5, category: "Food" },
-    ],
-    monthlyData: [
-      { month: "Jan", income: 6500, expenses: 4200 },
-      { month: "Feb", income: 7200, expenses: 4800 },
-      { month: "Mar", income: 8000, expenses: 5200 },
-      { month: "Apr", income: 7500, expenses: 4900 },
-    ],
-  };
 
   useEffect(() => {
     setSelectedDateRange("month");
@@ -74,6 +50,7 @@ const DashboardPage = () => {
           totalBalance: totalBalanceResponse,
           income: totalIncome,
           expense: Math.abs(totalExpenses),
+          savingRate: totalIncome ? ((totalIncome + totalExpenses) / totalIncome) * 100 : 0,
         });
       } finally {
         setIsLoading(false);
@@ -98,7 +75,7 @@ const DashboardPage = () => {
       let cumulativeSum = 0;
       const cumulativeData = groupedData.map((item) => {
         cumulativeSum += item.cashFlow;
-        return { ...item, cashFlow: cumulativeSum };
+        return { ...item, cashFlow: Math.round(cumulativeSum * 100) / 100 };
       });
 
       setChartData(cumulativeData);
@@ -129,6 +106,26 @@ const DashboardPage = () => {
     }
   };
 
+  // Helper to get top 4 expense categories from recordsData
+  const getTopExpenseCategories = () => {
+    if (!recordsData) return [];
+    // Group by categoryName and sum negative amounts (expenses), exclude transfers
+    const categoryTotals = recordsData.reduce((acc, record) => {
+      if (record.amount < 0 && record.recordType !== "Transfer") {
+        acc[record.categoryName] = (acc[record.categoryName] || 0) + Math.abs(record.amount);
+      }
+      return acc;
+    }, {});
+    // Convert to array and sort by total descending
+    const sorted = Object.entries(categoryTotals)
+      .map(([name, amount]) => ({ name, amount }))
+      .sort((a, b) => b.amount - a.amount)
+      .slice(0, 4);
+    // Assign a color for each (fallback to blue if >4)
+    const colors = ["bg-blue-400", "bg-purple-400", "bg-green-400", "bg-yellow-400"];
+    return sorted.map((cat, idx) => ({ ...cat, color: colors[idx] || "bg-blue-400" }));
+  };
+
   return isLoading ? (
     <LoadingOverlay />
   ) : (
@@ -149,7 +146,9 @@ const DashboardPage = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm mb-1">Total Balance</p>
-                <p className="text-2xl font-bold text-gray-100">{getCurrencyLabel("BGN", dashboardDataMock.balance)}</p>
+                <p className="text-2xl font-bold text-gray-100">
+                  {getCurrencyLabel("BGN", dashboardData.totalBalance)}
+                </p>
               </div>
               <CurrencyDollarIcon className="h-8 w-8 text-blue-400" />
             </div>
@@ -159,9 +158,7 @@ const DashboardPage = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm mb-1">Total Income</p>
-                <p className="text-2xl font-bold text-green-400">
-                  +{getCurrencyLabel("BGN", dashboardDataMock.income)}
-                </p>
+                <p className="text-2xl font-bold text-green-400">+{getCurrencyLabel("BGN", dashboardData.income)}</p>
               </div>
               <ArrowUpIcon className="h-8 w-8 text-green-400" />
             </div>
@@ -171,9 +168,7 @@ const DashboardPage = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm mb-1">Total Expenses</p>
-                <p className="text-2xl font-bold text-red-400">
-                  -{getCurrencyLabel("BGN", dashboardDataMock.expenses)}
-                </p>
+                <p className="text-2xl font-bold text-red-400">-{getCurrencyLabel("BGN", dashboardData.expense)}</p>
               </div>
               <ArrowDownIcon className="h-8 w-8 text-red-400" />
             </div>
@@ -183,9 +178,7 @@ const DashboardPage = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm mb-1">Savings Rate</p>
-                <p className="text-2xl font-bold text-blue-400">
-                  {((1 - dashboardDataMock.expenses / dashboardDataMock.income) * 100 || 0).toFixed(1)}%
-                </p>
+                <p className="text-2xl font-bold text-blue-400">{dashboardData.savingRate.toFixed(2)}%</p>
               </div>
               <ChartBarIcon className="h-8 w-8 text-blue-400" />
             </div>
@@ -219,7 +212,12 @@ const DashboardPage = () => {
           <div className="bg-gray-800 p-6 rounded-2xl shadow-lg">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg font-semibold text-gray-100">Recent Transactions</h3>
-              <button className="text-blue-400 text-sm hover:text-blue-300">See All</button>
+              <Link
+                to="/records"
+                className="text-blue-400 text-sm hover:text-blue-300"
+              >
+                See All
+              </Link>
             </div>
 
             <div className="space-y-4">
@@ -227,9 +225,10 @@ const DashboardPage = () => {
                 .slice(1)
                 .slice(-4)
                 .map((record) => (
-                  <div
+                  <Link
+                    to="/records"
                     key={record.id}
-                    className="bg-gray-700 p-4 rounded-xl flex items-center justify-between hover:bg-gray-600 transition-colors"
+                    className="block bg-gray-700 p-4 rounded-xl flex items-center justify-between hover:bg-gray-600 transition-colors"
                   >
                     <div>
                       <p className="text-gray-100 font-medium">{record.categoryName}</p>
@@ -240,7 +239,7 @@ const DashboardPage = () => {
                     <span className={`text-sm font-semibold ${record.amount > 0 ? "text-green-400" : "text-red-400"}`}>
                       {getCurrencyLabel("BGN", record.amount)}
                     </span>
-                  </div>
+                  </Link>
                 ))}
             </div>
           </div>
@@ -252,16 +251,18 @@ const DashboardPage = () => {
           <div className="bg-gray-800 p-6 rounded-2xl shadow-lg">
             <h3 className="text-lg font-semibold text-gray-100 mb-6">Expense Categories</h3>
             <div className="space-y-6">
-              {dashboardDataMock.categories.map((category) => (
+              {getTopExpenseCategories().map((category, idx, arr) => (
                 <div key={category.name} className="space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-gray-300 text-sm">{category.name}</span>
-                    <span className="text-gray-400 text-sm">${category.amount.toLocaleString()}</span>
+                    <span className="text-gray-400 text-sm">{getCurrencyLabel("BGN", category.amount)}</span>
                   </div>
                   <div className="w-full bg-gray-700 rounded-full h-2">
                     <div
                       className={`${category.color} h-2 rounded-full`}
-                      style={{ width: `${(category.amount / dashboardDataMock.expenses) * 100}%` }}
+                      style={{
+                        width: arr[0].amount > 0 ? `${Math.round((category.amount / arr[0].amount) * 100)}%` : "0%",
+                      }}
                     />
                   </div>
                 </div>
