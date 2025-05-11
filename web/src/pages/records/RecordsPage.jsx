@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router";
 import { PlusIcon, ChevronDownIcon, PencilIcon, TrashIcon, DocumentTextIcon } from "@heroicons/react/24/outline";
-import { getRecords, getRecordTypes } from "../../api/records.service.js";
+import { getRecords, getRecordTypes, deleteRecord } from "../../api/records.service.js";
 import LoadingOverlay from "../../components/LoadingOverlay.jsx";
 import { toast } from "react-toastify";
 import { importWalletRecords } from "../../api/import.service.js";
@@ -128,6 +128,27 @@ const RecordsPage = () => {
       setIsLoading(true);
       await importWalletRecords(file);
       toast.success("Records imported successfully!");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Add delete handler
+  const handleDeleteRecord = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this record?")) return;
+    try {
+      setIsLoading(true);
+      await deleteRecord(id);
+      toast.success("Record deleted successfully!");
+      // Remove the deleted record from groupedRecords
+      setGroupedRecords((prev) => {
+        const updated = {};
+        for (const [date, records] of Object.entries(prev)) {
+          const filtered = records.filter((r) => r.id !== id);
+          if (filtered.length > 0) updated[date] = filtered;
+        }
+        return updated;
+      });
     } finally {
       setIsLoading(false);
     }
@@ -306,7 +327,10 @@ const RecordsPage = () => {
                             >
                               <PencilIcon className="h-4 w-4" />
                             </NavLink>
-                            <button className="text-gray-400 hover:text-red-400 p-1 rounded-lg transition-colors">
+                            <button
+                              className="text-gray-400 hover:text-red-400 p-1 rounded-lg transition-colors"
+                              onClick={() => handleDeleteRecord(record.id)}
+                            >
                               <TrashIcon className="h-4 w-4" />
                             </button>
                           </div>

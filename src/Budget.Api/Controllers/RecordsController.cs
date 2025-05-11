@@ -57,11 +57,11 @@ public class RecordsController : BaseController
         return MatchResponse<RecordModel, RecordResponse>(result);
     }
 
-    [HttpDelete]
-    [Route(nameof(Delete))]
-    public async Task<IActionResult> Delete([FromQuery] DeleteRecordRequest request)
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(Guid id)
     {
-        var result = await _mediator.Send((request, CurrentUser).Adapt<DeleteRecordCommand>());
+        var command = new DeleteRecordCommand(id, CurrentUser.Id);
+        var result = await _mediator.Send(command);
 
         return MatchResponse<RecordModel, RecordResponse>(result);
     }
