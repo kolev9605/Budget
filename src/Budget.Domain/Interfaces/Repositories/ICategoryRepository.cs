@@ -23,4 +23,6 @@ public interface ICategoryRepository : IRepository<Category>
     Task<IEnumerable<CategoryModel>> GetSubcategoriesByParentCategoryIdMappedAsync(Guid parentCategoryId, string userId);
 
     Task<CategoryForRecordCreationModel?> GetForRecordCreationAsync(Guid id);
+
+    Task<IEnumerable<GetMostUsedCategoriesResult>> GetMostUsedCategoriesAsync(string userId, int count, int recordsCount = 1000);
 }

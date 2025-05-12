@@ -3,6 +3,7 @@ using Budget.Api.Models.Categories;
 using Budget.Application.Categories.Commands.Create;
 using Budget.Application.Categories.Commands.Delete;
 using Budget.Application.Categories.Commands.Update;
+using Budget.Application.Categories.Queries;
 using Budget.Application.Categories.Queries.GetById;
 using Budget.Common;
 using Budget.Domain.Entities;
@@ -66,5 +67,14 @@ public class CategoriesController : BaseController
         var result = await _mediator.Send((request, CurrentUser).Adapt<UpdateCategoryCommand>());
 
         return MatchResponse<CategoryModel, CategoryResponse>(result);
+    }
+
+    [HttpGet("most-used")]
+    public async Task<IActionResult> GetMostUsedCategories([FromQuery] GetMostUsedCategoriesRequest request)
+    {
+        var query = new GetMostUsedCategoriesQuery(CurrentUser.Id, request.Count);
+        var result = await _mediator.Send(query);
+
+        return MatchResponse<IEnumerable<GetMostUsedCategoriesResult>, IEnumerable<GetMostUsedCategoriesResult>>(result);
     }
 }

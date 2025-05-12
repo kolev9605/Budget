@@ -1,3 +1,4 @@
+using Budget.Application.Categories.Queries;
 using Budget.Domain.Entities;
 using Budget.Domain.Interfaces.Repositories;
 using Budget.Domain.Models.Categories;
@@ -118,5 +119,26 @@ public class CategoryRepository : Repository<Category>, ICategoryRepository
         return GetUserCategories(userId)
             .Include(c => c.SubCategories)
             .Where(c => c.Id == categoryId);
+    }
+
+    public async Task<IEnumerable<GetMostUsedCategoriesResult>> GetMostUsedCategoriesAsync(string userId, int count, int recordsCount = 1000)
+    {
+        // Get last 1000 records for the user, including Category
+        var lastRecords = await _budgetDbContext.Records
+            .Where(r => r.Account.UserId == userId)
+            .Where(r => r.Category.CategoryType != CategoryType.Transfer)
+            .OrderByDescending(r => r.RecordDate)
+            .Take(recordsCount)
+            .Include(r => r.Category)
+            .ToListAsync();
+
+        // Group and project in-memory
+        return lastRecords
+            .Where(r => r.Category != null)
+            .GroupBy(r => new { r.Category.Id, r.Category.Name })
+            .Select(g => new GetMostUsedCategoriesResult(g.Key.Id, g.Key.Name, g.Count()))
+            .OrderByDescending(g => g.Count)
+            .Take(count)
+            .ToList();
     }
 }

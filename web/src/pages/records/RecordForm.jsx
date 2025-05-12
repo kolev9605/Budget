@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   CurrencyDollarIcon,
   DocumentTextIcon,
@@ -6,10 +6,63 @@ import {
   ChevronLeftIcon,
 } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
+import { getMostUsedCategories } from "../../api/categories.service";
 
 const RecordForm = ({ accounts, categories, recordTypes, onSubmit, record }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState(record);
+
+  // Add state for expanded parent category, collapsed by default
+  const [expandedParentCategory, setExpandedParentCategory] = useState(null);
+
+  // State for most used categories
+  const [mostUsedCategories, setMostUsedCategories] = useState([]);
+
+  // Fetch most used categories on mount
+  useEffect(() => {
+    getMostUsedCategories().then((data) => {
+      // Map API result (with id) to full category objects from categories prop
+      const mapped = data.map((item) => categories.find((cat) => cat.id === item.id)).filter(Boolean);
+      setMostUsedCategories(mapped);
+
+      // Preselect the most used category if not already selected
+      if (!formData.categoryId && mapped.length > 0) {
+        setFormData((prev) => ({
+          ...prev,
+          categoryId: mapped[0].id,
+        }));
+      }
+    });
+  }, [categories]);
+
+  // Find the transfer category if present
+  const transferCategory = categories.find(
+    (cat) => cat.name?.toLowerCase?.() === "transfer" && cat.categoryType?.toLowerCase?.() === "transfer"
+  );
+
+  // Store the most used category id for reuse
+  const mostUsedCategoryId = mostUsedCategories.length > 0 ? mostUsedCategories[0].id : null;
+
+  // Handle record type change and set category accordingly
+  const handleRecordTypeChange = (recordType) => {
+    if (recordType === "Transfer" && transferCategory) {
+      setFormData((prev) => ({
+        ...prev,
+        recordType,
+        categoryId: transferCategory.id,
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        recordType,
+        categoryId: mostUsedCategoryId ?? null,
+      }));
+    }
+  };
+
+  // Helper to group categories by parent (assuming category.parentCategoryId)
+  const parentCategories = categories.filter((cat) => !cat.parentCategoryId);
+  const getSubCategories = (parentId) => categories.filter((cat) => cat.parentCategoryId === parentId);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -45,7 +98,7 @@ const RecordForm = ({ accounts, categories, recordTypes, onSubmit, record }) => 
                 <button
                   key={recordType}
                   type="button"
-                  onClick={() => setFormData({ ...formData, recordType: recordType })}
+                  onClick={() => handleRecordTypeChange(recordType)}
                   className={`p-3 rounded-xl flex items-center justify-center gap-2 transition-colors
                     ${
                       formData.recordType === recordType
@@ -64,32 +117,29 @@ const RecordForm = ({ accounts, categories, recordTypes, onSubmit, record }) => 
             </div>
 
             {/* Most Used Categories */}
-            {formData.recordType !== "transfer" && (
+            {formData.recordType !== "Transfer" && (
               <div>
-                <div className="mb-2 mt-6 text-gray-300 font-semibold text-sm">
-                  Most Used Categories
-                </div>
+                <div className="mb-2 mt-6 text-gray-300 font-semibold text-sm">Most Used Categories</div>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
-                  {categories
-                    .sort((a, b) => (b.usageCount || 0) - (a.usageCount || 0))
-                    .slice(0, 4)
-                    .map((category) => (
+                  {mostUsedCategories.length > 0 ? (
+                    mostUsedCategories.slice(0, 4).map((category) => (
                       <button
                         key={category.id}
                         type="button"
                         onClick={() => setFormData({ ...formData, categoryId: category.id })}
                         className={`flex flex-col items-center justify-center p-4 rounded-xl shadow-md transition-colors
-                          ${
-                            formData.categoryId === category.id
-                              ? "bg-blue-500 text-white"
-                              : "bg-gray-700 hover:bg-gray-600 text-gray-300"
-                          }`}
+                            ${
+                              formData.categoryId === category.id
+                                ? "bg-blue-500 text-white"
+                                : "bg-gray-700 hover:bg-gray-600 text-gray-300"
+                            }`}
                       >
-                        {/* Optionally add an icon here if your category has one */}
                         <span className="font-medium text-sm">{category.name}</span>
-                        {/* <span className="text-xs text-gray-400 mt-1">{category.usageCount || 0} uses</span> */}
                       </button>
-                    ))}
+                    ))
+                  ) : (
+                    <span className="text-gray-400 col-span-4">No usage data</span>
+                  )}
                 </div>
               </div>
             )}
@@ -117,11 +167,7 @@ const RecordForm = ({ accounts, categories, recordTypes, onSubmit, record }) => 
                 <label className="block text-sm font-medium text-gray-300 mb-3">Date</label>
                 <input
                   type="datetime-local"
-                  value={
-                    formData.recordDate
-                      ? new Date(formData.recordDate).toISOString().slice(0, 16)
-                      : ""
-                  }
+                  value={formData.recordDate ? new Date(formData.recordDate).toISOString().slice(0, 16) : ""}
                   onChange={(e) => setFormData({ ...formData, recordDate: e.target.value })}
                   className="w-full bg-gray-700 border border-gray-600 rounded-xl px-4 py-3.5
                     text-gray-100 focus:outline-none focus:border-blue-400 focus:ring-2 
@@ -176,23 +222,112 @@ const RecordForm = ({ accounts, categories, recordTypes, onSubmit, record }) => 
             </div>
 
             {/* Category Selection */}
-            {formData.recordType !== "transfer" && (
+            {formData.recordType !== "Transfer" && (
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-3">Category</label>
-                <select
-                  value={formData.categoryId}
-                  onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
-                  className="w-full bg-gray-700 border border-gray-600 rounded-xl px-4 py-3.5
-                    text-gray-100 focus:outline-none focus:border-blue-400 focus:ring-2 
-                    focus:ring-blue-400/30 appearance-none"
-                >
-                  <option value="">Select Category</option>
-                  {categories.map((category) => (
-                    <option key={category.id} value={category.id}>
-                      {category.name}
-                    </option>
-                  ))}
-                </select>
+                {/* Collapsible Category Selector */}
+                <div className="bg-gray-700 rounded-xl p-2">
+                  {/* Collapsed view: show selected category and expand button */}
+                  {expandedParentCategory === null && (
+                    <div className="flex items-center">
+                      <span className="flex-1 px-4 py-2 rounded-lg bg-gray-800 text-gray-100">
+                        {categories.find((cat) => cat.id === formData.categoryId)?.name || (
+                          <span className="text-gray-400">No category selected</span>
+                        )}
+                      </span>
+                      <button
+                        type="button"
+                        className="ml-2 px-2 py-2 rounded transition-colors text-xs text-gray-400 hover:text-blue-400"
+                        onClick={() => setExpandedParentCategory("__expand__")}
+                        aria-label="Expand categories"
+                      >
+                        ▼
+                      </button>
+                    </div>
+                  )}
+                  {/* Expanded view: show all categories and allow selection */}
+                  {expandedParentCategory !== null && (
+                    <div>
+                      {parentCategories.map((parent) => (
+                        <div key={parent.id} className="mb-2">
+                          {/* Parent category is always selectable */}
+                          <div className="flex items-center">
+                            <button
+                              type="button"
+                              className={`flex-1 text-left px-4 py-2 rounded-lg transition-colors
+                                ${
+                                  formData.categoryId === parent.id
+                                    ? "bg-blue-500 text-white"
+                                    : "bg-gray-800 hover:bg-gray-600 text-gray-200"
+                                }`}
+                              onClick={() => {
+                                setFormData({ ...formData, categoryId: parent.id });
+                                setExpandedParentCategory(null);
+                              }}
+                            >
+                              {parent.name}
+                            </button>
+                            {getSubCategories(parent.id).length > 0 && (
+                              <button
+                                type="button"
+                                className="ml-2 px-2 py-2 rounded transition-colors text-xs text-gray-400 hover:text-blue-400"
+                                onClick={() =>
+                                  setExpandedParentCategory(
+                                    expandedParentCategory === parent.id ? "__expand__" : parent.id
+                                  )
+                                }
+                                aria-label={
+                                  expandedParentCategory === parent.id
+                                    ? "Collapse subcategories"
+                                    : "Expand subcategories"
+                                }
+                              >
+                                {expandedParentCategory === parent.id ? "▲" : "▼"}
+                              </button>
+                            )}
+                          </div>
+                          {/* Sub-categories */}
+                          {expandedParentCategory === parent.id && getSubCategories(parent.id).length > 0 && (
+                            <div className="ml-4 mt-1">
+                              {getSubCategories(parent.id).map((sub) => (
+                                <button
+                                  key={sub.id}
+                                  type="button"
+                                  className={`w-full text-left px-4 py-2 rounded-lg mt-1 transition-colors
+                                    ${
+                                      formData.categoryId === sub.id
+                                        ? "bg-blue-400 text-white"
+                                        : "bg-gray-600 hover:bg-gray-500 text-gray-100"
+                                    }`}
+                                  onClick={() => {
+                                    setFormData({ ...formData, categoryId: sub.id });
+                                    setExpandedParentCategory(null);
+                                  }}
+                                >
+                                  {sub.name}
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                      {/* Collapse button */}
+                      <div className="flex justify-end">
+                        <button
+                          type="button"
+                          className="mt-2 px-3 py-1 rounded text-xs text-gray-400 hover:text-blue-400"
+                          onClick={() => setExpandedParentCategory(null)}
+                        >
+                          Collapse
+                        </button>
+                      </div>
+                      {/* Fallback if no categories */}
+                      {categories.length === 0 && (
+                        <div className="text-gray-400 px-4 py-2">No categories available</div>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
             )}
 

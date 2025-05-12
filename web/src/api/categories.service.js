@@ -31,3 +31,8 @@ export const getCategoryTypes = async () => {
   const response = await axiosInstance.get("/categories/types");
   return response.data;
 };
+
+export const getMostUsedCategories = async () => {
+  const response = await axiosInstance.get("/categories/most-used");
+  return response.data;
+}
