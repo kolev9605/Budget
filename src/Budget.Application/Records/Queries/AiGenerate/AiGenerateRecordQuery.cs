@@ -6,6 +6,7 @@ using Budget.Domain.Models.Records;
 using ErrorOr;
 using MediatR;
 
+
 namespace Budget.Application.Records.Queries.AiGenerate;
 
 public record AiGenerateRecordQuery(string Prompt, string UserId) : IRequest<ErrorOr<AiGenerateRecordQueryResult?>>;
