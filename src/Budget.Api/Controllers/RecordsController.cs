@@ -1,7 +1,6 @@
 ﻿using Budget.Api.Models.Records;
 using Budget.Application.Records.Commands;
 using Budget.Application.Records.Queries;
-using Budget.Application.Records.Queries.AiGenerate;
 using Budget.Common;
 using Budget.Domain.Entities;
 using Budget.Domain.Models.Pagination;
@@ -95,12 +94,12 @@ public class RecordsController : BaseController
         return MatchResponse<IEnumerable<GetRecordsStatisticsResult>, IEnumerable<GetRecordsStatisticsResponse>>(result);
     }
 
-    [HttpPost("ai-generate")]
-    public async Task<IActionResult> AiGenerate([FromBody] string prompt)
-    {
-        var result = await _mediator.Send(new AiGenerateRecordQuery(prompt, CurrentUser.Id));
-        await Task.Delay(1000); // Simulate some delay for the AI generation
+    // [HttpPost("ai-generate")]
+    // public async Task<IActionResult> AiGenerate([FromBody] string prompt)
+    // {
+    //     var result = await _mediator.Send(new AiGenerateRecordQuery(prompt, CurrentUser.Id));
+    //     await Task.Delay(1000); // Simulate some delay for the AI generation
 
-        return MatchResponse<AiGenerateRecordQueryResult, AiGenerateRecordQueryResult>(result);
-    }
+    //     return MatchResponse<AiGenerateRecordQueryResult, AiGenerateRecordQueryResult>(result);
+    // }
 }

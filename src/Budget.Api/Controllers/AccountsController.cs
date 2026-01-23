@@ -1,7 +1,6 @@
 ﻿using Budget.Api.Models.Accounts;
 using Budget.Application.Accounts.Commands;
 using Budget.Application.Accounts.Queries.GetAll;
-using Budget.Application.Accounts.Queries.GetById;
 using Budget.Domain.Models.Accounts;
 using Mapster;
 using MediatR;
@@ -12,14 +11,14 @@ namespace Budget.Api.Controllers;
 public class AccountsController(
     IMediator _mediator) : BaseController
 {
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetById([FromRoute] Guid id)
-    {
-        var getAccountByIdRequest = new GetAccountByIdRequest(id);
-        var result = await _mediator.Send((getAccountByIdRequest, CurrentUser).Adapt<GetAccountByIdQuery>());
+    // [HttpGet("{id}")]
+    // public async Task<IActionResult> GetById([FromRoute] Guid id)
+    // {
+    //     var getAccountByIdRequest = new GetAccountByIdRequest(id);
+    //     var result = await _mediator.Send((getAccountByIdRequest, CurrentUser).Adapt<GetAccountByIdQuery>());
 
-        return MatchResponse<AccountModel, AccountResponse>(result);
-    }
+    //     return MatchResponse<AccountModel, AccountResponse>(result);
+    // }
 
     [HttpGet]
     public async Task<IActionResult> GetAll(bool includeHidden)

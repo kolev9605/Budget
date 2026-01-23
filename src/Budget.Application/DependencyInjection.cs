@@ -1,4 +1,4 @@
-﻿using Budget.Application.Accounts.Queries.GetById;
+﻿using Budget.Application.Records.Queries;
 using Budget.Application.Services;
 using Budget.Domain.Interfaces.Services;
 using Mapster;
@@ -15,7 +15,7 @@ namespace Budget.Application
             services.AddServices();
             services.AddMappings();
 
-            services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<GetAccountByIdQueryHandler>());
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<GetRecordByIdForUpdateQuery>());
 
             return services;
         }

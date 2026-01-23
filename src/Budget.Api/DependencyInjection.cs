@@ -1,8 +1,9 @@
-﻿using Mapster;
+﻿using System.Reflection;
+using System.Text.Json.Serialization;
+using Budget.Api.Endpoints.Accounts;
+using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Http.Features;
-using System.Reflection;
-using System.Text.Json.Serialization;
 
 namespace Budget.Api;
 
@@ -13,6 +14,13 @@ public static class DependencyInjection
         services.AddMappings();
 
         services.AddMemoryCache();
+
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<GetAccountByIdQueryHandler>());
+
+        services.ConfigureHttpJsonOptions(options =>
+        {
+            options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        });
 
         services.AddControllers().AddJsonOptions(opt =>
         {
@@ -26,7 +34,6 @@ public static class DependencyInjection
             options.MemoryBufferThreshold = int.MaxValue;
         });
 
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
 
