@@ -21,7 +21,8 @@ public static class GetAllAccountsQueryMockHelper
     )
     {
         var command = new GetAllAccountsQuery(
-            userId ?? DefaultValueConstants.User.Id
+            userId ?? DefaultValueConstants.User.Id,
+            IncludeHidden: false
         );
 
         return command;

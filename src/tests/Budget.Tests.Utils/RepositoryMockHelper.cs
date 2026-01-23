@@ -84,7 +84,7 @@ public static class RepositoryMockHelper
         var accounts = new List<AccountModel> { account.Adapt<AccountModel>() };
 
         accountRepositoryMock
-            .Setup(x => x.GetAllAccountModelsByUserIdAsync(DefaultValueConstants.User.Id))
+            .Setup(x => x.GetAllAccountModelsByUserIdAsync(DefaultValueConstants.User.Id, It.IsAny<bool>()))
             .Returns(Task.FromResult(accounts.AsEnumerable()));
 
         accountRepositoryMock
