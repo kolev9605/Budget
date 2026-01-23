@@ -1,0 +1,3 @@
+GET {{host}}/accounts/getById?accountId=6ed08301-e639-487e-b215-8b3b2f6330c1
+content-type: application/json
+Authorization: Bearer {{token}}

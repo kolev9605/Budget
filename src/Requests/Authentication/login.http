@@ -1,0 +1,7 @@
+POST {{host}}/Authentication/Login
+content-type: application/json
+
+{
+    "username": "kolev9605",
+    "password": "kolev9605"
+}

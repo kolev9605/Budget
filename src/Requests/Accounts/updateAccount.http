@@ -1,0 +1,10 @@
+PUT {{host}}/accounts/update
+content-type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "id": "6ed08301-e639-487e-b215-8b3b2f6330c1",
+    "name": "Test account 1 (updated)",
+    "currencyId": "bde4a5c7-d3e3-4725-a28e-ff834796e47e",
+    "initialBalance": 0
+}

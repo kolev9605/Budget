@@ -1,0 +1,156 @@
+import { Link, NavLink } from "react-router-dom";
+import {
+  PlusIcon,
+  PencilIcon,
+  TrashIcon,
+  ChevronDownIcon,
+  ChevronRightIcon,
+  FolderIcon,
+} from "@heroicons/react/24/outline";
+import { useEffect, useState } from "react";
+import { getCategories, deleteCategory } from "../../api/categories.service.js";
+import LoadingOverlay from "../../components/LoadingOverlay.jsx";
+
+const CategoryPage = () => {
+  const [categories, setCategories] = useState([]);
+  const [collapsed, setCollapsed] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await getCategories(false);
+        setCategories(response);
+
+        response.forEach((category) => {
+          if (!category.parentCategoryId) {
+            setCollapsed((prev) => ({ ...prev, [category.id]: true }));
+          }
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  const toggleCollapse = (categoryId) => {
+    setCollapsed((prev) => ({ ...prev, [categoryId]: !prev[categoryId] }));
+  };
+
+  const handleDelete = async (categoryId) => {
+    if (window.confirm("Are you sure you want to delete this category?")) {
+      try {
+        setIsLoading(true);
+        await deleteCategory(categoryId);
+        setCategories((prev) => prev.filter((category) => category.id !== categoryId));
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
+
+  const renderCategory = (category, isParent = false) => {
+    const hasSubCategories = categories.some((subCategory) => subCategory.parentCategoryId === category.id);
+
+    return (
+      <div
+        onClick={() => toggleCollapse(category.id)}
+        key={category.id}
+        className={`flex justify-between items-center bg-gray-800 p-4 shadow-md ${
+          isParent
+            ? collapsed[category.id]
+              ? "rounded-lg" // Fully rounded when collapsed
+              : "rounded-t-lg" // Remove bottom-right radius when expanded
+            : "" /* No border radius for sub-categories */
+        }`}
+      >
+        <div className="flex items-center gap-2">
+          {
+            hasSubCategories && ( // Show icon only if there are sub-categories
+              <span
+                className="text-gray-400 hover:text-gray-300 transition-colors"
+              >
+                {collapsed[category.id] ? (
+                  <ChevronRightIcon className="h-4 w-4" /> // Points right when collapsed
+                ) : (
+                  <ChevronDownIcon className="h-4 w-4" /> // Points down when expanded
+                )}
+              </span>
+            )}
+          <div>
+            <h3 className="text-sm font-semibold text-gray-100">{category.name}</h3>
+            <p className="text-xs text-gray-400">{category.description}</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <Link
+            to={`/categories/edit/${category.id}`}
+            className="text-gray-400 hover:text-blue-400 p-2 rounded-lg transition-colors"
+          >
+            <PencilIcon className="h-4 w-4" />
+          </Link>
+          <button
+            onClick={() => handleDelete(category.id)}
+            className="text-gray-400 hover:text-red-400 p-2 rounded-lg transition-colors"
+          >
+            <TrashIcon className="h-4 w-4" />
+          </button>
+        </div>
+      </div>
+    );
+  };
+
+  const renderCategories = (categories, parentCategoryId = null) => {
+    return categories
+      .filter((category) => category.parentCategoryId === parentCategoryId)
+      .map((category) => (
+        <div key={category.id}>
+          {renderCategory(category, parentCategoryId === null)}
+          {parentCategoryId === null && !collapsed[category.id] && (
+            <div className="bg-gray-850 rounded-b-lg">{renderCategories(categories, category.id)}</div>
+          )}
+        </div>
+      ));
+  };
+
+  return isLoading ? (
+    <LoadingOverlay />
+  ) : (
+    <div className="min-h-screen bg-gray-900 p-6 sm:p-8 lg:p-10">
+      {" "}
+      {/* Ensures full page has a dark background */}
+      <div className="max-w-7xl mx-auto">
+        {" "}
+        {/* Added max-w-4xl and mx-auto for consistent width */}
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-bold text-gray-100 flex items-center gap-2">
+            <FolderIcon className="h-6 w-6 text-blue-400" />
+            Categories
+          </h1>
+          <NavLink
+            to="/categories/new"
+            className="bg-blue-500 hover:bg-blue-400 text-white px-6 py-3 rounded-xl
+              flex items-center gap-2 transition-colors"
+            state={{ categories }}
+          >
+            <PlusIcon className="h-5 w-5" />
+            Add Category
+          </NavLink>
+        </div>
+        <div className="bg-gray-900 rounded-lg shadow-md">
+          {categories.length > 0 ? (
+            <div className="space-y-4">{renderCategories(categories)}</div>
+          ) : (
+            <div className="text-center text-gray-400">
+              No categories found. Create your first category to organize transactions.
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default CategoryPage;

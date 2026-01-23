@@ -1,0 +1,9 @@
+POST {{host}}/charts/getCashFlowData
+content-type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "accountIds": ["1c1749ed-8edb-41b1-87b0-5002bfef5e7d"],
+    "startDate": "2024-10-17T13:32:57.692Z",
+    "endDate": "2024-10-17T13:32:57.692Z"
+}

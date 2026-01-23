@@ -1,0 +1,3 @@
+GET {{host}}/accounts/getAll
+content-type: application/json
+Authorization: Bearer {{token}}
