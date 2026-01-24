@@ -1,9 +1,9 @@
 using Budget.Api.Helpers;
-using Budget.Api.Models;
 using Budget.Domain.Common.Errors;
 using Budget.Infrastructure.Persistence;
 using ErrorOr;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Budget.Api.Endpoints.Accounts;
@@ -31,17 +31,20 @@ public static class GetAccountByIdEndpoint
 {
     public static void MapGetAccountByIdEndpoint(this WebApplication app)
     {
-        app.MapGet("/accounts/{AccountId}", async (
-            Guid AccountId,
-            IMediator mediator,
-            HttpContext httpContext) =>
-        {
-            var currentUser = httpContext.GetCurrentUser();
-            var query = new GetAccountByIdQuery(AccountId, currentUser.Id);
-            var result = await mediator.Send(query);
+        app
+            .MapGet("/accounts/{AccountId}", async (
+                [FromQuery] Guid AccountId,
+                IMediator mediator,
+                HttpContext httpContext) =>
+            {
+                var currentUser = httpContext.GetCurrentUser();
+                var query = new GetAccountByIdQuery(AccountId, currentUser.Id);
+                var result = await mediator.Send(query);
 
-            return result.MatchResponse();
-        });
+                return result.MatchResponse();
+            })
+            .RequireAuthorization()
+            .WithTags("Accounts");
     }
 }
 
