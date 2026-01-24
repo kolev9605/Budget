@@ -20,15 +20,15 @@ public class AccountsController(
     //     return MatchResponse<AccountModel, AccountResponse>(result);
     // }
 
-    [HttpGet]
-    public async Task<IActionResult> GetAll(bool includeHidden)
-    {
-        var query = new GetAllAccountsQuery(CurrentUser.Id, includeHidden);
+    // [HttpGet]
+    // public async Task<IActionResult> GetAll(bool includeHidden)
+    // {
+    //     var query = new GetAllAccountsQuery(CurrentUser.Id, includeHidden);
 
-        var result = await _mediator.Send(query);
+    //     var result = await _mediator.Send(query);
 
-        return MatchResponse<IEnumerable<AccountModel>, IEnumerable<AccountResponse>>(result);
-    }
+    //     return MatchResponse<IEnumerable<AccountModel>, IEnumerable<AccountResponse>>(result);
+    // }
 
     [HttpPost]
     public async Task<IActionResult> Create(CreateAccountRequest createAccountRequest)

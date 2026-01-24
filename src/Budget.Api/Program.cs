@@ -63,6 +63,7 @@ app.UseAuthorization();
 
 // app.MapAccountsEndpoints();
 app.MapGetAccountByIdEndpoint();
+app.MapGetAllAccountsEndpoint();
 app.MapControllers();
 
 app.Run();
