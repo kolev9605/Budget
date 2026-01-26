@@ -4,7 +4,6 @@ using Budget.Domain.Common.Errors;
 using Budget.Infrastructure.Persistence;
 using ErrorOr;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Budget.Api.Endpoints.Accounts;
