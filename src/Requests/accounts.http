@@ -9,7 +9,7 @@ Content-Type: application/json
 
 ###
 
-GET {{host}}/accounts/getById?accountId=6d228702-5e7d-4734-a773-1e2673d71f96
+GET {{host}}/accounts/6d228702-5e7d-4734-a773-1e2673d71f96
 Content-Type: application/json
 Authorization: Bearer {{login.response.body.token}}
 

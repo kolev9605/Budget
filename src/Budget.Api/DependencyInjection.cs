@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using System.Text.Json.Serialization;
 using Budget.Api.Endpoints.Accounts;
+using Budget.Api.Interfaces;
 using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Http.Features;
@@ -15,7 +16,7 @@ public static class DependencyInjection
 
         services.AddMemoryCache();
 
-        services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<GetAccountByIdQueryHandler>());
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
 
         services.ConfigureHttpJsonOptions(options =>
         {
@@ -51,5 +52,23 @@ public static class DependencyInjection
         services.AddScoped<IMapper, ServiceMapper>();
 
         return services;
+    }
+
+    public static void MapEndpoints(this WebApplication app)
+    {
+        var endpointTypes = typeof(Program).Assembly
+            .GetTypes()
+            .Where(t =>
+                t is { IsAbstract: false, IsInterface: false } &&
+                typeof(IEndpoint).IsAssignableFrom(t));
+
+        foreach (var type in endpointTypes)
+        {
+            var method = type.GetMethod(
+                nameof(IEndpoint.Map),
+                BindingFlags.Public | BindingFlags.Static);
+
+            method!.Invoke(null, new object[] { app });
+        }
     }
 }

@@ -61,9 +61,7 @@ app.UseCors(x => x.AllowAnyHeader()
 app.UseAuthentication();
 app.UseAuthorization();
 
-// app.MapAccountsEndpoints();
-app.MapGetAccountByIdEndpoint();
-app.MapGetAllAccountsEndpoint();
 app.MapControllers();
+app.MapEndpoints();
 
 app.Run();

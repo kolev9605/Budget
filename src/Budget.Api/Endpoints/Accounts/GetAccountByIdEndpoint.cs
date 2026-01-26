@@ -1,4 +1,5 @@
 using Budget.Api.Helpers;
+using Budget.Api.Interfaces;
 using Budget.Domain.Common.Errors;
 using Budget.Infrastructure.Persistence;
 using ErrorOr;
@@ -8,83 +9,98 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Budget.Api.Endpoints.Accounts;
 
-public record GetAccountByIdResponse(
-    Guid Id,
-    string Name,
-    decimal InitialBalance,
-    decimal Balance,
-    GetAccountByIdCurrencyResponse Currency,
-    GetAccountByIdPaymentTypeResponse PaymentType,
-    bool IsActive
-);
-
-public record GetAccountByIdCurrencyResponse(
-    Guid Id,
-    string Name
-);
-
-public record GetAccountByIdPaymentTypeResponse(
-    Guid Id,
-    string Name
-);
-public static class GetAccountByIdEndpoint
+public class GetAccountByIdEndpoint : IEndpoint
 {
-    public static void MapGetAccountByIdEndpoint(this WebApplication app)
+    public class Request
+    {
+        public Guid AccountId { get; set; }
+    }
+
+    public class Response
+    {
+        public Guid Id { get; set; }
+        public required string Name { get; set; }
+        public decimal InitialBalance { get; set; }
+        public decimal Balance { get; set; }
+        public required CurrencyResponse Currency { get; set; }
+        public required PaymentTypeResponse PaymentType { get; set; }
+        public bool IsActive { get; set; }
+
+        public class CurrencyResponse
+        {
+            public Guid Id { get; set; }
+            public required string Name { get; set; }
+        }
+
+        public class PaymentTypeResponse
+        {
+            public Guid Id { get; set; }
+            public required string Name { get; set; }
+        }
+    }
+
+    public record Query(
+        Guid AccountId,
+        string UserId) : IRequest<ErrorOr<Response>>;
+
+    public class QueryHandler : IRequestHandler<Query, ErrorOr<Response>>
+    {
+        private readonly BudgetDbContext _dbContext;
+
+        public QueryHandler(BudgetDbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
+        public async Task<ErrorOr<Response>> Handle(Query query, CancellationToken cancellationToken)
+        {
+            var account = await _dbContext.Accounts
+                .Where(a => a.UserId == query.UserId)
+                .Where(a => a.Id == query.AccountId)
+                .Select(a => new Response
+                {
+                    Id = a.Id,
+                    Name = a.Name,
+                    InitialBalance = a.InitialBalance,
+                    Balance = a.InitialBalance + a.Records.Sum(r => r.Amount),
+                    Currency = new Response.CurrencyResponse
+                    {
+                        Id = a.Currency.Id,
+                        Name = a.Currency.Name
+                    },
+                    PaymentType = new Response.PaymentTypeResponse
+                    {
+                        Id = a.PaymentType.Id,
+                        Name = a.PaymentType.Name
+                    },
+                    IsActive = a.IsActive
+                })
+                .FirstOrDefaultAsync();
+
+            if (account is null)
+            {
+                return Errors.Account.NotFound;
+            }
+
+            return account;
+        }
+    }
+
+    public static void Map(WebApplication app)
     {
         app
-            .MapGet("/accounts/{AccountId}", async (
-                [FromQuery] Guid AccountId,
+            .MapGet("/accounts/{accountId}/{alo}", async (
+                [AsParameters] Request request,
                 IMediator mediator,
                 HttpContext httpContext) =>
             {
                 var currentUser = httpContext.GetCurrentUser();
-                var query = new GetAccountByIdQuery(AccountId, currentUser.Id);
+                var query = new Query(request.AccountId, currentUser.Id);
                 var result = await mediator.Send(query);
 
                 return result.MatchResponse();
             })
             .RequireAuthorization()
             .WithTags("Accounts");
-    }
-}
-
-public record GetAccountByIdQuery(
-    Guid AccountId,
-    string UserId) : IRequest<ErrorOr<GetAccountByIdResponse>>;
-
-public class GetAccountByIdQueryHandler : IRequestHandler<GetAccountByIdQuery, ErrorOr<GetAccountByIdResponse>>
-{
-    private readonly BudgetDbContext _dbContext;
-
-    public GetAccountByIdQueryHandler(BudgetDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
-
-    public async Task<ErrorOr<GetAccountByIdResponse>> Handle(GetAccountByIdQuery request, CancellationToken cancellationToken)
-    {
-        var account = await _dbContext.Accounts
-            .Where(a => a.UserId == request.UserId)
-            .Where(a => a.Id == request.AccountId)
-            .Select(a => new GetAccountByIdResponse(
-                a.Id,
-                a.Name,
-                a.InitialBalance,
-                a.InitialBalance + a.Records.Sum(r => r.Amount),
-                new GetAccountByIdCurrencyResponse(
-                    a.Currency.Id,
-                    a.Currency.Name),
-                new GetAccountByIdPaymentTypeResponse(
-                    a.PaymentType.Id,
-                    a.PaymentType.Name),
-                a.IsActive))
-            .FirstOrDefaultAsync();
-
-        if (account is null)
-        {
-            return Errors.Account.NotFound;
-        }
-
-        return account;
     }
 }

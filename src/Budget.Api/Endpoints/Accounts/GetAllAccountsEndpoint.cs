@@ -1,44 +1,94 @@
 using Budget.Api.Helpers;
+using Budget.Api.Interfaces;
 using Budget.Infrastructure.Persistence;
 using ErrorOr;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Budget.Api.Endpoints.Accounts;
 
-public record GetAllAccountsResponse(
-    Guid Id,
-    string Name,
-    decimal InitialBalance,
-    decimal Balance,
-    GetAllAccountsCurrencyResponse Currency,
-    GetAllAccountsPaymentTypeResponse PaymentType,
-    bool IsActive
-);
-
-public record GetAllAccountsCurrencyResponse(
-    Guid Id,
-    string Name
-);
-
-public record GetAllAccountsPaymentTypeResponse(
-    Guid Id,
-    string Name
-);
-
-public static class GetAllAccountsEndpoint
+public class GetAllAccountsEndpoint : IEndpoint
 {
-    public static void MapGetAllAccountsEndpoint(this WebApplication app)
+    public class Request
+    {
+        public bool IncludeHidden { get; set; }
+    }
+
+    public class Response
+    {
+        public Guid Id { get; set; }
+        public required string Name { get; set; }
+        public decimal InitialBalance { get; set; }
+        public decimal Balance { get; set; }
+        public required CurrencyResponse Currency { get; set; }
+        public required PaymentTypeResponse PaymentType { get; set; }
+        public bool IsActive { get; set; }
+
+        public class CurrencyResponse
+        {
+            public Guid Id { get; set; }
+            public required string Name { get; set; }
+        }
+
+        public class PaymentTypeResponse
+        {
+            public Guid Id { get; set; }
+            public required string Name { get; set; }
+        }
+    }
+
+    public record Query(
+        string UserId,
+        bool IncludeHidden) : IRequest<ErrorOr<IEnumerable<Response>>>;
+
+    public class QueryHandler : IRequestHandler<Query, ErrorOr<IEnumerable<Response>>>
+    {
+        private readonly BudgetDbContext _dbContext;
+
+        public QueryHandler(BudgetDbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
+        public async Task<ErrorOr<IEnumerable<Response>>> Handle(Query query, CancellationToken cancellationToken)
+        {
+            var accounts = await _dbContext.Accounts
+                .Where(a => a.UserId == query.UserId)
+                .Where(a => query.IncludeHidden || a.IsActive)
+                .Select(a => new Response
+                {
+                    Id = a.Id,
+                    Name = a.Name,
+                    InitialBalance = a.InitialBalance,
+                    Balance = a.InitialBalance + a.Records.Sum(r => r.Amount),
+                    Currency = new Response.CurrencyResponse
+                    {
+                        Id = a.Currency.Id,
+                        Name = a.Currency.Name
+                    },
+                    PaymentType = new Response.PaymentTypeResponse
+                    {
+                        Id = a.PaymentType.Id,
+                        Name = a.PaymentType.Name
+                    },
+                    IsActive = a.IsActive
+                })
+                .ToListAsync(cancellationToken);
+
+            return accounts.AsEnumerable().ToErrorOr();
+        }
+    }
+
+    public static void Map(WebApplication app)
     {
         app
             .MapGet("/accounts", async (
-                [FromQuery] bool includeHidden,
+                [AsParameters] Request request,
                 IMediator mediator,
                 HttpContext httpContext) =>
             {
                 var currentUser = httpContext.GetCurrentUser();
-                var query = new GetAllAccountsQuery(currentUser.Id, includeHidden);
+                var query = new Query(currentUser.Id, request.IncludeHidden);
                 var result = await mediator.Send(query);
 
                 return result.MatchResponse();
@@ -48,38 +98,3 @@ public static class GetAllAccountsEndpoint
     }
 }
 
-public record GetAllAccountsQuery(
-    string UserId,
-    bool IncludeHidden) : IRequest<ErrorOr<IEnumerable<GetAllAccountsResponse>>>;
-
-public class GetAllAccountsQueryHandler : IRequestHandler<GetAllAccountsQuery, ErrorOr<IEnumerable<GetAllAccountsResponse>>>
-{
-    private readonly BudgetDbContext _dbContext;
-
-    public GetAllAccountsQueryHandler(BudgetDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
-
-    public async Task<ErrorOr<IEnumerable<GetAllAccountsResponse>>> Handle(GetAllAccountsQuery request, CancellationToken cancellationToken)
-    {
-        var accounts = await _dbContext.Accounts
-            .Where(a => a.UserId == request.UserId)
-            .Where(a => request.IncludeHidden || a.IsActive)
-            .Select(a => new GetAllAccountsResponse(
-                a.Id,
-                a.Name,
-                a.InitialBalance,
-                a.InitialBalance + a.Records.Sum(r => r.Amount),
-                new GetAllAccountsCurrencyResponse(
-                    a.Currency.Id,
-                    a.Currency.Name),
-                new GetAllAccountsPaymentTypeResponse(
-                    a.PaymentType.Id,
-                    a.PaymentType.Name),
-                a.IsActive))
-            .ToListAsync(cancellationToken);
-
-        return accounts.AsEnumerable().ToErrorOr();
-    }
-}
