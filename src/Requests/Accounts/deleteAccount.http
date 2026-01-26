@@ -1,3 +1,0 @@
-DELETE {{host}}/accounts/delete?accountId=9a59c8de-9d4d-40fd-a0ab-55129fe32934
-content-type: application/json
-Authorization: Bearer {{token}}

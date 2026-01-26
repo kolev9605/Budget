@@ -1,0 +1,20 @@
+# @name login
+POST {{host}}/Authentication/Login
+Content-Type: application/json
+
+{
+    "email": "kolev9605@gmail.com",
+    "password": "kolev9605@gmail.com"
+}
+
+###
+
+POST {{host}}/statistics/getCashFlow
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+{
+    "accountIds": ["1c1749ed-8edb-41b1-87b0-5002bfef5e7d"],
+    "startDate": "2024-10-17T13:32:57.692Z",
+    "endDate": "2024-10-17T13:32:57.692Z"
+}

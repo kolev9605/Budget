@@ -1,0 +1,57 @@
+# @name login
+POST {{host}}/Authentication/Login
+Content-Type: application/json
+
+{
+    "email": "kolev9605@gmail.com",
+    "password": "kolev9605@gmail.com"
+}
+
+###
+
+GET {{host}}/categories/getall
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+###
+
+GET {{host}}/categories/getAllSubcategories?parentCategoryId=3633683c-fdd9-4974-a567-a1a5eaf65e25
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+###
+
+GET {{host}}/categories/getById?categoryId=9346e4af-cfdc-4bf2-81ec-57bd15b604d4
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+###
+
+POST {{host}}/categories/create
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+{
+    "name": "TEST",
+    "categoryType": 0,
+    "parentCategoryId": null
+}
+
+###
+
+PUT {{host}}/categories/update
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+{
+    "id": "9346e4af-cfdc-4bf2-81ec-57bd15b604d4",
+    "name": "TEST - Updated",
+    "categoryType": 0,
+    "parentCategoryId": null
+}
+
+###
+
+DELETE {{host}}/categories/delete?id=9346e4af-cfdc-4bf2-81ec-57bd15b604d4
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}

@@ -1,0 +1,51 @@
+# @name login
+POST {{host}}/Authentication/Login
+Content-Type: application/json
+
+{
+    "email": "kolev9605@gmail.com",
+    "password": "kolev9605@gmail.com"
+}
+
+###
+
+GET {{host}}/accounts/getById?accountId=6d228702-5e7d-4734-a773-1e2673d71f96
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+###
+
+GET {{host}}/accounts?includeHidden=false
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+###
+
+POST {{host}}/accounts/create
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+{
+    "name": "Test account 1",
+    "currencyId": "fdf35b26-571a-4afc-bf36-ea72885b174a",
+    "initialBalance": 0
+}
+
+###
+
+DELETE {{host}}/accounts/delete?accountId=9a59c8de-9d4d-40fd-a0ab-55129fe32934
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+###
+
+PUT {{host}}/accounts/update
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+{
+    "id": "6ed08301-e639-487e-b215-8b3b2f6330c1",
+    "name": "Test account 1 (updated)",
+    "currencyId": "bde4a5c7-d3e3-4725-a28e-ff834796e47e",
+    "initialBalance": 0
+}

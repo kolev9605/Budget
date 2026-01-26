@@ -1,0 +1,73 @@
+# @name login
+POST {{host}}/Authentication/Login
+Content-Type: application/json
+
+{
+    "email": "kolev9605@gmail.com",
+    "password": "kolev9605@gmail.com"
+}
+
+###
+
+GET {{host}}/records/GetAllPaginated?pagenumber=1
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+###
+
+GET {{host}}/records/getById?id=78160924-792b-4a42-b35b-c02de30357e2
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+###
+
+GET {{host}}/records/getByIdForUpdate?id=9bd45173-3533-444f-86da-ce365a6af389
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+###
+
+GET {{host}}/records/getRecordsDateRange
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+###
+
+POST {{host}}/records/create
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+{
+    "note": "Test record #3",
+    "amount": 50,
+    "accountId": "b3cfd947-0f46-4094-a092-aa00bed75fd5",
+    "categoryId": "0fedc562-5e8f-4459-a692-d45211bd0739",
+    "paymentTypeId": "2df8edd7-a21a-494d-b3f1-45f196a630d6",
+    "recordType": 1,
+    "recordDate": "2024-10-17T13:32:57.692Z",
+    "fromAccountId": null
+}
+
+###
+
+PUT {{host}}/records/update
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+{
+    "id": "dbe58498-5a30-44fd-bc6d-4f8cbc29d128",
+    "note": "Test record #3 (UPDATED",
+    "amount": 500,
+    "accountId": "b3cfd947-0f46-4094-a092-aa00bed75fd5",
+    "categoryId": "0fedc562-5e8f-4459-a692-d45211bd0739",
+    "paymentTypeId": "2df8edd7-a21a-494d-b3f1-45f196a630d6",
+    "recordType": 1,
+    "recordDate": "2024-10-17T13:32:57.692Z",
+    "fromAccountId": null
+}
+
+###
+
+DELETE {{host}}/records/delete?id=78160924-792b-4a42-b35b-c02de30357e2
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}

@@ -1,3 +1,0 @@
-GET {{host}}/records/getById?id=78160924-792b-4a42-b35b-c02de30357e2
-content-type: application/json
-Authorization: Bearer {{token}}

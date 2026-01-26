@@ -1,9 +1,0 @@
-POST {{host}}/accounts/create
-content-type: application/json
-Authorization: Bearer {{token}}
-
-{
-    "name": "Test account 1",
-    "currencyId": "fdf35b26-571a-4afc-bf36-ea72885b174a",
-    "initialBalance": 0
-}

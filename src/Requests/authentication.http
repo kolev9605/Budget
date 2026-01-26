@@ -1,0 +1,18 @@
+# @name login
+POST {{host}}/Authentication/Login
+Content-Type: application/json
+
+{
+    "email": "kolev9605@gmail.com",
+    "password": "kolev9605@gmail.com"
+}
+
+###
+
+POST {{host}}/authentication/register
+Content-Type: application/json
+
+{
+    "password": "kolev9605@gmail.com",
+    "email": "kolev9605@gmail.com"
+}
