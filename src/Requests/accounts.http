@@ -9,7 +9,7 @@ Content-Type: application/json
 
 ###
 
-GET {{host}}/accounts/6d228702-5e7d-4734-a773-1e2673d71f96
+GET {{host}}/accounts/2161d8c8-e84f-4870-b241-353624b888e3
 Content-Type: application/json
 Authorization: Bearer {{login.response.body.token}}
 
@@ -21,19 +21,20 @@ Authorization: Bearer {{login.response.body.token}}
 
 ###
 
-POST {{host}}/accounts/create
+POST {{host}}/accounts
 Content-Type: application/json
 Authorization: Bearer {{login.response.body.token}}
 
 {
     "name": "Test account 1",
-    "currencyId": "fdf35b26-571a-4afc-bf36-ea72885b174a",
+    "currencyId": "adc2b74c-15d1-4026-a4c7-d1bc994f35c3",
+    "paymentTypeId": "617b69ac-57c5-4286-9188-80bc850352da",
     "initialBalance": 0
 }
 
 ###
 
-DELETE {{host}}/accounts/delete?accountId=9a59c8de-9d4d-40fd-a0ab-55129fe32934
+DELETE {{host}}/accounts/9a59c8de-9d4d-40fd-a0ab-55129fe32934
 Content-Type: application/json
 Authorization: Bearer {{login.response.body.token}}
 

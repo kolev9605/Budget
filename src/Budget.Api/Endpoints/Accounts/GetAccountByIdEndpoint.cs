@@ -88,7 +88,7 @@ public class GetAccountByIdEndpoint : IEndpoint
     public static void Map(WebApplication app)
     {
         app
-            .MapGet("/accounts/{accountId}/{alo}", async (
+            .MapGet("/accounts/{accountId}", async (
                 [AsParameters] Request request,
                 IMediator mediator,
                 HttpContext httpContext) =>
