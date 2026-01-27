@@ -26,7 +26,7 @@ Content-Type: application/json
 Authorization: Bearer {{login.response.body.token}}
 
 {
-    "name": "Test account 1",
+    "name": "Test account 2",
     "currencyId": "adc2b74c-15d1-4026-a4c7-d1bc994f35c3",
     "paymentTypeId": "617b69ac-57c5-4286-9188-80bc850352da",
     "initialBalance": 0
@@ -34,19 +34,20 @@ Authorization: Bearer {{login.response.body.token}}
 
 ###
 
-DELETE {{host}}/accounts/9a59c8de-9d4d-40fd-a0ab-55129fe32934
+DELETE {{host}}/accounts/37e39211-f0d8-4e60-b838-2e880f567f4a
 Content-Type: application/json
 Authorization: Bearer {{login.response.body.token}}
 
 ###
 
-PUT {{host}}/accounts/update
+PUT {{host}}/accounts
 Content-Type: application/json
 Authorization: Bearer {{login.response.body.token}}
 
 {
-    "id": "6ed08301-e639-487e-b215-8b3b2f6330c1",
+    "id": "2161d8c8-e84f-4870-b241-353624b888e3",
     "name": "Test account 1 (updated)",
-    "currencyId": "bde4a5c7-d3e3-4725-a28e-ff834796e47e",
+    "currencyId": "adc2b74c-15d1-4026-a4c7-d1bc994f35c3",
+    "paymentTypeId": "617b69ac-57c5-4286-9188-80bc850352da",
     "initialBalance": 0
 }

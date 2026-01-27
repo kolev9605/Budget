@@ -53,7 +53,7 @@ public static class HttpContextExtensions
         );
     }
 
-    public static IResult HandleErrors(List<Error> errors)
+    private static IResult HandleErrors(List<Error> errors)
     {
         var firstError = errors[0];
 

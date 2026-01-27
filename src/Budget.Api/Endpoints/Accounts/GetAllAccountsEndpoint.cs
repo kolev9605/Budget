@@ -11,7 +11,7 @@ public class GetAllAccountsEndpoint : IEndpoint
 {
     public class Request
     {
-        public bool IncludeHidden { get; set; }
+        public bool? IncludeHidden { get; set; }
     }
 
     public class Response
@@ -88,7 +88,9 @@ public class GetAllAccountsEndpoint : IEndpoint
                 HttpContext httpContext) =>
             {
                 var currentUser = httpContext.GetCurrentUser();
-                var query = new Query(currentUser.Id, request.IncludeHidden);
+
+                var includeHidden = request.IncludeHidden ?? false;
+                var query = new Query(currentUser.Id, includeHidden);
                 var result = await mediator.Send(query);
 
                 return result.MatchResponse();

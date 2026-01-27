@@ -15,7 +15,7 @@ public class UpdateRecordEndpoint : IEndpoint
 {
     public class Request
     {
-        public Guid RecordId { get; set; }
+        public Guid Id { get; set; }
         public string Note { get; set; } = null!;
         public decimal Amount { get; set; }
         public Guid AccountId { get; set; }
@@ -173,15 +173,14 @@ public class UpdateRecordEndpoint : IEndpoint
     public static void Map(WebApplication app)
     {
         app
-            .MapPut("/records/{recordId}", async (
-                Guid recordId,
+            .MapPut("/records", async (
                 Request request,
                 IMediator mediator,
                 HttpContext httpContext) =>
             {
                 var currentUser = httpContext.GetCurrentUser();
                 var command = new Command(
-                    recordId,
+                    request.Id,
                     request.Note,
                     request.Amount,
                     request.AccountId,
