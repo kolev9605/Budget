@@ -29,7 +29,7 @@ builder.Host.UseSerilog((context, services, configuration) =>
 
 builder.Services
     .AddDomain()
-    .AddPersistence(builder.Configuration)
+    .AddPersistence(builder.Configuration.GetConnectionString("Budget"))
     .AddInfrastructure(builder.Configuration)
     .AddApplication()
     .AddPresentation()
@@ -65,3 +65,5 @@ app.MapControllers();
 app.MapEndpoints();
 
 app.Run();
+
+public partial class Program { }

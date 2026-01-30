@@ -10,26 +10,26 @@ namespace Budget.Infrastructure.Persistence;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddPersistence(this IServiceCollection services, string? connectionString)
     {
-        services.AddDatabase(configuration);
-        services.AddIdentity(configuration);
+        services.AddDatabase(connectionString);
+        services.AddIdentity();
         services.AddRepositories();
 
         return services;
     }
 
-    private static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddDatabase(this IServiceCollection services, string? connectionString)
     {
         services.AddDbContext<BudgetDbContext>(options =>
             options
-                .UseNpgsql(configuration.GetConnectionString("Budget"))
+                .UseNpgsql(connectionString)
                 .UseSnakeCaseNamingConvention());
 
         return services;
     }
 
-    private static IServiceCollection AddIdentity(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddIdentity(this IServiceCollection services)
     {
         services.AddIdentityCore<ApplicationUser>(options =>
             {
