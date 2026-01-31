@@ -1,7 +1,6 @@
 using Budget.Api.Endpoints.Accounts;
-using Budget.Api.Endpoints.Authentication;
+using Budget.Domain.Common.Errors;
 using Budget.Domain.Entities;
-using Budget.Domain.Models.Authentication;
 using Budget.Infrastructure.Persistence;
 using Budget.Integration.Tests.Fakers;
 using Budget.Integration.Tests.Fixtures;
@@ -104,6 +103,7 @@ public class CreateAccountEndpointTests : IClassFixture<DatabaseFixtureApp>
 
         // Assert
         Assert.True(result.IsError);
+        Assert.Equal(Errors.Currency.NotFound, result.Errors.First());
     }
 
     [Fact]
@@ -128,6 +128,7 @@ public class CreateAccountEndpointTests : IClassFixture<DatabaseFixtureApp>
 
         // Assert
         Assert.True(result.IsError);
+        Assert.Equal(Errors.PaymentType.NotFound, result.Errors.First());
     }
 
     [Fact]
@@ -141,9 +142,6 @@ public class CreateAccountEndpointTests : IClassFixture<DatabaseFixtureApp>
         _dbContext.Currencies.Add(currency);
         _dbContext.PaymentTypes.Add(paymentType);
         await _dbContext.SaveChangesAsync();
-
-        // var count = _dbContext.Categories.Count();
-        // Assert.NotEqual(0, count);
 
         var handler = new CreateAccountEndpoint.CommandHandler(_dbContext);
 
