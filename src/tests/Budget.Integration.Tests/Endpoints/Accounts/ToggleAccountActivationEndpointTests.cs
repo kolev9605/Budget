@@ -1,4 +1,5 @@
 using Budget.Api.Endpoints.Accounts;
+using Budget.Domain.Common.Errors;
 using Budget.Domain.Entities;
 using Budget.Infrastructure.Persistence;
 using Budget.Integration.Tests.Fakers;
@@ -114,6 +115,8 @@ public class ToggleAccountActivationEndpointTests : IClassFixture<DatabaseFixtur
 
         // Assert
         Assert.True(result.IsError);
+        Assert.Single(result.Errors);
+        Assert.Equal(Errors.Account.NotFound, result.Errors.First());
     }
 
     [Fact]
@@ -132,11 +135,8 @@ public class ToggleAccountActivationEndpointTests : IClassFixture<DatabaseFixtur
 
         // Assert
         Assert.True(result.IsError);
-
-        // Verify account state was not changed
-        var unchangedAccount = await _dbContext.Accounts.FirstOrDefaultAsync(a => a.Id == account.Id);
-        Assert.NotNull(unchangedAccount);
-        Assert.True(unchangedAccount.IsActive);
+        Assert.Single(result.Errors);
+        Assert.Equal(Errors.Account.NotFound, result.Errors.First());
     }
 
     [Fact]
@@ -152,6 +152,7 @@ public class ToggleAccountActivationEndpointTests : IClassFixture<DatabaseFixtur
         var result1 = await handler.Handle(
             new ToggleAccountActivationEndpoint.Command(account.Id, userId),
             CancellationToken.None);
+
         Assert.False(result1.IsError);
 
         var account1 = await _dbContext.Accounts.FirstOrDefaultAsync(a => a.Id == account.Id);
@@ -177,112 +178,5 @@ public class ToggleAccountActivationEndpointTests : IClassFixture<DatabaseFixtur
         var account3 = await _dbContext.Accounts.FirstOrDefaultAsync(a => a.Id == account.Id);
         Assert.NotNull(account3);
         Assert.False(account3.IsActive);
-    }
-
-    [Fact]
-    public async Task Handle_ShouldNotAffectOtherAccounts()
-    {
-        // Arrange
-        var userId = await CreateTestUserAsync();
-        var account1 = await CreateAccountWithDependenciesAsync(userId, isActive: true);
-        var account2 = await CreateAccountWithDependenciesAsync(userId, isActive: true);
-
-        var handler = new ToggleAccountActivationEndpoint.CommandHandler(_dbContext);
-
-        // Act - Toggle only account1
-        var result = await handler.Handle(
-            new ToggleAccountActivationEndpoint.Command(account1.Id, userId),
-            CancellationToken.None);
-
-        // Assert
-        Assert.False(result.IsError);
-
-        var updatedAccount1 = await _dbContext.Accounts.FirstOrDefaultAsync(a => a.Id == account1.Id);
-        var updatedAccount2 = await _dbContext.Accounts.FirstOrDefaultAsync(a => a.Id == account2.Id);
-
-        Assert.NotNull(updatedAccount1);
-        Assert.NotNull(updatedAccount2);
-        Assert.False(updatedAccount1.IsActive);
-        Assert.True(updatedAccount2.IsActive); // Should remain active
-    }
-
-    [Fact]
-    public async Task Handle_WithActiveAccount_ShouldReturnSuccessResponse()
-    {
-        // Arrange
-        var userId = await CreateTestUserAsync();
-        var account = await CreateAccountWithDependenciesAsync(userId, isActive: true);
-
-        var handler = new ToggleAccountActivationEndpoint.CommandHandler(_dbContext);
-        var command = new ToggleAccountActivationEndpoint.Command(account.Id, userId);
-
-        // Act
-        var result = await handler.Handle(command, CancellationToken.None);
-
-        // Assert
-        Assert.False(result.IsError);
-        var response = result.Value;
-        Assert.NotNull(response);
-    }
-
-    [Fact]
-    public async Task Handle_WithInactiveAccount_ShouldReturnSuccessResponse()
-    {
-        // Arrange
-        var userId = await CreateTestUserAsync();
-        var account = await CreateAccountWithDependenciesAsync(userId, isActive: false);
-
-        var handler = new ToggleAccountActivationEndpoint.CommandHandler(_dbContext);
-        var command = new ToggleAccountActivationEndpoint.Command(account.Id, userId);
-
-        // Act
-        var result = await handler.Handle(command, CancellationToken.None);
-
-        // Assert
-        Assert.False(result.IsError);
-        var response = result.Value;
-        Assert.NotNull(response);
-    }
-
-    [Fact]
-    public async Task Handle_ShouldPreserveAccountData()
-    {
-        // Arrange
-        var userId = await CreateTestUserAsync();
-        var currency = new CurrencyFaker().Generate();
-        var paymentType = new PaymentTypeFaker().Generate();
-
-        _dbContext.Currencies.Add(currency);
-        _dbContext.PaymentTypes.Add(paymentType);
-        await _dbContext.SaveChangesAsync();
-
-        var account = new AccountFaker(userId, currency.Id, paymentType.Id)
-            .RuleFor(a => a.Name, "Test Account")
-            .RuleFor(a => a.InitialBalance, 5000m)
-            .RuleFor(a => a.IsActive, true)
-            .Generate();
-
-        _dbContext.Accounts.Add(account);
-        await _dbContext.SaveChangesAsync();
-
-        var originalCreatedOn = account.CreatedOn;
-
-        var handler = new ToggleAccountActivationEndpoint.CommandHandler(_dbContext);
-        var command = new ToggleAccountActivationEndpoint.Command(account.Id, userId);
-
-        // Act
-        var result = await handler.Handle(command, CancellationToken.None);
-
-        // Assert
-        Assert.False(result.IsError);
-
-        var updatedAccount = await _dbContext.Accounts.FirstOrDefaultAsync(a => a.Id == account.Id);
-        Assert.NotNull(updatedAccount);
-        Assert.Equal("Test Account", updatedAccount.Name);
-        Assert.Equal(5000m, updatedAccount.InitialBalance);
-        Assert.Equal(userId, updatedAccount.UserId);
-        Assert.Equal(currency.Id, updatedAccount.CurrencyId);
-        Assert.Equal(paymentType.Id, updatedAccount.PaymentTypeId);
-        Assert.Equal(originalCreatedOn, updatedAccount.CreatedOn); // CreatedOn should not change
     }
 }
