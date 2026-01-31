@@ -1,4 +1,5 @@
 using Budget.Api.Endpoints.Accounts;
+using Budget.Domain.Common.Errors;
 using Budget.Domain.Entities;
 using Budget.Infrastructure.Persistence;
 using Budget.Integration.Tests.Fakers;
@@ -59,8 +60,8 @@ public class GetAccountByIdEndpointTests : IClassFixture<DatabaseFixtureApp>
     {
         // Arrange
         var initialBalance = 1000m;
-        var recordAmount1 = -100m; // Expense
-        var recordAmount2 = 50m;   // Income
+        var recordAmount1 = -100m;
+        var recordAmount2 = 50m;
         var userId = await CreateTestUserAsync();
         var (account, category) = await CreateAccountWithDependenciesAsync(userId, initialBalance);
 
@@ -110,6 +111,8 @@ public class GetAccountByIdEndpointTests : IClassFixture<DatabaseFixtureApp>
 
         // Assert
         Assert.True(result.IsError);
+        Assert.Single(result.Errors);
+        Assert.Equal(Errors.Account.NotFound, result.Errors.First());
     }
 
     [Fact]
@@ -129,5 +132,7 @@ public class GetAccountByIdEndpointTests : IClassFixture<DatabaseFixtureApp>
 
         // Assert
         Assert.True(result.IsError);
+        Assert.Single(result.Errors);
+        Assert.Equal(Errors.Account.NotFound, result.Errors.First());
     }
 }
