@@ -4,7 +4,6 @@ using Budget.Infrastructure.Persistence;
 using Budget.Integration.Tests.Fakers;
 using Budget.Integration.Tests.Fixtures;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Xunit;
 
 namespace Budget.Integration.Tests.Endpoints.Accounts;
@@ -48,7 +47,7 @@ public class GetAllAccountsEndpointTests : IClassFixture<DatabaseFixtureApp>
         for (int i = 0; i < accountCount; i++)
         {
             var account = new AccountFaker(userId, currency.Id, paymentType.Id)
-                .RuleFor(a => a.Name, $"Account {i + 1}")
+                .RuleFor(a => a.Name, $"Account {userId} {i + 1}")
                 .RuleFor(a => a.IsActive, i < activeCount)
                 .Generate();
 
@@ -220,7 +219,7 @@ public class GetAllAccountsEndpointTests : IClassFixture<DatabaseFixtureApp>
         Assert.Single(accounts);
 
         var responseAccount = accounts[0];
-        var expectedBalance = initialBalance + (-200m) + 150m; // 950m
+        var expectedBalance = initialBalance + (-200m) + 150m;
         Assert.Equal(expectedBalance, responseAccount.Balance);
     }
 
@@ -234,24 +233,8 @@ public class GetAllAccountsEndpointTests : IClassFixture<DatabaseFixtureApp>
         var (user1Accounts, currency, paymentType) = await CreateAccountsWithDependenciesAsync(
             userId1, accountCount: 2, activeCount: 2);
 
-        // Create accounts for second user
-        var user2Currency = new CurrencyFaker().Generate();
-        var user2PaymentType = new PaymentTypeFaker().Generate();
-        _dbContext.Currencies.Add(user2Currency);
-        _dbContext.PaymentTypes.Add(user2PaymentType);
-        await _dbContext.SaveChangesAsync();
-
-        var user2Accounts = new List<Account>();
-        for (int i = 0; i < 3; i++)
-        {
-            var account = new AccountFaker(userId2, user2Currency.Id, user2PaymentType.Id)
-                .RuleFor(a => a.Name, $"User2 Account {i + 1}")
-                .RuleFor(a => a.IsActive, true) // Ensure all are active
-                .Generate();
-            user2Accounts.Add(account);
-        }
-        _dbContext.Accounts.AddRange(user2Accounts);
-        await _dbContext.SaveChangesAsync();
+        var (user2Accounts, user2Currency, user2PaymentType) = await CreateAccountsWithDependenciesAsync(
+            userId2, accountCount: 3, activeCount: 2);
 
         var handler = new GetAllAccountsEndpoint.QueryHandler(_dbContext);
 
@@ -269,7 +252,7 @@ public class GetAllAccountsEndpointTests : IClassFixture<DatabaseFixtureApp>
         var user2Results = result2.Value.ToList();
 
         Assert.Equal(2, user1Results.Count);
-        Assert.Equal(3, user2Results.Count);
+        Assert.Equal(2, user2Results.Count);
 
         // Verify isolation
         var user1Ids = user1Results.Select(a => a.Id).ToList();
