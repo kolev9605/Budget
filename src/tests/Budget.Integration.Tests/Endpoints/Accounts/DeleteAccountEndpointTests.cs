@@ -88,7 +88,7 @@ public class DeleteAccountEndpointTests : IClassFixture<DatabaseFixtureApp>
 
         // Assert
         Assert.True(result.IsError);
-        Assert.True(result.Errors.Count == 1);
+        Assert.Single(result.Errors);
         Assert.True(result.Errors.FirstOrDefault() == Errors.Account.NotFound);
     }
 
@@ -108,8 +108,8 @@ public class DeleteAccountEndpointTests : IClassFixture<DatabaseFixtureApp>
 
         // Assert
         Assert.True(result.IsError);
-        Assert.True(result.Errors.Count == 1);
-        Assert.True(result.Errors.FirstOrDefault() == Errors.Account.NotFound);
+        Assert.Single(result.Errors);
+        Assert.Equal(Errors.Account.NotFound, result.Errors.First());
 
         var existingAccount = await _dbContext.Accounts
             .FirstOrDefaultAsync(a => a.Id == account.Id);
