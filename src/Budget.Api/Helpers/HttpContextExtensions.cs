@@ -20,22 +20,6 @@ public static class HttpContextExtensions
         throw new UnauthorizedAccessException();
     }
 
-    public static void HandleErrorResponse(this HttpContext httpContext, List<Error> errors)
-    {
-        var firstError = errors[0];
-
-        var statusCode = firstError.Type switch
-        {
-            ErrorType.NotFound => HttpStatusCode.NotFound,
-            ErrorType.Validation => HttpStatusCode.BadRequest,
-            ErrorType.Unauthorized => HttpStatusCode.Unauthorized,
-            ErrorType.Forbidden => HttpStatusCode.Forbidden,
-            _ => HttpStatusCode.InternalServerError
-        };
-
-        httpContext.Response.StatusCode = (int)statusCode;
-    }
-
     public static IResult MatchResponse<TResult>(this ErrorOr<TResult> result)
     {
         return result.Match(
