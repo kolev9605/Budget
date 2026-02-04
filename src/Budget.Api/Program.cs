@@ -43,8 +43,7 @@ if (app.Environment.IsDevelopment())
 }
 
 // Disable HTTPS redirection so the HTTP port works
-// Temp solution
-// app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
 app.UseCors(x => x.AllowAnyHeader()
       .AllowAnyMethod()
