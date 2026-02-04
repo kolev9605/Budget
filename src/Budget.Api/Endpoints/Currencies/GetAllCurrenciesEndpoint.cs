@@ -15,6 +15,7 @@ public class GetAllCurrenciesEndpoint : IEndpoint
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = null!;
+        public string Abbreviation { get; set; } = null!;
     }
 
     public record Query() : IRequest<ErrorOr<IEnumerable<Response>>>;
@@ -43,6 +44,7 @@ public class GetAllCurrenciesEndpoint : IEndpoint
                         {
                             Id = c.Id,
                             Name = c.Name,
+                            Abbreviation = c.Abbreviation
                         })
                         .ToListAsync(cancellationToken);
 

@@ -29,15 +29,31 @@ public class GetAllRecordsEndpoint : IEndpoint
         public string? Note { get; set; }
         public DateTimeOffset RecordDate { get; set; }
         public decimal Amount { get; set; }
-        public Guid AccountId { get; set; }
-        public string AccountName { get; set; } = null!;
-        public Guid? FromAccountId { get; set; }
-        public string? FromAccountName { get; set; }
-        public Guid CategoryId { get; set; }
-        public string CategoryName { get; set; } = null!;
+        public AccountResponse Account { get; set; } = null!;
+        public AccountResponse? FromAccount { get; set; }
+        public CategoryResponse Category { get; set; } = null!;
         public RecordType RecordType { get; set; }
         public DateTimeOffset CreatedOn { get; set; }
         public DateTimeOffset UpdatedOn { get; set; }
+
+        public class AccountResponse
+        {
+            public Guid Id { get; set; }
+            public string Name { get; set; } = null!;
+            public CurrencyResponse Currency { get; set; } = null!;
+
+            public class CurrencyResponse
+            {
+                public Guid Id { get; set; }
+                public string Abbreviation { get; set; } = null!;
+            }
+        }
+
+        public class CategoryResponse
+        {
+            public Guid Id { get; set; }
+            public string Name { get; set; } = null!;
+        }
     }
 
     public record Query(
@@ -102,12 +118,31 @@ public class GetAllRecordsEndpoint : IEndpoint
                     Note = r.Note,
                     RecordDate = r.RecordDate,
                     Amount = r.Amount,
-                    AccountId = r.AccountId,
-                    AccountName = r.Account.Name,
-                    FromAccountId = r.FromAccountId,
-                    FromAccountName = r.FromAccount != null ? r.FromAccount.Name : null,
-                    CategoryId = r.CategoryId,
-                    CategoryName = r.Category.Name,
+                    Account = new Response.AccountResponse
+                    {
+                        Id = r.Account.Id,
+                        Name = r.Account.Name,
+                        Currency = new Response.AccountResponse.CurrencyResponse
+                        {
+                            Id = r.Account.Currency.Id,
+                            Abbreviation = r.Account.Currency.Abbreviation
+                        }
+                    },
+                    FromAccount = r.FromAccount != null ? new Response.AccountResponse
+                    {
+                        Id = r.FromAccount.Id,
+                        Name = r.FromAccount.Name,
+                        Currency = new Response.AccountResponse.CurrencyResponse
+                        {
+                            Id = r.FromAccount.Currency.Id,
+                            Abbreviation = r.FromAccount.Currency.Abbreviation
+                        }
+                    } : null,
+                    Category = new Response.CategoryResponse
+                    {
+                        Id = r.Category.Id,
+                        Name = r.Category.Name
+                    },
                     RecordType = r.RecordType,
                     CreatedOn = r.CreatedOn,
                     UpdatedOn = r.UpdatedOn
