@@ -286,6 +286,7 @@ public class GetAllAccountsEndpointTests : IClassFixture<DatabaseFixtureApp>
         var account = new AccountFaker(userId, currency.Id, paymentType.Id)
             .RuleFor(a => a.Name, "Test Account")
             .RuleFor(a => a.InitialBalance, 5000m)
+            .RuleFor(a => a.IsActive, true)
             .Generate();
 
         _dbContext.Accounts.Add(account);
