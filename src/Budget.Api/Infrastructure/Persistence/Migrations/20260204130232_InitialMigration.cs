@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Budget.Api.Infrastructure.Budget.Infrastructure.Persistence.Migrations
+namespace Budget.Api.Infrastructure.Persistence.Migrations
 {
     /// <inheritdoc />
     public partial class InitialMigration : Migration
@@ -236,8 +237,10 @@ namespace Budget.Api.Infrastructure.Budget.Infrastructure.Persistence.Migrations
                     user_id = table.Column<string>(type: "text", nullable: false),
                     currency_id = table.Column<Guid>(type: "uuid", nullable: false),
                     initial_balance = table.Column<decimal>(type: "numeric", nullable: false),
+                    payment_type_id = table.Column<Guid>(type: "uuid", nullable: false),
                     created_on = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "timezone('utc', now())"),
-                    updated_on = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "timezone('utc', now())")
+                    updated_on = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "timezone('utc', now())"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true)
                 },
                 constraints: table =>
                 {
@@ -246,6 +249,12 @@ namespace Budget.Api.Infrastructure.Budget.Infrastructure.Persistence.Migrations
                         name: "fk_accounts_currencies_currency_id",
                         column: x => x.currency_id,
                         principalTable: "currencies",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "fk_accounts_payment_types_payment_type_id",
+                        column: x => x.payment_type_id,
+                        principalTable: "payment_types",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -266,7 +275,6 @@ namespace Budget.Api.Infrastructure.Budget.Infrastructure.Persistence.Migrations
                     amount = table.Column<decimal>(type: "numeric", nullable: false),
                     account_id = table.Column<Guid>(type: "uuid", nullable: false),
                     from_account_id = table.Column<Guid>(type: "uuid", nullable: true),
-                    payment_type_id = table.Column<Guid>(type: "uuid", nullable: false),
                     category_id = table.Column<Guid>(type: "uuid", nullable: false),
                     record_type = table.Column<int>(type: "integer", nullable: false),
                     created_on = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "timezone('utc', now())"),
@@ -293,18 +301,17 @@ namespace Budget.Api.Infrastructure.Budget.Infrastructure.Persistence.Migrations
                         principalTable: "categories",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "fk_records_payment_types_payment_type_id",
-                        column: x => x.payment_type_id,
-                        principalTable: "payment_types",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
                 name: "ix_accounts_currency_id",
                 table: "accounts",
                 column: "currency_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_accounts_payment_type_id",
+                table: "accounts",
+                column: "payment_type_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_accounts_user_id",
@@ -369,11 +376,6 @@ namespace Budget.Api.Infrastructure.Budget.Infrastructure.Persistence.Migrations
                 column: "from_account_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_records_payment_type_id",
-                table: "records",
-                column: "payment_type_id");
-
-            migrationBuilder.CreateIndex(
                 name: "ix_user_categories_category_id",
                 table: "user_categories",
                 column: "category_id");
@@ -410,13 +412,13 @@ namespace Budget.Api.Infrastructure.Budget.Infrastructure.Persistence.Migrations
                 name: "accounts");
 
             migrationBuilder.DropTable(
-                name: "payment_types");
-
-            migrationBuilder.DropTable(
                 name: "categories");
 
             migrationBuilder.DropTable(
                 name: "currencies");
+
+            migrationBuilder.DropTable(
+                name: "payment_types");
 
             migrationBuilder.DropTable(
                 name: "asp_net_users");

@@ -9,23 +9,23 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Budget.Api.Infrastructure.Budget.Infrastructure.Persistence.Migrations
+namespace Budget.Api.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(BudgetDbContext))]
-    [Migration("20250511084902_AddAccountIsActive")]
-    partial class AddAccountIsActive
+    [Migration("20260204130232_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.4")
+                .HasAnnotation("ProductVersion", "10.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Budget.Domain.Entities.Account", b =>
+            modelBuilder.Entity("Budget.Api.Domain.Entities.Account", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -88,7 +88,7 @@ namespace Budget.Api.Infrastructure.Budget.Infrastructure.Persistence.Migrations
                     b.ToTable("accounts", (string)null);
                 });
 
-            modelBuilder.Entity("Budget.Domain.Entities.ApplicationUser", b =>
+            modelBuilder.Entity("Budget.Api.Domain.Entities.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text")
@@ -168,7 +168,7 @@ namespace Budget.Api.Infrastructure.Budget.Infrastructure.Persistence.Migrations
                     b.ToTable("asp_net_users", (string)null);
                 });
 
-            modelBuilder.Entity("Budget.Domain.Entities.Category", b =>
+            modelBuilder.Entity("Budget.Api.Domain.Entities.Category", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -215,7 +215,7 @@ namespace Budget.Api.Infrastructure.Budget.Infrastructure.Persistence.Migrations
                     b.ToTable("categories", (string)null);
                 });
 
-            modelBuilder.Entity("Budget.Domain.Entities.Currency", b =>
+            modelBuilder.Entity("Budget.Api.Domain.Entities.Currency", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -240,7 +240,7 @@ namespace Budget.Api.Infrastructure.Budget.Infrastructure.Persistence.Migrations
                     b.ToTable("currencies", (string)null);
                 });
 
-            modelBuilder.Entity("Budget.Domain.Entities.PaymentType", b =>
+            modelBuilder.Entity("Budget.Api.Domain.Entities.PaymentType", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -259,7 +259,7 @@ namespace Budget.Api.Infrastructure.Budget.Infrastructure.Persistence.Migrations
                     b.ToTable("payment_types", (string)null);
                 });
 
-            modelBuilder.Entity("Budget.Domain.Entities.Record", b =>
+            modelBuilder.Entity("Budget.Api.Domain.Entities.Record", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -322,7 +322,7 @@ namespace Budget.Api.Infrastructure.Budget.Infrastructure.Persistence.Migrations
                     b.ToTable("records", (string)null);
                 });
 
-            modelBuilder.Entity("Budget.Domain.Entities.UserCategory", b =>
+            modelBuilder.Entity("Budget.Api.Domain.Entities.UserCategory", b =>
                 {
                     b.Property<string>("UserId")
                         .HasColumnType("text")
@@ -505,23 +505,23 @@ namespace Budget.Api.Infrastructure.Budget.Infrastructure.Persistence.Migrations
                     b.ToTable("asp_net_user_tokens", (string)null);
                 });
 
-            modelBuilder.Entity("Budget.Domain.Entities.Account", b =>
+            modelBuilder.Entity("Budget.Api.Domain.Entities.Account", b =>
                 {
-                    b.HasOne("Budget.Domain.Entities.Currency", "Currency")
+                    b.HasOne("Budget.Api.Domain.Entities.Currency", "Currency")
                         .WithMany("Accounts")
                         .HasForeignKey("CurrencyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_accounts_currencies_currency_id");
 
-                    b.HasOne("Budget.Domain.Entities.PaymentType", "PaymentType")
+                    b.HasOne("Budget.Api.Domain.Entities.PaymentType", "PaymentType")
                         .WithMany("Accounts")
                         .HasForeignKey("PaymentTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_accounts_payment_types_payment_type_id");
 
-                    b.HasOne("Budget.Domain.Entities.ApplicationUser", "User")
+                    b.HasOne("Budget.Api.Domain.Entities.ApplicationUser", "User")
                         .WithMany("Accounts")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -535,9 +535,9 @@ namespace Budget.Api.Infrastructure.Budget.Infrastructure.Persistence.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Budget.Domain.Entities.Category", b =>
+            modelBuilder.Entity("Budget.Api.Domain.Entities.Category", b =>
                 {
-                    b.HasOne("Budget.Domain.Entities.Category", "ParentCategory")
+                    b.HasOne("Budget.Api.Domain.Entities.Category", "ParentCategory")
                         .WithMany("SubCategories")
                         .HasForeignKey("ParentCategoryId")
                         .HasConstraintName("fk_categories_categories_parent_category_id");
@@ -545,23 +545,23 @@ namespace Budget.Api.Infrastructure.Budget.Infrastructure.Persistence.Migrations
                     b.Navigation("ParentCategory");
                 });
 
-            modelBuilder.Entity("Budget.Domain.Entities.Record", b =>
+            modelBuilder.Entity("Budget.Api.Domain.Entities.Record", b =>
                 {
-                    b.HasOne("Budget.Domain.Entities.Account", "Account")
+                    b.HasOne("Budget.Api.Domain.Entities.Account", "Account")
                         .WithMany("Records")
                         .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_records_accounts_account_id");
 
-                    b.HasOne("Budget.Domain.Entities.Category", "Category")
+                    b.HasOne("Budget.Api.Domain.Entities.Category", "Category")
                         .WithMany("Records")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_records_categories_category_id");
 
-                    b.HasOne("Budget.Domain.Entities.Account", "FromAccount")
+                    b.HasOne("Budget.Api.Domain.Entities.Account", "FromAccount")
                         .WithMany("TransferRecords")
                         .HasForeignKey("FromAccountId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -574,16 +574,16 @@ namespace Budget.Api.Infrastructure.Budget.Infrastructure.Persistence.Migrations
                     b.Navigation("FromAccount");
                 });
 
-            modelBuilder.Entity("Budget.Domain.Entities.UserCategory", b =>
+            modelBuilder.Entity("Budget.Api.Domain.Entities.UserCategory", b =>
                 {
-                    b.HasOne("Budget.Domain.Entities.Category", "Category")
+                    b.HasOne("Budget.Api.Domain.Entities.Category", "Category")
                         .WithMany("Users")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_user_categories_categories_category_id");
 
-                    b.HasOne("Budget.Domain.Entities.ApplicationUser", "User")
+                    b.HasOne("Budget.Api.Domain.Entities.ApplicationUser", "User")
                         .WithMany("Categories")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -607,7 +607,7 @@ namespace Budget.Api.Infrastructure.Budget.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Budget.Domain.Entities.ApplicationUser", null)
+                    b.HasOne("Budget.Api.Domain.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -617,7 +617,7 @@ namespace Budget.Api.Infrastructure.Budget.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Budget.Domain.Entities.ApplicationUser", null)
+                    b.HasOne("Budget.Api.Domain.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -634,7 +634,7 @@ namespace Budget.Api.Infrastructure.Budget.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_asp_net_user_roles_asp_net_roles_role_id");
 
-                    b.HasOne("Budget.Domain.Entities.ApplicationUser", null)
+                    b.HasOne("Budget.Api.Domain.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -644,7 +644,7 @@ namespace Budget.Api.Infrastructure.Budget.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Budget.Domain.Entities.ApplicationUser", null)
+                    b.HasOne("Budget.Api.Domain.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -652,21 +652,21 @@ namespace Budget.Api.Infrastructure.Budget.Infrastructure.Persistence.Migrations
                         .HasConstraintName("fk_asp_net_user_tokens_asp_net_users_user_id");
                 });
 
-            modelBuilder.Entity("Budget.Domain.Entities.Account", b =>
+            modelBuilder.Entity("Budget.Api.Domain.Entities.Account", b =>
                 {
                     b.Navigation("Records");
 
                     b.Navigation("TransferRecords");
                 });
 
-            modelBuilder.Entity("Budget.Domain.Entities.ApplicationUser", b =>
+            modelBuilder.Entity("Budget.Api.Domain.Entities.ApplicationUser", b =>
                 {
                     b.Navigation("Accounts");
 
                     b.Navigation("Categories");
                 });
 
-            modelBuilder.Entity("Budget.Domain.Entities.Category", b =>
+            modelBuilder.Entity("Budget.Api.Domain.Entities.Category", b =>
                 {
                     b.Navigation("Records");
 
@@ -675,12 +675,12 @@ namespace Budget.Api.Infrastructure.Budget.Infrastructure.Persistence.Migrations
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("Budget.Domain.Entities.Currency", b =>
+            modelBuilder.Entity("Budget.Api.Domain.Entities.Currency", b =>
                 {
                     b.Navigation("Accounts");
                 });
 
-            modelBuilder.Entity("Budget.Domain.Entities.PaymentType", b =>
+            modelBuilder.Entity("Budget.Api.Domain.Entities.PaymentType", b =>
                 {
                     b.Navigation("Accounts");
                 });
