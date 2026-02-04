@@ -1,11 +1,8 @@
 using Budget.Api.Helpers;
 using Budget.Api.Interfaces;
-using Budget.Domain.Common.Errors;
-using Budget.Domain.Entities;
-using Budget.Domain.Models.Categories;
-using Budget.Infrastructure.Persistence;
+using Budget.Api.Domain.Entities;
+using Budget.Api.Infrastructure.Persistence;
 using ErrorOr;
-using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,11 +15,28 @@ public class GetAllCategoriesEndpoint : IEndpoint
         public bool? PrimaryOnly { get; set; }
     }
 
+    public class Response
+    {
+        public Guid Id { get; set; }
+
+        public string Name { get; set; } = null!;
+
+        public CategoryType CategoryType { get; set; }
+
+        public Guid? ParentCategoryId { get; set; }
+
+        public bool IsInitial { get; set; }
+
+        public DateTimeOffset CreatedOn { get; set; }
+
+        public DateTimeOffset UpdatedOn { get; set; }
+    }
+
     public record Query(
         bool PrimaryOnly,
-        string UserId) : IRequest<ErrorOr<IEnumerable<CategoryModel>>>;
+        string UserId) : IRequest<ErrorOr<IEnumerable<Response>>>;
 
-    public class QueryHandler : IRequestHandler<Query, ErrorOr<IEnumerable<CategoryModel>>>
+    public class QueryHandler : IRequestHandler<Query, ErrorOr<IEnumerable<Response>>>
     {
         private readonly BudgetDbContext _dbContext;
 
@@ -31,7 +45,7 @@ public class GetAllCategoriesEndpoint : IEndpoint
             _dbContext = dbContext;
         }
 
-        public async Task<ErrorOr<IEnumerable<CategoryModel>>> Handle(Query query, CancellationToken cancellationToken)
+        public async Task<ErrorOr<IEnumerable<Response>>> Handle(Query query, CancellationToken cancellationToken)
         {
             var categoriesQuery = _dbContext.Categories
                 .AsNoTracking()
@@ -45,7 +59,16 @@ public class GetAllCategoriesEndpoint : IEndpoint
 
             var categories = await categoriesQuery
                 .OrderBy(c => c.Name)
-                .ProjectToType<CategoryModel>()
+                .Select(c => new Response
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    CategoryType = c.CategoryType,
+                    ParentCategoryId = c.ParentCategoryId,
+                    IsInitial = c.IsInitial,
+                    CreatedOn = c.CreatedOn,
+                    UpdatedOn = c.UpdatedOn
+                })
                 .ToListAsync(cancellationToken);
 
             return categories.AsEnumerable().ToErrorOr();

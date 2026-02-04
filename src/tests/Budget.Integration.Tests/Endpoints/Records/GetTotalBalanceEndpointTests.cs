@@ -1,11 +1,10 @@
 using Budget.Api.Endpoints.Records;
-using Budget.Domain.Entities;
-using Budget.Infrastructure.Persistence;
+using Budget.Api.Domain.Entities;
 using Budget.Integration.Tests.Fakers;
 using Budget.Integration.Tests.Fixtures;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Xunit;
+using Budget.Api.Infrastructure.Persistence;
 
 namespace Budget.Integration.Tests.Endpoints.Records;
 

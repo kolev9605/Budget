@@ -1,7 +1,7 @@
 using Budget.Api.Endpoints.Currencies;
-using Budget.Domain.Constants;
-using Budget.Domain.Interfaces.Services;
-using Budget.Infrastructure.Persistence;
+using Budget.Api.Domain.Constants;
+using Budget.Api.Domain.Interfaces.Services;
+using Budget.Api.Infrastructure.Persistence;
 using Budget.Integration.Tests.Fakers;
 using Budget.Integration.Tests.Fixtures;
 using Microsoft.Extensions.Caching.Memory;

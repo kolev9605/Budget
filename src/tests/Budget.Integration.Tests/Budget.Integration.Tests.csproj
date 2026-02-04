@@ -24,15 +24,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Budget.Api\Budget.Api.csproj" />
-    <ProjectReference Include="..\..\Budget.Application\Budget.Application.csproj" />
-    <ProjectReference Include="..\..\Budget.Domain\Budget.Domain.csproj" />
-    <ProjectReference Include="..\..\Infrastructure\Budget.Infrastructure.Persistence\Budget.Infrastructure.Persistence.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="..\..\..\scripts\initial-seeder.sql" Link="scripts\initial-seeder.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
 
 </Project>

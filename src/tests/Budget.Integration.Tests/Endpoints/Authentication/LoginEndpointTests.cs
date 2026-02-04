@@ -1,8 +1,8 @@
 using Budget.Api.Endpoints.Authentication;
-using Budget.Domain.Common.Errors;
-using Budget.Domain.Entities;
-using Budget.Domain.Interfaces;
-using Budget.Infrastructure.Persistence;
+using Budget.Api.Domain.Common.Errors;
+using Budget.Api.Domain.Entities;
+using Budget.Api.Domain.Interfaces;
+using Budget.Api.Infrastructure.Persistence;
 using Budget.Integration.Tests.Fakers;
 using Budget.Integration.Tests.Fixtures;
 using Microsoft.AspNetCore.Identity;

@@ -1,5 +1,5 @@
-using Budget.Domain.Models.Authentication;
-using Budget.Infrastructure.Persistence;
+using Budget.Api.Domain.Models.Authentication;
+using Budget.Api.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Testcontainers.PostgreSql;

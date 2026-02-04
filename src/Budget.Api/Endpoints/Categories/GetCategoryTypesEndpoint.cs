@@ -1,6 +1,6 @@
 using Budget.Api.Interfaces;
-using Budget.Common;
-using Budget.Domain.Entities;
+using Budget.Api.Helpers;
+using Budget.Api.Domain.Entities;
 
 namespace Budget.Api.Endpoints.Categories;
 

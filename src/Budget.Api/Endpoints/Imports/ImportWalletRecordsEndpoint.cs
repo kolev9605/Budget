@@ -1,11 +1,11 @@
 using System.Text.Json;
 using Budget.Api.Helpers;
 using Budget.Api.Interfaces;
-using Budget.Domain.Entities;
-using Budget.Domain.Interfaces;
-using Budget.Domain.Interfaces.Services;
-using Budget.Domain.Models.Import.Wallet;
-using Budget.Infrastructure.Persistence;
+using Budget.Api.Domain.Entities;
+using Budget.Api.Domain.Interfaces;
+using Budget.Api.Domain.Interfaces.Services;
+using Budget.Api.Domain.Models.Import.Wallet;
+using Budget.Api.Infrastructure.Persistence;
 using ErrorOr;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

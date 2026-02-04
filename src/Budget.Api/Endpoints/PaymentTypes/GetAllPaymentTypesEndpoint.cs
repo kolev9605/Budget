@@ -1,11 +1,9 @@
 using Budget.Api.Helpers;
 using Budget.Api.Interfaces;
-using Budget.Domain.Constants;
-using Budget.Domain.Interfaces.Services;
-using Budget.Domain.Models.PaymentTypes;
-using Budget.Infrastructure.Persistence;
+using Budget.Api.Domain.Constants;
+using Budget.Api.Domain.Interfaces.Services;
+using Budget.Api.Infrastructure.Persistence;
 using ErrorOr;
-using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,9 +11,15 @@ namespace Budget.Api.Endpoints.PaymentTypes;
 
 public class GetAllPaymentTypesEndpoint : IEndpoint
 {
-    public record Query() : IRequest<ErrorOr<IEnumerable<PaymentTypeModel>>>;
+    public class Response
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; } = null!;
+    }
 
-    public class QueryHandler : IRequestHandler<Query, ErrorOr<IEnumerable<PaymentTypeModel>>>
+    public record Query() : IRequest<ErrorOr<IEnumerable<Response>>>;
+
+    public class QueryHandler : IRequestHandler<Query, ErrorOr<IEnumerable<Response>>>
     {
         private readonly BudgetDbContext _dbContext;
         private readonly ICacheManager _cacheManager;
@@ -26,7 +30,7 @@ public class GetAllPaymentTypesEndpoint : IEndpoint
             _cacheManager = cacheManager;
         }
 
-        public async Task<ErrorOr<IEnumerable<PaymentTypeModel>>> Handle(Query query, CancellationToken cancellationToken)
+        public async Task<ErrorOr<IEnumerable<Response>>> Handle(Query query, CancellationToken cancellationToken)
         {
             return await _cacheManager.GetOrCreateAsync(
                 CacheConstants.PaymentTypes.Key,
@@ -35,7 +39,11 @@ public class GetAllPaymentTypesEndpoint : IEndpoint
                 {
                     var paymentTypes = await _dbContext.PaymentTypes
                         .AsNoTracking()
-                        .ProjectToType<PaymentTypeModel>()
+                        .Select(p => new Response
+                        {
+                            Id = p.Id,
+                            Name = p.Name
+                        })
                         .ToListAsync(cancellationToken);
 
                     return paymentTypes.AsEnumerable().ToErrorOr();

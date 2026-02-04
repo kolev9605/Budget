@@ -1,9 +1,9 @@
 using Budget.Api.Endpoints.Categories;
-using Budget.Domain.Constants;
-using Budget.Domain.Entities;
-using Record = Budget.Domain.Entities.Record;
-using Budget.Domain.Interfaces.Services;
-using Budget.Infrastructure.Persistence;
+using Budget.Api.Domain.Constants;
+using Budget.Api.Domain.Entities;
+using Record = Budget.Api.Domain.Entities.Record;
+using Budget.Api.Domain.Interfaces.Services;
+using Budget.Api.Infrastructure.Persistence;
 using Budget.Integration.Tests.Fakers;
 using Budget.Integration.Tests.Fixtures;
 using Microsoft.AspNetCore.Identity;

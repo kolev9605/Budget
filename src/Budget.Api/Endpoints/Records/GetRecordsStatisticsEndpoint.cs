@@ -1,10 +1,8 @@
 using Budget.Api.Helpers;
 using Budget.Api.Interfaces;
-using Budget.Domain.Entities;
-using Budget.Domain.Models.Records.Statistics;
-using Budget.Infrastructure.Persistence;
+using Budget.Api.Domain.Entities;
+using Budget.Api.Infrastructure.Persistence;
 using ErrorOr;
-using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,12 +16,24 @@ public class GetRecordsStatisticsEndpoint : IEndpoint
         public DateTimeOffset EndDateRange { get; set; }
     }
 
+    public class Response
+    {
+        public Guid Id { get; set; }
+        public DateTimeOffset RecordDate { get; set; }
+        public decimal Amount { get; set; }
+        public Guid AccountId { get; set; }
+        public string AccountName { get; set; } = null!;
+        public Guid CategoryId { get; set; }
+        public string CategoryName { get; set; } = null!;
+        public RecordType RecordType { get; set; }
+    }
+
     public record Query(
         DateTimeOffset StartDateRange,
         DateTimeOffset EndDateRange,
-        string UserId) : IRequest<ErrorOr<IEnumerable<GetRecordsStatisticsResult>>>;
+        string UserId) : IRequest<ErrorOr<IEnumerable<Response>>>;
 
-    public class QueryHandler : IRequestHandler<Query, ErrorOr<IEnumerable<GetRecordsStatisticsResult>>>
+    public class QueryHandler : IRequestHandler<Query, ErrorOr<IEnumerable<Response>>>
     {
         private readonly BudgetDbContext _dbContext;
 
@@ -32,7 +42,7 @@ public class GetRecordsStatisticsEndpoint : IEndpoint
             _dbContext = dbContext;
         }
 
-        public async Task<ErrorOr<IEnumerable<GetRecordsStatisticsResult>>> Handle(Query query, CancellationToken cancellationToken)
+        public async Task<ErrorOr<IEnumerable<Response>>> Handle(Query query, CancellationToken cancellationToken)
         {
             var recordsInRange = await _dbContext.Records
                 .AsNoTracking()
@@ -41,7 +51,17 @@ public class GetRecordsStatisticsEndpoint : IEndpoint
                 .Where(r => r.Account.UserId == query.UserId)
                 .Where(r => r.RecordDate >= query.StartDateRange.UtcDateTime && r.RecordDate <= query.EndDateRange.UtcDateTime)
                 .OrderBy(r => r.RecordDate)
-                .ProjectToType<GetRecordsStatisticsResult>()
+                .Select(r => new Response
+                {
+                    Id = r.Id,
+                    RecordDate = r.RecordDate,
+                    Amount = r.Amount,
+                    AccountId = r.AccountId,
+                    AccountName = r.Account.Name,
+                    CategoryId = r.CategoryId,
+                    CategoryName = r.Category.Name,
+                    RecordType = r.RecordType
+                })
                 .ToListAsync(cancellationToken);
 
             return recordsInRange.AsEnumerable().ToErrorOr();

@@ -1,8 +1,8 @@
 using Budget.Api.Helpers;
 using Budget.Api.Interfaces;
-using Budget.Domain.Common.Errors;
-using Budget.Domain.Entities;
-using Budget.Infrastructure.Persistence;
+using Budget.Api.Domain.Common.Errors;
+using Budget.Api.Domain.Entities;
+using Budget.Api.Infrastructure.Persistence;
 using ErrorOr;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

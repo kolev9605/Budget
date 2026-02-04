@@ -1,0 +1,51 @@
+﻿using Budget.Api.Domain.Entities;
+
+namespace Budget.Api.Domain.Models.Records;
+
+public class RecordsExportModel
+{
+    public string? Note { get; set; }
+
+    public string? FromAccount { get; set; }
+
+    public string Account { get; set; } = null!;
+
+    public RecordType RecordType { get; set; }
+
+    public string PaymentType { get; set; } = null!;
+
+    public string Category { get; set; } = null!;
+
+    public DateTimeOffset DateCreated { get; set; }
+
+    public DateTimeOffset RecordDate { get; set; }
+
+    public decimal Amount { get; set; }
+
+    public static RecordsExportModel FromRecord(Record record)
+    {
+        return new RecordsExportModel
+        {
+            Note = record.Note,
+            Account = record.Account.Name,
+            FromAccount = record.FromAccount?.Name,
+            RecordType = record.RecordType,
+            Category = record.Category.Name,
+            DateCreated = record.CreatedOn,
+            RecordDate = record.RecordDate,
+            Amount = record.Amount,
+        };
+    }
+
+    public static Record ToRecord(RecordsExportModel record)
+    {
+        return new Record
+        {
+            Note = record.Note,
+            RecordType = record.RecordType,
+            CreatedOn = record.DateCreated,
+            RecordDate = record.RecordDate,
+            Amount = record.Amount,
+        };
+    }
+}

@@ -1,10 +1,9 @@
 using Budget.Api.Helpers;
 using Budget.Api.Interfaces;
-using Budget.Domain.Common.Errors;
-using Budget.Domain.Models.Records;
-using Budget.Infrastructure.Persistence;
+using Budget.Api.Domain.Common.Errors;
+using Budget.Api.Domain.Entities;
+using Budget.Api.Infrastructure.Persistence;
 using ErrorOr;
-using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,11 +16,28 @@ public class GetRecordByIdEndpoint : IEndpoint
         public Guid RecordId { get; set; }
     }
 
+    public class Response
+    {
+        public Guid Id { get; set; }
+        public string? Note { get; set; }
+        public DateTimeOffset RecordDate { get; set; }
+        public decimal Amount { get; set; }
+        public Guid AccountId { get; set; }
+        public string AccountName { get; set; } = null!;
+        public Guid? FromAccountId { get; set; }
+        public string? FromAccountName { get; set; }
+        public Guid CategoryId { get; set; }
+        public string CategoryName { get; set; } = null!;
+        public RecordType RecordType { get; set; }
+        public DateTimeOffset CreatedOn { get; set; }
+        public DateTimeOffset UpdatedOn { get; set; }
+    }
+
     public record Query(
         Guid RecordId,
-        string UserId) : IRequest<ErrorOr<RecordModel>>;
+        string UserId) : IRequest<ErrorOr<Response>>;
 
-    public class QueryHandler : IRequestHandler<Query, ErrorOr<RecordModel>>
+    public class QueryHandler : IRequestHandler<Query, ErrorOr<Response>>
     {
         private readonly BudgetDbContext _dbContext;
 
@@ -30,7 +46,7 @@ public class GetRecordByIdEndpoint : IEndpoint
             _dbContext = dbContext;
         }
 
-        public async Task<ErrorOr<RecordModel>> Handle(Query query, CancellationToken cancellationToken)
+        public async Task<ErrorOr<Response>> Handle(Query query, CancellationToken cancellationToken)
         {
             var record = await _dbContext.Records
                 .AsNoTracking()
@@ -39,7 +55,22 @@ public class GetRecordByIdEndpoint : IEndpoint
                 .Include(r => r.FromAccount)
                 .Where(r => r.Id == query.RecordId)
                 .Where(r => r.Account.UserId == query.UserId)
-                .ProjectToType<RecordModel>()
+                .Select(r => new Response
+                {
+                    Id = r.Id,
+                    Note = r.Note,
+                    RecordDate = r.RecordDate,
+                    Amount = r.Amount,
+                    AccountId = r.AccountId,
+                    AccountName = r.Account.Name,
+                    FromAccountId = r.FromAccountId,
+                    FromAccountName = r.FromAccount != null ? r.FromAccount.Name : null,
+                    CategoryId = r.CategoryId,
+                    CategoryName = r.Category.Name,
+                    RecordType = r.RecordType,
+                    CreatedOn = r.CreatedOn,
+                    UpdatedOn = r.UpdatedOn
+                })
                 .FirstOrDefaultAsync(cancellationToken);
 
             if (record is null)

@@ -1,13 +1,8 @@
 using Budget.Api;
 using Budget.Api.Helpers;
-using Budget.Application;
-using Budget.Domain;
-using Budget.Infrastructure;
-using Budget.Infrastructure.Persistence;
+using Budget.Api.Infrastructure;
+using Budget.Api.Infrastructure.Persistence;
 using Serilog;
-using Budget.Infrastructure.AI;
-using Budget.Api.Endpoints;
-using Budget.Api.Endpoints.Accounts;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,10 +23,8 @@ builder.Host.UseSerilog((context, services, configuration) =>
 });
 
 builder.Services
-    .AddDomain()
     .AddPersistence(builder.Configuration.GetConnectionString("Budget"))
     .AddInfrastructure(builder.Configuration)
-    .AddApplication()
     .AddPresentation()
     // .AddAI(builder.Configuration)
 ;
@@ -61,7 +54,6 @@ app.UseCors(x => x.AllowAnyHeader()
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
 app.MapEndpoints();
 
 app.Run();

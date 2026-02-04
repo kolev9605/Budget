@@ -1,6 +1,6 @@
 using Budget.Api.Helpers;
 using Budget.Api.Interfaces;
-using Budget.Infrastructure.Persistence;
+using Budget.Api.Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

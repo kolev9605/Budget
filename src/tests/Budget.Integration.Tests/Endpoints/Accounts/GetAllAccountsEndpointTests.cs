@@ -1,6 +1,6 @@
 using Budget.Api.Endpoints.Accounts;
-using Budget.Domain.Entities;
-using Budget.Infrastructure.Persistence;
+using Budget.Api.Domain.Entities;
+using Budget.Api.Infrastructure.Persistence;
 using Budget.Integration.Tests.Fakers;
 using Budget.Integration.Tests.Fixtures;
 using Microsoft.AspNetCore.Identity;

@@ -1,10 +1,8 @@
 using Budget.Api.Helpers;
 using Budget.Api.Interfaces;
-using Budget.Domain.Constants;
-using Budget.Domain.Entities;
-using Budget.Domain.Interfaces.Services;
-using Budget.Domain.Models.Categories;
-using Budget.Infrastructure.Persistence;
+using Budget.Api.Domain.Constants;
+using Budget.Api.Domain.Interfaces.Services;
+using Budget.Api.Infrastructure.Persistence;
 using ErrorOr;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -18,11 +16,18 @@ public class GetMostUsedCategoriesEndpoint : IEndpoint
         public int? Count { get; set; } = 10;
     }
 
+    public class Response
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; } = null!;
+        public int Count { get; set; }
+    }
+
     public record Query(
         string UserId,
-        int Count) : IRequest<ErrorOr<IEnumerable<GetMostUsedCategoriesResult>>>;
+        int Count) : IRequest<ErrorOr<IEnumerable<Response>>>;
 
-    public class QueryHandler : IRequestHandler<Query, ErrorOr<IEnumerable<GetMostUsedCategoriesResult>>>
+    public class QueryHandler : IRequestHandler<Query, ErrorOr<IEnumerable<Response>>>
     {
         private readonly BudgetDbContext _dbContext;
         private readonly ICacheManager _cacheManager;
@@ -33,7 +38,7 @@ public class GetMostUsedCategoriesEndpoint : IEndpoint
             _cacheManager = cacheManager;
         }
 
-        public async Task<ErrorOr<IEnumerable<GetMostUsedCategoriesResult>>> Handle(Query query, CancellationToken cancellationToken)
+        public async Task<ErrorOr<IEnumerable<Response>>> Handle(Query query, CancellationToken cancellationToken)
         {
             return await _cacheManager.GetOrCreateAsync(
                 CacheConstants.MostUsedCategories.Key,
@@ -48,10 +53,12 @@ public class GetMostUsedCategoriesEndpoint : IEndpoint
                         .GroupBy(r => r.Category)
                         .OrderByDescending(g => g.Count())
                         .Take(query.Count)
-                        .Select(g => new GetMostUsedCategoriesResult(
-                            g.Key.Id,
-                            g.Key.Name,
-                            g.Count()))
+                        .Select(g => new Response
+                        {
+                            Id = g.Key.Id,
+                            Name = g.Key.Name,
+                            Count = g.Count()
+                        })
                         .ToListAsync(cancellationToken);
 
                     return mostUsedCategories.AsEnumerable().ToErrorOr();

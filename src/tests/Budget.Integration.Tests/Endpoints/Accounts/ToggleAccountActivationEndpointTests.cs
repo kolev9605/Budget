@@ -1,7 +1,7 @@
 using Budget.Api.Endpoints.Accounts;
-using Budget.Domain.Common.Errors;
-using Budget.Domain.Entities;
-using Budget.Infrastructure.Persistence;
+using Budget.Api.Domain.Common.Errors;
+using Budget.Api.Domain.Entities;
+using Budget.Api.Infrastructure.Persistence;
 using Budget.Integration.Tests.Fakers;
 using Budget.Integration.Tests.Fixtures;
 using Microsoft.AspNetCore.Identity;
@@ -136,7 +136,7 @@ public class ToggleAccountActivationEndpointTests : IClassFixture<DatabaseFixtur
         // Assert
         Assert.True(result.IsError);
         Assert.Single(result.Errors);
-        Assert.Equal(Errors.Account.NotFound, result.Errors.First());
+        Assert.Equal(Errors.Account.BelongsToAnotherUser, result.Errors.First());
     }
 
     [Fact]

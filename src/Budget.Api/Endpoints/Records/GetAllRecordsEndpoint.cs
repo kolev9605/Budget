@@ -1,12 +1,10 @@
 using Budget.Api.Helpers;
 using Budget.Api.Interfaces;
-using Budget.Domain.Constants;
-using Budget.Domain.Entities;
-using Budget.Domain.Models.Pagination;
-using Budget.Domain.Models.Records;
-using Budget.Infrastructure.Persistence;
+using Budget.Api.Domain.Constants;
+using Budget.Api.Domain.Entities;
+using Budget.Api.Domain.Models.Pagination;
+using Budget.Api.Infrastructure.Persistence;
 using ErrorOr;
-using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,6 +23,23 @@ public class GetAllRecordsEndpoint : IEndpoint
         public int? PageSize { get; set; }
     }
 
+    public class Response
+    {
+        public Guid Id { get; set; }
+        public string? Note { get; set; }
+        public DateTimeOffset RecordDate { get; set; }
+        public decimal Amount { get; set; }
+        public Guid AccountId { get; set; }
+        public string AccountName { get; set; } = null!;
+        public Guid? FromAccountId { get; set; }
+        public string? FromAccountName { get; set; }
+        public Guid CategoryId { get; set; }
+        public string CategoryName { get; set; } = null!;
+        public RecordType RecordType { get; set; }
+        public DateTimeOffset CreatedOn { get; set; }
+        public DateTimeOffset UpdatedOn { get; set; }
+    }
+
     public record Query(
         Guid? AccountId,
         RecordType? RecordType,
@@ -33,9 +48,9 @@ public class GetAllRecordsEndpoint : IEndpoint
         DateTime? EndDateRange,
         int PageNumber,
         int PageSize,
-        string UserId) : IRequest<ErrorOr<IPagedListContainer<RecordModel>>>;
+        string UserId) : IRequest<ErrorOr<IPagedListContainer<Response>>>;
 
-    public class QueryHandler : IRequestHandler<Query, ErrorOr<IPagedListContainer<RecordModel>>>
+    public class QueryHandler : IRequestHandler<Query, ErrorOr<IPagedListContainer<Response>>>
     {
         private readonly BudgetDbContext _dbContext;
 
@@ -44,7 +59,7 @@ public class GetAllRecordsEndpoint : IEndpoint
             _dbContext = dbContext;
         }
 
-        public async Task<ErrorOr<IPagedListContainer<RecordModel>>> Handle(Query query, CancellationToken cancellationToken)
+        public async Task<ErrorOr<IPagedListContainer<Response>>> Handle(Query query, CancellationToken cancellationToken)
         {
             var baseQuery = _dbContext.Records
                 .AsNoTracking()
@@ -81,14 +96,29 @@ public class GetAllRecordsEndpoint : IEndpoint
                 .OrderByDescending(r => r.RecordDate)
                 .Skip((query.PageNumber - 1) * query.PageSize)
                 .Take(query.PageSize)
-                .ProjectToType<RecordModel>()
+                .Select(r => new Response
+                {
+                    Id = r.Id,
+                    Note = r.Note,
+                    RecordDate = r.RecordDate,
+                    Amount = r.Amount,
+                    AccountId = r.AccountId,
+                    AccountName = r.Account.Name,
+                    FromAccountId = r.FromAccountId,
+                    FromAccountName = r.FromAccount != null ? r.FromAccount.Name : null,
+                    CategoryId = r.CategoryId,
+                    CategoryName = r.Category.Name,
+                    RecordType = r.RecordType,
+                    CreatedOn = r.CreatedOn,
+                    UpdatedOn = r.UpdatedOn
+                })
                 .ToListAsync(cancellationToken);
 
             var totalPages = (int)Math.Ceiling((double)totalCount / query.PageSize);
             var hasNextPage = query.PageNumber < totalPages;
             var hasPreviousPage = query.PageNumber > 1;
 
-            var result = new PagedListContainer<RecordModel>(
+            var result = new PagedListContainer<Response>(
                 records,
                 query.PageNumber,
                 totalPages,

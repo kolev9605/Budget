@@ -1,5 +1,5 @@
 using Bogus;
-using Budget.Domain.Entities;
+using Budget.Api.Domain.Entities;
 
 namespace Budget.Integration.Tests.Fakers;
 

@@ -1,11 +1,9 @@
 using Budget.Api.Helpers;
 using Budget.Api.Interfaces;
-using Budget.Domain.Constants;
-using Budget.Domain.Interfaces.Services;
-using Budget.Domain.Models.Currencies;
-using Budget.Infrastructure.Persistence;
+using Budget.Api.Domain.Constants;
+using Budget.Api.Domain.Interfaces.Services;
+using Budget.Api.Infrastructure.Persistence;
 using ErrorOr;
-using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,9 +11,15 @@ namespace Budget.Api.Endpoints.Currencies;
 
 public class GetAllCurrenciesEndpoint : IEndpoint
 {
-    public record Query() : IRequest<ErrorOr<IEnumerable<CurrencyModel>>>;
+    public class Response
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; } = null!;
+    }
 
-    public class QueryHandler : IRequestHandler<Query, ErrorOr<IEnumerable<CurrencyModel>>>
+    public record Query() : IRequest<ErrorOr<IEnumerable<Response>>>;
+
+    public class QueryHandler : IRequestHandler<Query, ErrorOr<IEnumerable<Response>>>
     {
         private readonly BudgetDbContext _dbContext;
         private readonly ICacheManager _cacheManager;
@@ -26,7 +30,7 @@ public class GetAllCurrenciesEndpoint : IEndpoint
             _cacheManager = cacheManager;
         }
 
-        public async Task<ErrorOr<IEnumerable<CurrencyModel>>> Handle(Query query, CancellationToken cancellationToken)
+        public async Task<ErrorOr<IEnumerable<Response>>> Handle(Query query, CancellationToken cancellationToken)
         {
             return await _cacheManager.GetOrCreateAsync(
                 CacheConstants.Currencies.Key,
@@ -35,7 +39,11 @@ public class GetAllCurrenciesEndpoint : IEndpoint
                 {
                     var currencies = await _dbContext.Currencies
                         .AsNoTracking()
-                        .ProjectToType<CurrencyModel>()
+                        .Select(c => new Response
+                        {
+                            Id = c.Id,
+                            Name = c.Name,
+                        })
                         .ToListAsync(cancellationToken);
 
                     return currencies.AsEnumerable().ToErrorOr();

@@ -2,7 +2,6 @@ using System.Net;
 using System.Security.Claims;
 using Budget.Api.Models;
 using ErrorOr;
-using Mapster;
 
 namespace Budget.Api.Helpers;
 
@@ -35,14 +34,6 @@ public static class HttpContextExtensions
         };
 
         httpContext.Response.StatusCode = (int)statusCode;
-    }
-
-    public static IResult MatchResponse<TResult, TResponse>(this ErrorOr<TResult> result)
-    {
-        return result.Match(
-            value => Results.Ok(value.Adapt<TResponse>()),
-            errors => HandleErrors(errors)
-        );
     }
 
     public static IResult MatchResponse<TResult>(this ErrorOr<TResult> result)

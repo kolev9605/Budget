@@ -1,7 +1,4 @@
-﻿using System.Net;
-using System.Net.Mime;
-using System.Text.Json;
-using Budget.Domain.Exceptions;
+﻿using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace Budget.Api.Helpers;

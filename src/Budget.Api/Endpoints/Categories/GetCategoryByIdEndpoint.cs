@@ -1,10 +1,9 @@
 using Budget.Api.Helpers;
 using Budget.Api.Interfaces;
-using Budget.Domain.Common.Errors;
-using Budget.Domain.Models.Categories;
-using Budget.Infrastructure.Persistence;
+using Budget.Api.Domain.Common.Errors;
+using Budget.Api.Domain.Entities;
+using Budget.Api.Infrastructure.Persistence;
 using ErrorOr;
-using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,11 +16,34 @@ public class GetCategoryByIdEndpoint : IEndpoint
         public Guid CategoryId { get; set; }
     }
 
+    public class Response
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; } = null!;
+        public CategoryType CategoryType { get; set; }
+        public Guid? ParentCategoryId { get; set; }
+        public bool IsInitial { get; set; }
+        public DateTimeOffset CreatedOn { get; set; }
+        public DateTimeOffset UpdatedOn { get; set; }
+        public List<SubCategory> SubCategories { get; set; } = new();
+
+        public class SubCategory
+        {
+            public Guid Id { get; set; }
+            public string Name { get; set; } = null!;
+            public CategoryType CategoryType { get; set; }
+            public Guid? ParentCategoryId { get; set; }
+            public bool IsInitial { get; set; }
+            public DateTimeOffset CreatedOn { get; set; }
+            public DateTimeOffset UpdatedOn { get; set; }
+        }
+    }
+
     public record Query(
         Guid CategoryId,
-        string UserId) : IRequest<ErrorOr<CategoryModel>>;
+        string UserId) : IRequest<ErrorOr<Response>>;
 
-    public class QueryHandler : IRequestHandler<Query, ErrorOr<CategoryModel>>
+    public class QueryHandler : IRequestHandler<Query, ErrorOr<Response>>
     {
         private readonly BudgetDbContext _dbContext;
 
@@ -30,7 +52,7 @@ public class GetCategoryByIdEndpoint : IEndpoint
             _dbContext = dbContext;
         }
 
-        public async Task<ErrorOr<CategoryModel>> Handle(Query query, CancellationToken cancellationToken)
+        public async Task<ErrorOr<Response>> Handle(Query query, CancellationToken cancellationToken)
         {
             var category = await _dbContext.Categories
                 .AsNoTracking()
@@ -38,6 +60,26 @@ public class GetCategoryByIdEndpoint : IEndpoint
                 .Include(c => c.SubCategories)
                 .Where(c => c.Id == query.CategoryId)
                 .Where(c => c.Users.Any(uc => uc.UserId == query.UserId))
+                .Select(c => new Response
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    CategoryType = c.CategoryType,
+                    ParentCategoryId = c.ParentCategoryId,
+                    IsInitial = c.IsInitial,
+                    CreatedOn = c.CreatedOn,
+                    UpdatedOn = c.UpdatedOn,
+                    SubCategories = c.SubCategories.Select(sc => new Response.SubCategory
+                    {
+                        Id = sc.Id,
+                        Name = sc.Name,
+                        CategoryType = sc.CategoryType,
+                        ParentCategoryId = sc.ParentCategoryId,
+                        IsInitial = sc.IsInitial,
+                        CreatedOn = sc.CreatedOn,
+                        UpdatedOn = sc.UpdatedOn
+                    }).ToList()
+                })
                 .FirstOrDefaultAsync(cancellationToken);
 
             if (category is null)
@@ -45,7 +87,7 @@ public class GetCategoryByIdEndpoint : IEndpoint
                 return Errors.Category.NotFound;
             }
 
-            return category.Adapt<CategoryModel>();
+            return category;
         }
     }
 
